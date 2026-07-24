@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI-assisted RSE — kurz (rozcestník)</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <style>
+    .block { margin: 2.5rem 0; }
+    .block-head { display: flex; align-items: baseline; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.3rem; }
+    .block-head h2 { margin: 0; border: none; padding: 0; }
+    .block-tag { font-family: var(--font-sans); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; background: var(--accent); color: #fff; padding: 0.15em 0.6em; border-radius: 3px; }
+    .block-sub { color: var(--muted); font-style: italic; font-size: 0.92rem; margin: 0 0 1rem; }
+    .lgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 0.6rem; }
+    .lcard { display: block; border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 4px; padding: 0.7rem 0.9rem; background: var(--bg-card); text-decoration: none; color: var(--text); transition: background 0.15s, transform 0.1s; }
+    .lcard:hover { background: var(--accent-light); opacity: 1; transform: translateY(-1px); }
+    .lcard .lc-code { font-family: var(--font-sans); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); }
+    .lcard .lc-title { font-family: var(--font-sans); font-weight: 600; font-size: 0.95rem; margin: 0.15rem 0 0.2rem; }
+    .lcard .lc-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.4; }
+    .stat-row { display: flex; gap: 1.5rem; flex-wrap: wrap; font-family: var(--font-sans); font-size: 0.85rem; color: var(--muted); margin-top: 0.5rem; }
+    .stat-row strong { color: var(--accent); font-size: 1.3rem; }
+    .stat { display: flex; flex-direction: column; }
+  </style>
+</head>
+<body>
+<div class="page">
+<div class="content">
+
+<header class="lesson-header">
+  <div class="lesson-meta">
+    <span class="tag">Kurz</span>
+    <span class="tag">22 lekcí</span>
+    Samostudium · IT4Innovations
+  </div>
+  <h1>AI-assisted Research Software Development</h1>
+  <p class="lesson-subtitle">Vývoj výzkumného softwaru s pomocí AI — pro vědce-kodéry, RSE vývojáře a manažery/PI. Každá lekce ve třech variantách, s Feynmanovým cvičením.</p>
+  <div class="stat-row">
+    <div class="stat"><strong>4</strong>bloky</div>
+    <div class="stat"><strong>22</strong>lekcí</div>
+    <div class="stat"><strong>3</strong>publika / lekci</div>
+  </div>
+</header>
+
+<div class="callout">
+  <div class="callout-label">Jak to číst</div>
+  <p>Klikni na libovolnou lekci. Doporučené pořadí je shora dolů (A → B → C → D), ale lekce jsou samostatné a hustě provázané odkazy „co dál" — dá se skákat podle zájmu. Každá lekce má na konci interaktivní kvíz.</p>
+</div>
+
+<!-- Blok A -->
+<div class="block">
+  <div class="block-head"><span class="block-tag">Blok A</span><h2>Klasické disciplíny</h2></div>
+  <p class="block-sub">Co je na vývoji softwaru staré a osvědčené — a co z toho AI mění.</p>
+  <div class="lgrid">
+    <a class="lcard" href="lessons/0001-no-silver-bullet.html"><span class="lc-code">A3</span><div class="lc-title">No Silver Bullet</div><div class="lc-desc">Esenciální vs. akcidentální komplexita</div></a>
+    <a class="lcard" href="lessons/0003-tdd.html"><span class="lc-code">A1</span><div class="lc-title">TDD</div><div class="lc-desc">Test-first jako specifikace i záchranná síť</div></a>
+    <a class="lcard" href="lessons/0015-refactoring.html"><span class="lc-code">A2</span><div class="lc-title">Refactoring</div><div class="lc-desc">Změna struktury beze změny chování</div></a>
+    <a class="lcard" href="lessons/0016-domain-driven-design.html"><span class="lc-code">A4</span><div class="lc-title">Domain-Driven Design</div><div class="lc-desc">Kód mluví jazykem domény = jazyk pro AI</div></a>
+    <a class="lcard" href="lessons/0017-agile-manifesto.html"><span class="lc-code">A5</span><div class="lc-title">Agile Manifesto</div><div class="lc-desc">Hodnoty a krátká zpětná vazba, ne ceremonie</div></a>
+  </div>
+</div>
+
+<!-- Blok B -->
+<div class="block">
+  <div class="block-head"><span class="block-tag">Blok B</span><h2>Rámec a vrstvy nástrojů</h2></div>
+  <p class="block-sub">Jak agentní nástroje fungují — rámec pěti otázek.</p>
+  <div class="lgrid">
+    <a class="lcard" href="lessons/0002-harness-vs-guardrails.html"><span class="lc-code">B1</span><div class="lc-title">Harness vs. Guardrails</div><div class="lc-desc">Dva architekturální meta-koncepty</div></a>
+    <a class="lcard" href="lessons/0004-ramec-peti-otazek.html"><span class="lc-code">B2</span><div class="lc-title">Rámec pěti otázek</div><div class="lc-desc">Inventář komponent agentního nástroje</div></a>
+    <a class="lcard" href="lessons/0005-memory-a-claude-md.html"><span class="lc-code">B3</span><div class="lc-title">Memory a CLAUDE.md</div><div class="lc-desc">Trvalá vrstva kontextu</div></a>
+    <a class="lcard" href="lessons/0006-skills-a-slash-commands.html"><span class="lc-code">B4</span><div class="lc-title">Skills a slash commands</div><div class="lc-desc">Zabalené postupy</div></a>
+    <a class="lcard" href="lessons/0007-hooks.html"><span class="lc-code">B5</span><div class="lc-title">Hooks</div><div class="lc-desc">Mechanické guardraily</div></a>
+    <a class="lcard" href="lessons/0008-mcp.html"><span class="lc-code">B6</span><div class="lc-title">MCP</div><div class="lc-desc">Napojení na vnější systémy</div></a>
+    <a class="lcard" href="lessons/0009-subagents.html"><span class="lc-code">vrstva 5</span><div class="lc-title">Subagenti</div><div class="lc-desc">Delegace práce na další agenty</div></a>
+  </div>
+</div>
+
+<!-- Blok C -->
+<div class="block">
+  <div class="block-head"><span class="block-tag">Blok C</span><h2>Věda, reprodukovatelnost a důvěra</h2></div>
+  <p class="block-sub">Kde leží hranice jistoty ve vědeckém kontextu.</p>
+  <div class="lgrid">
+    <a class="lcard" href="lessons/0013-fair4rs.html"><span class="lc-code">C1</span><div class="lc-title">FAIR4RS</div><div class="lc-desc">Principy pro výzkumný software</div></a>
+    <a class="lcard" href="lessons/0012-reprodukovatelnost.html"><span class="lc-code">C2</span><div class="lc-title">Reprodukovatelnost</div><div class="lc-desc">Aby šlo výsledek zopakovat</div></a>
+    <a class="lcard" href="lessons/0010-deskilling.html"><span class="lc-code">C3</span><div class="lc-title">Deskilling</div><div class="lc-desc">Ztráta dovednosti a jak jí předejít</div></a>
+    <a class="lcard" href="lessons/0011-trust-gap.html"><span class="lc-code">C4</span><div class="lc-title">Trust gap</div><div class="lc-desc">Plynulost ≠ správnost</div></a>
+    <a class="lcard" href="lessons/0014-vedecky-vs-produkcni-sw.html"><span class="lc-code">C5</span><div class="lc-title">Vědecký vs. produkční SW</div><div class="lc-desc">Prototyp vs. páteř</div></a>
+  </div>
+</div>
+
+<!-- Blok D -->
+<div class="block">
+  <div class="block-head"><span class="block-tag">Blok D</span><h2>Praxe a zavádění</h2></div>
+  <p class="block-sub">Jak to dostat do reálné práce výzkumné organizace.</p>
+  <div class="lgrid">
+    <a class="lcard" href="lessons/0018-context-engineering.html"><span class="lc-code">D1</span><div class="lc-title">Context engineering</div><div class="lc-desc">Kurátorství obsahu kontextového okna</div></a>
+    <a class="lcard" href="lessons/0019-verifikace-code-review.html"><span class="lc-code">D2</span><div class="lc-title">Verifikace a code review</div><div class="lc-desc">Review jako povinná vrstva</div></a>
+    <a class="lcard" href="lessons/0020-bezpecnost-citliva-data.html"><span class="lc-code">D3</span><div class="lc-title">Bezpečnost a citlivá data</div><div class="lc-desc">Co smí do modelu; HPC a lokální modely</div></a>
+    <a class="lcard" href="lessons/0021-licence-provenance-autorstvi.html"><span class="lc-code">D4</span><div class="lc-title">Licence, provenance, autorství</div><div class="lc-desc">Komu kód patří a kdo ručí</div></a>
+    <a class="lcard" href="lessons/0022-zavadeni-v-tymu.html"><span class="lc-code">D5</span><div class="lc-title">Zavádění v týmu</div><div class="lc-desc">Governance jako sociální problém</div></a>
+  </div>
+</div>
+
+<div class="lesson-nav">
+  <div><span class="nav-label">Repozitář</span><a href="https://github.com/rlonka/ai-assisted-course">github.com/rlonka/ai-assisted-course</a></div>
+  <div><span class="nav-label">Autor</span>Radek Lonka · RSE @ IT4Innovations · Nordic-RSE</div>
+</div>
+
+<p style="margin-top:2rem; font-size:0.8rem; color: var(--muted); font-family: var(--font-sans);">Lekce vznikaly s asistencí AI — viz <a href="lessons/0021-licence-provenance-autorstvi.html">D4 (provenance)</a>.</p>
+
+</div>
+</div>
+</body>
+</html>
