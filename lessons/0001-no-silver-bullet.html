@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A3 — No Silver Bullet | AI-assisted RSE</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="page">
+<div class="content">
+
+<!-- Header -->
+<header class="lesson-header">
+  <div class="lesson-meta">
+    <span class="tag">A3</span>
+    <span class="tag">Týden 1</span>
+    Blok A: Stará disciplína
+  </div>
+  <h1>No Silver Bullet</h1>
+  <p class="lesson-subtitle">Fred Brooks, 1986 — historická kotva pro AI hype</p>
+</header>
+
+<!-- Progress -->
+<div class="progress-bar" title="Curriculum progress">
+  <div class="progress-dot current" title="A3 — aktuální lekce"></div>
+  <div class="progress-dot" title="B1"></div>
+  <div class="progress-dot" title="A1"></div>
+  <div class="progress-dot" title="B2"></div>
+  <div class="progress-dot" title="B3–B5"></div>
+  <div class="progress-dot" title="A2, C1, C2"></div>
+  <div class="progress-dot" title="C3, C4, A5"></div>
+  <div class="progress-dot" title="A4, B9"></div>
+</div>
+
+<!-- 1. Jádro -->
+<h2>1 — Jádro</h2>
+
+<p>Brooks v roce 1986 položil otázku: <em>proč software tak těžce roste?</em> Jeho odpověď: komplexita softwaru má dvě části — <strong>esenciální</strong> (vlastní problémové doméně, nelze ji odstranit) a <strong>akcidentální</strong> (způsobená implementací, lze ji zredukovat). Všechny velké pokroky v historii — assembler, OOP, IDE — snižovaly pouze akcidentální komplexitu. Esenciální zůstala. Proto neexistuje a nebude existovat žádná technologie, která by dala řád magnitudy (10×) zlepšení produktivity. AI není výjimka.</p>
+
+<div class="callout">
+  <div class="callout-label">Proč to musíš umět přednášet</div>
+  <p>Každé publikum přichází s implicitní nadějí: "<em>AI za mě vyřeší těžkou práci.</em>" Brooks ti dává jazyk, jak tuto naději kalibrovat bez cynismu. Není to "AI je špatná" — je to "přesněji popišme, co AI umí a co neumí."</p>
+</div>
+
+<!-- 2. Historický kontext -->
+<h2>2 — Historický kontext</h2>
+
+<p>Rok 1986. Fred Brooks, autor <em>The Mythical Man-Month</em> (1975), publikuje esej v IEEE Computer. Kontext: průmysl zažívá vlnu optimismu kolem objektově orientovaného programování. Každý slibuje revoluci.</p>
+
+<p>Brooks se vrací k otázce, proč softwarová krize z 60. let stále trvá. Identifikuje čtyři vlastnosti softwaru, které ho dělají fundamentálně odlišným od hardwaru:</p>
+
+<div class="two-col">
+  <div class="col-box col-red">
+    <div class="col-label">Čtyři problémy (Brooks)</div>
+    <ul>
+      <li><strong>Complexity</strong> — škáluje nelineárně</li>
+      <li><strong>Conformity</strong> — musí se přizpůsobit lidskému světu</li>
+      <li><strong>Changeability</strong> — úspěšný software se mění</li>
+      <li><strong>Invisibility</strong> — nelze vizualizovat přirozeně</li>
+    </ul>
+  </div>
+  <div class="col-box col-green">
+    <div class="col-label">Co pomohlo (ale ne 10×)</div>
+    <ul>
+      <li>High-level jazyky (60. léta)</li>
+      <li>Time-sharing / Unix (70. léta)</li>
+      <li>OOP, IDE (80. léta)</li>
+      <li>Internet, open source (90. léta)</li>
+      <li>Cloud, kontejnery (2010. léta)</li>
+      <li>AI asistenti (2020. léta)</li>
+    </ul>
+  </div>
+</div>
+
+<p>Každá vlna přinesla zlepšení — ale žádná nedala 10×. A každá vlna přišla s hype, který sliboval víc.</p>
+
+<!-- 3. Jak to funguje dnes s AI -->
+<h2>3 — Jak to funguje dnes s AI</h2>
+
+<p>AI kódovací asistenti (Claude Code, GitHub Copilot, Cursor) jsou historicky nejsilnějším útočníkem na <em>akcidentální</em> komplexitu, jaký jsme kdy viděli. Konkrétně:</p>
+
+<div class="callout green">
+  <div class="callout-label">Co AI skutečně dělá</div>
+  <p><strong>Snižuje akcidentální komplexitu:</strong> boilerplate, syntax lookup, debugování triviálních chyb, generování testů pro zřejmé případy, navigace v cizím kódu.</p>
+</div>
+
+<div class="callout red">
+  <div class="callout-label">Co AI nedělá</div>
+  <p><strong>Esenciální komplexita zůstává celá u tebe:</strong> pochopit problémovou doménu, navrhnout správnou abstrakci, rozhodnout co je správný výsledek, poznat kdy je řešení špatně. AI ti pomůže napsat kód — neurčí za tebe, co ten kód má dělat.</p>
+</div>
+
+<p>Data z New Relic (2026): AI kód má <strong>1,7× více issues</strong> než kód psaný bez AI. Příčina: vývojáři přestávají rozumět kódu, který AI vygeneruje — esenciální komplexita se neztratila, jen se přesunula do slepého místa.</p>
+
+<!-- 4. Tři příklady -->
+<h2>4 — Tři příklady</h2>
+
+<div class="examples">
+  <div class="example-card">
+    <div class="example-label">Vědec-kodér</div>
+    <p>Píšeš simulaci Monte Carlo v Pythonu. AI ti napíše smyčku, generátor náhodných čísel, i vizualizaci. Ale: jestli je model fyzikálně správný, jestli jsou okrajové podmínky správně nastavené — to musíš vědět ty. AI ti ušetří hodinu. Chyba v modelu ti zkazí výsledky studie.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">RSE vývojář</div>
+    <p>Refaktoruješ legacy Fortran kód. AI ti pomůže přeložit syntaxi, navrhnout Python ekvivalent, napsat testy. Ale: porozumění tomu, co původní kód dělá numericky — to je esenciální. AI přeloží kód, ale neopraví chybu, které si původní autor neuvědomoval.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">Manažer / PI</div>
+    <p>Tým nasadí AI asistenty. Velocity se zvýší o 30 %. Za 6 měsíců: kód je těžší na údržbu, nikdo nerozumí klíčovým rozhodnutím, onboarding nových lidí trvá déle. Příčina: akcidentální bariéry zmizely, esenciální komplexita se skryla.</p>
+  </div>
+</div>
+
+<!-- 5. Propojení — rámec pěti otázek -->
+<h2>5 — Propojení na rámec pěti otázek</h2>
+
+<p>Brooks dává <em>why</em>. Rámec pěti otázek (lekce <a href="0004-ramec-peti-otazek.html">B2</a>) dává <em>how</em>. Konkrétně:</p>
+
+<ul>
+  <li><strong>Memory (CLAUDE.md):</strong> Přenáší esenciální znalost domény do kontextu agenta. Pokud ji tam nedáš, agent operuje bez ní.</li>
+  <li><strong>Skills:</strong> Enkapsulují to, co člověk rozhodl — workflow, který esenciální rozhodnutí chrání před AI zkraty.</li>
+  <li><strong>Hooks:</strong> Deterministické guardrails — přesně věci, kde AI musí selhat deterministicky, ne probabilisticky.</li>
+  <li><strong>MCP:</strong> Rozšiřuje, co agent "vidí" — ale nerozhoduje za něj, co s tím udělat.</li>
+  <li><strong>Subagents:</strong> Paralelizace akcidentální práce. Esenciální rozhodnutí stále probíhá na úrovni orchestrátoru.</li>
+</ul>
+
+<!-- 6. Nejčastější nepochopení -->
+<h2>6 — Nejčastější nepochopení</h2>
+
+<div class="callout amber">
+  <div class="callout-label">Co si lidé myslí</div>
+  <p>"Brooks byl pesimista z roku 1986. AI je jiná — to je skutečná revoluce, tentokrát to platí."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Co to skutečně je</div>
+  <p>Brooks nebyl pesimista — byl přesný. Stejnou chybu dělala každá generace: assembler, OOP, UML, agile, microservices. Každý tvrdil, že <em>tentokrát</em> je to jinak. Pokaždé to bylo lepší, ale ne 10×. AI je největší pokrok za 40 let — a stále to neznamená, že esenciální komplexita zmizí. Hype vždy přestřeluje, pak přijde zklamání, pak se nastavení kalibruje. Kde jsme teď v tomto cyklu?</p>
+</div>
+
+<p>Druhé nepochopení: "No Silver Bullet říká, že AI nepomáhá." Nepravda. Brooks říká, že pomáhá — ale ne exponenciálně. <strong>To je silná teze, ne slabá.</strong></p>
+
+<!-- 7. Spicy teze -->
+<h2>7 — Spicy teze</h2>
+
+<div class="spicy">
+  <p>Pokud váš tým s AI kóduje rychleji, ale hůř rozumí tomu, co kód dělá — AI právě přesunula esenciální komplexitu z viditelného místa na neviditelné. Zrychlení bez porozumění není produktivita. Je to dluh.</p>
+</div>
+
+<!-- 8. Primární zdroje -->
+<h2>8 — Primární zdroje</h2>
+
+<ul class="resource-list">
+  <li>
+    <a href="https://www.cs.unc.edu/techreports/86-020.pdf" target="_blank">No Silver Bullet — Fred Brooks (1986, PDF)</a>
+    <span class="why">Proč: 10 stran, přečteš za 30 minut. Každá věta je přesná. Nutné přečíst v originále — parafráze vždy ztrácí ostrost argumentu.</span>
+  </li>
+  <li>
+    <a href="https://newrelic.com/resources/report/state-of-ai-coding" target="_blank">State of AI Coding 2026 — New Relic</a>
+    <span class="why">Proč: empirická data, ne intuice. 1,7× více issues je konkrétní číslo, které si publikum zapamatuje. Použij pro C4 lekci také.</span>
+  </li>
+  <li>
+    <a href="https://en.wikipedia.org/wiki/No_Silver_Bullet" target="_blank">No Silver Bullet — Wikipedia (kontext a recepce)</a>
+    <span class="why">Proč: ukazuje, jak byl argument přijat a kde se myslitelé mýlili. Dobrý pro historický kontext přednášky, ne jako primární zdroj.</span>
+  </li>
+</ul>
+
+<!-- 9. Feynmanovo cvičení -->
+<h2>9 — Feynmanovo cvičení</h2>
+
+<p>Než se posunout, ověř si, že to skutečně chápeš. Odpověz na všechny otázky — dostaneš okamžitou zpětnou vazbu.</p>
+
+<div class="quiz" id="quiz-main">
+  <div class="quiz-header">Feynmanův test — No Silver Bullet</div>
+
+  <!-- Q1 -->
+  <div class="quiz-question" id="q1">
+    <div class="quiz-q">1. Brooks rozlišuje dva typy komplexity. Esenciální komplexita je…</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q1" value="a"> způsobená špatným jazykem nebo frameworkem</label></li>
+      <li><label><input type="radio" name="q1" value="b"> vlastní samotné problémové doméně, nelze ji eliminovat</label></li>
+      <li><label><input type="radio" name="q1" value="c"> způsobená špatným designem a lze ji refaktorovat</label></li>
+      <li><label><input type="radio" name="q1" value="d"> specifická pro legacy kód starší než 10 let</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q1', 'b', 'Přesně. Esenciální = vlastní problému. Nemůžeš ji vyrefaktorovat pryč — jen ji lépe pojmenovat.', 'Ne. Akcidentální = způsobená implementací. Esenciální = vlastní problémové doméně.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q1-fb"></div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="quiz-question" id="q2">
+    <div class="quiz-q">2. AI kódovací asistenti (Claude Code, Copilot) primárně snižují…</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q2" value="a"> esenciální komplexitu tím, že rozumí doméně</label></li>
+      <li><label><input type="radio" name="q2" value="b"> obě formy komplexity rovnoměrně</label></li>
+      <li><label><input type="radio" name="q2" value="c"> akcidentální komplexitu — boilerplate, syntax, lookup</label></li>
+      <li><label><input type="radio" name="q2" value="d"> conformity komplexitu, protože se přizpůsobí prostředí</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q2', 'c', 'Správně. AI je nejsilnější nástroj na akcidentální komplexitu v historii. Esenciální zůstává celá u tebe.', 'Ne. AI nerozumí doméně — ví jen, co jsi jí řekl. Esenciální komplexita (porozumění problému) zůstává u člověka.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q2-fb"></div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="quiz-question" id="q3">
+    <div class="quiz-q">3. Co znamená Brooksovo tvrzení "No Silver Bullet"?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q3" value="a"> Software nelze zlepšit — produktivita je stropovaná</label></li>
+      <li><label><input type="radio" name="q3" value="b"> Žádná technologie nedá řád magnitudy (10×) zlepšení</label></li>
+      <li><label><input type="radio" name="q3" value="c"> Nové technologie jsou vždy přeceňovány a nemají hodnotu</label></li>
+      <li><label><input type="radio" name="q3" value="d"> Softwarová produktivita závisí pouze na počtu vývojářů</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q3', 'b', 'Přesně. Brooks neřekl, že zlepšení neexistují — řekl, že žádné nedá 10× skok. Zlepšení jsou reálná, ale lineární.', 'Ne. Brooks uznává, že technologie pomáhají — assembler, OOP, AI. Jen říká: žádná nedá 10× skok produktivity.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q3-fb"></div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="quiz-question" id="q4">
+    <div class="quiz-q">4. Tým nasadí AI asistenty, velocity vzroste o 30 %, ale za 6 měsíců kód hůře udržují. Brooks by řekl…</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q4" value="a"> AI způsobila novou esenciální komplexitu v kódové bázi</label></li>
+      <li><label><input type="radio" name="q4" value="b"> AI přesunula esenciální komplexitu do slepého místa týmu</label></li>
+      <li><label><input type="radio" name="q4" value="c"> Tým zvolil špatný AI nástroj — problém je v produktu</label></li>
+      <li><label><input type="radio" name="q4" value="d"> 30 % není dost — správně nasazená AI dá víc než 10×</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q4', 'b', 'Výborně. Esenciální komplexita nezmizela — přesunula se z místa, kde ji tým vidí, na místo, kde ji nevidí. To je přesně Brooksova predikce.', 'Ne. AI novou esenciální komplexitu nevytváří — ale může ji zakrýt. Problém není v nástroji, je v tom, že tým přestal budovat porozumění.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q4-fb"></div>
+  </div>
+
+  <div class="quiz-score" id="quiz-score"></div>
+</div>
+
+<!-- 10. Propojení na ostatní lekce -->
+<h2>10 — Co dál</h2>
+
+<p><strong>Co musíš znát před touto lekcí:</strong> Nic specifického — A3 je záměrně první, protože poskytuje jazyk (esenciální/akcidentální) pro všechno ostatní.</p>
+
+<p><strong>Co si přečíst potom (Týden 1, druhá lekce):</strong></p>
+<ul>
+  <li><a href="0002-harness-vs-guardrails.html">B1 — Harness vs. Guardrails</a> — jak jsou tato pojmy aplikována v architektuře Claude Code</li>
+</ul>
+
+<p><strong>Propojení do curricula:</strong></p>
+<ul>
+  <li><a href="0004-ramec-peti-otazek.html">B2 — Rámec pěti otázek</a> — každá z pěti otázek je odpovědí na konkrétní typ (esenciální / akcidentální) komplexity</li>
+  <li><em>C4 — AI kód quality</em> — empirická data (1,7× více issues) jsou přímým měřením Brooksovy predikce</li>
+  <li><em>C3 — Deskilling</em> — deskilling je přesun esenciální komplexity do slepého místa</li>
+  <li><em>A2 — Refactoring</em> — refactoring je systematická práce s akcidentální komplexitou; Brooks mu dává kontext</li>
+</ul>
+
+<!-- Footer -->
+<div class="lesson-nav">
+  <div>
+    <span class="nav-label">Curriculum</span>
+    <a href="../RESOURCES.md">Zdroje</a>
+  </div>
+  <div>
+    <span class="nav-label">Příští lekce</span>
+    <a href="0002-harness-vs-guardrails.html">B1 — Harness vs. Guardrails →</a>
+  </div>
+</div>
+
+<p style="margin-top:2rem; font-size:0.8rem; color: var(--muted); font-family: var(--font-sans);">
+  Máš otázku? Vrať se do Claude Code a napiš ji — agent je tvůj učitel a může rozvinout libovolný bod z této lekce.
+</p>
+
+</div><!-- .content -->
+</div><!-- .page -->
+
+<script>
+const scores = {};
+
+function check(qid, correct, okMsg, failMsg) {
+  const selected = document.querySelector(`input[name="${qid}"]:checked`);
+  const fb = document.getElementById(`${qid}-fb`);
+
+  if (!selected) {
+    fb.textContent = 'Vyber jednu odpověď.';
+    fb.className = 'quiz-feedback incorrect';
+    fb.style.display = 'block';
+    return;
+  }
+
+  const isCorrect = selected.value === correct;
+  fb.textContent = isCorrect ? '✓ ' + okMsg : '✗ ' + failMsg;
+  fb.className = 'quiz-feedback ' + (isCorrect ? 'correct' : 'incorrect');
+  fb.style.display = 'block';
+
+  scores[qid] = isCorrect;
+
+  // Disable further changes
+  document.querySelectorAll(`input[name="${qid}"]`).forEach(r => r.disabled = true);
+  document.querySelector(`#${qid} .quiz-check`).disabled = true;
+
+  // Show score if all answered
+  const total = 4;
+  if (Object.keys(scores).length === total) {
+    const correct_count = Object.values(scores).filter(Boolean).length;
+    const scoreEl = document.getElementById('quiz-score');
+    scoreEl.style.display = 'block';
+    if (correct_count === total) {
+      scoreEl.innerHTML = `<strong>✓ ${correct_count}/${total} — Skvěle.</strong> Chápeš Brooksův argument dostatečně na to, abys ho přednášel. Jdi na B1.`;
+    } else if (correct_count >= 3) {
+      scoreEl.innerHTML = `<strong>${correct_count}/${total} — Téměř.</strong> Přečti si znovu sekci ${
+        !scores['q1'] ? '1 (esenciální vs. akcidentální)' : !scores['q2'] ? '3 (co AI dělá)' : !scores['q3'] ? '1 (Brooksova teze)' : '4 (příklad týmu)'
+      } a zkus znovu.`;
+    } else {
+      scoreEl.innerHTML = `<strong>${correct_count}/${total} — Vrať se.</strong> Mezera je v základním konceptu. Přečti znovu sekce 1–3, pak přečti Brookse (10 stran, 30 minut). Tato lekce nestačí jako jediný zdroj.`;
+    }
+  }
+}
+</script>
+
+</body>
+</html>

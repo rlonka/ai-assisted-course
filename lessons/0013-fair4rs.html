@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C1 — FAIR4RS | AI-assisted RSE</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    /* FAIR letter cards */
+    .fair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.7rem;
+      margin: 1.25rem 0 1.5rem;
+    }
+    .fair-card {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.85rem 1rem;
+      background: var(--bg-card);
+    }
+    .fair-card .fl {
+      display: flex;
+      align-items: baseline;
+      gap: 0.55rem;
+      margin-bottom: 0.35rem;
+    }
+    .fair-card .letter {
+      font-family: var(--font-sans);
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1;
+    }
+    .fair-card .word { font-family: var(--font-sans); font-weight: 700; font-size: 0.92rem; }
+    .fair-card p { margin: 0; font-size: 0.82rem; line-height: 1.5; color: var(--muted); }
+    .fair-card .sw { display: block; margin-top: 0.4rem; font-size: 0.79rem; color: var(--text); }
+    .fair-card .sw b { font-family: var(--font-sans); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 700; }
+    @media (max-width: 520px) { .fair { grid-template-columns: 1fr; } }
+
+    /* Data vs software table */
+    .cmp {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.87rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .cmp th {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+      border-bottom: 2px solid var(--text);
+    }
+    .cmp td {
+      padding: 0.55rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    .cmp tr:last-child td { border-bottom: none; }
+
+    /* In / Out lists */
+    .in-out {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .in-out-box {
+      border-radius: 4px;
+      padding: 0.8rem 1rem;
+      font-size: 0.86rem;
+    }
+    .in-box  { background: var(--green-light);  border: 1px solid #b7dfc8; }
+    .out-box { background: var(--red-light);     border: 1px solid #f9b8b8; }
+    .in-out-box h4 {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin: 0 0 0.5rem;
+      color: var(--muted);
+    }
+    .in-out-box ul { margin: 0; padding-left: 1.1rem; }
+    .in-out-box li { margin-bottom: 0.3rem; }
+    @media (max-width: 480px) { .in-out { grid-template-columns: 1fr; } }
+
+    /* Myth banner */
+    .myth {
+      background: var(--red-light);
+      border: 1px solid #f9b8b8;
+      border-radius: 6px;
+      padding: 1rem 1.2rem;
+      margin: 1.25rem 0;
+      text-align: center;
+    }
+    .myth .m-eq { font-family: var(--font-sans); font-size: 1.15rem; font-weight: 800; }
+    .myth .m-eq .strike { text-decoration: line-through; text-decoration-color: var(--red); text-decoration-thickness: 3px; color: var(--muted); }
+    .myth .m-sub { font-size: 0.83rem; color: var(--muted); margin-top: 0.4rem; }
+
+    /* Code example block */
+    .code-example {
+      background: #1a1a2e;
+      color: #e2e8f0;
+      border-radius: 6px;
+      padding: 1rem 1.2rem;
+      font-family: var(--font-mono);
+      font-size: 0.80rem;
+      line-height: 1.6;
+      margin: 1rem 0 1.5rem;
+      overflow-x: auto;
+    }
+    .code-example .cm-comment { color: #718096; }
+    .code-example .cm-key     { color: #fbd38d; }
+    .code-example .cm-val     { color: #c6f6d5; }
+  </style>
+</head>
+<body>
+<div class="page">
+<div class="content">
+
+<!-- Header -->
+<header class="lesson-header">
+  <div class="lesson-meta">
+    <span class="tag">C1</span>
+    <span class="tag">Týden 6</span>
+    Blok C: Vědecký software
+  </div>
+  <h1>FAIR4RS</h1>
+  <p class="lesson-subtitle">FAIR principy pro vědecký software, ne jen pro data. Findable, Accessible, Interoperable, Reusable — a proč se to nedá zkopírovat z dat jedna ku jedné.</p>
+</header>
+
+<!-- Progress -->
+<div class="progress-bar">
+  <div class="progress-dot done"    title="A3 — No Silver Bullet"></div>
+  <div class="progress-dot done"    title="A1 — TDD"></div>
+  <div class="progress-dot done"    title="B1–B2 — Harness, rámec pěti otázek"></div>
+  <div class="progress-dot done"    title="B3–B6 + Subagents — vrstvy harness"></div>
+  <div class="progress-dot done"    title="C3 — Deskilling"></div>
+  <div class="progress-dot done"    title="C4 — Trust gap"></div>
+  <div class="progress-dot done"    title="C2 — Reprodukovatelnost"></div>
+  <div class="progress-dot current" title="C1 — FAIR4RS (aktuální)"></div>
+</div>
+
+<!-- 1. Jádro -->
+<h2>1 — Jádro</h2>
+
+<p>Reprodukovatelnost (C2) byla o tom, aby tvůj výsledek přežil. <strong>FAIR4RS</strong> je o tom, aby přežil a byl <em>použitelný pro ostatní</em> tvůj software. FAIR = <strong>F</strong>indable, <strong>A</strong>ccessible, <strong>I</strong>nteroperable, <strong>R</strong>eusable — čtyři principy, které rozhodují, jestli je tvůj kód dohledatelný, dostupný, propojitelný a znovupoužitelný, nebo jestli zmizí i s tebou.</p>
+
+<p>FAIR vznikl pro <em>data</em> (Wilkinson et al., 2016). Software je ale jiné zvíře — spustitelný, závislý na verzích, vyvíjí se v čase. Proto vznikl <strong>FAIR4RS</strong> (RDA/ReSA/FORCE11, 2022): FAIR principy přizpůsobené výzkumnému softwaru. Pro RSE komunitu je to profesní standard — a AI ho činí zároveň snadnějším i naléhavějším.</p>
+
+<div class="callout">
+  <div class="callout-label">Jedno pravidlo</div>
+  <p>FAIR není o zveřejnění kódu. Je o tom, aby ho stroj i člověk <em>našel, dostal se k němu, propojil ho a znovu použil</em> — bez tebe jako prostředníka. Software, který umíš spustit jen ty, není vědecký nástroj; je to tvůj osobní skript.</p>
+</div>
+
+<!-- 2. Proč FAIR4RS a ne FAIR -->
+<h2>2 — Proč software nestačí FAIR pro data</h2>
+
+<p>FAIR pro data se nedá na software přenést jedna ku jedné, protože software má vlastnosti, které data nemají:</p>
+
+<table class="cmp">
+  <tr>
+    <th>Vlastnost</th>
+    <th>Data</th>
+    <th>Software</th>
+  </tr>
+  <tr>
+    <td>Povaha</td>
+    <td>Statická — jednou pořízená</td>
+    <td>Spustitelná — něco dělá</td>
+  </tr>
+  <tr>
+    <td>Závislosti</td>
+    <td>Zpravidla žádné</td>
+    <td>Prostředí, knihovny, verze</td>
+  </tr>
+  <tr>
+    <td>Vývoj v čase</td>
+    <td>Verze = nový dataset</td>
+    <td>Neustálý — commity, release, forky</td>
+  </tr>
+  <tr>
+    <td>„Použít"</td>
+    <td>Přečíst / analyzovat</td>
+    <td>Zkompilovat, spustit, integrovat</td>
+  </tr>
+</table>
+
+<p>Proto FAIR4RS klade důraz na věci, které u dat nedávají smysl: verzování s persistentními identifikátory pro každou verzi, popis závislostí a prostředí, citovatelnost vyvíjejícího se artefaktu, licenci umožňující spuštění a úpravu. Reprodukovatelnost z C2 je tady jádrem principu „Reusable".</p>
+
+<!-- 3. Čtyři principy -->
+<h2>3 — Čtyři principy pro software</h2>
+
+<div class="fair">
+  <div class="fair-card">
+    <div class="fl"><span class="letter">F</span><span class="word">Findable</span></div>
+    <p>Software i jeho metadata jsou dohledatelné — mají persistentní identifikátor a jsou registrované/indexované.</p>
+    <span class="sw"><b>V praxi</b> DOI přes Zenodo, záznam v registru, bohatá metadata (autoři, verze, klíčová slova).</span>
+  </div>
+  <div class="fair-card">
+    <div class="fl"><span class="letter">A</span><span class="word">Accessible</span></div>
+    <p>Software lze získat standardním protokolem; metadata přežijí, i kdyby samotný kód zmizel.</p>
+    <span class="sw"><b>V praxi</b> Veřejný repozitář, archivovaný release, jasně definovaný způsob přístupu (i s autentizací).</span>
+  </div>
+  <div class="fair-card">
+    <div class="fl"><span class="letter">I</span><span class="word">Interoperable</span></div>
+    <p>Čte a píše standardní formáty, používá komunitní API, propojí se s dalším softwarem a daty.</p>
+    <span class="sw"><b>V praxi</b> Standardní vstup/výstup (HDF5, NetCDF…), dokumentované API, žádné proprietární black-boxy.</span>
+  </div>
+  <div class="fair-card">
+    <div class="fl"><span class="letter">R</span><span class="word">Reusable</span></div>
+    <p>Jasná licence, provenience, dokumentace a komunitní standardy — aby na tom šlo stavět.</p>
+    <span class="sw"><b>V praxi</b> LICENSE, CITATION.cff, testy, reprodukovatelnost (C2), popis prostředí a závislostí.</span>
+  </div>
+</div>
+
+<p>Principy jsou pořadím záměrné: nejdřív tě musí <em>najít</em> (F), pak <em>získat</em> (A), pak to musí <em>zapadnout</em> do jejich ekosystému (I), teprve pak na tom mohou <em>stavět</em> (R). Přeskočit dřívější znamená, že pozdější je k ničemu — nejlepší znovupoužitelný kód je bezcenný, když ho nikdo nenajde.</p>
+
+<!-- 4. FAIR != Open -->
+<h2>4 — Nejdůležitější rozlišení: FAIR ≠ Open</h2>
+
+<div class="myth">
+  <div class="m-eq"><span class="strike">FAIR = Open Source</span></div>
+  <div class="m-sub">Accessible neznamená „zdarma a veřejně". Znamená „získatelné definovaným protokolem — i s autentizací".</div>
+</div>
+
+<p>Tohle je nejčastější a nejzávažnější nepochopení. <strong>FAIR nemluví o ceně ani o otevřenosti — mluví o dohledatelnosti a definovaném přístupu.</strong> Software za autentizací, komerční nebo s omezenou licencí může být plně FAIR, pokud má persistentní identifikátor, jasně popsaný způsob přístupu a metadata, která přežijí. A naopak: kód volně na GitHubu bez licence, bez metadat, bez identifikátoru je <em>open, ale ne FAIR</em> — nenajdeš ho, nesmíš ho legálně použít, a za rok bude smazaný.</p>
+
+<div class="callout amber">
+  <div class="callout-label">Zapamatuj si</div>
+  <p>Open je o právech a ceně. FAIR je o nalezitelnosti a přístupu — pro stroje i lidi. Můžeš být FAIR bez toho být open; a být open bez toho být FAIR. Cíl vědeckého softwaru je FAIR; open je časté, ale ne totéž.</p>
+</div>
+
+<!-- 5. FAIR a agenti -->
+<h2>5 — FAIR a agenti: metadata jsou strojová potrava</h2>
+
+<p>Původní FAIR měl silný důraz, který se často zapomíná: má být <em>machine-actionable</em> — čitelný a použitelný nejen pro člověka, ale pro stroj. V éře agentů to přestává být abstraktní ideál a stává se praktickou pákou, obousměrně:</p>
+
+<ul>
+  <li><strong>FAIR je to, co agentovi umožní tvůj software použít.</strong> Strojově čitelná metadata, standardní rozhraní (I) a jasná licence (R) jsou přesně to, co agent (a MCP server, B6) potřebuje, aby tvůj nástroj našel a zapojil. Ne-FAIR software je pro agenta neviditelný.</li>
+  <li><strong>Agent ti pomůže software zFAIRovatit.</strong> Vygenerovat <code>CITATION.cff</code>, doplnit licenci, napsat metadata, standardizovat vstup/výstup, sepsat dokumentaci — to je přesně nudné plumbing, které vědci odkládají a agent zvládne neúnavně.</li>
+</ul>
+
+<div class="code-example">
+<span class="cm-comment"># CITATION.cff — strojově čitelná metadata (princip F + R)</span>
+<span class="cm-key">cff-version:</span> <span class="cm-val">1.2.0</span>
+<span class="cm-key">title:</span> <span class="cm-val">particle-sim</span>
+<span class="cm-key">version:</span> <span class="cm-val">2.1.0</span>
+<span class="cm-key">doi:</span> <span class="cm-val">10.5281/zenodo.1234567</span>
+<span class="cm-key">license:</span> <span class="cm-val">MIT</span>
+<span class="cm-key">authors:</span>
+  <span class="cm-key">- family-names:</span> <span class="cm-val">Novák</span>
+    <span class="cm-key">given-names:</span> <span class="cm-val">Jan</span>
+</div>
+
+<p>Ale pozor na druhou stranu: agenti vyrábějí software rychleji než kdy dřív — a tím i <em>ne-FAIR</em> software rychleji než kdy dřív. Skripty bez licence, bez metadat, bez identifikátoru se hromadí průmyslovým tempem. FAIR se proto z „hezké ctnosti" mění na nutnou hygienu, jinak se vědecký software utopí v nedohledatelném balastu.</p>
+
+<!-- 6. Kdy řešit FAIR -->
+<h2>6 — Kolik FAIR je dost</h2>
+
+<div class="in-out">
+  <div class="in-out-box in-box">
+    <h4>Minimum pro každý projekt ✓</h4>
+    <ul>
+      <li>LICENSE — bez ní nesmí nikdo legálně použít (R)</li>
+      <li>README s popisem a spuštěním (F, R)</li>
+      <li>Připnuté závislosti / prostředí (R, C2)</li>
+      <li>Verejný repozitář s historií (A)</li>
+    </ul>
+  </div>
+  <div class="in-out-box out-box">
+    <h4>Když jde o vědecký výstup navíc ✓</h4>
+    <ul>
+      <li>DOI přes Zenodo pro citovatelnost (F)</li>
+      <li>CITATION.cff — strojová metadata (F, R)</li>
+      <li>Standardní vstup/výstup formáty (I)</li>
+      <li><code>/reproduce</code> a testy invariantů (R, C2)</li>
+    </ul>
+  </div>
+</div>
+
+<p>FAIR není binární přepínač, je to spektrum — a jde po něm postupovat po krocích jako po žebříku reprodukovatelnosti (C2). Ale jedna věc je nepodkročitelné minimum: <strong>LICENSE</strong>. Kód bez licence není „volný" — je ve výchozím stavu <em>zapovězený</em> (autorské právo). Nejčastější tichý blocker znovupoužití není chybějící DOI, ale chybějící řádek s licencí.</p>
+
+<!-- 7. Historický kontext -->
+<h2>7 — Historický kontext</h2>
+
+<ul>
+  <li><strong>FAIR data principles (Wilkinson et al., 2016).</strong> Původní text, ohromně vlivný, ale explicitně o datech. Zavedl machine-actionability jako cíl. FAIR4RS je jeho adaptace — se všemi rozdíly, které software přináší.</li>
+  <li><strong>FAIR4RS Working Group (Chue Hong et al., 2022).</strong> RDA + ReSA + FORCE11. Komunitní konsenzus, jak FAIR aplikovat na software. Primární zdroj této lekce a profesní standard RSE.</li>
+  <li><strong>Software citation principles (FORCE11, 2016) a CITATION.cff.</strong> Konkrétní řešení, jak software citovat a popsat strojově. Praktická náplň principů F a R.</li>
+  <li><strong>RSE hnutí a Software Sustainability Institute.</strong> Celé profesní hnutí kolem toho, že vědecký software si zaslouží stejnou péči jako vědecká data. Nordic-RSE, ReSA — komunita, která FAIR4RS drží při životě.</li>
+</ul>
+
+<p>Pointa pro publikum (a pro RSE zvlášť): FAIR4RS je uznání, že software je <em>první-třídní vědecký výstup</em>, ne pomocný skript. To je celý étos RSE profese — a AI, která software zlevňuje, ten étos nezastarává, naopak: čím víc kódu, tím důležitější, aby byl dohledatelný a použitelný.</p>
+
+<!-- 8. Tři příklady -->
+<h2>8 — Tři příklady</h2>
+
+<div class="examples">
+  <div class="example-card">
+    <div class="example-label">Vědec-kodér</div>
+    <p>Napsal užitečný analytický nástroj, dal ho na GitHub — a považuje ho za „sdílený". Jenže: bez licence (nikdo ho legálně nesmí použít), bez metadat (nikdo ho nenajde), bez popisu prostředí (nikdo ho nespustí). Open, ale ne FAIR. Nechá agenta doplnit LICENSE, CITATION.cff a README, archivuje release na Zenodo pro DOI — a z osobního skriptu se stane citovatelný vědecký nástroj.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">RSE vývojář</div>
+    <p>FAIR4RS je jeho profesní řemeslo. Zavádí ho jako standard skupiny: každý projekt má LICENSE, CITATION.cff, standardní I/O formáty, DOI pro release. Ví, že FAIR ≠ open — jejich clusterový nástroj je za autentizací, ale je plně FAIR díky persistentnímu identifikátoru a popsanému přístupu. AI používá na plumbing, člověk hlídá, že metadata jsou pravdivá, ne halucinovaná.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">Manažer / PI</div>
+    <p>Grantová agentura čím dál častěji vyžaduje FAIR software management plan. PI, který to bral jako byrokracii, zjišťuje, že FAIR je návratná investice: FAIR software se cituje (impact), přežije odchod studenta (kontinuita) a je připravený pro agentní nástroje (budoucnost). Metrika není „máme open source", ale „najde a použije naše nástroje někdo — nebo agent — bez nás?".</p>
+  </div>
+</div>
+
+<!-- 9. Propojení -->
+<h2>9 — Propojení na ostatní lekce</h2>
+
+<ul>
+  <li><strong>C2 — Reprodukovatelnost:</strong> Reprodukovatelnost je jádro principu „Reusable". FAIR4RS zasazuje C2 do širšího rámce — reprodukovatelný, ale nenalezitelný software je pořád k ničemu pro ostatní.</li>
+  <li><strong>B6 — MCP:</strong> Machine-actionable metadata jsou to, co agentovi (přes MCP server) umožní tvůj software najít a použít. FAIR software je agentem použitelný software; ne-FAIR je pro něj neviditelný.</li>
+  <li><strong>A4 — Domain-Driven Design:</strong> Interoperabilita (I) i metadata staví na sdíleném jazyce domény. Standardní formáty a API jsou ubiquitous language mezi nástroji — totéž, co CLAUDE.md řeší uvnitř projektu.</li>
+  <li><strong>C3 — Deskilling:</strong> FAIR vyžaduje rozumět vlastnímu softwaru natolik, abys ho popsal a udělal použitelným. Je to další tlak proti erozi — nedokumentuješ FAIR, čemu sám nerozumíš.</li>
+</ul>
+
+<!-- 10. Nejčastější nepochopení -->
+<h2>10 — Nejčastější nepochopení</h2>
+
+<div class="callout amber">
+  <div class="callout-label">Nepochopení 1</div>
+  <p>„Dal jsem kód na GitHub, takže je FAIR."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>GitHub bez licence, metadat a identifikátoru je <em>open, ale ne FAIR</em>. Nenajdeš ho (žádný DOI, chudá metadata), nesmíš ho legálně použít (bez licence je defaultně zapovězený), a může být kdykoliv smazán (žádný archivovaný release). Zveřejnění je nutná, ale zdaleka ne dostatečná podmínka. FAIR je o nalezitelnosti a použitelnosti, ne o tom, že je to „venku".</p>
+</div>
+
+<div class="callout amber">
+  <div class="callout-label">Nepochopení 2</div>
+  <p>„FAIR znamená, že to musím dát zadarmo a otevřeně — to nemůžu, náš software je komerční / za autentizací."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>FAIR ≠ open. Accessible znamená „získatelné definovaným protokolem", ne „zdarma a veřejně" — přístup smí zahrnovat autentizaci nebo licenci. Komerční či chráněný software může být plně FAIR, pokud má persistentní identifikátor, popsaný způsob přístupu a trvalá metadata. Otevřenost je jiná osa než FAIR.</p>
+</div>
+
+<div class="callout amber">
+  <div class="callout-label">Nepochopení 3</div>
+  <p>„FAIR je jen pro data — pro pár skriptů je to zbytečná byrokracie."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>Právě proto vznikl FAIR4RS — software je jiné zvíře než data a zaslouží vlastní adaptaci, ne odmítnutí. A minimum není byrokracie: LICENSE + README + připnuté prostředí je pár hodin práce (s agentem méně), které rozhodují, jestli tvůj „pár skriptů" přežije tvůj odchod, nebo zmizí. Byrokracie je forma bez užitku; FAIR minimum je užitek bez formy.</p>
+</div>
+
+<!-- 11. Spicy teze -->
+<h2>11 — Spicy teze</h2>
+
+<div class="spicy">
+  <p>Většina vědeckého softwaru na světě je mrtvá při narození — jeden autor ho umí spustit, nikdo jiný ho nenajde, a s odchodem autora mizí. Není to problém talentu ani nástrojů; je to problém, že věda odměňuje papery, ne použitelný kód. FAIR4RS je pokus tenhle nesoulad napravit zvenčí — a AI je první síla, která ho může vyřešit zevnitř, protože zlevňuje přesně ten plumbing, na který nikdy nebyl čas. Kdo dnes vydá ne-FAIR software, nešetří čas. Odkládá pohřeb.</p>
+</div>
+
+<!-- 12. Primární zdroje -->
+<h2>12 — Primární zdroje</h2>
+
+<ul class="resource-list">
+  <li>
+    <a href="https://www.nature.com/articles/s41597-022-01710-x" target="_blank">FAIR Principles for Research Software (FAIR4RS) — Chue Hong et al. (2022)</a>
+    <span class="why">Proč: Primární zdroj. Definitivní komunitní dokument (RDA/ReSA/FORCE11). Přečti čtyři principy a sekci o tom, čím se software liší od dat. Základ celé lekce a profesní standard RSE.</span>
+  </li>
+  <li>
+    <a href="https://www.nature.com/articles/sdata201618" target="_blank">The FAIR Guiding Principles — Wilkinson et al. (2016)</a>
+    <span class="why">Proč: Původní FAIR (pro data). Pochopíš, odkud principy pocházejí a proč je machine-actionability jádro — klíčové pro pochopení, proč FAIR software = agentem použitelný software. Čti úvod a definice.</span>
+  </li>
+  <li>
+    <a href="https://citation-file-format.github.io/" target="_blank">Citation File Format (CITATION.cff)</a>
+    <span class="why">Proč: Praktický nástroj pro principy F a R — strojově čitelná metadata a citace softwaru. Konkrétní, hned použitelné. Ukázka, že FAIR minimum je řádky v souboru, ne byrokracie.</span>
+  </li>
+</ul>
+
+<!-- 13. Feynmanovo cvičení -->
+<h2>13 — Feynmanovo cvičení</h2>
+
+<div class="quiz" id="quiz-main">
+  <div class="quiz-header">Feynmanův test — FAIR4RS</div>
+
+  <!-- Q1 -->
+  <div class="quiz-question" id="q1">
+    <div class="quiz-q">1. Kolega dal skript na veřejný GitHub bez licence a bez dalších metadat a tvrdí, že je teď FAIR. Má pravdu?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q1" value="a"> Ano — veřejný GitHub splňuje všechny čtyři principy FAIR</label></li>
+      <li><label><input type="radio" name="q1" value="b"> Ne — je open, ale ne FAIR: bez metadat/DOI ho nikdo nenajde (F), bez licence ho nikdo nesmí použít (R), a bez archivu může zmizet (A)</label></li>
+      <li><label><input type="radio" name="q1" value="c"> Ano, ale jen pokud je repozitář hvězdičkovaný</label></li>
+      <li><label><input type="radio" name="q1" value="d"> Ne — FAIR vyžaduje, aby byl kód v Pythonu</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q1','b','Přesně. Zveřejnění je nutná, ne dostatečná podmínka. Bez metadat a identifikátoru není Findable, bez licence není legálně Reusable (kód bez licence je defaultně zapovězený), bez archivovaného release není spolehlivě Accessible. Open ≠ FAIR.','Ne. Veřejný GitHub sám o sobě nesplňuje FAIR. Chybí nalezitelnost (metadata, DOI), použitelnost (licence — bez ní je kód defaultně zapovězený) a trvalá dostupnost (archiv). Je to open, ale ne FAIR.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q1-fb"></div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="quiz-question" id="q2">
+    <div class="quiz-q">2. Váš clusterový nástroj je za autentizací a nemůže být veřejně otevřený. Může být FAIR?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q2" value="a"> Ne — FAIR vyžaduje, aby byl software zdarma a veřejně otevřený</label></li>
+      <li><label><input type="radio" name="q2" value="b"> Ano — Accessible znamená „získatelné definovaným protokolem", který smí zahrnovat autentizaci; s persistentním ID, popsaným přístupem a trvalými metadaty je plně FAIR</label></li>
+      <li><label><input type="radio" name="q2" value="c"> Jen pokud ho zveřejníte jako open source</label></li>
+      <li><label><input type="radio" name="q2" value="d"> Ne — software za autentizací nemůže mít metadata</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q2','b','Správně. FAIR ≠ open. Accessible je o definovaném způsobu přístupu, ne o ceně nebo otevřenosti — autentizace je legitimní protokol. S persistentním identifikátorem, jasně popsaným přístupem a trvalými metadaty je chráněný software plně FAIR. Otevřenost je jiná osa.','Ne. Právě to je nejčastější mýtus: FAIR nerovná se open. Accessible znamená získatelné definovaným protokolem — i s autentizací. Software za loginem může být plně FAIR, pokud má identifikátor, popsaný přístup a trvalá metadata.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q2-fb"></div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="quiz-question" id="q3">
+    <div class="quiz-q">3. Proč je FAIR (a machine-actionable metadata) v éře agentů obzvlášť důležité?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q3" value="a"> Není — agenti si poradí i s nedohledatelným softwarem</label></li>
+      <li><label><input type="radio" name="q3" value="b"> Strojově čitelná metadata a standardní rozhraní jsou přesně to, co agent potřebuje, aby tvůj software našel a použil; ne-FAIR software je pro agenta neviditelný</label></li>
+      <li><label><input type="radio" name="q3" value="c"> Protože agenti vyžadují, aby byl veškerý software zdarma</label></li>
+      <li><label><input type="radio" name="q3" value="d"> Protože FAIR zrychluje běh kódu</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q3','b','Výborně. Machine-actionability byla v původním FAIR trochu abstraktní ideál — v éře agentů je to praktická páka. FAIR metadata, standardní API (I) a jasná licence (R) jsou to, co agentovi (přes MCP) umožní software najít a zapojit. Navíc: agent ti pomůže software zFAIRovatit, ale zároveň chrlí ne-FAIR kód rychleji — proto je FAIR naléhavější.','Ne. FAIR je pro agenty klíčové: strojově čitelná metadata a standardní rozhraní jsou přesně to, čím agent tvůj software najde a použije. Ne-FAIR software je pro agenta neviditelný — nezrychluje běh, ale rozhoduje o použitelnosti.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q3-fb"></div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="quiz-question" id="q4">
+    <div class="quiz-q">4. Jaké je nepodkročitelné minimum FAIR, které nejčastěji tiše blokuje znovupoužití, když chybí?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q4" value="a"> DOI přes Zenodo</label></li>
+      <li><label><input type="radio" name="q4" value="b"> LICENSE — kód bez licence je autorským právem defaultně zapovězený; nikdo ho nesmí legálně použít, i když je veřejný</label></li>
+      <li><label><input type="radio" name="q4" value="c"> Logo projektu</label></li>
+      <li><label><input type="radio" name="q4" value="d"> Účet na sociální síti pro projekt</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q4','b','Přesně. Nejčastější tichý blocker není chybějící DOI, ale chybějící licence. Kód bez licence NENÍ „volný" — ve výchozím stavu ho autorské právo zapovídá, takže ho nikdo nesmí legálně použít ani upravit, i když je veřejně na GitHubu. Jeden soubor LICENSE odemyká celý princip Reusable.','Ne. DOI a kosmetika nejsou to kritické minimum. Je to LICENSE: bez ní je kód defaultně zapovězený autorským právem — nikdo ho nesmí legálně použít, i když je veřejný. To je nejčastější tichý blocker znovupoužití.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q4-fb"></div>
+  </div>
+
+  <div class="quiz-score" id="quiz-score"></div>
+</div>
+
+<!-- 14. Co dál -->
+<h2>14 — Co dál</h2>
+
+<p><strong>Co musíš znát před touto lekcí:</strong></p>
+<ul>
+  <li><a href="0012-reprodukovatelnost.html">C2 — Reprodukovatelnost</a> — jádro principu „Reusable". FAIR4RS ji zasazuje do širšího rámce.</li>
+  <li><a href="0008-mcp.html">B6 — MCP</a> — machine-actionable metadata jsou to, co agentovi umožní tvůj FAIR software použít.</li>
+</ul>
+
+<p><strong>Praktický úkol (25 minut):</strong> Vezmi jeden svůj repozitář a projdi ho podle F/A/I/R. Konkrétně: má LICENSE? Má README s popisem a spuštěním? Má CITATION.cff? Používá standardní I/O formáty? Nech agenta doplnit, co chybí z minima (LICENSE, CITATION.cff, README), a ověř, že metadata jsou pravdivá — ne halucinovaná. Pak si polož otázku PI: „Najde a použije tenhle nástroj někdo bez mého vysvětlení?"</p>
+
+<p><strong>Konec jádra bloku C.</strong> Máš teď rámec vědecké kvality: reprodukovatelnost (C2), FAIR (C1), a jejich lidský protipól — deskilling (C3) a trust gap (C4). Umíš říct, co dělá vědecký software důvěryhodným a použitelným, a kde AI pomáhá i škodí.</p>
+
+<p><strong>Kam dál:</strong></p>
+<ul>
+  <li><em>C5 — Vědecký vs. produkční software</em> — kde jsou jiné nároky a proč. Dokončení bloku C.</li>
+  <li><em>A4 — Domain-Driven Design</em> — ubiquitous language a bounded contexts; propojení interoperability a metadat se sdíleným jazykem domény.</li>
+</ul>
+
+<!-- Footer -->
+<div class="lesson-nav">
+  <div>
+    <span class="nav-label">Předchozí lekce</span>
+    <a href="0012-reprodukovatelnost.html">← C2 — Reprodukovatelnost</a>
+  </div>
+  <div>
+    <span class="nav-label">Příští lekce</span>
+    <a href="#">C5 — Vědecký vs. produkční SW →</a>
+  </div>
+</div>
+
+<p style="margin-top:2rem; font-size:0.8rem; color: var(--muted); font-family: var(--font-sans);">
+  Máš otázku? Vrať se do Claude Code a napiš ji — agent je tvůj učitel a může rozvinout libovolný bod z této lekce.
+</p>
+
+</div>
+</div>
+
+<script>
+const scores = {};
+function check(qid, correct, okMsg, failMsg) {
+  const selected = document.querySelector(`input[name="${qid}"]:checked`);
+  const fb = document.getElementById(`${qid}-fb`);
+  if (!selected) {
+    fb.textContent = 'Vyber jednu odpověď.';
+    fb.className = 'quiz-feedback incorrect';
+    fb.style.display = 'block';
+    return;
+  }
+  const isCorrect = selected.value === correct;
+  fb.textContent = isCorrect ? '✓ ' + okMsg : '✗ ' + failMsg;
+  fb.className = 'quiz-feedback ' + (isCorrect ? 'correct' : 'incorrect');
+  fb.style.display = 'block';
+  scores[qid] = isCorrect;
+  document.querySelectorAll(`input[name="${qid}"]`).forEach(r => r.disabled = true);
+  document.querySelector(`#${qid} .quiz-check`).disabled = true;
+  if (Object.keys(scores).length === 4) {
+    const n = Object.values(scores).filter(Boolean).length;
+    const el = document.getElementById('quiz-score');
+    el.style.display = 'block';
+    if (n === 4) {
+      el.innerHTML = '<strong>✓ 4/4 — Výborně.</strong> Praktický úkol: projdi jeden repozitář podle F/A/I/R, nech agenta doplnit minimum (LICENSE, CITATION.cff, README), ověř pravdivost metadat. Pak otázka PI: „Najde a použije to někdo bez mého vysvětlení?"';
+    } else if (n >= 3) {
+      el.innerHTML = `<strong>${n}/4 — Téměř.</strong> Přečti znovu sekci 4 (FAIR ≠ Open) a sekci 3 (čtyři principy). Klíč: FAIR je o nalezitelnosti a přístupu, ne o ceně; a LICENSE je nepodkročitelné minimum — bez ní je kód defaultně zapovězený.`;
+    } else {
+      el.innerHTML = `<strong>${n}/4 — Vrať se.</strong> Přečti znovu sekci 3 (F/A/I/R) a sekci 4 (FAIR ≠ Open) — nejčastější a nejzávažnější nepochopení. Výsledek: open a FAIR jsou různé osy; cíl vědeckého softwaru je FAIR.`;
+    }
+  }
+}
+</script>
+</body>
+</html>

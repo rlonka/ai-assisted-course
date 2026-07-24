@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>B5 — Hooks | AI-assisted RSE</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    /* Comparison table */
+    .cmp {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.87rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .cmp th {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+      border-bottom: 2px solid var(--text);
+    }
+    .cmp td {
+      padding: 0.55rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    .cmp tr:last-child td { border-bottom: none; }
+    .cmp .col-name { font-family: var(--font-mono); font-size: 0.80rem; white-space: nowrap; }
+
+    /* In / Out lists */
+    .in-out {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .in-out-box {
+      border-radius: 4px;
+      padding: 0.8rem 1rem;
+      font-size: 0.86rem;
+    }
+    .in-box  { background: var(--green-light);  border: 1px solid #b7dfc8; }
+    .out-box { background: var(--red-light);     border: 1px solid #f9b8b8; }
+    .in-out-box h4 {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin: 0 0 0.5rem;
+      color: var(--muted);
+    }
+    .in-out-box ul { margin: 0; padding-left: 1.1rem; }
+    .in-out-box li { margin-bottom: 0.3rem; }
+    @media (max-width: 480px) { .in-out { grid-template-columns: 1fr; } }
+
+    /* Code example block */
+    .code-example {
+      background: #1a1a2e;
+      color: #e2e8f0;
+      border-radius: 6px;
+      padding: 1rem 1.2rem;
+      font-family: var(--font-mono);
+      font-size: 0.80rem;
+      line-height: 1.6;
+      margin: 1rem 0 1.5rem;
+      overflow-x: auto;
+    }
+    .code-example .cm-comment { color: #718096; }
+    .code-example .cm-heading { color: #90cdf4; font-weight: 700; }
+    .code-example .cm-key     { color: #fbd38d; }
+    .code-example .cm-val     { color: #c6f6d5; }
+    .code-example .cm-warn    { color: #fc8181; }
+
+    /* Event lifecycle */
+    .events {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      margin: 1.25rem 0 1.5rem;
+      max-width: 560px;
+    }
+    .ev-row {
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+      padding: 0.5rem 0.9rem;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      font-size: 0.84rem;
+    }
+    .ev-name {
+      font-family: var(--font-mono);
+      font-size: 0.79rem;
+      color: var(--accent);
+      min-width: 9.5rem;
+    }
+    .ev-desc { color: var(--muted); font-size: 0.82rem; }
+    .ev-row.block { border-color: #f9b8b8; background: var(--red-light); }
+    .ev-row.block .ev-name { color: var(--red); }
+  </style>
+</head>
+<body>
+<div class="page">
+<div class="content">
+
+<!-- Header -->
+<header class="lesson-header">
+  <div class="lesson-meta">
+    <span class="tag">B5</span>
+    <span class="tag">Týden 3</span>
+    Blok B: Agentní paradigma
+  </div>
+  <h1>Hooks</h1>
+  <p class="lesson-subtitle">Deterministické guardrails — co se musí (ne)stát vždy, bez ohledu na to, co agent chce. Skill vyvoláš ty; hook se spustí sám.</p>
+</header>
+
+<!-- Progress -->
+<div class="progress-bar">
+  <div class="progress-dot done"    title="A3 — No Silver Bullet"></div>
+  <div class="progress-dot done"    title="B1 — Harness vs. Guardrails"></div>
+  <div class="progress-dot done"    title="A1 — TDD"></div>
+  <div class="progress-dot done"    title="B2 — Rámec pěti otázek"></div>
+  <div class="progress-dot done"    title="B3 — Memory a CLAUDE.md"></div>
+  <div class="progress-dot done"    title="B4 — Skills a slash commands"></div>
+  <div class="progress-dot current" title="B5 — Hooks (aktuální)"></div>
+  <div class="progress-dot"         title="B6 — MCP, dále C-blok"></div>
+</div>
+
+<!-- 1. Jádro -->
+<h2>1 — Jádro</h2>
+
+<p>CLAUDE.md řekne agentovi "necommituj přímo do main". Agent to většinou poslechne — ale prochází to modelem, a model je pravděpodobnostní. Někdy poslechne, někdy ne. Když <em>potřebuješ jistotu</em>, že se něco nestane, není správná vrstva instrukce. Je to <strong>hook</strong>.</p>
+
+<p>Hook je shell skript, který harness spustí <em>automaticky</em> při určité události — než agent zavolá nástroj, poté co upraví soubor, když session končí. Neprochází modelem. Je to obyčejný kód: spustí se, vrátí exit code, a podle něj se akce buď povolí, nebo <strong>zablokuje</strong>. Vrstva 3 rámce pěti otázek: <em>"Jaké guardrails jsou deterministické?"</em></p>
+
+<div class="callout">
+  <div class="callout-label">Jedno pravidlo</div>
+  <p>Když spolehlivost nesmí záviset na tom, co si model "myslí", je to hook. Hook nežádá agenta, aby se choval správně — <em>fyzicky mu nedovolí</em> chovat se špatně.</p>
+</div>
+
+<!-- 2. Hook vs skill -->
+<h2>2 — Hook vs. skill: kdo drží spoušť</h2>
+
+<p>Skill a hook mohou obsahovat tentýž postup. Liší se v jediné, ale zásadní věci: <strong>kdo je spouští a jestli se to dá obejít.</strong></p>
+
+<table class="cmp">
+  <tr>
+    <th>&nbsp;</th>
+    <th>Skill (harness)</th>
+    <th>Hook (guardrail)</th>
+  </tr>
+  <tr>
+    <td class="col-name">Kdo spouští</td>
+    <td>Ty, přes <code>/název</code></td>
+    <td>Harness, automaticky při události</td>
+  </tr>
+  <tr>
+    <td class="col-name">Prochází modelem?</td>
+    <td>Ano — je to prompt</td>
+    <td>Ne — je to shell skript</td>
+  </tr>
+  <tr>
+    <td class="col-name">Dá se zapomenout?</td>
+    <td>Ano — musíš ho vyvolat</td>
+    <td>Ne — spustí se vždy</td>
+  </tr>
+  <tr>
+    <td class="col-name">Umí zablokovat akci?</td>
+    <td>Ne — jen navrhuje postup</td>
+    <td>Ano — exit code 2 akci zastaví</td>
+  </tr>
+  <tr>
+    <td class="col-name">Charakter</td>
+    <td>Pozitivní: „udělej tohle"</td>
+    <td>Negativní: „tohle se nesmí"</td>
+  </tr>
+</table>
+
+<div class="callout amber">
+  <div class="callout-label">Klíčové rozlišení</div>
+  <p>Skill je <em>pozitivní architektura</em> — dáváš agentovi schopnost něco udělat na povel. Hook je <em>negativní architektura</em> — definuješ hranici, kterou agent nemůže překročit, ať chce nebo ne. Skill rozšiřuje; hook omezuje. Zpět k B1: harness vs. guardrails.</p>
+</div>
+
+<!-- 3. Anatomie hooku -->
+<h2>3 — Anatomie hooku</h2>
+
+<p>Hook se konfiguruje v <code>settings.json</code>: navážeš shell příkaz na <em>událost</em>. Nejdůležitější události v životním cyklu:</p>
+
+<div class="events">
+  <div class="ev-row block">
+    <span class="ev-name">PreToolUse</span>
+    <span class="ev-desc">Než agent zavolá nástroj — může akci zablokovat (exit 2)</span>
+  </div>
+  <div class="ev-row">
+    <span class="ev-name">PostToolUse</span>
+    <span class="ev-desc">Poté co nástroj doběhl — např. spustit formatter po editaci</span>
+  </div>
+  <div class="ev-row">
+    <span class="ev-name">UserPromptSubmit</span>
+    <span class="ev-desc">Když odešleš prompt — validace nebo doplnění kontextu</span>
+  </div>
+  <div class="ev-row">
+    <span class="ev-name">Stop</span>
+    <span class="ev-desc">Když agent končí odpověď — např. ověřit, že testy jsou zelené</span>
+  </div>
+  <div class="ev-row">
+    <span class="ev-name">SessionStart / SessionEnd</span>
+    <span class="ev-desc">Začátek a konec session — setup, úklid, log</span>
+  </div>
+</div>
+
+<p>Hook dostane na <code>stdin</code> JSON s daty události (jaký nástroj, s jakými argumenty). Rozhodne se a vrátí <strong>exit code</strong>. Pro <code>PreToolUse</code> platí jednoduché pravidlo: <strong>exit 2 = blokuj</strong>, cokoliv jiného = povol. Text na <code>stderr</code> se ukáže agentovi jako důvod.</p>
+
+<div class="code-example">
+<span class="cm-comment"># .claude/settings.json — zablokuj přímý commit do main</span>
+<span class="cm-heading">{</span>
+  <span class="cm-key">"hooks"</span>: {
+    <span class="cm-key">"PreToolUse"</span>: [{
+      <span class="cm-key">"matcher"</span>: <span class="cm-val">"Bash"</span>,
+      <span class="cm-key">"hooks"</span>: [{
+        <span class="cm-key">"type"</span>: <span class="cm-val">"command"</span>,
+        <span class="cm-key">"command"</span>: <span class="cm-val">".claude/hooks/guard-main.sh"</span>
+      }]
+    }]
+  }
+<span class="cm-heading">}</span>
+
+<span class="cm-comment"># .claude/hooks/guard-main.sh</span>
+<span class="cm-comment">#!/usr/bin/env bash</span>
+cmd=$(jq -r '.tool_input.command')
+branch=$(git branch --show-current)
+<span class="cm-warn">if [[ "$branch" == "main" && "$cmd" == *"git commit"* ]]; then</span>
+  <span class="cm-warn">echo "Zakázáno: commit přímo do main. Založ větev." &gt;&amp;2</span>
+  <span class="cm-warn">exit 2</span>   <span class="cm-comment"># exit 2 = zablokuj akci</span>
+fi
+exit 0     <span class="cm-comment"># cokoliv jiného = povol</span>
+</div>
+
+<p>Žádná interpretace. Žádné "většinou". Skript vidí commit do main, vrátí 2, akce se nestane. Vždy, deterministicky.</p>
+
+<!-- 4. Kdy použít hook -->
+<h2>4 — Kdy použít hook (a kdy ne)</h2>
+
+<div class="in-out">
+  <div class="in-out-box in-box">
+    <h4>Použij hook ✓</h4>
+    <ul>
+      <li>Kritický invariant, který nesmí selhat (žádný commit do main)</li>
+      <li>Něco se musí stát <em>automaticky</em> (formátovat po každé editaci)</li>
+      <li>Bezpečnostní hranice (nikdy nemazat <code>data/</code>)</li>
+      <li>Ověření na konci (testy musí být zelené, než agent skončí)</li>
+      <li>Spolehlivost nesmí záviset na tvé paměti ani na modelu</li>
+    </ul>
+  </div>
+  <div class="in-out-box out-box">
+    <h4>Nedělej z toho hook ✗</h4>
+    <ul>
+      <li>Postup, který chceš spouštět, jen když se rozhodneš → skill</li>
+      <li>Znalost projektu → CLAUDE.md</li>
+      <li>Preference, kde občasná odchylka nevadí → CLAUDE.md</li>
+      <li>Něco pomalého, co by blokovalo každou akci</li>
+      <li>Pravidlo, které se často mění a experimentuješ s ním</li>
+    </ul>
+  </div>
+</div>
+
+<p>Hook je nejsilnější a zároveň nejdražší vrstva: běží při každé události, na kterou ho navážeš, a když je pomalý nebo chybný, brzdí nebo blokuje veškerou práci. Proto ho rezervuj pro to, co se opravdu <em>musí</em> vynutit — ne pro to, co by bylo hezké mít.</p>
+
+<!-- 5. Deterministický vs probabilistický -->
+<h2>5 — Proč na tom záleží: deterministický vs. probabilistický</h2>
+
+<p>Tohle je jádro celé lekce. CLAUDE.md, skill i prompt sdílejí jednu vlastnost: <strong>prochází modelem</strong>. Model je pravděpodobnostní — instrukci splní s vysokou pravděpodobností, ne s jistotou. Pro 95 % věcí to stačí. Pro zbylých 5 % — data, bezpečnost, nevratné akce — 95 % není dost.</p>
+
+<p>Hook tenhle strop probourá, protože <em>neprochází modelem</em>. Je to shell skript. Buď se spustí a vrátí 2, nebo ne. Není tam žádná interpretace, žádná teplota, žádné "agent to tentokrát pochopil jinak". Determinismus je celá pointa.</p>
+
+<div class="callout green">
+  <div class="callout-label">Mentální model</div>
+  <p>Ptej se: „Co se stane, když model tuhle instrukci v jednom z tisíce běhů ignoruje?" Když je odpověď „nic hrozného" → stačí CLAUDE.md. Když je odpověď „smazaná data / rozbitý main / uniklý token" → potřebuješ hook. Determinismus kupuješ přesně tam, kde je selhání nepřijatelné.</p>
+</div>
+
+<!-- 6. Historický kontext -->
+<h2>6 — Historický kontext</h2>
+
+<p>Hooks nejsou nic nového — je to CI/CD tradice přenesená k agentovi:</p>
+
+<ul>
+  <li><strong>Git hooks (pre-commit, pre-push).</strong> Přesně stejný nápad: skript, který se spustí při události a může akci zablokovat. Claude Code hook je git hook pro akce agenta.</li>
+  <li><strong>CI/CD pipelines (Jenkins, GitHub Actions).</strong> Deterministické brány: testy neprošly → merge se nestane. Žádné „většinou". Hook je tatáž brána, jen o krok dřív — u samotné akce.</li>
+  <li><strong>Linters a pre-commit frameworky.</strong> Automatická vynucená pravidla, ne doporučení. Vývojáři je znají desítky let.</li>
+  <li><strong>Assertions a design by contract.</strong> Invariant, který se ověřuje za běhu a při porušení zastaví program — ne se jen doufá, že platí.</li>
+</ul>
+
+<p>Pro publikum je to úleva: guardrails znají z CI. Nová je jen věc, kterou hlídají — akce agenta místo commitu člověka.</p>
+
+<!-- 7. Tři příklady -->
+<h2>7 — Tři příklady</h2>
+
+<div class="examples">
+  <div class="example-card">
+    <div class="example-label">Vědec-kodér</div>
+    <p>Pracuje s cennými naměřenými daty v <code>data/raw/</code>, která nejde znovu pořídit. Do CLAUDE.md napsal „nikdy neupravuj raw data" — a jednou to agent přesto udělal při „úklidu". Teď má <code>PreToolUse</code> hook: jakýkoliv zápis nebo smazání pod <code>data/raw/</code> → exit 2. Instrukce se dá ignorovat; hook ne. Data jsou fyzicky chráněná.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">RSE vývojář</div>
+    <p>Tým vyžaduje, aby veškerý Python kód prošel <code>ruff</code> a testy před koncem každé úlohy. Místo aby to připomínal v každém promptu, má dva hooky: <code>PostToolUse</code> spustí formatter po každé editaci, <code>Stop</code> hook nepustí agenta „hotovo", dokud <code>pytest</code> není zelený. Kvalita se nevynucuje disciplínou — vynucuje se harnessem.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">Manažer / PI</div>
+    <p>Řeší otázku od security týmu: „Jak zaručíte, že agent nepushne tokeny do repozitáře?" Odpověď není „řekli jsme mu to". Je to <code>PreToolUse</code> hook, který skenuje diff na secrets a zablokuje commit. Hook je auditovatelný artefakt — skript v repu, který jde ukázat auditorovi. Instrukce v promptu se auditovat nedá; shell skript s exit code ano.</p>
+  </div>
+</div>
+
+<!-- 8. Propojení -->
+<h2>8 — Propojení na ostatní lekce</h2>
+
+<ul>
+  <li><strong>B1 — Harness vs. Guardrails:</strong> Hook JE guardrail — negativní architektura. Tahle lekce je konkrétní implementace toho, co B1 zavedla teoreticky. Skill (B4) je harness, hook je guardrail; společně tvoří obě strany.</li>
+  <li><strong>B4 — Skills:</strong> Ostrá hranice se láme tady. Tentýž postup: jako skill ho vyvoláš ty (dá se zapomenout), jako hook se spustí sám (nedá se obejít). Rozdíl není v postupu — je v tom, kdo drží spoušť.</li>
+  <li><strong>B3 — Memory a CLAUDE.md:</strong> CLAUDE.md instrukci model interpretuje; hook ji vynutí. Pro kritické invarianty nepatří do CLAUDE.md — patří do hooku. Když agent instrukci z CLAUDE.md ignoruje, je to signál povýšit ji na hook.</li>
+  <li><strong>A1 — TDD:</strong> „Testy musí být zelené, než skončíš" je <code>Stop</code> hook. Red-green disciplína vynucená harnessem, ne dobrou vůlí.</li>
+</ul>
+
+<!-- 9. Nejčastější nepochopení -->
+<h2>9 — Nejčastější nepochopení</h2>
+
+<div class="callout amber">
+  <div class="callout-label">Nepochopení 1</div>
+  <p>„Silnou instrukci v CLAUDE.md („NIKDY nedělej X!!!") agent poslechne stejně spolehlivě jako hook."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>Velká písmena a vykřičníky mění pravděpodobnost, ne jistotu. Instrukce pořád prochází modelem. Hook neprochází — je to kód s exit code. Rozdíl mezi „skoro vždy" a „vždy" je přesně ten rozdíl, kvůli kterému hooky existují. Pro kritické věci není „skoro" dost.</p>
+</div>
+
+<div class="callout amber">
+  <div class="callout-label">Nepochopení 2</div>
+  <p>„Hooky jsou pokročilá věc — přidám jich radši spoustu, ať jsem v bezpečí."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>Každý hook běží při své události — a když je pomalý nebo chybný, brzdí nebo blokuje veškerou práci. Špatný hook je horší než žádný: tiše rozbije workflow a těžko se hledá. Měj málo hooků, které hlídají to, co se opravdu nesmí stát. Guardrail není dekorace.</p>
+</div>
+
+<div class="callout amber">
+  <div class="callout-label">Nepochopení 3</div>
+  <p>„Hook je jen automaticky spuštěný skill."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>Skill radí postup agentovi (prochází modelem, agent ho může upravit). Hook je mimo model — vykoná se přesně tak, jak je napsaný, a umí akci <em>zablokovat</em>, což skill neumí. Automatizace není jediný rozdíl; determinismus a schopnost blokovat jsou to podstatné.</p>
+</div>
+
+<!-- 10. Spicy teze -->
+<h2>10 — Spicy teze</h2>
+
+<div class="spicy">
+  <p>Když někdo řekne „nemůžu agentovi věřit, že nesmaže něco důležitého" — nemá problém s AI. Má problém s tím, že jeho kritické invarianty nikdy nebyly vynucené, jen doufané. Agent tu díru jen zviditelnil. Zralý tým své hranice nepíše do promptu jako prosbu — zadrátuje je jako guardrail. Důvěra není strategie; determinismus ano.</p>
+</div>
+
+<!-- 11. Primární zdroje -->
+<h2>11 — Primární zdroje</h2>
+
+<ul class="resource-list">
+  <li>
+    <a href="https://docs.anthropic.com/en/docs/claude-code/hooks" target="_blank">Claude Code — Hooks</a>
+    <span class="why">Proč: Oficiální referenční dokumentace. Přečti celou stránku (15 min) — všechny události, formát JSON na stdin, význam exit codes, matcher pro nástroje. Nutné minimum pro tuto lekci.</span>
+  </li>
+  <li>
+    <a href="https://docs.anthropic.com/en/docs/claude-code/hooks-guide" target="_blank">Claude Code — Hooks Guide (praktické příklady)</a>
+    <span class="why">Proč: Konkrétní recepty — formátování po editaci, blokování akcí, logování. Ukazuje vzory, které přímo zkopíruješ. Dobré jako druhý zdroj po referenci.</span>
+  </li>
+  <li>
+    <a href="https://pre-commit.com/" target="_blank">pre-commit framework (git hooks)</a>
+    <span class="why">Proč: Historická kotva. Git pre-commit hooks jsou přímý předchůdce — stejný nápad (skript při události, který blokuje) aplikovaný na commity místo akcí agenta. Přečti úvodní stránku; princip je identický.</span>
+  </li>
+</ul>
+
+<!-- 12. Feynmanovo cvičení -->
+<h2>12 — Feynmanovo cvičení</h2>
+
+<div class="quiz" id="quiz-main">
+  <div class="quiz-header">Feynmanův test — Hooks</div>
+
+  <!-- Q1 -->
+  <div class="quiz-question" id="q1">
+    <div class="quiz-q">1. Do CLAUDE.md jsi napsal „NIKDY nemaž soubory v data/raw/". Agent to přesto jednou udělal. Jaké je správné řešení?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q1" value="a"> Zvýraznit instrukci velkými písmeny a vykřičníky, aby ji agent bral vážněji</label></li>
+      <li><label><input type="radio" name="q1" value="b"> Přesunout ji do PreToolUse hooku — ten neprochází modelem a akci deterministicky zablokuje (exit 2)</label></li>
+      <li><label><input type="radio" name="q1" value="c"> Udělat z toho skill /protect-data a vyvolávat ho před rizikovou prací</label></li>
+      <li><label><input type="radio" name="q1" value="d"> Přidat instrukci taky do .claude/memory/, ať má vyšší prioritu</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q1','b','Přesně. CLAUDE.md prochází modelem — je pravděpodobnostní. Když je selhání nepřijatelné (nevratná ztráta dat), potřebuješ determinismus: hook, který mimo model akci zablokuje. Velká písmena mění pravděpodobnost, ne jistotu.','Ne. Cokoliv, co prochází modelem (CLAUDE.md, memory, i skill), je pravděpodobnostní. Pro nevratnou ztrátu dat potřebuješ deterministickou vrstvu — PreToolUse hook, který akci zablokuje exit codem 2.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q1-fb"></div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="quiz-question" id="q2">
+    <div class="quiz-q">2. Co je pravý rozdíl mezi skillem a hookem, když oba obsahují tentýž postup?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q2" value="a"> Hook je rychlejší, protože je napsaný v shellu, kdežto skill v přirozeném jazyce</label></li>
+      <li><label><input type="radio" name="q2" value="b"> Skill vyvoláš ty a prochází modelem (dá se obejít); hook se spustí automaticky, neprochází modelem a umí akci zablokovat</label></li>
+      <li><label><input type="radio" name="q2" value="c"> Žádný podstatný rozdíl — hook je jen skill spuštěný na pozadí</label></li>
+      <li><label><input type="radio" name="q2" value="d"> Skill umí blokovat akce, hook jen loguje</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q2','b','Správně. Není to o rychlosti ani o jazyce. Skill je harness — vyvoláš ho ty, prochází modelem, dá se zapomenout. Hook je guardrail — spustí se sám, mimo model, a umí akci deterministicky zastavit. Kdo drží spoušť a jestli se to dá obejít.','Ne. Rozdíl není v rychlosti ani že by hook byl „skill na pozadí". Skill vyvoláš ty a prochází modelem (lze obejít); hook se spustí sám, mimo model, a umí akci zablokovat (exit 2). Harness vs. guardrail.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q2-fb"></div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="quiz-question" id="q3">
+    <div class="quiz-q">3. Chceš, aby se po každé editaci Python souboru automaticky spustil formatter. Kam to patří?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q3" value="a"> PostToolUse hook — spustí se automaticky poté, co nástroj (editace) doběhl</label></li>
+      <li><label><input type="radio" name="q3" value="b"> Skill /format — vyvoláš ho, když chceš zformátovat</label></li>
+      <li><label><input type="radio" name="q3" value="c"> CLAUDE.md — instrukce „vždy formátuj po editaci"</label></li>
+      <li><label><input type="radio" name="q3" value="d"> PreToolUse hook — zablokuješ editaci, dokud není zformátováno</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q3','a','Přesně. „Automaticky po každé editaci" = událost PostToolUse (nástroj doběhl). Skill by ses musel vyvolat ručně, CLAUDE.md prochází modelem a občas se přeskočí. PostToolUse hook to udělá vždy, sám.','Ne. „Automaticky po každé editaci" je událost PostToolUse — spustí se poté, co editace doběhla. Skill vyvoláváš ručně; CLAUDE.md je pravděpodobnostní. PreToolUse je před akcí, ne po ní.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q3-fb"></div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="quiz-question" id="q4">
+    <div class="quiz-q">4. Security tým se ptá PI: „Jak zaručíte, že agent nepushne token do repa?" Která odpověď je technicky správná?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q4" value="a"> „Napsali jsme mu do CLAUDE.md, že to nesmí, a je to spolehlivý model"</label></li>
+      <li><label><input type="radio" name="q4" value="b"> „PreToolUse hook skenuje diff na secrets a zablokuje commit — je to auditovatelný skript v repu, ne prosba v promptu"</label></li>
+      <li><label><input type="radio" name="q4" value="c"> „Agent je trénovaný na bezpečnost, takže tokeny sám nikdy nepushne"</label></li>
+      <li><label><input type="radio" name="q4" value="d"> „Kontrolujeme to ručně v code review po každém commitu"</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q4','b','Výborně. Guardrail je deterministický a auditovatelný artefakt — skript s exit codem, který jde ukázat auditorovi. Instrukce v promptu ani „model je spolehlivý" nejsou záruka; jsou to naděje. Bezpečnostní hranice se drátuje, nedoufá.','Ne. Instrukce, důvěra v model ani ruční review po commitu nejsou deterministická záruka (a token už mezitím unikl). Správná odpověď je hook: PreToolUse skener, který commit zablokuje — auditovatelný kód, ne prosba.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q4-fb"></div>
+  </div>
+
+  <div class="quiz-score" id="quiz-score"></div>
+</div>
+
+<!-- 13. Co dál -->
+<h2>13 — Co dál</h2>
+
+<p><strong>Co musíš znát před touto lekcí:</strong></p>
+<ul>
+  <li><a href="0002-harness-vs-guardrails.html">B1 — Harness vs. Guardrails</a> — hook je konkrétní guardrail. Bez rozlišení pozitivní/negativní architektury tahle lekce nedává smysl.</li>
+  <li><a href="0006-skills-a-slash-commands.html">B4 — Skills</a> — skill je protipól hooku. Rozdíl „kdo drží spoušť" je jádro obou lekcí.</li>
+</ul>
+
+<p><strong>Praktický úkol (25 minut):</strong> Vyber jeden kritický invariant ve svém projektu — něco, co se nesmí stát (smazání dat, commit do main, push tokenu). Napiš minimální <code>PreToolUse</code> hook, který to zablokuje: shell skript, který přečte JSON ze stdin, zkontroluje podmínku a vrátí exit 2. Otestuj, že agenta opravdu zastaví. Pak si zkus rozdíl: dej tentýž postup do CLAUDE.md a pozoruj, že „skoro vždy" není „vždy".</p>
+
+<p><strong>Příští lekce:</strong></p>
+<ul>
+  <li><em>B6 — MCP</em> — vrstva 4 rámce pěti otázek. Jak dát agentovi přístup k externím nástrojům a datům (databáze, API, cluster) standardizovaným protokolem. Memory je znalost, skill je postup, hook je hranice — MCP je dosah.</li>
+</ul>
+
+<p><strong>Propojení do curricula:</strong></p>
+<ul>
+  <li><em>C2 — Reprodukovatelnost</em> — hooky jsou způsob, jak vynutit reprodukovatelnost mechanicky: Stop hook, který ověří, že výsledek jde zregenerovat.</li>
+  <li><em>C4 — Trust gap v AI kódu</em> — guardrails jsou přímá odpověď na „1,7× více issues v AI kódu". Deterministická brána chytí to, co model pustí.</li>
+</ul>
+
+<!-- Footer -->
+<div class="lesson-nav">
+  <div>
+    <span class="nav-label">Předchozí lekce</span>
+    <a href="0006-skills-a-slash-commands.html">← B4 — Skills a slash commands</a>
+  </div>
+  <div>
+    <span class="nav-label">Příští lekce</span>
+    <a href="0008-mcp.html">B6 — MCP →</a>
+  </div>
+</div>
+
+<p style="margin-top:2rem; font-size:0.8rem; color: var(--muted); font-family: var(--font-sans);">
+  Máš otázku? Vrať se do Claude Code a napiš ji — agent je tvůj učitel a může rozvinout libovolný bod z této lekce.
+</p>
+
+</div>
+</div>
+
+<script>
+const scores = {};
+function check(qid, correct, okMsg, failMsg) {
+  const selected = document.querySelector(`input[name="${qid}"]:checked`);
+  const fb = document.getElementById(`${qid}-fb`);
+  if (!selected) {
+    fb.textContent = 'Vyber jednu odpověď.';
+    fb.className = 'quiz-feedback incorrect';
+    fb.style.display = 'block';
+    return;
+  }
+  const isCorrect = selected.value === correct;
+  fb.textContent = isCorrect ? '✓ ' + okMsg : '✗ ' + failMsg;
+  fb.className = 'quiz-feedback ' + (isCorrect ? 'correct' : 'incorrect');
+  fb.style.display = 'block';
+  scores[qid] = isCorrect;
+  document.querySelectorAll(`input[name="${qid}"]`).forEach(r => r.disabled = true);
+  document.querySelector(`#${qid} .quiz-check`).disabled = true;
+  if (Object.keys(scores).length === 4) {
+    const n = Object.values(scores).filter(Boolean).length;
+    const el = document.getElementById('quiz-score');
+    el.style.display = 'block';
+    if (n === 4) {
+      el.innerHTML = '<strong>✓ 4/4 — Výborně.</strong> Praktický úkol: vyber jeden kritický invariant a napiš PreToolUse hook, který ho zablokuje (exit 2). Otestuj, že agenta opravdu zastaví — a porovnej s toutéž instrukcí v CLAUDE.md.';
+    } else if (n >= 3) {
+      el.innerHTML = `<strong>${n}/4 — Téměř.</strong> Přečti znovu sekci 2 (hook vs. skill) a sekci 5 (deterministický vs. probabilistický). Klíč: hook neprochází modelem, spustí se sám a umí zablokovat akci (exit 2). To je celý rozdíl.`;
+    } else {
+      el.innerHTML = `<strong>${n}/4 — Vrať se.</strong> Přečti znovu sekci 1 a 5 — proč je hook deterministický a čím se liší od instrukce, která prochází modelem. Pak sekci 3 — události a exit codes. Výsledek: hook je guardrail, ne prosba.`;
+    }
+  }
+}
+</script>
+</body>
+</html>

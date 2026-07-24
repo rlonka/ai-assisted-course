@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A2 — Refactoring | AI-assisted RSE</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    /* Comparison table */
+    .cmp {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.87rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .cmp th {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+      border-bottom: 2px solid var(--text);
+    }
+    .cmp td {
+      padding: 0.55rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    .cmp tr:last-child td { border-bottom: none; }
+
+    /* Two hats */
+    .hats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.8rem;
+      margin: 1.25rem 0 1.5rem;
+    }
+    .hat {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.9rem 1rem;
+      background: var(--bg-card);
+    }
+    .hat .h-ico { font-size: 1.4rem; }
+    .hat h4 { font-family: var(--font-sans); margin: 0.3rem 0 0.4rem; font-size: 0.9rem; }
+    .hat p { margin: 0; font-size: 0.82rem; color: var(--muted); line-height: 1.45; }
+    .hat.add  { border-color: #63b3ed; background: #ebf8ff; }
+    .hat.ref  { border-color: #68d391; background: #f0fff4; }
+    .hats-warn { text-align: center; font-family: var(--font-sans); font-size: 0.83rem; color: var(--red); margin: -0.6rem 0 1.5rem; font-weight: 600; }
+    @media (max-width: 480px) { .hats { grid-template-columns: 1fr; } }
+
+    /* Code before/after */
+    .code-example {
+      background: #1a1a2e;
+      color: #e2e8f0;
+      border-radius: 6px;
+      padding: 1rem 1.2rem;
+      font-family: var(--font-mono);
+      font-size: 0.80rem;
+      line-height: 1.6;
+      margin: 1rem 0 0.6rem;
+      overflow-x: auto;
+    }
+    .code-example .cm-comment { color: #718096; }
+    .code-example .cm-bad  { color: #fc8181; }
+    .code-example .cm-good { color: #90cdf4; }
+    .code-example .cm-key  { color: #c6f6d5; }
+    .code-cap { font-size: 0.78rem; color: var(--muted); margin: 0 0 1.5rem; font-family: var(--font-sans); }
+
+    /* Named refactorings */
+    .named {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      margin: 1rem 0 1.5rem;
+      max-width: 560px;
+    }
+    .nref {
+      display: flex;
+      align-items: baseline;
+      gap: 0.8rem;
+      padding: 0.5rem 0.9rem;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      font-size: 0.84rem;
+    }
+    .nref-name { font-family: var(--font-mono); font-size: 0.80rem; color: var(--accent); min-width: 9rem; }
+    .nref-desc { color: var(--muted); font-size: 0.82rem; }
+
+    /* In / Out */
+    .in-out {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .in-out-box { border-radius: 4px; padding: 0.8rem 1rem; font-size: 0.86rem; }
+    .in-box  { background: var(--green-light);  border: 1px solid #b7dfc8; }
+    .out-box { background: var(--red-light);     border: 1px solid #f9b8b8; }
+    .in-out-box h4 { font-family: var(--font-sans); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; margin: 0 0 0.5rem; color: var(--muted); }
+    .in-out-box ul { margin: 0; padding-left: 1.1rem; }
+    .in-out-box li { margin-bottom: 0.3rem; }
+    @media (max-width: 480px) { .in-out { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<div class="page">
+<div class="content">
+
+<!-- Header -->
+<header class="lesson-header">
+  <div class="lesson-meta">
+    <span class="tag">A2</span>
+    <span class="tag">Týden 7</span>
+    Blok A: Klasické disciplíny
+  </div>
+  <h1>Refactoring</h1>
+  <p class="lesson-subtitle">Změna struktury kódu beze změny chování — v malých bezpečných krocích. Disciplína, kterou AI zrychluje i ohrožuje zároveň.</p>
+</header>
+
+<!-- Progress -->
+<div class="progress-bar">
+  <div class="progress-dot done"    title="A3 — No Silver Bullet"></div>
+  <div class="progress-dot done"    title="A1 — TDD"></div>
+  <div class="progress-dot done"    title="B1–B6 + Subagents — blok B"></div>
+  <div class="progress-dot done"    title="C1–C5 — blok C"></div>
+  <div class="progress-dot current" title="A2 — Refactoring (aktuální)"></div>
+  <div class="progress-dot"         title="A4 — Domain-Driven Design"></div>
+  <div class="progress-dot"         title="A5 — Agile Manifesto"></div>
+  <div class="progress-dot"         title="Blok D — HPC / praxe"></div>
+</div>
+
+<!-- 1. Jádro -->
+<h2>1 — Jádro</h2>
+
+<p><strong>Refactoring</strong> je změna vnitřní struktury kódu <em>beze změny jeho vnějšího chování</em>, prováděná v malých, ověřitelných krocích. Cíl není přidat funkci ani opravit chybu — cíl je udělat kód srozumitelnějším, aby další změna byla levná. Je to disciplína bezpečné změny.</p>
+
+<p>Dvě slova nesou celou váhu: <em>„beze změny chování"</em> a <em>„malé kroky"</em>. Když změníš chování, není to refactoring — je to nová funkce nebo oprava. Když uděláš velký skok, není to bezpečné — je to sázka. Refactoring je přesně ten úzký pruh, kde měníš tvar a garantuješ, že se výstup nezměnil. A právě tuhle garanci AI umí rozmělnit rychleji, než se stačíš rozkoukat.</p>
+
+<div class="callout">
+  <div class="callout-label">Jedno pravidlo</div>
+  <p>Refactoring bez ověření zachovaného chování není refactoring — je to přepis s nadějí. Bezpečnost nepochází z toho, že „to vypadá ekvivalentně", ale z testu, který dokáže, že chování zůstalo stejné.</p>
+</div>
+
+<!-- 2. Co to je a co není -->
+<h2>2 — Refactoring vs. přepis</h2>
+
+<p>Nejčastější záměna není refactoring vs. nová funkce — to je vidět. Zákeřnější je refactoring vs. <em>přepis</em>. Vypadají podobně (mění kód), ale jsou to protiklady v riziku.</p>
+
+<table class="cmp">
+  <tr>
+    <th>&nbsp;</th>
+    <th>Refactoring</th>
+    <th>Přepis (rewrite)</th>
+  </tr>
+  <tr>
+    <td>Chování</td>
+    <td>Zachované, ověřené testy</td>
+    <td>Rekonstruované z paměti — snadno se ztratí</td>
+  </tr>
+  <tr>
+    <td>Kroky</td>
+    <td>Malé, každý ověřitelný</td>
+    <td>Velký skok, ověřitelný až na konci (nebo nikdy)</td>
+  </tr>
+  <tr>
+    <td>Riziko</td>
+    <td>Nízké — vždy zpět o krok</td>
+    <td>Vysoké — vše nebo nic</td>
+  </tr>
+  <tr>
+    <td>Znalost v kódu</td>
+    <td>Zůstává, jen se přeskládá</td>
+    <td>Zahodí se — včetně nezapsaných edge cases</td>
+  </tr>
+</table>
+
+<p>Přepis má své místo — někdy je kód opravdu neudržitelný. Ale přepis, který <em>omylem</em> spustíš místo refactoringu, zahodí roky zapečených znalostí (ten podivný <code>if</code>, co ošetřuje reálný okrajový případ). Refactoring tuhle znalost zachovává, protože se jí nikdy nepustí — jen ji přeskládá do lepšího tvaru.</p>
+
+<!-- 3. Dva klobouky -->
+<h2>3 — Dva klobouky</h2>
+
+<p>Kent Beck: v každém okamžiku máš na hlavě <em>právě jeden</em> ze dvou klobouků. Buď přidáváš funkci (mění chování, testy přibývají), nebo refaktoruješ (chování stejné, testy beze změny procházejí). Nikdy oba naráz.</p>
+
+<div class="hats">
+  <div class="hat add">
+    <div class="h-ico">🎩</div>
+    <h4>Klobouk „přidávám funkci"</h4>
+    <p>Měníš chování. Píšeš nový test (červený → zelený). Nešaháš na strukturu okolo.</p>
+  </div>
+  <div class="hat ref">
+    <div class="h-ico">🧢</div>
+    <h4>Klobouk „refaktoruji"</h4>
+    <p>Chování stejné. Existující testy zůstávají zelené. Nepřidáváš chování.</p>
+  </div>
+</div>
+<p class="hats-warn">⚠ Míchat oba klobouky = když se rozbije test, nevíš, jestli za to může nová funkce, nebo přeskládání.</p>
+
+<p>Proč na tom tolik záleží? Když refaktoruješ a zároveň měníš chování a něco praskne, ztratil jsi diagnostickou sílu — nevíš, která z těch dvou věcí to způsobila. Oddělené klobouky znamenají, že při refactoringu je <em>každý</em> červený test jednoznačný signál „rozbil jsi to, vrať krok". Tuhle jednoznačnost AI ráda smaže: bez pokynu ti s chutí přeskládá strukturu <em>a</em> přidá chování v jednom diffu.</p>
+
+<!-- 4. Bezpečnost -->
+<h2>4 — Odkud pochází bezpečnost</h2>
+
+<p>Refactoring je „bezpečná" změna ze dvou konkrétních důvodů — a oba musí platit, jinak bezpečnost mizí:</p>
+
+<ol>
+  <li><strong>Malé kroky.</strong> Každá transformace je tak malá, že se vejde do hlavy a jde okamžitě vrátit. Ne „přepíšu modul", ale „přejmenuji proměnnou", „vytáhnu metodu".</li>
+  <li><strong>Testy jako záchranná síť.</strong> Po každém kroku spustíš testy. Zelené = chování zachováno, pokračuj. Červené = tenhle krok to rozbil, vrať ho. Bez testů refaktoruješ poslepu.</li>
+</ol>
+
+<p>Nejběžnější bezpečné transformace mají jména (Fowlerův katalog) — a právě proto, že jsou pojmenované a mechanické, je AI (i IDE) umí spolehlivě:</p>
+
+<div class="named">
+  <div class="nref"><span class="nref-name">Extract Method</span><span class="nref-desc">Vytáhni blok kódu do pojmenované funkce</span></div>
+  <div class="nref"><span class="nref-name">Rename</span><span class="nref-desc">Přejmenuj tak, aby jméno říkalo záměr</span></div>
+  <div class="nref"><span class="nref-name">Inline</span><span class="nref-desc">Rozpusť zbytečnou nepřímost zpět</span></div>
+  <div class="nref"><span class="nref-name">Move</span><span class="nref-desc">Přesuň funkci/pole tam, kam patří</span></div>
+</div>
+
+<div class="code-example">
+<span class="cm-comment"># Před — nečitelný blok uvnitř větší funkce</span>
+<span class="cm-bad">e = sum(0.5*m*v**2 for m, v in zip(masses, vels))</span>
+<span class="cm-bad">e += sum(m*g*h for m, h in zip(masses, heights))</span>
+
+<span class="cm-comment"># Po — Extract Method: chování stejné, záměr čitelný</span>
+<span class="cm-good">e = kinetic_energy(masses, vels) + potential_energy(masses, heights)</span>
+</div>
+<p class="code-cap">Extract Method: struktura se změnila, výsledek <code>e</code> je identický. Test na <code>e</code> zůstává zelený — to je důkaz, že šlo o refactoring, ne o přepis.</p>
+
+<p>A pravidlo tří (známé z Skills, B4): refaktoruj, když duplicitu vidíš <em>potřetí</em>. Poprvé napíšeš, podruhé zaskřípeš, potřetí vytáhneš. Dřív je to předčasná abstrakce.</p>
+
+<!-- 5. AI a refactoring -->
+<h2>5 — AI a refactoring: akcelerátor i past</h2>
+
+<p>Tady je celý smysl téhle lekce pro AI-assisted vývoj. Refactoring je z velké části <em>mechanická, akcidentální</em> práce (A3) — a v té je AI výjimečná. Zároveň je to disciplína, jejíž bezpečnost stojí a padá s ověřením chování — a to AI umí tiše obejít.</p>
+
+<div class="in-out">
+  <div class="in-out-box in-box">
+    <h4>AI jako akcelerátor ✓</h4>
+    <ul>
+      <li>Mechanické transformace (extract, rename, move) rychle a napříč soubory</li>
+      <li>Napíše <em>charakterizační testy</em> kolem legacy kódu, aby šel bezpečně refaktorovat</li>
+      <li>Navrhne, kde je struktura zamotaná a co vytáhnout</li>
+      <li>Zvládne nudné, rozsáhlé přejmenování bez únavy</li>
+    </ul>
+  </div>
+  <div class="in-out-box out-box">
+    <h4>AI jako past ✗</h4>
+    <ul>
+      <li>„Refaktoruje" a přitom tiše změní chování — přepis vydávaný za refactoring</li>
+      <li>Míchá oba klobouky v jednom diffu (funkce + přeskládání)</li>
+      <li>Velký diff, který vypadá ekvivalentně, ale není — trust gap (C4)</li>
+      <li>Bez testů nemáš jak poznat, že chování uteklo</li>
+    </ul>
+  </div>
+</div>
+
+<p>Rozhodující pravidlo: <strong>nejdřív síť, pak skok.</strong> Než necháš AI cokoliv „refaktorovat", musí existovat test, který zachycuje aktuální chování. Když ho nemáš, nech AI nejdřív napsat charakterizační testy (skvělé využití!), ověř je, a teprve pak refaktoruj. AI refactoring bez testu není rychlý refactoring — je to rychlý hazard, jen s hezčím diffem. A plynulost toho diffu (C4) tě nesmí zmást: ekvivalentně vypadající ≠ ekvivalentní.</p>
+
+<!-- 6. Historický kontext -->
+<h2>6 — Historický kontext</h2>
+
+<ul>
+  <li><strong>Fowler, Refactoring (1999, 2. vyd. 2018).</strong> Kanonický text — definice, katalog pojmenovaných refaktoringů, disciplína malých kroků. Odtud pochází celý slovník. Nutné minimum: úvod + kapitola 1 (rozšířený příklad).</li>
+  <li><strong>Opdyke, disertace (1992).</strong> První formalizace behavior-preserving transformací. Refactoring jako pojem má akademický základ, ne jen praxi.</li>
+  <li><strong>Kent Beck a XP.</strong> Dva klobouky a red-green-<em>refactor</em> cyklus. Refactoring je třetí krok TDD (A1) — ne oddělená fáze, ale součást rytmu psaní kódu.</li>
+  <li><strong>Ward Cunningham — technický dluh (1992).</strong> Refactoring je způsob, jak dluh splácet. Bez něj úrok (rostoucí cena změny) narůstá, až se kód stane nezměnitelným.</li>
+</ul>
+
+<p>Pointa pro publikum: refactoring je zralá, 30 let stará disciplína s katalogem a teorií. AI ji nevynalezla ani neznehodnotila — jen zlevnila mechanickou část a zostřila důležitost té ověřovací. Kdo zná Fowlera, ví přesně, co po AI chtít a čemu nevěřit.</p>
+
+<!-- 7. Tři příklady -->
+<h2>7 — Tři příklady</h2>
+
+<div class="examples">
+  <div class="example-card">
+    <div class="example-label">Vědec-kodér</div>
+    <p>Má 300řádkovou funkci, co vznikla organicky a nikdo se jí nechce dotknout. Nechá AI nejdřív napsat charakterizační testy — zafixovat, co funkce <em>teď</em> dělá (i ty divné okraje). Pak teprve pustí AI na Extract Method po částech, po každém kroku zelené testy. Výsledek: čitelný kód, prokazatelně stejné chování. Kdyby přeskočil testy, „vyčistil" by i ten podivný <code>if</code>, co ošetřoval reálný případ — a rozbil analýzu.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">RSE vývojář</div>
+    <p>Ví, že AI ráda míchá klobouky. Zavádí pravidlo pro tým: refactoring commit a feature commit jsou <em>oddělené</em> — nikdy v jednom PR. AI dostane explicitně jeden klobouk: „jen přejmenuj a vytáhni metody, nedotýkej se chování; testy musí zůstat zelené beze změny." Diff pak jde reviewovat snadno, protože reviewer ví, že chování se nemělo hnout — a jakákoliv změna testů je red flag.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">Manažer / PI</div>
+    <p>Slyší „AI za víkend zrefaktorovala náš starý pipeline". Správná otázka: „existovaly testy, které dokazují, že chování zůstalo stejné?" Když ne, nebyl to refactoring — byl to nezreviewovaný přepis kritického kódu, a výsledky můžou být tiše jiné. Rychlost refactoringu bez sítě není zisk, je to nezměřené riziko. Metrika není „kolik kódu se přeskládalo", ale „kolik z toho bylo prokazatelně bezpečné".</p>
+  </div>
+</div>
+
+<!-- 8. Propojení -->
+<h2>8 — Propojení na ostatní lekce</h2>
+
+<ul>
+  <li><strong>A1 — TDD:</strong> Refactoring je třetí krok red-green-refactor. Testy z TDD jsou přesně ta záchranná síť, která dělá refactoring bezpečným. Bez testů refaktoruješ poslepu — proto A1 předchází A2.</li>
+  <li><strong>A3 — No Silver Bullet:</strong> Mechanický refactoring je akcidentální komplexita — tam AI září. Rozhodnutí <em>jaká struktura je dobrá</em> je blíž esenciální — tam zůstáváš ty. AI seká mechaniku, ne design.</li>
+  <li><strong>C4 — Trust gap:</strong> „Vypadá ekvivalentně" je past plynulosti aplikovaná na diff. Velký refactoring diff od AI zní bezpečně — kalibrovaná důvěra ho ověří testem, ne pohledem.</li>
+  <li><strong>B4 — Skills:</strong> Pravidlo tří je sdílené. Skill i Extract Method extrahují opakovaný vzor při třetím výskytu. Refactoring je Extract aplikovaný na kód, skill na prompt.</li>
+</ul>
+
+<!-- 9. Nejčastější nepochopení -->
+<h2>9 — Nejčastější nepochopení</h2>
+
+<div class="callout amber">
+  <div class="callout-label">Nepochopení 1</div>
+  <p>„Zrefaktoroval jsem kód a přitom opravil pár chyb a vylepšil chování."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>To nebyl refactoring — refactoring z definice chování <em>nemění</em>. Jakmile měníš chování (oprava, vylepšení), máš na hlavě druhý klobouk a jsi v jiné disciplíně s jinými riziky. Míchání obou je přesně to, co bere refactoringu jeho bezpečnost: když něco praskne, nevíš proč. Odděl je — nejlíp do samostatných commitů.</p>
+</div>
+
+<div class="callout amber">
+  <div class="callout-label">Nepochopení 2</div>
+  <p>„AI mi ten diff vygenerovala a vypadá ekvivalentně, takže je to bezpečný refactoring."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>„Vypadá ekvivalentně" není „je ekvivalentní" — to je past plynulosti (C4). Bezpečnost refactoringu nepochází z toho, jak diff vypadá, ale z testu, který dokazuje zachované chování. Bez sítě je i hezký AI diff jen rychlý přepis. Nejdřív test, který drží chování; pak teprve refactoring.</p>
+</div>
+
+<div class="callout amber">
+  <div class="callout-label">Nepochopení 3</div>
+  <p>„Refactoring je samostatná fáze — uděláme si na něj čas, až bude hotová funkčnost."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>Refactoring odložený „na potom" se nekoná — „potom" nikdy nepřijde a dluh narůstá. Fowler: refaktoruj <em>průběžně</em> — když přidáváš funkci, opravuješ chybu, děláš review. Je to součást rytmu, ne oddělený projekt. AI to usnadňuje: malý refactoring před změnou stojí teď zlomek, co dřív. Výmluva „není čas" slábne.</p>
+</div>
+
+<!-- 10. Spicy teze -->
+<h2>10 — Spicy teze</h2>
+
+<div class="spicy">
+  <p>AI udělala z refactoringu nejnebezpečnější operaci ve vývoji — ne proto, že by ho dělala špatně, ale proto, že ho dělá <em>přesvědčivě</em>. Dřív velký přepis vypadal jako velký přepis a člověk zpozorněl. Teď přijde elegantní diff, který vypadá jako nevinné přeskládání, a klidně v sobě nese změnu chování, kterou nikdo neověřil. Bez testů není AI refactoring rychlejší refactoring — je to hazard v obleku disciplíny. A protože ten oblek sedí dokonale, poznáš rozdíl, až když výsledky tiše nesedí.</p>
+</div>
+
+<!-- 11. Primární zdroje -->
+<h2>11 — Primární zdroje</h2>
+
+<ul class="resource-list">
+  <li>
+    <a href="https://martinfowler.com/books/refactoring.html" target="_blank">Refactoring: Improving the Design of Existing Code — Martin Fowler (2018)</a>
+    <span class="why">Proč: Kanonický zdroj. Úvod + kapitola 1 (rozšířený příklad, kde vidíš disciplínu malých kroků naživo) jsou nutné minimum. Katalog pak slouží jako referenční slovník pojmenovaných transformací.</span>
+  </li>
+  <li>
+    <a href="https://martinfowler.com/bliki/TwoHatsRefactoring.html" target="_blank">Refactoring &amp; „Two Hats" — Fowler / Kent Beck</a>
+    <span class="why">Proč: Krátké vysvětlení pravidla dvou klobouků — proč nikdy neměnit strukturu a chování naráz. Přímo aplikovatelné na to, jak zadávat úkoly AI.</span>
+  </li>
+  <li>
+    <a href="https://martinfowler.com/bliki/TechnicalDebt.html" target="_blank">Technical Debt — Martin Fowler</a>
+    <span class="why">Proč: Rámuje, proč refactoring děláš — je to splácení dluhu, který jinak roste s úrokem. Propojuje A2 s C5 (prototyp → páteř) a udržitelností kódu.</span>
+  </li>
+</ul>
+
+<!-- 12. Feynmanovo cvičení -->
+<h2>12 — Feynmanovo cvičení</h2>
+
+<div class="quiz" id="quiz-main">
+  <div class="quiz-header">Feynmanův test — Refactoring</div>
+
+  <!-- Q1 -->
+  <div class="quiz-question" id="q1">
+    <div class="quiz-q">1. Kolega říká: „Zrefaktoroval jsem ten modul a při tom opravil dvě chyby a zrychlil to." Proč to technicky nebyl refactoring?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q1" value="a"> Byl — oprava chyb je součást refactoringu</label></li>
+      <li><label><input type="radio" name="q1" value="b"> Refactoring z definice nemění chování; jakmile opravuješ chyby a měníš výkonové chování, máš druhý klobouk — a míchání obou bere refactoringu bezpečnost (když něco praskne, nevíš proč)</label></li>
+      <li><label><input type="radio" name="q1" value="c"> Nebyl, protože refactoring smí dělat jen IDE, ne člověk</label></li>
+      <li><label><input type="radio" name="q1" value="d"> Byl, pokud u toho svítily zelené testy</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q1','b','Přesně. Refactoring zachovává chování — mění jen strukturu. Oprava chyby chování mění (to je pointa opravy), takže je to druhý klobouk. Míchat je dohromady znamená ztratit diagnostiku: když test zčervená, nevíš, jestli za to může přeskládání, nebo oprava. Odděl klobouky, nejlíp do samostatných commitů.','Ne. Oprava chyb NENÍ refactoring — mění chování, což refactoring z definice nedělá. To je druhý klobouk. Problém míchání: když se něco rozbije, nerozlišíš, jestli to způsobila oprava, nebo přeskládání struktury.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q1-fb"></div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="quiz-question" id="q2">
+    <div class="quiz-q">2. Chceš nechat AI zrefaktorovat 300řádkovou legacy funkci bez testů. Jaký je bezpečný první krok?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q2" value="a"> Nechat AI rovnou refaktorovat — je rychlá a diff si přečtu</label></li>
+      <li><label><input type="radio" name="q2" value="b"> Nechat AI nejdřív napsat charakterizační testy, které zafixují současné chování, ověřit je, a teprve pak refaktorovat</label></li>
+      <li><label><input type="radio" name="q2" value="c"> Přepsat funkci od nuly, je to čistší</label></li>
+      <li><label><input type="radio" name="q2" value="d"> Refaktorovat a testy dopsat až nakonec, ať vím, co má výsledek být</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q2','b','Správně. Nejdřív síť, pak skok. Bez testu, který drží současné chování, není jak poznat, že refactoring chování zachoval — a AI ho tiše změní. Charakterizační testy (zafixovat, co kód TEĎ dělá, i divné okraje) jsou skvělé využití AI a nutná podmínka bezpečného refactoringu. Testy až nakonec zafixují už rozbité chování.','Ne. Bez sítě je AI refactoring hazard — nemáš jak poznat, že chování uteklo. Správně: nech AI napsat charakterizační testy (co kód teď dělá), ověř je, PAK refaktoruj. Testy až nakonec by zafixovaly už změněné chování, ne původní.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q2-fb"></div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="quiz-question" id="q3">
+    <div class="quiz-q">3. AI vygenerovala velký „refactoring" diff, který vypadá ekvivalentně. Co z toho plyne o jeho bezpečnosti?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q3" value="a"> Je bezpečný — když vypadá ekvivalentně, chování je zachované</label></li>
+      <li><label><input type="radio" name="q3" value="b"> Nic — „vypadá ekvivalentně" je past plynulosti (C4); bezpečnost dokazuje jen test na zachované chování, ne vzhled diffu</label></li>
+      <li><label><input type="radio" name="q3" value="c"> Je nebezpečný — velké diffy jsou vždy špatně</label></li>
+      <li><label><input type="radio" name="q3" value="d"> Je bezpečný, pokud je od dost velkého modelu</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q3','b','Výborně. To je trust gap (C4) aplikovaný na refactoring. Plynulý, ekvivalentně vypadající diff je přesně to, čemu se nesmí věřit z pohledu. Bezpečnost refactoringu nepochází ze vzhledu, ale z testu, který dokazuje zachované chování. Ekvivalentně vypadající ≠ ekvivalentní.','Ne. Vzhled diffu není důkaz. „Vypadá ekvivalentně" je past plynulosti — velký diff může nést tichou změnu chování. Jediný důkaz bezpečnosti je zelený test, který drží původní chování. Kalibruj důvěru ověřením, ne pohledem.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q3-fb"></div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="quiz-question" id="q4">
+    <div class="quiz-q">4. Jaký je rozdíl mezi refactoringem a přepisem (rewrite) z hlediska rizika?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q4" value="a"> Žádný — obojí mění kód, takže je to totéž</label></li>
+      <li><label><input type="radio" name="q4" value="b"> Refactoring jde v malých ověřitelných krocích a zachovává znalost v kódu; přepis je velký skok, který zahazuje kód i zapečené edge cases a ověří se až na konci (nebo nikdy)</label></li>
+      <li><label><input type="radio" name="q4" value="c"> Přepis je vždy bezpečnější, protože je čistší</label></li>
+      <li><label><input type="radio" name="q4" value="d"> Refactoring smí dělat jen senior, přepis kdokoliv</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q4','b','Přesně. Klíčový rozdíl je v riziku a ve znalosti. Refactoring: malé kroky, každý ověřitelný, znalost (i ty divné if) zůstává, vždy zpět o krok. Přepis: velký skok, vše nebo nic, zahazuje nezapsané edge cases uložené ve starém kódu. Přepis má místo, ale spustit ho omylem místo refactoringu je drahá chyba — a AI to umí snadno.','Ne. Rozdíl je zásadní: refactoring jde v malých ověřitelných krocích a zachovává znalost zapečenou v kódu (edge cases); přepis je velký skok, který ji zahazuje a ověří se až na konci. Riziko je opačné — refactoring nízké, přepis vysoké.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q4-fb"></div>
+  </div>
+
+  <div class="quiz-score" id="quiz-score"></div>
+</div>
+
+<!-- 13. Co dál -->
+<h2>13 — Co dál</h2>
+
+<p><strong>Co musíš znát před touto lekcí:</strong></p>
+<ul>
+  <li><a href="0003-tdd.html">A1 — TDD</a> — testy jsou záchranná síť refactoringu; refactoring je třetí krok red-green-refactor.</li>
+  <li><a href="0011-trust-gap.html">C4 — Trust gap</a> — „vypadá ekvivalentně" je past plynulosti aplikovaná na diff.</li>
+</ul>
+
+<p><strong>Praktický úkol (25 minut):</strong> Vezmi funkci, které se bojíš dotknout. Nejdřív nech AI napsat charakterizační testy — zafixuj, co dělá teď. Spusť je (zelené). Pak zadej AI <em>jediný klobouk</em>: „jen Extract Method a Rename, chování nezměnit, testy musí zůstat zelené beze změny." Po každém kroku testy. Když některý zčervená, vrať krok. Uvidíš rozdíl mezi bezpečným refactoringem a hazardem, který jsi dělal dřív.</p>
+
+<p><strong>Příští lekce (dokončení bloku A):</strong></p>
+<ul>
+  <li><em>A4 — Domain-Driven Design</em> — ubiquitous language a bounded contexts. Propojení interoperability (C1), CLAUDE.md (B3) a sdíleného jazyka domény.</li>
+  <li><em>A5 — Agile Manifesto</em> — kde agentní vývoj navazuje na agilní hodnoty a kde je inovuje.</li>
+</ul>
+
+<!-- Footer -->
+<div class="lesson-nav">
+  <div>
+    <span class="nav-label">Předchozí lekce</span>
+    <a href="0014-vedecky-vs-produkcni-sw.html">← C5 — Vědecký vs. produkční SW</a>
+  </div>
+  <div>
+    <span class="nav-label">Příští lekce</span>
+    <a href="0016-domain-driven-design.html">A4 — Domain-Driven Design →</a>
+  </div>
+</div>
+
+<p style="margin-top:2rem; font-size:0.8rem; color: var(--muted); font-family: var(--font-sans);">
+  Máš otázku? Vrať se do Claude Code a napiš ji — agent je tvůj učitel a může rozvinout libovolný bod z této lekce.
+</p>
+
+</div>
+</div>
+
+<script>
+const scores = {};
+function check(qid, correct, okMsg, failMsg) {
+  const selected = document.querySelector(`input[name="${qid}"]:checked`);
+  const fb = document.getElementById(`${qid}-fb`);
+  if (!selected) {
+    fb.textContent = 'Vyber jednu odpověď.';
+    fb.className = 'quiz-feedback incorrect';
+    fb.style.display = 'block';
+    return;
+  }
+  const isCorrect = selected.value === correct;
+  fb.textContent = isCorrect ? '✓ ' + okMsg : '✗ ' + failMsg;
+  fb.className = 'quiz-feedback ' + (isCorrect ? 'correct' : 'incorrect');
+  fb.style.display = 'block';
+  scores[qid] = isCorrect;
+  document.querySelectorAll(`input[name="${qid}"]`).forEach(r => r.disabled = true);
+  document.querySelector(`#${qid} .quiz-check`).disabled = true;
+  if (Object.keys(scores).length === 4) {
+    const n = Object.values(scores).filter(Boolean).length;
+    const el = document.getElementById('quiz-score');
+    el.style.display = 'block';
+    if (n === 4) {
+      el.innerHTML = '<strong>✓ 4/4 — Výborně.</strong> Praktický úkol: vezmi funkci, které se bojíš. Nech AI napsat charakterizační testy (zelené), pak zadej jediný klobouk — Extract + Rename, chování nezměnit. Po každém kroku testy. Rozdíl mezi refactoringem a hazardem uvidíš na vlastní oči.';
+    } else if (n >= 3) {
+      el.innerHTML = `<strong>${n}/4 — Téměř.</strong> Přečti znovu sekci 3 (dva klobouky) a sekci 5 (AI jako past). Klíč: refactoring nemění chování, jede v malých krocích, a jeho bezpečnost je v testu — ne ve vzhledu diffu. Nejdřív síť, pak skok.`;
+    } else {
+      el.innerHTML = `<strong>${n}/4 — Vrať se.</strong> Přečti znovu sekci 1 a 2 — co refactoring je (změna struktury beze změny chování) a čím se liší od přepisu. Pak sekci 4 — odkud pochází bezpečnost. Výsledek: bez testu to není refactoring, ale přepis s nadějí.`;
+    }
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>B4 — Skills a slash commands | AI-assisted RSE</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    /* Comparison table */
+    .cmp {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.87rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .cmp th {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+      border-bottom: 2px solid var(--text);
+    }
+    .cmp td {
+      padding: 0.55rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    .cmp tr:last-child td { border-bottom: none; }
+    .cmp .col-name { font-family: var(--font-mono); font-size: 0.80rem; white-space: nowrap; }
+
+    /* In / Out lists */
+    .in-out {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .in-out-box {
+      border-radius: 4px;
+      padding: 0.8rem 1rem;
+      font-size: 0.86rem;
+    }
+    .in-box  { background: var(--green-light);  border: 1px solid #b7dfc8; }
+    .out-box { background: var(--red-light);     border: 1px solid #f9b8b8; }
+    .in-out-box h4 {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin: 0 0 0.5rem;
+      color: var(--muted);
+    }
+    .in-out-box ul { margin: 0; padding-left: 1.1rem; }
+    .in-out-box li { margin-bottom: 0.3rem; }
+    @media (max-width: 480px) { .in-out { grid-template-columns: 1fr; } }
+
+    /* Code example block */
+    .code-example {
+      background: #1a1a2e;
+      color: #e2e8f0;
+      border-radius: 6px;
+      padding: 1rem 1.2rem;
+      font-family: var(--font-mono);
+      font-size: 0.80rem;
+      line-height: 1.6;
+      margin: 1rem 0 1.5rem;
+      overflow-x: auto;
+    }
+    .code-example .cm-comment { color: #718096; }
+    .code-example .cm-heading { color: #90cdf4; font-weight: 700; }
+    .code-example .cm-key     { color: #fbd38d; }
+    .code-example .cm-val     { color: #c6f6d5; }
+
+    /* Rule-of-three stepper */
+    .r3 {
+      display: flex;
+      gap: 0.6rem;
+      margin: 1.25rem 0 1.5rem;
+      flex-wrap: wrap;
+    }
+    .r3-step {
+      flex: 1 1 0;
+      min-width: 9rem;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 0.7rem 0.9rem;
+      background: var(--bg-card);
+    }
+    .r3-step .r3-n {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+    .r3-step .r3-t { font-size: 0.84rem; line-height: 1.45; }
+    .r3-step.hit { border-color: #68d391; background: #f0fff4; }
+  </style>
+</head>
+<body>
+<div class="page">
+<div class="content">
+
+<!-- Header -->
+<header class="lesson-header">
+  <div class="lesson-meta">
+    <span class="tag">B4</span>
+    <span class="tag">Týden 3</span>
+    Blok B: Agentní paradigma
+  </div>
+  <h1>Skills a slash commands</h1>
+  <p class="lesson-subtitle">Jak zabalit opakovaný workflow do pojmenovaného <code>/příkazu</code> — kdy skill postavit, kdy si vystačit s promptem, a proč je to refaktoring, ne magie</p>
+</header>
+
+<!-- Progress -->
+<div class="progress-bar">
+  <div class="progress-dot done"    title="A3 — No Silver Bullet"></div>
+  <div class="progress-dot done"    title="B1 — Harness vs. Guardrails"></div>
+  <div class="progress-dot done"    title="A1 — TDD"></div>
+  <div class="progress-dot done"    title="B2 — Rámec pěti otázek"></div>
+  <div class="progress-dot done"    title="B3 — Memory a CLAUDE.md"></div>
+  <div class="progress-dot current" title="B4 — Skills a slash commands (aktuální)"></div>
+  <div class="progress-dot"         title="B5 — Hooks"></div>
+  <div class="progress-dot"         title="C3, C4, A4, B9"></div>
+</div>
+
+<!-- 1. Jádro -->
+<h2>1 — Jádro</h2>
+
+<p>Když se přistihneš, že píšeš agentovi potřetí tentýž mnohakrokový prompt — "spusť testy, když spadnou, oprav je, pak zaformátuj, pak commitni" — právě jsi našel kandidáta na <strong>skill</strong>. Skill je opakovaný workflow zabalený do pojmenované, znovupoužitelné jednotky, kterou vyvoláš jako <code>/skill-name</code>.</p>
+
+<p>Skill není nová schopnost agenta. Je to <em>abstrakce postupu, který už umíš popsat</em>. Stejně jako v programování extrahuješ opakovaný blok kódu do funkce, tady extrahuješ opakovaný prompt do skillu. Vrstva 2 rámce pěti otázek zní přesně takto: <em>"Které opakované workflows jsou enkapsulované?"</em></p>
+
+<div class="callout">
+  <div class="callout-label">Jedno pravidlo</div>
+  <p>Skill vyřeš, když prompt opakuješ. Ne dřív. Skill je refaktoring workflow — a refaktoring bez duplicity je předčasná abstrakce.</p>
+</div>
+
+<!-- 2. Skill vs ostatní vrstvy -->
+<h2>2 — Skill vs. prompt vs. CLAUDE.md vs. hook</h2>
+
+<p>Skill se snadno zamění s ostatními mechanismy. Rozdíl je v tom, <em>kdo ho spouští</em> a <em>kdy se aktivuje</em>.</p>
+
+<table class="cmp">
+  <tr>
+    <th>Mechanismus</th>
+    <th>Kdo spouští</th>
+    <th>Kdy se aktivuje</th>
+    <th>Na co je</th>
+  </tr>
+  <tr>
+    <td class="col-name">Prompt</td>
+    <td>Ty, ručně</td>
+    <td>Jednorázově, teď</td>
+    <td>Unikátní úkol, který se nebude opakovat</td>
+  </tr>
+  <tr>
+    <td class="col-name">CLAUDE.md</td>
+    <td>Systém</td>
+    <td>Vždy, pasivně v pozadí</td>
+    <td>Znalost projektu, kterou agent má mít pořád</td>
+  </tr>
+  <tr>
+    <td class="col-name">Skill</td>
+    <td>Ty, přes <code>/název</code></td>
+    <td>Na vyžádání, aktivně</td>
+    <td>Opakovaný <em>postup</em> — sekvence kroků</td>
+  </tr>
+  <tr>
+    <td class="col-name">Hook</td>
+    <td>Harness</td>
+    <td>Automaticky, deterministicky</td>
+    <td>Guardrail — co se musí (ne)stát vždy</td>
+  </tr>
+</table>
+
+<div class="callout amber">
+  <div class="callout-label">Nejčastější záměna</div>
+  <p><strong>CLAUDE.md je znalost, skill je postup.</strong> "Projekt používá pytest" → CLAUDE.md. "Spusť pytest, přečti selhání, oprav, opakuj až zelená" → skill. <strong>Skill je harness (vyvoláš ho ty), hook je guardrail (spustí se sám).</strong> Když chceš, aby se něco stalo vždy bez tvého zásahu, není to skill — je to hook.</p>
+</div>
+
+<!-- 3. Anatomie skillu -->
+<h2>3 — Anatomie skillu</h2>
+
+<p>Skill v Claude Code je adresář se souborem <code>SKILL.md</code>: frontmatter (jméno + popis) a tělo s instrukcemi. Volitelně přibalí skripty nebo referenční soubory. Popis (<code>description</code>) je klíčový — podle něj agent (a ty přes <code>/</code>) skill najde.</p>
+
+<div class="code-example">
+<span class="cm-comment"># .claude/skills/run-tests/SKILL.md</span>
+
+<span class="cm-comment">---</span>
+<span class="cm-key">name:</span> <span class="cm-val">run-tests</span>
+<span class="cm-key">description:</span> <span class="cm-val">Spustí pytest, přečte selhání, opraví je a</span>
+             <span class="cm-val">opakuje, dokud nejsou všechny testy zelené.</span>
+<span class="cm-comment">---</span>
+
+<span class="cm-heading"># Postup</span>
+
+1. Spusť `pytest -q`.
+2. Pokud vše projde, skonči a nahlas výsledek.
+3. Pokud něco spadne, přečti traceback — oprav *příčinu*,
+   ne symptom. Neupravuj test, jen aby prošel.
+4. Znovu spusť pytest. Opakuj od kroku 2.
+5. Nikdy necommituj — jen dosáhni zelené.
+</div>
+
+<p>Vyvoláš ho napsáním <code>/run-tests</code>. Agent načte <code>SKILL.md</code> až v tu chvíli — do té doby zabírá v kontextu jen jeden řádek (jméno + popis). To je <strong>progressive disclosure</strong> a je to důvod, proč můžeš mít desítky skillů, aniž bys zahltil kontext.</p>
+
+<!-- 4. Kdy postavit skill -->
+<h2>4 — Kdy postavit skill (a kdy ne)</h2>
+
+<div class="in-out">
+  <div class="in-out-box in-box">
+    <h4>Postav skill ✓</h4>
+    <ul>
+      <li>Tentýž mnohakrokový prompt jsi napsal 3× (<em>pravidlo tří</em>)</li>
+      <li>Postup má jasné, opakovatelné kroky</li>
+      <li>Chceš ho sdílet s týmem (skill jde do repozitáře)</li>
+      <li>Workflow má správné pořadí, na kterém záleží</li>
+      <li>Chceš konzistentní výsledek napříč lidmi a sezeními</li>
+    </ul>
+  </div>
+  <div class="in-out-box out-box">
+    <h4>Nech to promptem ✗</h4>
+    <ul>
+      <li>Úkol je jednorázový, nebude se opakovat</li>
+      <li>Postup je pokaždé jiný</li>
+      <li>Je to jen znalost projektu → patří do CLAUDE.md</li>
+      <li>Musí se to stát vždy a automaticky → patří do hooku</li>
+      <li>Skill by měl jeden řádek ("naformátuj kód") — to je prompt</li>
+    </ul>
+  </div>
+</div>
+
+<p>Pravidlo tří je totéž, co v refaktoringu: první výskyt napíšeš, druhý zaskřípeš, třetí extrahuješ. Skill dřív než potřetí je předčasná abstrakce — investuješ do údržby něčeho, o čem ještě nevíš, jestli má stabilní tvar.</p>
+
+<div class="r3">
+  <div class="r3-step">
+    <span class="r3-n">1×</span>
+    <span class="r3-t">Napíšeš prompt. Funguje. Zapomeneš na něj.</span>
+  </div>
+  <div class="r3-step">
+    <span class="r3-n">2×</span>
+    <span class="r3-t">Píšeš skoro totéž. Zaskřípeš — ale ještě neabstrahuj.</span>
+  </div>
+  <div class="r3-step hit">
+    <span class="r3-n">3×</span>
+    <span class="r3-t">Potřetí. Teď víš, že tvar je stabilní → extrahuj skill.</span>
+  </div>
+</div>
+
+<!-- 5. Progressive disclosure -->
+<h2>5 — Proč skills škálují: progressive disclosure</h2>
+
+<p>Naivní obava: "Když budu mít dvacet skillů, zahltím kontext dvaceti postupy." Nezahltíš. Do kontextu se na začátku načte jen <em>jméno a popis</em> každého skillu — jeden řádek. Tělo skillu (celý postup, skripty, reference) se načte, až když ho vyvoláš.</p>
+
+<p>To má dva důsledky, na kterých záleží:</p>
+
+<ul>
+  <li><strong>Popis je rozhraní.</strong> Agent se rozhoduje, jestli je skill relevantní, výhradně podle <code>description</code>. Vágní popis = skill se nikdy nenajde. Popis piš tak, aby z něj bylo jasné <em>kdy</em> skill použít, ne jen co dělá.</li>
+  <li><strong>Skillů může být hodně.</strong> Protože každý stojí v základu jen řádek, můžeš mít knihovnu skillů pro celý projekt. Náklad na kontext je lineární v <em>počtu</em> skillů, ne v jejich <em>velikosti</em>.</li>
+</ul>
+
+<div class="callout green">
+  <div class="callout-label">Praktický důsledek</div>
+  <p>Investuj čas do <code>description</code>, ne jen do těla skillu. Tělo přečte agent, až když skill vyvolá — ale jestli ho vůbec vyvolá, rozhoduje popis. Špatný popis = mrtvý skill, který nikdo (ani agent) nenajde.</p>
+</div>
+
+<!-- 6. Historický kontext -->
+<h2>6 — Historický kontext</h2>
+
+<p>Skills nejsou nový nápad. Jsou to staré principy inženýrství aplikované na workflow s agentem:</p>
+
+<ul>
+  <li><strong>DRY (Don't Repeat Yourself), Hunt &amp; Thomas 1999.</strong> Každý kus znalosti má mít jedinou reprezentaci. Opakovaný prompt porušuje DRY — skill ho obnovuje.</li>
+  <li><strong>Extract Method, refaktoring (Fowler).</strong> Skill je Extract Method aplikovaný na prompt. Duplicitní sekvence kroků → pojmenovaná, znovupoužitelná jednotka.</li>
+  <li><strong>Collective ownership, XP.</strong> Skill commitnutý do repozitáře je sdílený tým­ový nástroj — každý ho vyvolá stejně, každý dostane stejný postup.</li>
+  <li><strong>Unix philosophy.</strong> Malé, složitelné nástroje s jasným jménem. <code>/skill</code> je moderní obdoba shell aliasu nebo Makefile targetu.</li>
+</ul>
+
+<p>To je dobrá zpráva pro publikum: nemusíš se učit nový mentální model. Skill = funkce pro workflow. Kdy extrahovat funkci, už víš.</p>
+
+<!-- 7. Tři příklady -->
+<h2>7 — Tři příklady</h2>
+
+<div class="examples">
+  <div class="example-card">
+    <div class="example-label">Vědec-kodér</div>
+    <p>Po každé změně v simulaci opakuje tentýž rituál: spustit benchmark, porovnat s baseline, zkontrolovat, že energie se konzervuje. Třikrát to napsal jako prompt. Teď má <code>/verify-run</code> — jeden skill, tři kroky. Vyvolá ho po každé změně a dostane stejnou kontrolu pokaždé. Přestal zapomínat na krok s konzervací energie, protože ho už nedělá z hlavy.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">RSE vývojář</div>
+    <p>Tým má release proces: changelog, bump verze, tag, build wheel, smoke test. Dřív to každý dělal trochu jinak. Teď je to <code>/release</code> commitnutý v repozitáři. Skill je verze-kontrolovaný — když se proces změní, změní se skill v PR a projde review. Onboarding nového člena: "spusť <code>/release</code>", ne třístránkový wiki dokument, který nikdo nečte.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">Manažer / PI</div>
+    <p>Vidí, že dva seniorní vývojáři odcházejí a odchází s nimi "jak se to tady dělá". Skills jsou způsob, jak tacit knowledge udělat explicitní a přenositelnou: postup, který byl dřív v hlavě, je teď <code>SKILL.md</code> v repozitáři. Není to náklad navíc — je to pojistka proti bus factoru. Skills jsou institucionální paměť týmu, ne osobní zkratka.</p>
+  </div>
+</div>
+
+<!-- 8. Propojení -->
+<h2>8 — Propojení na ostatní lekce</h2>
+
+<ul>
+  <li><strong>B2 — Rámec pěti otázek:</strong> Skills jsou vrstva 2 — enkapsulované workflows. Stojí na vrstvě 1 (Memory): skill předpokládá znalost projektu z CLAUDE.md a staví na ní postup.</li>
+  <li><strong>B3 — Memory a CLAUDE.md:</strong> Ostrá hranice. CLAUDE.md je <em>znalost</em> ("používáme pytest"), skill je <em>postup</em> ("spusť pytest a oprav selhání"). Když nevíš, kam co dát, zeptej se: je to fakt o projektu, nebo sekvence akcí?</li>
+  <li><strong>B5 — Hooks:</strong> Skill vyvoláš ty (harness); hook se spustí sám (guardrail). "Chci to spouštět, když se rozhodnu" → skill. "Musí se to stát vždy" → hook. Stejný postup může být skill i hook — liší se, kdo drží spoušť.</li>
+  <li><strong>A2 — Refactoring:</strong> Pravidlo tří a Extract Method jsou přímo z refaktoringu. Skill je refaktoring aplikovaný na prompt místo na kód. Stejná disciplína, stejné signály duplicity.</li>
+</ul>
+
+<!-- 9. Nejčastější nepochopení -->
+<h2>9 — Nejčastější nepochopení</h2>
+
+<div class="callout amber">
+  <div class="callout-label">Nepochopení 1</div>
+  <p>"Čím víc skillů mám, tím lepší je moje AI setup."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>Počet skillů není metrika kvality. Skill, který jsi vyvolal jednou, je náklad na údržbu bez návratnosti — zastará, přestane platit, a matoucí popis znečistí kontext. Dobrý setup má málo skillů, které se používají často. Skill bez opakování je předčasná abstrakce.</p>
+</div>
+
+<div class="callout amber">
+  <div class="callout-label">Nepochopení 2</div>
+  <p>"Skill je chytřejší než prompt — dá agentovi schopnost, kterou jinak nemá."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>Skill nepřidává schopnost. Je to tentýž prompt, jen pojmenovaný a znovupoužitelný. Když postup nefunguje jako prompt, nebude fungovat ani jako skill. Skill řeší <em>opakování</em>, ne <em>schopnost</em>. Nejdřív ověř, že postup funguje jako prompt — pak ho teprve extrahuj.</p>
+</div>
+
+<div class="callout amber">
+  <div class="callout-label">Nepochopení 3</div>
+  <p>"Všechno, co dělám opakovaně, patří do skillu."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>Opakovaná <em>znalost</em> patří do CLAUDE.md. Opakovaný <em>guardrail</em> patří do hooku. Do skillu patří opakovaný <em>postup, který vyvoláváš ty</em>. Otázka není "opakuje se to?", ale "je to postup, sekvence akcí, kterou chci spouštět na povel?"</p>
+</div>
+
+<!-- 10. Spicy teze -->
+<h2>10 — Spicy teze</h2>
+
+<div class="spicy">
+  <p>Skills nejsou o AI. Jsou o tom, že většina týmů nikdy nezapsala, jak vlastně dělají svou práci. Agent jen zviditelnil díru, která tam byla pořád: postupy žijí v hlavách, ne v repozitáři. Kdo neumí popsat svůj workflow do <code>SKILL.md</code>, neměl ho pod kontrolou ani předtím — jen to nebylo vidět.</p>
+</div>
+
+<!-- 11. Primární zdroje -->
+<h2>11 — Primární zdroje</h2>
+
+<ul class="resource-list">
+  <li>
+    <a href="https://docs.anthropic.com/en/docs/claude-code/skills" target="_blank">Claude Code — Agent Skills</a>
+    <span class="why">Proč: Oficiální dokumentace. Přečti celou stránku (10 min) — struktura <code>SKILL.md</code>, frontmatter, progressive disclosure, jak agent skill najde podle popisu. Základní zdroj pro tuto lekci.</span>
+  </li>
+  <li>
+    <a href="https://docs.anthropic.com/en/docs/claude-code/slash-commands" target="_blank">Claude Code — Slash Commands</a>
+    <span class="why">Proč: Jak se skill vyvolá přes <code>/název</code>, rozdíl mezi vestavěnými a vlastními příkazy, argumenty. Krátká stránka; přečti sekci o custom commands.</span>
+  </li>
+  <li>
+    <a href="https://martinfowler.com/books/refactoring.html" target="_blank">Refactoring — Martin Fowler (2018): Extract Method &amp; pravidlo tří</a>
+    <span class="why">Proč: Skill je Extract Method aplikovaný na prompt. Kapitola 1 a "The Rule of Three" dávají disciplínu, kdy abstrahovat a kdy ne — přesně přenositelnou na skills. Stačí úvod + kap. 1.</span>
+  </li>
+</ul>
+
+<!-- 12. Feynmanovo cvičení -->
+<h2>12 — Feynmanovo cvičení</h2>
+
+<div class="quiz" id="quiz-main">
+  <div class="quiz-header">Feynmanův test — Skills a slash commands</div>
+
+  <!-- Q1 -->
+  <div class="quiz-question" id="q1">
+    <div class="quiz-q">1. Vývojář zapsal do skillu: "Tento projekt používá Python 3.12 a pytest." Skill se ale nikdy nevyvolá a agent na to nebere ohled. Kde je chyba?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q1" value="a"> Skill má špatný popis — je potřeba přeformulovat frontmatter</label></li>
+      <li><label><input type="radio" name="q1" value="b"> To není postup, je to znalost projektu — patří do CLAUDE.md, ne do skillu</label></li>
+      <li><label><input type="radio" name="q1" value="c"> Skill se musí vyvolat ručně přes /název, agent ho nespustí sám</label></li>
+      <li><label><input type="radio" name="q1" value="d"> Python 3.12 skills nepodporuje</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q1','b','Přesně. Skill je postup — sekvence akcí, kterou vyvoláš. Fakt o projektu ("používáme pytest") je znalost a patří do CLAUDE.md, kde je načtený vždy pasivně. Do skillu balíš postup, ne fakt.','Ne. Problém není ve formulaci ani ve vyvolání. "Používáme pytest" je znalost projektu, ne postup. Znalost patří do CLAUDE.md (načte se vždy), skill je pro sekvenci akcí, kterou spouštíš.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q1-fb"></div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="quiz-question" id="q2">
+    <div class="quiz-q">2. Máš postup, který se MUSÍ spustit vždy před každým commitem, i když na něj zapomeneš. Skill, nebo hook?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q2" value="a"> Skill — zabalíš postup do /pre-commit a vyvoláš ho před commitem</label></li>
+      <li><label><input type="radio" name="q2" value="b"> Hook — "musí se stát vždy, i když zapomenu" znamená deterministické spuštění bez tvého zásahu; to je guardrail, ne harness</label></li>
+      <li><label><input type="radio" name="q2" value="c"> Skill — hooky neumí spouštět mnohakrokové postupy</label></li>
+      <li><label><input type="radio" name="q2" value="d"> Ani jedno — patří to do CLAUDE.md jako pravidlo</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q2','b','Správně. Klíč je "vždy, i když zapomenu". Skill vyvoláš ty (harness) — a na to se dá zapomenout. Hook se spustí sám, deterministicky (guardrail). Když spolehlivost nesmí záviset na tvé paměti, je to hook.','Ne. Skill vyvoláváš ty — takže se na něj dá zapomenout, což je přesně to, co nechceš. "Musí se stát vždy bez mého zásahu" = deterministický guardrail = hook. To je rozdíl harness vs. guardrail z B1.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q2-fb"></div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="quiz-question" id="q3">
+    <div class="quiz-q">3. Napsal jsi unikátní prompt na jednorázovou migraci dat. Fungoval napoprvé. Máš z něj udělat skill?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q3" value="a"> Ano — každý fungující prompt je dobré uchovat jako skill pro budoucnost</label></li>
+      <li><label><input type="radio" name="q3" value="b"> Ne — jednorázový úkol nemá opakování; skill bez opakování je předčasná abstrakce a jen náklad na údržbu</label></li>
+      <li><label><input type="radio" name="q3" value="c"> Ano, ale jen pokud měl víc než tři kroky</label></li>
+      <li><label><input type="radio" name="q3" value="d"> Ne — migrace dat se do skillů nedávají z bezpečnostních důvodů</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q3','b','Přesně. Pravidlo tří: extrahuj až při třetím výskytu. Jednorázový úkol se neopakuje, takže skill by byl mrtvá abstrakce — zastará a bude jen mást. Skill řeší opakování; bez opakování není co řešit.','Ne. Skill řeší opakování. Jednorázový prompt, který se nebude opakovat, jako skill jen zastará a znečistí kontext popisem. Pravidlo tří: extrahuj při třetím výskytu, ne při prvním.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q3-fb"></div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="quiz-question" id="q4">
+    <div class="quiz-q">4. Proč můžeš mít dvacet skillů, aniž bys zahltil kontext agenta?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q4" value="a"> Protože Claude Code komprimuje skills do binárního formátu</label></li>
+      <li><label><input type="radio" name="q4" value="b"> Progressive disclosure — do kontextu se v základu načte jen jméno a popis každého skillu; tělo (celý postup) se načte až při vyvolání</label></li>
+      <li><label><input type="radio" name="q4" value="c"> Skills se do kontextu nenačítají vůbec, běží mimo model</label></li>
+      <li><label><input type="radio" name="q4" value="d"> Protože agent si pamatuje skills mezi sezeními a nemusí je načítat</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q4','b','Výborně. Progressive disclosure: základní náklad je jeden řádek (jméno + popis) na skill. Tělo se načte až při /vyvolání. Proto je náklad lineární v počtu skillů, ne v jejich velikosti — a proto je popis kritický, protože podle něj se skill vůbec najde.','Ne. Není to komprese ani běh mimo model. Jde o progressive disclosure: do kontextu jde jen jméno + popis (jeden řádek), tělo skillu se načte teprve při vyvolání. Proto na velikosti skillu v základu nezáleží — a proto je popis rozhraní, které rozhoduje o nalezení.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q4-fb"></div>
+  </div>
+
+  <div class="quiz-score" id="quiz-score"></div>
+</div>
+
+<!-- 13. Co dál -->
+<h2>13 — Co dál</h2>
+
+<p><strong>Co musíš znát před touto lekcí:</strong></p>
+<ul>
+  <li><a href="0004-ramec-peti-otazek.html">B2 — Rámec pěti otázek</a> — Skills jsou vrstva 2. Tato lekce ji rozvíjí do detailu.</li>
+  <li><a href="0005-memory-a-claude-md.html">B3 — Memory a CLAUDE.md</a> — hranice znalost (CLAUDE.md) vs. postup (skill) je jádro této lekce.</li>
+</ul>
+
+<p><strong>Praktický úkol (20 minut):</strong> Projdi svou historii promptů za poslední týden. Najdi jeden mnohakrokový postup, který jsi napsal aspoň třikrát. Napiš z něj minimální <code>SKILL.md</code> — jméno, jeden dobrý popis (kdy ho použít), a kroky postupu. Vyvolej ho přes <code>/název</code> a porovnej s ručním promptem. Pak si zkus jeden postup, který jsi napsal jen jednou — a zdůvodni si, proč z něj skill <em>neděláš</em>.</p>
+
+<p><strong>Příští lekce:</strong></p>
+<ul>
+  <li><em>B5 — Hooks</em> — vrstva 3 rámce pěti otázek. Deterministické guardrails: co se musí (ne)stát vždy, bez ohledu na to, co agent chce. Skill vyvoláš ty; hook se spustí sám. Tady se ta hranice ostře vyostří.</li>
+</ul>
+
+<p><strong>Propojení do curricula:</strong></p>
+<ul>
+  <li><em>A2 — Refactoring</em> — pravidlo tří a Extract Method jsou přímo odtud. Skill je refaktoring workflow místo kódu.</li>
+  <li><em>C3 — Deskilling</em> — pozor: skill, který zabalí rozhodování (ne jen mechaniku), může postupně převzít úsudek, který má zůstat tvůj. Skill má automatizovat rutinu, ne myšlení.</li>
+</ul>
+
+<!-- Footer -->
+<div class="lesson-nav">
+  <div>
+    <span class="nav-label">Předchozí lekce</span>
+    <a href="0005-memory-a-claude-md.html">← B3 — Memory a CLAUDE.md</a>
+  </div>
+  <div>
+    <span class="nav-label">Příští lekce</span>
+    <a href="0007-hooks.html">B5 — Hooks →</a>
+  </div>
+</div>
+
+<p style="margin-top:2rem; font-size:0.8rem; color: var(--muted); font-family: var(--font-sans);">
+  Máš otázku? Vrať se do Claude Code a napiš ji — agent je tvůj učitel a může rozvinout libovolný bod z této lekce.
+</p>
+
+</div>
+</div>
+
+<script>
+const scores = {};
+function check(qid, correct, okMsg, failMsg) {
+  const selected = document.querySelector(`input[name="${qid}"]:checked`);
+  const fb = document.getElementById(`${qid}-fb`);
+  if (!selected) {
+    fb.textContent = 'Vyber jednu odpověď.';
+    fb.className = 'quiz-feedback incorrect';
+    fb.style.display = 'block';
+    return;
+  }
+  const isCorrect = selected.value === correct;
+  fb.textContent = isCorrect ? '✓ ' + okMsg : '✗ ' + failMsg;
+  fb.className = 'quiz-feedback ' + (isCorrect ? 'correct' : 'incorrect');
+  fb.style.display = 'block';
+  scores[qid] = isCorrect;
+  document.querySelectorAll(`input[name="${qid}"]`).forEach(r => r.disabled = true);
+  document.querySelector(`#${qid} .quiz-check`).disabled = true;
+  if (Object.keys(scores).length === 4) {
+    const n = Object.values(scores).filter(Boolean).length;
+    const el = document.getElementById('quiz-score');
+    el.style.display = 'block';
+    if (n === 4) {
+      el.innerHTML = '<strong>✓ 4/4 — Výborně.</strong> Praktický úkol: najdi ve své historii postup napsaný 3×, zabal ho do SKILL.md s dobrým popisem, vyvolej přes /název. Pak si zdůvodni jeden postup, ze kterého skill záměrně NEděláš.';
+    } else if (n >= 3) {
+      el.innerHTML = `<strong>${n}/4 — Téměř.</strong> Přečti znovu sekci 2 (skill vs. CLAUDE.md vs. hook) a sekci 4 (kdy postavit). Klíč: znalost → CLAUDE.md, postup na povel → skill, guardrail vždy → hook. A pravidlo tří: extrahuj při třetím výskytu.`;
+    } else {
+      el.innerHTML = `<strong>${n}/4 — Vrať se.</strong> Přečti znovu sekci 1 a 2 — co skill je (pojmenovaný opakovaný postup) a čím se liší od ostatních vrstev. Pak sekci 5 — progressive disclosure. Výsledek: skill je Extract Method pro prompt, ne nová schopnost.`;
+    }
+  }
+}
+</script>
+</body>
+</html>

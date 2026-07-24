@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A1 — TDD | AI-assisted RSE</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    /* Cycle diagram */
+    .cycle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      margin: 1.5rem 0;
+      font-family: var(--font-sans);
+      flex-wrap: wrap;
+    }
+    .cycle-step {
+      text-align: center;
+      padding: 1rem 1.25rem;
+      border-radius: 50%;
+      width: 110px;
+      height: 110px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .cycle-step .step-label {
+      font-size: 1.3rem;
+      font-weight: 900;
+      line-height: 1;
+      margin-bottom: 0.3rem;
+    }
+    .cycle-step .step-desc {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      line-height: 1.2;
+    }
+    .cycle-step.red   { background: #fff5f5; border: 3px solid #fc8181; color: #9b2c2c; }
+    .cycle-step.green { background: #f0fff4; border: 3px solid #68d391; color: #276749; }
+    .cycle-step.blue  { background: #ebf8ff; border: 3px solid #63b3ed; color: #2c5282; }
+    .cycle-arrow {
+      font-size: 1.4rem;
+      color: var(--muted);
+      padding: 0 0.5rem;
+      flex-shrink: 0;
+    }
+
+    /* Who does what table */
+    .who-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .who-table th {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+      border-bottom: 2px solid var(--text);
+    }
+    .who-table td {
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .who-table tr:last-child td { border-bottom: none; }
+    .who-human { color: #2c5282; font-weight: 600; }
+    .who-ai    { color: #276749; font-weight: 600; }
+    .who-both  { color: #7b4f00; font-weight: 600; }
+
+    @media (max-width: 500px) {
+      .cycle-step { width: 85px; height: 85px; padding: 0.75rem; }
+      .cycle-step .step-label { font-size: 1rem; }
+      .cycle-arrow { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+<div class="content">
+
+<!-- Header -->
+<header class="lesson-header">
+  <div class="lesson-meta">
+    <span class="tag">A1</span>
+    <span class="tag">Týden 2</span>
+    Blok A: Stará disciplína
+  </div>
+  <h1>Test-Driven Development</h1>
+  <p class="lesson-subtitle">Red-green-refactor — jak napsat test dřív než kód, a proč to s AI dává smysl víc než kdy dřív</p>
+</header>
+
+<!-- Progress -->
+<div class="progress-bar">
+  <div class="progress-dot done"    title="A3"></div>
+  <div class="progress-dot done"    title="B1"></div>
+  <div class="progress-dot current" title="A1 — aktuální"></div>
+  <div class="progress-dot"         title="B2"></div>
+  <div class="progress-dot"         title="B3–B5"></div>
+  <div class="progress-dot"         title="A2, C1, C2"></div>
+  <div class="progress-dot"         title="C3, C4, A5"></div>
+  <div class="progress-dot"         title="A4, B9"></div>
+</div>
+
+<!-- 1. Jádro -->
+<h2>1 — Jádro</h2>
+
+<p>TDD je disciplína, nikoli nástroj. Píšeš test dřív, než napíšeš implementaci — test definuje, co kód musí dělat, ne jak. Cyklus jsou tři kroky: <strong>Red</strong> (test selže, kód neexistuje), <strong>Green</strong> (napíšeš minimální implementaci, test projde), <strong>Refactor</strong> (vyčistíš kód, testy stále zelené). S AI se zodpovědnost přerozdělí: člověk píše testy (Red), AI implementuje (Green), člověk reviewuje (Refactor). Test je specifikace, které AI musí vyhovět — ne hádat.</p>
+
+<div class="cycle">
+  <div class="cycle-step red">
+    <span class="step-label">RED</span>
+    <span class="step-desc">Napiš test, který selže</span>
+  </div>
+  <div class="cycle-arrow">→</div>
+  <div class="cycle-step green">
+    <span class="step-label">GREEN</span>
+    <span class="step-desc">Minimální kód, test projde</span>
+  </div>
+  <div class="cycle-arrow">→</div>
+  <div class="cycle-step blue">
+    <span class="step-label">REFACTOR</span>
+    <span class="step-desc">Vyčisti, testy zelené</span>
+  </div>
+  <div class="cycle-arrow">→</div>
+  <div class="cycle-step red" style="opacity:0.35;">
+    <span class="step-label">RED</span>
+    <span class="step-desc">Další feature</span>
+  </div>
+</div>
+
+<div class="callout">
+  <div class="callout-label">Proč to musíš umět přednášet</div>
+  <p>TDD je obrana proti deskillingu (<a href="#">C3</a>). Pokud test píše AI — nevíš, jestli testuje správnou věc. Pokud test píšeš ty — musíš domeně rozumět dřív, než AI cokoli napíše. Test je doklad porozumění.</p>
+</div>
+
+<!-- 2. Historický kontext -->
+<h2>2 — Historický kontext</h2>
+
+<p>Kent Beck formalizoval TDD v 90. letech jako součást <em>Extreme Programming</em> (XP). Kniha <em>TDD by Example</em> vyšla v 2002 — Beck na ní demonstroval celý přístup živým kódováním (peněžní operace, potom implementace JUnit frameworku samotného).</p>
+
+<p>Myšlenka "test napřed" ale existovala dřív. NASA psala ověřovací testy pro software kosmické lodi ještě před implementací v 70. letech. Beck ji systematizoval a dal jí disciplínu.</p>
+
+<p>TDD navazuje na starší tradici: <em>design by contract</em> (Bertrand Meyer, 1986) — specifikace chování jako součást kódu. Test je executable contract.</p>
+
+<div class="callout amber">
+  <div class="callout-label">Propojení s Brooksem (A3)</div>
+  <p>Test artikluje <strong>esenciální komplexitu</strong> — co musí kód dělat, jaké jsou invarianty, jaké jsou hranice. AI pak řeší akcidentální komplexitu implementace. Bez testu dáš AI esenciální problém k hádání.</p>
+</div>
+
+<!-- 3. TDD s AI -->
+<h2>3 — Jak to funguje dnes s AI</h2>
+
+<p>Přerozdělení práce v AI-assisted TDD:</p>
+
+<table class="who-table">
+  <tr>
+    <th>Krok</th>
+    <th>Kdo</th>
+    <th>Proč takto</th>
+  </tr>
+  <tr>
+    <td><strong>RED</strong> — napiš selhávající test</td>
+    <td class="who-human">Člověk</td>
+    <td>Test = specifikace domény. Pokud ho napíše AI, nevíš, co specifikuje. Toto je místo, kde se uplatňuje esenciální znalost.</td>
+  </tr>
+  <tr>
+    <td><strong>GREEN</strong> — minimální implementace</td>
+    <td class="who-ai">AI (nebo člověk)</td>
+    <td>Implementace jsou akcidentální komplexita. AI je v tomhle rychlá. Test ji ohraničuje — nemůže "přestřelit" víc než test dovolí.</td>
+  </tr>
+  <tr>
+    <td><strong>REFACTOR</strong> — vyčistit kód</td>
+    <td class="who-both">Člověk + AI</td>
+    <td>Refactoring je bezpečný, protože testy jsou zelené. AI může navrhnout čistší strukturu, člověk schválí.</td>
+  </tr>
+  <tr>
+    <td><strong>Další RED</strong> — edge cases</td>
+    <td class="who-human">Člověk (primárně)</td>
+    <td>Edge cases odhalují, co jsi v doméně nepochopil. AI může navrhnout, co zapomínáš — ale ty musíš rozhodnout, jestli to dává smysl.</td>
+  </tr>
+</table>
+
+<div class="callout green">
+  <div class="callout-label">Klíčový mechanismus</div>
+  <p>Selhávající test je <strong>harness</strong> pro agenta. Místo "napiš funkci pro výpočet energie" řekneš "<code>test_kinetic_energy_zero_velocity</code> musí projít." AI dostane verifikovatelný cíl — ne otevřenou výzvu.</p>
+</div>
+
+<!-- 4. Tři příklady -->
+<h2>4 — Tři příklady</h2>
+
+<div class="examples">
+  <div class="example-card">
+    <div class="example-label">Vědec-kodér</div>
+    <p>Implementuješ výpočet kinetické energie. Napíšeš test: při nulové rychlosti je energie přesně nula, při dvojnásobné rychlosti čtyřnásobná energie. AI napíše <code>E = 0.5 * m * v**2</code>. Test projde. Fyzikální invariant je zakódovaný dřív než implementace — AI ho nemůže porušit.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">RSE vývojář</div>
+    <p>Refaktoruješ datový pipeline. Napíšeš test: výstup refaktorované verze musí být bitově identický s původní implementací pro 3 referenční vstupy. AI refaktoruje. Pokud test selže — regrese je okamžitě viditelná, ne až v produkci. Testy jsou záchranná síť pro každý commit.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">Manažer / PI</div>
+    <p>Tým nasadil AI a velocity vzrostla 40 %. Za 6 měsíců: bug report z peer review, výsledky jsou nereprodukovatelné. Příčina: AI psala kód i testy. Testy testovaly implementaci, ne vědecké invarianty. TDD s pravidlem "test píše člověk" by to zachytil.</p>
+  </div>
+</div>
+
+<!-- 5. Propojení -->
+<h2>5 — Propojení na rámec pěti otázek</h2>
+
+<ul>
+  <li><strong>Memory (CLAUDE.md):</strong> Do CLAUDE.md patří testovací konvence — jaký framework, kde žijí testy, jaké jsou konvence pojmenování. Bez toho AI generuje testy v nekompatibilním stylu.</li>
+  <li><strong>Skills:</strong> <code>/tdd</code> skill formalizuje cyklus — spustí agenta v TDD režimu (napiš test, pak implementuj). Disciplína se stane součástí workflow, ne závisí na tom, jestli o ní vývojář vzpomene.</li>
+  <li><strong>Hooks:</strong> Hook může blokovat commit, pokud coverage klesla pod práh. Deterministická ochrana: nelze pushovat kód bez testů.</li>
+  <li><strong>MCP:</strong> MCP server s přístupem ke CI výsledkům — agent vidí, které testy selhávají v pipeline, ne jen lokálně.</li>
+  <li><strong>Subagents:</strong> Jeden agent píše testy (specifikace), druhý implementuje. Testovací agent má přístup k doménové dokumentaci; implementační agent dostane jen test jako zadání.</li>
+</ul>
+
+<!-- 6. Nepochopení -->
+<h2>6 — Nejčastější nepochopení</h2>
+
+<div class="callout amber">
+  <div class="callout-label">Co si lidé myslí</div>
+  <p>"AI píše testy i kód — TDD je zbytečné. Proč já bych psal testy, když to AI udělá za mě?"</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>Pokud AI napíše test i implementaci ve stejném kroku, test testuje implementaci — ne tvůj záměr. Test napsaný zpětně je jen dokumentace toho, co AI udělala. Selhávající test napsaný předem je specifikace toho, co chceš. To je zásadní rozdíl. AI-generated tests mají o 1,7× vyšší false-positive rate (New Relic, 2026).</p>
+</div>
+
+<div class="callout amber">
+  <div class="callout-label">Druhé nepochopení</div>
+  <p>"TDD je pomalé — psaní testů napřed zdržuje."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>TDD bez AI bylo pomalé, protože člověk psal obojí. S AI píšeš jen RED krok — AI dělá GREEN. Celkový čas na feature klesá. Čas na debugging klesá dramaticky — testy zachytí regresi v sekundách, ne v code review za týden.</p>
+</div>
+
+<!-- 7. Spicy teze -->
+<h2>7 — Spicy teze</h2>
+
+<div class="spicy">
+  <p>Nechat AI psát testy i kód není TDD. Je to test-confirmed development — potvrzuješ, že AI udělala to, co udělala. Vědecké invarianty musíš specifikovat ty. Pokud to neumíš, problém není v AI — problém je, že doméně nerozumíš dost na to, abys ji kódoval.</p>
+</div>
+
+<!-- 8. Primární zdroje -->
+<h2>8 — Primární zdroje</h2>
+
+<ul class="resource-list">
+  <li>
+    <a href="https://www.oreilly.com/library/view/test-driven-development/0321146530/" target="_blank">TDD by Example — Kent Beck (2002), kapitoly 1–3</a>
+    <span class="why">Proč: Beck kóduje živě — čteš hotový kód i myšlenkový proces. Kap. 1–3 stačí pro solidní základ (cca 40 stran). Zbytek knihy je voluntární. Přečti v originále — překlady ztrácejí Beckův přímý styl.</span>
+  </li>
+  <li>
+    <a href="https://martinfowler.com/bliki/TestDrivenDevelopment.html" target="_blank">TestDrivenDevelopment — Martin Fowler (bliki)</a>
+    <span class="why">Proč: Fowler dává TDD do kontextu agile a refactoringu (A2). Krátký, přesný, dobré pro cross-reference. 5 minut čtení.</span>
+  </li>
+  <li>
+    <a href="https://docs.anthropic.com/en/docs/claude-code/skills" target="_blank">Claude Code Skills — tdd skill</a>
+    <span class="why">Proč: Ukazuje, jak se TDD disciplína enkapsuluje jako skill. Praktický příklad harness (B1) pro TDD workflow — propojení teorie s nástrojem.</span>
+  </li>
+</ul>
+
+<!-- 9. Feynmanovo cvičení -->
+<h2>9 — Feynmanovo cvičení</h2>
+
+<div class="quiz" id="quiz-main">
+  <div class="quiz-header">Feynmanův test — TDD</div>
+
+  <!-- Q1 -->
+  <div class="quiz-question" id="q1">
+    <div class="quiz-q">1. Co znamená "RED" v red-green-refactor?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q1" value="a"> Kód má chybu a je potřeba ji opravit</label></li>
+      <li><label><input type="radio" name="q1" value="b"> Test je napsaný a selhává — implementace ještě neexistuje</label></li>
+      <li><label><input type="radio" name="q1" value="c"> CI pipeline selhala a build je červený</label></li>
+      <li><label><input type="radio" name="q1" value="d"> Refactoring zavedl regresi v existujících testech</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q1','b','Přesně. RED = test existuje, implementace ne. To je záměrný stav — dokazuje, že test skutečně testuje chybějící chování.','Ne. RED není chyba v kódu — je to záměrný stav. Píšeš test pro chování, které ještě neexistuje.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q1-fb"></div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="quiz-question" id="q2">
+    <div class="quiz-q">2. V AI-assisted TDD: kdo by měl psát selhávající test (RED krok)?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q2" value="a"> AI, protože ví jaké testy jsou potřeba pro implementaci</label></li>
+      <li><label><input type="radio" name="q2" value="b"> Člověk, protože test specifikuje záměr a doménové invarianty</label></li>
+      <li><label><input type="radio" name="q2" value="c"> Oba společně v interaktivním chat dialogu</label></li>
+      <li><label><input type="radio" name="q2" value="d"> Záleží — pokud AI zná doménu, může to udělat za tebe</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q2','b','Správně. Test = specifikace záměru. Záměr musíš artikulovat ty. Pokud to deleguješ na AI, nevíš, co specifikuješ — a ztratíš přehled nad esenciální komplexitou.','Ne. AI neví, co chceš — ví jen co jsi jí řekl. Pokud AI napíše test i implementaci, test testuje implementaci, ne tvůj záměr.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q2-fb"></div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="quiz-question" id="q3">
+    <div class="quiz-q">3. Fyzik napíše test: "při nulové rychlosti je kinetická energie přesně 0.0". Pak řekne AI: "Napiš implementaci." Co je tímto testem zajištěno?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q3" value="a"> AI implementaci nenapíše — test je příliš triviální</label></li>
+      <li><label><input type="radio" name="q3" value="b"> Fyzikální invariant je verifikovaný, AI nemůže vrátit špatnou hodnotu</label></li>
+      <li><label><input type="radio" name="q3" value="c"> Test pokrývá všechny okrajové případy numerické fyziky</label></li>
+      <li><label><input type="radio" name="q3" value="d"> AI bude nucena napsat optimalizovaný, výkonný kód</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q3','b','Přesně. Test artikuluje fyzikální invariant. AI může implementovat cokoliv — ale pokud vrátí nulu při v=0 a projde testem, invariant je splněn. To je hodnota testu jako specifikace.','Ne. Test zachytí konkrétní invariant, ne výkon a ne všechny případy. Ale to je v pořádku — začínáš jedním RED, pak přidáváš další.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q3-fb"></div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="quiz-question" id="q4">
+    <div class="quiz-q">4. Proč TDD pomáhá více s AI než bez AI?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q4" value="a"> AI automaticky spouští testy a reportuje výsledky</label></li>
+      <li><label><input type="radio" name="q4" value="b"> Selhávající test je verifikovatelný cíl — AI dostane jasnou specifikaci místo otevřené výzvy</label></li>
+      <li><label><input type="radio" name="q4" value="c"> AI generuje testy rychleji, takže RED krok je kratší</label></li>
+      <li><label><input type="radio" name="q4" value="d"> TDD eliminuje potřebu code review AI-generovaného kódu</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q4','b','Výborně. Test = harness pro agenta. Místo "napiš to nějak" dostane AI "projdi tímto testem". Verifikovatelný cíl snižuje ambiguitu — což je přesně místo, kde AI halucinuje.','Ne. Test je specifikace — to je jeho hlavní hodnota. AI dostane jasný, automaticky verifikovatelný cíl, ne jen slovní popis.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q4-fb"></div>
+  </div>
+
+  <div class="quiz-score" id="quiz-score"></div>
+</div>
+
+<!-- 10. Propojení -->
+<h2>10 — Co dál</h2>
+
+<p><strong>Co musíš znát před touto lekcí:</strong></p>
+<ul>
+  <li><a href="0001-no-silver-bullet.html">A3 — No Silver Bullet</a> — esenciální vs. akcidentální. Test zachycuje esenciální komplexitu. Bez tohoto rámce TDD vypadá jako overhead.</li>
+  <li><a href="0002-harness-vs-guardrails.html">B1 — Harness vs. Guardrails</a> — selhávající test je harness pro agenta. Hook na coverage je guardrail.</li>
+</ul>
+
+<p><strong>Příští lekce (Týden 2):</strong></p>
+<ul>
+  <li><a href="0004-ramec-peti-otazek.html">B2 — Rámec pěti otázek</a> — kompletní inventory: memory, skills, hooks, MCP, subagents. Harness a guardrails se tady konkretizují.</li>
+</ul>
+
+<p><strong>Propojení do curricula:</strong></p>
+<ul>
+  <li><em>A2 — Refactoring</em> — REFACTOR krok TDD je bezpečný právě díky testům. Bez testů je refactoring hazard. Viz Fowler.</li>
+  <li><em>C3 — Deskilling</em> — TDD jako obrana: musíš rozumět doméně dost na to, abys napsal test. AI ti nemůže tuhle práci sebrat, pokud na ní trváš.</li>
+  <li><em>D4 — TDD pro vědecký kód</em> — deepdive: jak psát testy pro simulace, numerické výpočty, stochastické metody.</li>
+</ul>
+
+<!-- Footer -->
+<div class="lesson-nav">
+  <div>
+    <span class="nav-label">Předchozí lekce</span>
+    <a href="0002-harness-vs-guardrails.html">← B1 — Harness vs. Guardrails</a>
+  </div>
+  <div>
+    <span class="nav-label">Příští lekce</span>
+    <a href="0004-ramec-peti-otazek.html">B2 — Rámec pěti otázek →</a>
+  </div>
+</div>
+
+<p style="margin-top:2rem; font-size:0.8rem; color: var(--muted); font-family: var(--font-sans);">
+  Máš otázku? Vrať se do Claude Code a napiš ji — agent je tvůj učitel a může rozvinout libovolný bod z této lekce.
+</p>
+
+</div>
+</div>
+
+<script>
+const scores = {};
+function check(qid, correct, okMsg, failMsg) {
+  const selected = document.querySelector(`input[name="${qid}"]:checked`);
+  const fb = document.getElementById(`${qid}-fb`);
+  if (!selected) {
+    fb.textContent = 'Vyber jednu odpověď.';
+    fb.className = 'quiz-feedback incorrect';
+    fb.style.display = 'block';
+    return;
+  }
+  const isCorrect = selected.value === correct;
+  fb.textContent = isCorrect ? '✓ ' + okMsg : '✗ ' + failMsg;
+  fb.className = 'quiz-feedback ' + (isCorrect ? 'correct' : 'incorrect');
+  fb.style.display = 'block';
+  scores[qid] = isCorrect;
+  document.querySelectorAll(`input[name="${qid}"]`).forEach(r => r.disabled = true);
+  document.querySelector(`#${qid} .quiz-check`).disabled = true;
+  if (Object.keys(scores).length === 4) {
+    const n = Object.values(scores).filter(Boolean).length;
+    const el = document.getElementById('quiz-score');
+    el.style.display = 'block';
+    if (n === 4) {
+      el.innerHTML = '<strong>✓ 4/4 — Skvěle.</strong> Teď praktický úkol: napiš jeden test pro kus kódu, který aktuálně nemáš pokrytý. Pak ho pošli AI k implementaci. Zápisem testu ověříš, jestli doméně opravdu rozumíš.';
+    } else if (n >= 3) {
+      el.innerHTML = `<strong>${n}/4 — Téměř.</strong> Přečti znovu tabulku v sekci 3 — klíč je v tom, <em>kdo</em> dělá RED krok a proč.`;
+    } else {
+      el.innerHTML = `<strong>${n}/4 — Vrať se.</strong> Přečti Becka, kap. 1 (15 stran) — pak se tato lekce otevře. Mezera je ve fundamentálním konceptu RED kroku.`;
+    }
+  }
+}
+</script>
+</body>
+</html>

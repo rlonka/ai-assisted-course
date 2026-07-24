@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>B2 — Rámec pěti otázek | AI-assisted RSE</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    /* Five-question table */
+    .five-q {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .five-q th {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+      border-bottom: 2px solid var(--text);
+    }
+    .five-q td {
+      padding: 0.6rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    .five-q tr:last-child td { border-bottom: none; }
+    .five-q .q-num {
+      font-family: var(--font-sans);
+      font-weight: 900;
+      font-size: 1.2rem;
+      color: var(--accent);
+      width: 1.8rem;
+    }
+    .five-q .q-name { font-weight: 700; }
+    .five-q .q-symptom { color: var(--red); font-style: italic; font-size: 0.85em; }
+    .five-q .q-ok { color: var(--green); font-size: 0.85em; }
+
+    /* Stacked layer diagram */
+    .layer-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      margin: 1.5rem 0;
+      max-width: 420px;
+    }
+    .layer {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.6rem 1rem;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      font-family: var(--font-sans);
+      font-size: 0.88rem;
+    }
+    .layer-num {
+      font-weight: 900;
+      color: var(--accent);
+      font-size: 1rem;
+      width: 1.4rem;
+      flex-shrink: 0;
+    }
+    .layer-title { font-weight: 700; min-width: 5.5rem; }
+    .layer-desc { color: var(--muted); font-size: 0.82rem; }
+    .layer-badge {
+      margin-left: auto;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.1em 0.5em;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .badge-b { background: var(--accent-light); color: var(--accent); }
+    .badge-a { background: var(--amber-light); color: var(--amber); }
+
+    @media (max-width: 500px) {
+      .layer { flex-wrap: wrap; }
+      .layer-badge { margin-left: 0; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+<div class="content">
+
+<!-- Header -->
+<header class="lesson-header">
+  <div class="lesson-meta">
+    <span class="tag">B2</span>
+    <span class="tag">Týden 2</span>
+    Blok B: Agentní paradigma
+  </div>
+  <h1>Rámec pěti otázek</h1>
+  <p class="lesson-subtitle">Memory, Skills, Hooks, MCP, Subagents — inventory, který rozhoduje, jestli agent pracuje pro tebe, nebo ty pro agenta</p>
+</header>
+
+<!-- Progress -->
+<div class="progress-bar">
+  <div class="progress-dot done"    title="A3 — No Silver Bullet"></div>
+  <div class="progress-dot done"    title="B1 — Harness vs. Guardrails"></div>
+  <div class="progress-dot done"    title="A1 — TDD"></div>
+  <div class="progress-dot current" title="B2 — Rámec pěti otázek (aktuální)"></div>
+  <div class="progress-dot"         title="B3–B5"></div>
+  <div class="progress-dot"         title="A2, C1, C2"></div>
+  <div class="progress-dot"         title="C3, C4, A5"></div>
+  <div class="progress-dot"         title="A4, B9"></div>
+</div>
+
+<!-- 1. Jádro -->
+<h2>1 — Jádro</h2>
+
+<p>Před každým netriviálním úkolem polož pět otázek. Každá otázka ověřuje jednu vrstvu agentovního workflow — a každá vrstva řeší jiný typ selhání. Pokud přeskočíš vrstvu, agent to nezahlásí. Odneseš si výsledek, který vypadá správně, ale stojí na hádání.</p>
+
+<div class="layer-stack">
+  <div class="layer">
+    <span class="layer-num">1</span>
+    <span class="layer-title">Memory</span>
+    <span class="layer-desc">Co agent ví natrvalo? <code>CLAUDE.md</code>, <code>memory/</code></span>
+    <span class="layer-badge badge-b">B3</span>
+  </div>
+  <div class="layer">
+    <span class="layer-num">2</span>
+    <span class="layer-title">Skills</span>
+    <span class="layer-desc">Které workflows jsou jako slash commands?</span>
+    <span class="layer-badge badge-b">B4</span>
+  </div>
+  <div class="layer">
+    <span class="layer-num">3</span>
+    <span class="layer-title">Hooks</span>
+    <span class="layer-desc">Co se spustí deterministicky — bez ohledu na agenta?</span>
+    <span class="layer-badge badge-b">B5</span>
+  </div>
+  <div class="layer">
+    <span class="layer-num">4</span>
+    <span class="layer-title">MCP</span>
+    <span class="layer-desc">Ke kterým externím nástrojům má agent přístup?</span>
+    <span class="layer-badge badge-b">B6</span>
+  </div>
+  <div class="layer">
+    <span class="layer-num">5</span>
+    <span class="layer-title">Subagents</span>
+    <span class="layer-desc">Kdy rozbít práci na více agentů?</span>
+    <span class="layer-badge badge-b">B9</span>
+  </div>
+</div>
+
+<div class="callout">
+  <div class="callout-label">Proč tento rámec existuje</div>
+  <p>Agent je dobrý přesně tak, jak dobrý je kontext, který dostane. Rámec pěti otázek je systematický způsob, jak tento kontext budovat — ne ad hoc, ne z paměti, ale jako disciplína před každým úkolem.</p>
+</div>
+
+<!-- 2. Co každá vrstva řeší -->
+<h2>2 — Co každá vrstva řeší</h2>
+
+<table class="five-q">
+  <tr>
+    <th>#</th>
+    <th>Otázka</th>
+    <th>Symptom bez ní</th>
+    <th>Mechanismus</th>
+  </tr>
+  <tr>
+    <td class="q-num">1</td>
+    <td><span class="q-name">Memory</span><br>Co agent ví o projektu natrvalo?</td>
+    <td class="q-symptom">Agent navrhuje jiný styl než projekt. Opakuješ konvence v každém promptu. Každá session začíná od nuly.</td>
+    <td><code>CLAUDE.md</code>, <code>.claude/memory/</code></td>
+  </tr>
+  <tr>
+    <td class="q-num">2</td>
+    <td><span class="q-name">Skills</span><br>Které opakované workflows jsou enkapsulované?</td>
+    <td class="q-symptom">Opakuješ tentýž dlouhý prompt. Výsledky se liší podle toho, jak přesně ho napíšeš ten den.</td>
+    <td><code>/skill-name</code> v <code>.claude/</code></td>
+  </tr>
+  <tr>
+    <td class="q-num">3</td>
+    <td><span class="q-name">Hooks</span><br>Co se spouští deterministicky?</td>
+    <td class="q-symptom">Agent commituje kód bez lintingu. Testy se nespouštějí, protože agent "zapomněl". Guardrails jsou volitelné.</td>
+    <td><code>settings.json</code> → hooks</td>
+  </tr>
+  <tr>
+    <td class="q-num">4</td>
+    <td><span class="q-name">MCP</span><br>Ke kterým nástrojům má agent přístup?</td>
+    <td class="q-symptom">Agent hádá stav systému nebo prosí o copy-paste výstupů. Výsledky nejsou verifikovatelné v reálném čase.</td>
+    <td>MCP servery v konfiguraci</td>
+  </tr>
+  <tr>
+    <td class="q-num">5</td>
+    <td><span class="q-name">Subagents</span><br>Kdy rozbít práci na více agentů?</td>
+    <td class="q-symptom">Jeden agent drží příliš velký kontext, ztrácí přehled. Sekvenční práce tam, kde jde o paralelizaci.</td>
+    <td><code>Task</code>, <code>Agent</code>, workflow</td>
+  </tr>
+</table>
+
+<!-- 3. Historický kontext -->
+<h2>3 — Historický kontext</h2>
+
+<p>Každá z pěti otázek má kořeny v klasické softwarové disciplíně. Nejsou to nové nápady — jsou to staré disciplíny přeložené do agentního kontextu.</p>
+
+<ul>
+  <li><strong>Memory → Ubiquitous Language (Evans, DDD 2003).</strong> Celý tým mluví stejným jazykem domény. <code>CLAUDE.md</code> je glossary projektu — agent se naučí termíny, konvence a invarianty projektu jednou, ne při každém promptu.</li>
+  <li><strong>Skills → XP collective ownership + refactoring.</strong> Opakovaný pattern je kandidát na abstrakci. Skill je procedurální abstrakce nad agentovým workflow — stejná myšlenka jako funkce.</li>
+  <li><strong>Hooks → CI/CD tradice (Jenkins, GitHub Actions).</strong> Deterministická gate na každý commit. Hook je guardrail (B1) — spustí se vždy, agent ho nemůže přeskočit.</li>
+  <li><strong>MCP → Unix filozofie.</strong> "Do one thing well." MCP server je specializovaný nástroj s jasným API. Agent orchestruje — nástroje provádějí.</li>
+  <li><strong>Subagents → Distributed systems.</strong> Izolace státu, message passing, specializace. Agent je proces. Workflow je orchestrátor. Kontext se nedělí — předává.</li>
+</ul>
+
+<div class="callout amber">
+  <div class="callout-label">Propojení s Brooksem (A3)</div>
+  <p>Rámec pěti otázek je systematická odpověď na akcidentální komplexitu agentního workflow. Memory, Skills, Hooks — to jsou nástroje, jak snížit kognitivní overhead spolupráce s agentem. Esenciální problém (co chceš) zůstává na tobě; pět otázek řeší, jak ho efektivně předat.</p>
+</div>
+
+<!-- 4. Audit v praxi -->
+<h2>4 — Audit v praxi</h2>
+
+<p>Rámec funguje jako checklist. Než zadáš agentovi netriviální úkol, projdi pět otázek v pořadí — každá stojí na předchozí.</p>
+
+<div class="callout green">
+  <div class="callout-label">Audit — příklad výstupu</div>
+  <p><strong>Projekt:</strong> vědecká simulace, Python, pytest.<br>
+  1. <strong>Memory ✓</strong> — CLAUDE.md existuje: numpy konvence, výstupní formát HDF5, styl komentářů.<br>
+  2. <strong>Skills △</strong> — chybí skill pro spuštění benchmarku. Opakuji tentýž prompt.<br>
+  3. <strong>Hooks ✓</strong> — hook na pytest, agent nemůže commitovat bez zelených testů.<br>
+  4. <strong>MCP ✗</strong> — agent nemá přístup k výsledkům CI. Ptám se ho na věci, které si musím zjistit sám.<br>
+  5. <strong>Subagents △</strong> — pro review kódu spouštím jednoho agenta. Mohl bych paralelizovat.<br>
+  <em>Výsledek: nastavit MCP pro CI, přidat benchmark skill.</em></p>
+</div>
+
+<p>Nemusíš mít všech pět vrstev najednou. Začni s Memory — je to minimum. Přidávej vrstvy, když narazíš na opakující se problém.</p>
+
+<!-- 5. Tři příklady -->
+<h2>5 — Tři příklady</h2>
+
+<div class="examples">
+  <div class="example-card">
+    <div class="example-label">Vědec-kodér</div>
+    <p>Nastavíš <code>CLAUDE.md</code> s popisem datového formátu, numpy konvencemi, fyzikálními jednotkami. Přidáš hook na pytest. Agent přestane navrhovat pandas tam, kde je numpy standard — a nepustí commit bez testů. Dvě vrstvy stačí na začátek.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">RSE vývojář</div>
+    <p>Plný stack: CLAUDE.md s architekturou a ADR (architecture decision records), skills pro review a deployment, hooks na testy + linting + type checking, MCP servery pro CI a databázi, subagents pro paralelní review bezpečnosti vs. správnosti. Výsledek: prediktabilní chování agenta — ne náhoda.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">Manažer / PI</div>
+    <p>Tým nasadil AI, velocity vzrostla 30 %. Za tři měsíce: každý vývojář má jiný výsledek ze stejného promptu. Příčina: chybí Memory vrstva. Žádný sdílený <code>CLAUDE.md</code> → žádný sdílený kontext → nepředvídatelné výstupy. CLAUDE.md není pro agenta — je to shared specification pro celý tým.</p>
+  </div>
+</div>
+
+<!-- 6. Propojení -->
+<h2>6 — Propojení na ostatní lekce</h2>
+
+<ul>
+  <li><strong>B1 — Harness vs. Guardrails:</strong> Hooks jsou guardrails. Skills jsou harness. Rámec pěti otázek pojmenovává, kam každý z nich patří v celkovém inventáři.</li>
+  <li><strong>A1 — TDD:</strong> Selhávající test je harness (Skills + Hooks). Hook blokuje commit bez testů. Memory obsahuje testovací konvence. Všechny tři vrstvy spolupracují na TDD workflow.</li>
+  <li><strong>A4 — DDD:</strong> Ubiquitous language z DDD jde přímo do Memory (CLAUDE.md). Pojmy domény jsou přesně to, co agent potřebuje znát natrvalo.</li>
+  <li><strong>B3–B6 — Deepdive:</strong> Každá z prvních čtyř vrstev má vlastní lekci. Tato lekce je mapa; jednotlivé lekce jsou territory.</li>
+</ul>
+
+<!-- 7. Nejčastější nepochopení -->
+<h2>7 — Nejčastější nepochopení</h2>
+
+<div class="callout amber">
+  <div class="callout-label">Co si lidé myslí</div>
+  <p>"Stačí dobrý prompt. CLAUDE.md je overhead — radši ten čas věnuji samotnému úkolu."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>Dobrý prompt řeší jednu session. CLAUDE.md řeší všechny session. Čas na nastavení <code>CLAUDE.md</code> se vrátí ve druhé session — a v každé další. Prompt je jednorázový; Memory je investice.</p>
+</div>
+
+<div class="callout amber">
+  <div class="callout-label">Druhé nepochopení</div>
+  <p>"MCP je zbytečná komplexita pro můj projekt."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>Bez MCP si agent musí buď domyslet stav externího systému (hádá), nebo ho dostane přes copy-paste (chybí kontext). MCP není komplexita navíc — je to standardizovaná náhrada za chaotický copy-paste. Otázka není "je MCP nutné", ale "kolik copy-paste toleruješ."</p>
+</div>
+
+<!-- 8. Spicy teze -->
+<h2>8 — Spicy teze</h2>
+
+<div class="spicy">
+  <p>Prompt bez rámce pěti otázek je jako test bez specifikace — výsledek závisí na tom, co AI odhadne. Rámec pěti otázek je tvoje specifikace pro agenta. Kdo ji nepíše, neprogramuje agenta — jen doufá.</p>
+</div>
+
+<!-- 9. Primární zdroje -->
+<h2>9 — Primární zdroje</h2>
+
+<ul class="resource-list">
+  <li>
+    <a href="https://docs.anthropic.com/en/docs/claude-code/memory" target="_blank">Claude Code — Memory (CLAUDE.md)</a>
+    <span class="why">Proč: Oficiální dokumentace Memory vrstvy. Přečti celou stránku — je krátká a obsahuje přesná pravidla pro CLAUDE.md vs. memory/ vs. .claude/settings.json.</span>
+  </li>
+  <li>
+    <a href="https://docs.anthropic.com/en/docs/claude-code/hooks" target="_blank">Claude Code — Hooks</a>
+    <span class="why">Proč: Hooks jsou deterministická vrstva guardrails. Dokumentace obsahuje příklady před/po akcích agenta. Spolu s Memory jsou to dvě nejdůležitější vrstvy pro stabilní workflow.</span>
+  </li>
+  <li>
+    <a href="https://modelcontextprotocol.io/introduction" target="_blank">MCP — Introduction (modelcontextprotocol.io)</a>
+    <span class="why">Proč: Kratší verze MCP specifikace. Přečti "Introduction" a "Concepts" — zbytek je implementační detail. Klíčové: Resources, Tools, Prompts jako tři typy MCP capabilities.</span>
+  </li>
+  <li>
+    <a href="https://www.domainlanguage.com/ddd/blue-book/" target="_blank">Domain-Driven Design — Eric Evans (2003), kap. 1–2</a>
+    <span class="why">Proč: Ubiquitous Language je historická kotva pro Memory vrstvu. Kap. 1 (30 stran) je maximum, co potřebuješ. Argument pro sdílený jazyk domény platí dnes pro agenta stejně jako tehdy pro tým.</span>
+  </li>
+</ul>
+
+<!-- 10. Feynmanovo cvičení -->
+<h2>10 — Feynmanovo cvičení</h2>
+
+<div class="quiz" id="quiz-main">
+  <div class="quiz-header">Feynmanův test — Rámec pěti otázek</div>
+
+  <!-- Q1 -->
+  <div class="quiz-question" id="q1">
+    <div class="quiz-q">1. Proč musí existovat <code>CLAUDE.md</code> — nestačí dobře napsat každý prompt zvlášť?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q1" value="a"> Protože CLAUDE.md je povinný — Claude Code bez něj nespustíš</label></li>
+      <li><label><input type="radio" name="q1" value="b"> Protože CLAUDE.md řeší všechny session najednou, prompt jen jednu — návratnost roste s každým dalším použitím</label></li>
+      <li><label><input type="radio" name="q1" value="c"> Protože do promptu se nevejdou všechny konvence projektu</label></li>
+      <li><label><input type="radio" name="q1" value="d"> Protože agent CLAUDE.md čte automaticky, takže ušetříš čas psaní promptu</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q1','b','Přesně. Memory je investice s rostoucí návratností. Prompt je náklad při každém použití. Rámec pěti otázek říká: co se opakuje, patří do stálé vrstvy — ne do jednorázového promptu.','Ne tak úplně. CLAUDE.md není povinný technicky — ale je povinný disciplínárně. Hlavní argument je ekonomický: jednou napsaná specifikace platí pro všechny session.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q1-fb"></div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="quiz-question" id="q2">
+    <div class="quiz-q">2. Jaký je rozdíl mezi Skills (Hooks) a MCP v rámci pěti otázek?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q2" value="a"> Skills jsou pro příkazy, MCP je pro databáze — to jsou různé technologie</label></li>
+      <li><label><input type="radio" name="q2" value="b"> Hooks jsou deterministické guardrails (spustí se vždy), MCP dává agentovi přístup k externím nástrojům v reálném čase</label></li>
+      <li><label><input type="radio" name="q2" value="c"> MCP je nadřazená vrstva, která zahrnuje Skills i Hooks</label></li>
+      <li><label><input type="radio" name="q2" value="d"> Skills jsou pro pokročilé uživatele, Hooks pro začátečníky</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q2','b','Správně. Hooks jsou guardrails — spustí se deterministicky, agent je nemůže přeskočit. MCP je harness — dává agentovi nástroje pro přístup k externím systémům. Různé typy vrstev řeší různé typy selhání.','Ne. Hooks a MCP řeší různé problémy ve dvou různých rovinách. Hook je deterministická reakce na akci agenta. MCP je přístup k externímu zdroji dat nebo nástroji.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q2-fb"></div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="quiz-question" id="q3">
+    <div class="quiz-q">3. Tým má agenta nastaveného — ale každý vývojář dostává jiné výsledky ze stejného promptu. Která vrstva rámce pěti otázek nejspíš chybí?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q3" value="a"> MCP — každý má jiný přístup k externím nástrojům</label></li>
+      <li><label><input type="radio" name="q3" value="b"> Subagents — každý spouští jiný počet agentů</label></li>
+      <li><label><input type="radio" name="q3" value="c"> Memory — chybí sdílené CLAUDE.md, každý agent pracuje s jiným implicitním kontextem</label></li>
+      <li><label><input type="radio" name="q3" value="d"> Skills — každý má jiné slash commands</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q3','c','Přesně. CLAUDE.md není jen pro jednoho vývojáře — je to shared specification pro celý tým. Bez ní každý agent pracuje s jiným implicitním kontextem, výsledky nejsou reprodukovatelné ani porovnatelné.','Ne. Symptom "různé výsledky ze stejného promptu" ukazuje na chybějící sdílený kontext. To je přesně to, co řeší Memory vrstva — CLAUDE.md jako společná specifikace.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q3-fb"></div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="quiz-question" id="q4">
+    <div class="quiz-q">4. Proč rámec pěti otázek prochází vrstvy v tomto pořadí (Memory → Skills → Hooks → MCP → Subagents), a ne v jiném?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q4" value="a"> Je to abecední pořadí anglických názvů</label></li>
+      <li><label><input type="radio" name="q4" value="b"> Každá vrstva stojí na předchozí — bez Memory jsou Skills nepředvídatelné, bez Hooks jsou guardrails volitelné, bez MCP Subagents nemají přístup k datům</label></li>
+      <li><label><input type="radio" name="q4" value="c"> Memory a Skills jsou povinné, ostatní volitelné — proto jsou první</label></li>
+      <li><label><input type="radio" name="q4" value="d"> Pořadí nezáleží — všech pět vrstev je nezávislých</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q4','b','Výborně. Vrstvy jsou závislé. Skill bez Memory je nedeterministický — nevíš, jaký kontext agent má. Hook bez Skills je guardrail bez harness — brání, ale nenavádí. MCP bez Hooks nemá deterministické guardrails kolem přístupu k datům. Pořadí je architekturní rozhodnutí, ne konvence.','Ne. Vrstvy jsou závislé — a to je důvod pořadí. Začni od základu (Memory = shared context), pak přidávej vrstvy, které na ní stojí.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q4-fb"></div>
+  </div>
+
+  <div class="quiz-score" id="quiz-score"></div>
+</div>
+
+<!-- 11. Co dál -->
+<h2>11 — Co dál</h2>
+
+<p><strong>Co musíš znát před touto lekcí:</strong></p>
+<ul>
+  <li><a href="0002-harness-vs-guardrails.html">B1 — Harness vs. Guardrails</a> — základní pojmový slovník. Pět otázek konkretizuje, kde každý z nich sedí.</li>
+  <li><a href="0003-tdd.html">A1 — TDD</a> — selhávající test jako harness. Konkrétní příklad, jak Memory + Skills + Hooks spolupracují na jedné disciplíně.</li>
+</ul>
+
+<p><strong>Příští lekce:</strong></p>
+<ul>
+  <li><a href="0005-memory-a-claude-md.html">B3 — Memory a CLAUDE.md</a> — jak psát CLAUDE.md, co do něj patří a co ne, jak se liší od memory/ a settings.json. Deepdive do první vrstvy rámce.</li>
+</ul>
+
+<p><strong>Propojení do curricula:</strong></p>
+<ul>
+  <li><em>A4 — Domain-Driven Design</em> — Ubiquitous Language z DDD je historická kotva pro Memory vrstvu. Evans psal pro tým; CLAUDE.md píšeš pro agenta i tým najednou.</li>
+  <li><em>C3 — Deskilling</em> — rámec pěti otázek je obrana: strukturuje, co agent smí/může/musí dělat. Bez struktury agent přebírá rozhodnutí, která patří tobě.</li>
+  <li><em>B9 — Agentic loop</em> — subagents (vrstva 5) se rozvijí v plnohodnotném orchestračním patternu: jak navrhovat workflow přes více agentů s izolovaným kontextem.</li>
+</ul>
+
+<!-- Footer -->
+<div class="lesson-nav">
+  <div>
+    <span class="nav-label">Předchozí lekce</span>
+    <a href="0003-tdd.html">← A1 — TDD</a>
+  </div>
+  <div>
+    <span class="nav-label">Příští lekce</span>
+    <a href="0005-memory-a-claude-md.html">B3 — Memory a CLAUDE.md →</a>
+  </div>
+</div>
+
+<p style="margin-top:2rem; font-size:0.8rem; color: var(--muted); font-family: var(--font-sans);">
+  Máš otázku? Vrať se do Claude Code a napiš ji — agent je tvůj učitel a může rozvinout libovolný bod z této lekce.
+</p>
+
+</div>
+</div>
+
+<script>
+const scores = {};
+function check(qid, correct, okMsg, failMsg) {
+  const selected = document.querySelector(`input[name="${qid}"]:checked`);
+  const fb = document.getElementById(`${qid}-fb`);
+  if (!selected) {
+    fb.textContent = 'Vyber jednu odpověď.';
+    fb.className = 'quiz-feedback incorrect';
+    fb.style.display = 'block';
+    return;
+  }
+  const isCorrect = selected.value === correct;
+  fb.textContent = isCorrect ? '✓ ' + okMsg : '✗ ' + failMsg;
+  fb.className = 'quiz-feedback ' + (isCorrect ? 'correct' : 'incorrect');
+  fb.style.display = 'block';
+  scores[qid] = isCorrect;
+  document.querySelectorAll(`input[name="${qid}"]`).forEach(r => r.disabled = true);
+  document.querySelector(`#${qid} .quiz-check`).disabled = true;
+  if (Object.keys(scores).length === 4) {
+    const n = Object.values(scores).filter(Boolean).length;
+    const el = document.getElementById('quiz-score');
+    el.style.display = 'block';
+    if (n === 4) {
+      el.innerHTML = '<strong>✓ 4/4 — Perfektně.</strong> Praktický úkol: otevři libovolný projekt a projdi rámec pěti otázek. Napiš, které vrstvy chybí a co by každá přinesla. To je tvůj CLAUDE.md pro příští session.';
+    } else if (n >= 3) {
+      el.innerHTML = `<strong>${n}/4 — Téměř.</strong> Přečti znovu sekci 2 — tabulku "Co každá vrstva řeší". Klíčové je pochopit, proč každá vrstva řeší jiný typ selhání.`;
+    } else {
+      el.innerHTML = `<strong>${n}/4 — Vrať se.</strong> Přečti sekce 1 a 2 znovu — jádro a tabulku. Pak si projdi B1 (Harness vs. Guardrails) — bez tohoto rámce je pět otázek jen seznam.`;
+    }
+  }
+}
+</script>
+</body>
+</html>

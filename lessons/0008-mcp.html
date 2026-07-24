@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>B6 — MCP | AI-assisted RSE</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    /* Comparison table */
+    .cmp {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.87rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .cmp th {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+      border-bottom: 2px solid var(--text);
+    }
+    .cmp td {
+      padding: 0.55rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    .cmp tr:last-child td { border-bottom: none; }
+    .cmp .col-name { font-family: var(--font-mono); font-size: 0.80rem; white-space: nowrap; }
+
+    /* In / Out lists */
+    .in-out {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .in-out-box {
+      border-radius: 4px;
+      padding: 0.8rem 1rem;
+      font-size: 0.86rem;
+    }
+    .in-box  { background: var(--green-light);  border: 1px solid #b7dfc8; }
+    .out-box { background: var(--red-light);     border: 1px solid #f9b8b8; }
+    .in-out-box h4 {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin: 0 0 0.5rem;
+      color: var(--muted);
+    }
+    .in-out-box ul { margin: 0; padding-left: 1.1rem; }
+    .in-out-box li { margin-bottom: 0.3rem; }
+    @media (max-width: 480px) { .in-out { grid-template-columns: 1fr; } }
+
+    /* Code example block */
+    .code-example {
+      background: #1a1a2e;
+      color: #e2e8f0;
+      border-radius: 6px;
+      padding: 1rem 1.2rem;
+      font-family: var(--font-mono);
+      font-size: 0.80rem;
+      line-height: 1.6;
+      margin: 1rem 0 1.5rem;
+      overflow-x: auto;
+    }
+    .code-example .cm-comment { color: #718096; }
+    .code-example .cm-heading { color: #90cdf4; font-weight: 700; }
+    .code-example .cm-key     { color: #fbd38d; }
+    .code-example .cm-val     { color: #c6f6d5; }
+
+    /* M×N vs M+N visual */
+    .mn-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1.25rem 0 1.5rem;
+    }
+    .mn-box {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.9rem 1rem;
+      font-size: 0.84rem;
+    }
+    .mn-box h4 {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      margin: 0 0 0.5rem;
+    }
+    .mn-bad  { background: var(--red-light);   border-color: #f9b8b8; }
+    .mn-good { background: var(--green-light); border-color: #b7dfc8; }
+    .mn-bad h4  { color: var(--red); }
+    .mn-good h4 { color: var(--green); }
+    .mn-box .mn-count {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 0.4rem;
+    }
+    @media (max-width: 480px) { .mn-wrap { grid-template-columns: 1fr; } }
+
+    /* Server offering rows */
+    .offer {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .offer-row {
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+      padding: 0.55rem 0.9rem;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      font-size: 0.85rem;
+    }
+    .offer-k {
+      font-family: var(--font-mono);
+      font-size: 0.80rem;
+      color: var(--accent);
+      min-width: 6.5rem;
+    }
+    .offer-d { color: var(--muted); font-size: 0.83rem; }
+  </style>
+</head>
+<body>
+<div class="page">
+<div class="content">
+
+<!-- Header -->
+<header class="lesson-header">
+  <div class="lesson-meta">
+    <span class="tag">B6</span>
+    <span class="tag">Týden 4</span>
+    Blok B: Agentní paradigma
+  </div>
+  <h1>MCP — Model Context Protocol</h1>
+  <p class="lesson-subtitle">Jak dát agentovi dosah k externím nástrojům a datům standardizovaným protokolem — a proč to není komplexita navíc, ale její opak</p>
+</header>
+
+<!-- Progress -->
+<div class="progress-bar">
+  <div class="progress-dot done"    title="A3 — No Silver Bullet"></div>
+  <div class="progress-dot done"    title="B1 — Harness vs. Guardrails"></div>
+  <div class="progress-dot done"    title="B2 — Rámec pěti otázek"></div>
+  <div class="progress-dot done"    title="B3 — Memory a CLAUDE.md"></div>
+  <div class="progress-dot done"    title="B4 — Skills a slash commands"></div>
+  <div class="progress-dot done"    title="B5 — Hooks"></div>
+  <div class="progress-dot current" title="B6 — MCP (aktuální)"></div>
+  <div class="progress-dot"         title="Subagents (vrstva 5), dále C-blok"></div>
+</div>
+
+<!-- 1. Jádro -->
+<h2>1 — Jádro</h2>
+
+<p>Agent umí přemýšlet o kódu, ale sám o sobě nevidí tvou databázi, nezná stav jobů na clusteru a nedosáhne na interní API. <strong>MCP — Model Context Protocol</strong> je standardizovaný způsob, jak agentovi tenhle dosah dát: připojíš <em>MCP server</em>, který zpřístupní nástroj nebo zdroj dat, a agent s ním umí pracovat, aniž bys psal vlastní integraci.</p>
+
+<p>MCP je vrstva 4 rámce pěti otázek: <em>„Jaký přístup k externím zdrojům agent má?"</em> Memory je znalost, skill je postup, hook je hranice — <strong>MCP je dosah</strong>. Otevřený protokol (Anthropic, konec 2024), který standardizuje, jak agent mluví s okolním světem.</p>
+
+<div class="callout">
+  <div class="callout-label">Jedno pravidlo</div>
+  <p>MCP není „další nástroj". Je to <em>protokol</em> — jazyk, kterým agent mluví s libovolným nástrojem. Nepiš N integrací pro N nástrojů; napiš (nebo použij) MCP server jednou a mluví s ním každý MCP klient.</p>
+</div>
+
+<!-- 2. Problém M×N -->
+<h2>2 — Problém, který MCP řeší: M×N → M+N</h2>
+
+<p>Bez standardu má každý AI klient (Claude Code, IDE plugin, chatbot…) vlastní způsob, jak se připojit ke každému nástroji (databáze, Git, cluster, API). <strong>M</strong> klientů × <strong>N</strong> nástrojů = M×N vlastních integrací, které někdo musí napsat a udržovat. To nefunguje — je to tatáž kombinatorická exploze, kterou historie řešila už mnohokrát.</p>
+
+<div class="mn-wrap">
+  <div class="mn-box mn-bad">
+    <h4>Bez protokolu — M×N</h4>
+    <p>Každý klient si píše vlastní adaptér ke každému nástroji. 5 klientů × 8 nástrojů = 40 integrací. Přidáš nástroj → 5 nových adaptérů.</p>
+    <div class="mn-count">roste násobně</div>
+  </div>
+  <div class="mn-box mn-good">
+    <h4>S MCP — M+N</h4>
+    <p>Každý klient mluví MCP. Každý nástroj má jeden MCP server. 5 + 8 = 13 kusů. Přidáš nástroj → jeden server, mluví s ním všichni.</p>
+    <div class="mn-count">roste součtově</div>
+  </div>
+</div>
+
+<p>Tohle je celé „proč MCP". Není to nová schopnost — je to <em>standardizace rozhraní</em>, která mění násobení na sčítání. Přesně jako USB, ovladače zařízení nebo JDBC pro databáze.</p>
+
+<!-- 3. Co server nabízí -->
+<h2>3 — Co MCP server nabízí</h2>
+
+<p>MCP server zpřístupňuje agentovi tři druhy věcí. Rozlišuj je — nejsou totéž:</p>
+
+<div class="offer">
+  <div class="offer-row">
+    <span class="offer-k">Tools</span>
+    <span class="offer-d">Akce, které agent může vyvolat — „spusť dotaz", „zařaď job", „vytvoř issue". Mají vedlejší efekty.</span>
+  </div>
+  <div class="offer-row">
+    <span class="offer-k">Resources</span>
+    <span class="offer-d">Data ke čtení — obsah souboru, řádek z DB, stav jobu. Kontext, ne akce.</span>
+  </div>
+  <div class="offer-row">
+    <span class="offer-k">Prompts</span>
+    <span class="offer-d">Předpřipravené šablony promptů, které server nabízí klientovi — opakovaný dotaz jako hotová jednotka.</span>
+  </div>
+</div>
+
+<p>Nejčastěji jde o <strong>tools</strong> (agent něco udělá) a <strong>resources</strong> (agent si něco přečte). To rozlišení má důsledek pro bezpečnost: tool s vedlejším efektem (smaže řádek) je rizikovější než resource ke čtení — a přesně tady se MCP potkává s hooky.</p>
+
+<!-- 4. Architektura -->
+<h2>4 — Architektura: klient, server, transport</h2>
+
+<p>MCP je klient–server. <strong>Klient</strong> (Claude Code) se připojí k <strong>serveru</strong>, který zpřístupňuje nástroj. Komunikují přes definovaný <em>transport</em> — buď lokálně přes <code>stdio</code> (server běží jako proces na tvém stroji), nebo vzdáleně přes HTTP.</p>
+
+<div class="code-example">
+<span class="cm-comment"># .claude/settings.json — připojení MCP serverů</span>
+<span class="cm-heading">{</span>
+  <span class="cm-key">"mcpServers"</span>: {
+
+    <span class="cm-comment">// lokální server jako proces (stdio transport)</span>
+    <span class="cm-key">"filesystem"</span>: {
+      <span class="cm-key">"command"</span>: <span class="cm-val">"npx"</span>,
+      <span class="cm-key">"args"</span>: [<span class="cm-val">"-y", "@modelcontextprotocol/server-filesystem", "./data"</span>]
+    },
+
+    <span class="cm-comment">// vzdálený server přes HTTP</span>
+    <span class="cm-key">"cluster-api"</span>: {
+      <span class="cm-key">"url"</span>: <span class="cm-val">"https://mcp.internal.hpc/slurm"</span>
+    }
+  }
+<span class="cm-heading">}</span>
+</div>
+
+<p>Lokální stdio server je dobrý pro věci na tvém stroji (souborový systém, lokální DB). Vzdálený HTTP server je pro sdílené služby (interní API, cluster). Z pohledu agenta je to jedno — protokol je stejný. To je smysl standardu: agent nemusí vědět, jestli je nástroj lokální nebo za sítí.</p>
+
+<!-- 5. Kdy MCP -->
+<h2>5 — Kdy MCP (a kdy ne)</h2>
+
+<div class="in-out">
+  <div class="in-out-box in-box">
+    <h4>Použij MCP ✓</h4>
+    <ul>
+      <li>Agent potřebuje opakovaný přístup k externímu systému (DB, cluster, API)</li>
+      <li>Existuje hotový MCP server pro tvůj nástroj (jen ho připojíš)</li>
+      <li>Přístup chceš sdílet napříč klienty i lidmi v týmu</li>
+      <li>Integrace se bude používat dlouhodobě, ne jednou</li>
+      <li>Chceš standardizovaný, auditovatelný způsob přístupu</li>
+    </ul>
+  </div>
+  <div class="in-out-box out-box">
+    <h4>Nesahej po MCP ✗</h4>
+    <ul>
+      <li>Stačí jednorázově spustit příkaz → Bash</li>
+      <li>Je to lokální postup, ne externí zdroj → skill</li>
+      <li>Přidáváš server „pro jistotu", bez konkrétní potřeby</li>
+      <li>Řešíš tím něco, co zvládne obyčejný shell nebo soubor</li>
+      <li>Server by dal agentovi široký přístup, který nedokážeš ohlídat</li>
+    </ul>
+  </div>
+</div>
+
+<p>MCP má smysl u <em>opakovaného, standardizovaného</em> přístupu. Na jednorázové „spusť mi tenhle skript" je MCP overkill — od toho je Bash. Otázka není „jde to přes MCP?", ale „budu tenhle přístup potřebovat opakovaně a chci ho mít standardizovaný?"</p>
+
+<!-- 6. Historický kontext -->
+<h2>6 — Historický kontext</h2>
+
+<p>Standardizační protokoly, které mění M×N na M+N, jsou v inženýrství stará a osvědčená věc:</p>
+
+<ul>
+  <li><strong>LSP — Language Server Protocol (Microsoft, 2016).</strong> Nejbližší analogie. Před LSP každý editor psal vlastní podporu pro každý jazyk (editorů × jazyků). LSP zavedl protokol: jeden language server na jazyk, mluví s ním každý editor. MCP je LSP pro AI nástroje.</li>
+  <li><strong>ODBC / JDBC.</strong> Standardní rozhraní k databázím. Aplikace nemusí znát konkrétní DB — mluví protokolem. MCP dělá totéž pro agenty a nástroje.</li>
+  <li><strong>USB.</strong> Jeden konektor místo desítek proprietárních. „USB-C pro AI" je běžná (a přesná) zkratka pro to, co MCP je.</li>
+  <li><strong>Device drivers.</strong> OS nemluví s každým zařízením zvlášť — mluví s ovladačem přes standardní rozhraní. MCP server je ovladač nástroje pro agenta.</li>
+</ul>
+
+<p>Pointa pro publikum: MCP nezavádí nový druh složitosti. Odstraňuje starý druh — kombinatorickou explozi vlastních integrací. Kdo tvrdí, že „MCP je komplikace navíc", si plete standard s tím, co standardizuje.</p>
+
+<!-- 7. Tři příklady -->
+<h2>7 — Tři příklady</h2>
+
+<div class="examples">
+  <div class="example-card">
+    <div class="example-label">Vědec-kodér</div>
+    <p>Data má v PostgreSQL — dřív je kopíroval do CSV, aby s nimi agent mohl pracovat. Teď připojil hotový Postgres MCP server: agent se ptá přímo na schéma a čte řádky jako <em>resources</em>. Žádné exportování, žádné zastaralé kopie. Agent pracuje nad živými daty, ale (díky read-only serveru) je nemůže změnit — přístup ke čtení, ne k zápisu.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">RSE vývojář</div>
+    <p>Tým spravuje jobs na HPC clusteru. Napsali interní MCP server nad Slurm: <em>tools</em> pro „zařaď job", „zjisti stav", <em>resources</em> pro log výstupy. Server je jeden, mluví s ním Claude Code i jejich vlastní CI bot — M+N, ne M×N. Rizikové <em>tools</em> (zrušení jobu) navíc jistí PreToolUse hook. MCP dává dosah, hook drží hranici.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">Manažer / PI</div>
+    <p>Slyší od vývojáře „potřebuju napojit agenta na náš tracker, Jira, monitoring a DB". První instinkt: „to je čtyři projekty integrace". Realita s MCP: čtyři hotové servery se připojí konfigurací, ne kódem. MCP mění integraci z vývojového projektu na konfigurační úlohu — a standard znamená, že to, co dnes napojíte pro Claude Code, zítra použije jiný klient beze změny.</p>
+  </div>
+</div>
+
+<!-- 8. Propojení -->
+<h2>8 — Propojení na ostatní lekce</h2>
+
+<ul>
+  <li><strong>B2 — Rámec pěti otázek:</strong> MCP je vrstva 4 — dosah. Odpovídá na otázku „k čemu externímu agent sáhne". Nejvyšší vrstva harness před orchestací (Subagents).</li>
+  <li><strong>B1 — Harness vs. Guardrails:</strong> MCP je harness — rozšiřuje, co agent umí (pozitivní architektura). Sám o sobě neomezuje. Proto se páruje s hooky.</li>
+  <li><strong>B5 — Hooks:</strong> MCP dává dosah, hook drží hranici. MCP <em>tool</em> s vedlejším efektem (smaž řádek, zruš job) je přesně to, co má jistit PreToolUse hook. MCP bez hooků je dosah bez brzdy.</li>
+  <li><strong>B4 — Skills:</strong> Skill je lokální postup; MCP je externí přístup. Skill může MCP <em>tool</em> volat jako krok postupu — orchestruje dosah, který MCP poskytuje.</li>
+</ul>
+
+<!-- 9. Nejčastější nepochopení -->
+<h2>9 — Nejčastější nepochopení</h2>
+
+<div class="callout amber">
+  <div class="callout-label">Nepochopení 1</div>
+  <p>„MCP je zbytečná komplexita — mně stačí, když agent spustí skript přes Bash."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>Pro jednorázové věci máš pravdu — Bash stačí. MCP se vyplatí u <em>opakovaného, standardizovaného</em> přístupu ke systému, který používá víc klientů nebo lidí. MCP nepřidává složitost; odstraňuje ji tím, že nahradí N ad-hoc integrací jedním protokolem. Komplexita je v tom M×N, které MCP ruší — ne v MCP.</p>
+</div>
+
+<div class="callout amber">
+  <div class="callout-label">Nepochopení 2</div>
+  <p>„MCP je bezpečnostní vrstva — když napojím databázi přes MCP, je to chráněné."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>MCP je dosah, ne guardrail. Dává agentovi přístup — víc přístupu, ne míň. Sám nic neblokuje. Bezpečnost přidáváš okolo: read-only server, omezená oprávnění, a PreToolUse hook na rizikové tools. MCP server s právem zápisu a bez hooku je otevřená brána, ne ochrana.</p>
+</div>
+
+<div class="callout amber">
+  <div class="callout-label">Nepochopení 3</div>
+  <p>„Musím napsat vlastní MCP server pro každý nástroj, který chci připojit."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>Pro běžné systémy (souborový systém, Postgres, Git, GitHub, Slack…) existují hotové MCP servery — jen je připojíš konfigurací. Vlastní server píšeš jen pro <em>vlastní</em> systém, který standardní server nepokrývá (interní API, váš Slurm wrapper). Napojení běžného nástroje je konfigurace, ne vývoj.</p>
+</div>
+
+<!-- 10. Spicy teze -->
+<h2>10 — Spicy teze</h2>
+
+<div class="spicy">
+  <p>MCP je nejpřeceňovanější i nejpodceňovanější vrstva zároveň. Přeceňovaná lidmi, kteří po ní sahají jako po kouzelném konektoru na všechno a zavěsí si pět serverů, které nepotřebují. Podceňovaná lidmi, kteří ji odmítají jako „hype" a přitom po sté kopírují data do CSV. Není to ani zázrak, ani móda. Je to LSP pro agenty — nudná, důležitá standardizace. A nudná standardizace vždycky vyhraje nad chytrou vlastní integrací.</p>
+</div>
+
+<!-- 11. Primární zdroje -->
+<h2>11 — Primární zdroje</h2>
+
+<ul class="resource-list">
+  <li>
+    <a href="https://modelcontextprotocol.io/" target="_blank">Model Context Protocol — oficiální specifikace</a>
+    <span class="why">Proč: Primární zdroj. Přečti „Introduction" a „Core concepts" (tools, resources, prompts) — 20 min. Pochopíš architekturu klient–server a co přesně server nabízí. Základ pro tuto lekci.</span>
+  </li>
+  <li>
+    <a href="https://docs.anthropic.com/en/docs/claude-code/mcp" target="_blank">Claude Code — MCP</a>
+    <span class="why">Proč: Jak MCP servery připojit konkrétně v Claude Code — <code>mcpServers</code> konfigurace, stdio vs. HTTP transport, hotové servery. Praktický protějšek k obecné specifikaci.</span>
+  </li>
+  <li>
+    <a href="https://microsoft.github.io/language-server-protocol/" target="_blank">Language Server Protocol (LSP)</a>
+    <span class="why">Proč: Historická kotva. LSP vyřešil M×N problém editorů a jazyků přesně stejným tahem. Přečti motivační úvod — pochopíš, proč je MCP „LSP pro AI" a proč standard poráží vlastní integrace.</span>
+  </li>
+</ul>
+
+<!-- 12. Feynmanovo cvičení -->
+<h2>12 — Feynmanovo cvičení</h2>
+
+<div class="quiz" id="quiz-main">
+  <div class="quiz-header">Feynmanův test — MCP</div>
+
+  <!-- Q1 -->
+  <div class="quiz-question" id="q1">
+    <div class="quiz-q">1. Kolega tvrdí: „MCP je jen komplexita navíc, mně stačí Bash." Kdy má pravdu a kdy ne?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q1" value="a"> Má vždycky pravdu — MCP nepřináší nic, co by Bash nezvládl</label></li>
+      <li><label><input type="radio" name="q1" value="b"> Má pravdu u jednorázových příkazů; u opakovaného sdíleného přístupu MCP naopak komplexitu ruší tím, že nahradí M×N integrací protokolem</label></li>
+      <li><label><input type="radio" name="q1" value="c"> Nemá nikdy pravdu — MCP je vždy lepší než Bash</label></li>
+      <li><label><input type="radio" name="q1" value="d"> Má pravdu, protože Bash je bezpečnější než MCP</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q1','b','Přesně. Pro jednorázový příkaz je Bash správná volba — MCP by byl overkill. MCP se vyplatí u opakovaného, standardizovaného přístupu, kde ruší kombinatorickou explozi M×N vlastních integrací. Komplexita je v tom M×N, ne v MCP.','Ne. Ani jeden extrém neplatí. U jednorázového příkazu má kolega pravdu (Bash stačí). Ale u opakovaného sdíleného přístupu MCP komplexitu odstraňuje — mění M×N integrací na M+N. Otázka je „opakovaně a standardizovaně?".')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q1-fb"></div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="quiz-question" id="q2">
+    <div class="quiz-q">2. Proč se říká, že MCP mění „M×N na M+N"?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q2" value="a"> Protože MCP snižuje počet tokenů v kontextu z násobku na součet</label></li>
+      <li><label><input type="radio" name="q2" value="b"> Bez standardu píše každý z M klientů vlastní integraci ke každému z N nástrojů (M×N); s MCP má každý klient jedno rozhraní a každý nástroj jeden server (M+N)</label></li>
+      <li><label><input type="radio" name="q2" value="c"> Protože MCP paralelizuje volání nástrojů, takže běží současně</label></li>
+      <li><label><input type="radio" name="q2" value="d"> Protože MCP kombinuje více nástrojů do jednoho volání</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q2','b','Správně. To je celé jádro MCP. Bez protokolu je každá dvojice (klient, nástroj) vlastní integrace — M×N kusů. Se standardem mluví klient protokolem a nástroj má jeden server — M+N kusů. Přidání nástroje je pak jeden server, ne M nových adaptérů. Stejný tah jako LSP.','Ne. Není to o tokenech ani paralelizaci. Jde o integrace: bez standardu M klientů × N nástrojů = M×N vlastních adaptérů; s MCP každý klient mluví protokolem a každý nástroj má jeden server = M+N. Násobení se mění na sčítání.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q2-fb"></div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="quiz-question" id="q3">
+    <div class="quiz-q">3. Napojil jsi přes MCP databázi s právem zápisu. Znamená to, že je přístup bezpečný?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q3" value="a"> Ano — MCP je bezpečnostní vrstva, přístup přes něj je chráněný</label></li>
+      <li><label><input type="radio" name="q3" value="b"> Ne — MCP je dosah, ne guardrail; bezpečnost přidáváš okolo: read-only server nebo PreToolUse hook na rizikové tools</label></li>
+      <li><label><input type="radio" name="q3" value="c"> Ano, pokud je server vzdálený přes HTTPS</label></li>
+      <li><label><input type="radio" name="q3" value="d"> Ne — MCP se pro databáze vůbec nepoužívá</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q3','b','Přesně. MCP dává víc přístupu, ne míň — je to harness, ne guardrail. Sám nic neblokuje. Bezpečnost je okolo: dej serveru jen read-only oprávnění, nebo jisti rizikové tools PreToolUse hookem. MCP s právem zápisu a bez hooku je otevřená brána.','Ne. MCP je dosah (harness), ne ochrana. Sám neblokuje nic — naopak přidává přístup. Bezpečnost přidáváš okolo: read-only server nebo hook na rizikové tools. Právo zápisu bez guardrailu není bezpečné.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q3-fb"></div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="quiz-question" id="q4">
+    <div class="quiz-q">4. Jaká je nejbližší historická analogie k MCP a proč?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q4" value="a"> Git — protože verzuje kontext agenta</label></li>
+      <li><label><input type="radio" name="q4" value="b"> LSP (Language Server Protocol) — vyřešil M×N problém editorů a jazyků jedním protokolem; MCP dělá totéž pro AI klienty a nástroje</label></li>
+      <li><label><input type="radio" name="q4" value="c"> HTTP — protože MCP servery běží přes web</label></li>
+      <li><label><input type="radio" name="q4" value="d"> Docker — protože MCP servery běží v kontejnerech</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q4','b','Výborně. LSP je přesná analogie: před ním psal každý editor podporu pro každý jazyk (editorů × jazyků). LSP zavedl protokol — jeden language server na jazyk, mluví s ním každý editor. MCP je tentýž tah pro AI: jeden server na nástroj, mluví s ním každý klient. „LSP pro AI".','Ne. Nejde o verzování, web ani kontejnery. Klíč je standardizace rozhraní, která ruší M×N: přesně to udělal LSP pro editory a jazyky. MCP je LSP pro AI klienty a nástroje — jeden server na nástroj místo integrace pro každou dvojici.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q4-fb"></div>
+  </div>
+
+  <div class="quiz-score" id="quiz-score"></div>
+</div>
+
+<!-- 13. Co dál -->
+<h2>13 — Co dál</h2>
+
+<p><strong>Co musíš znát před touto lekcí:</strong></p>
+<ul>
+  <li><a href="0004-ramec-peti-otazek.html">B2 — Rámec pěti otázek</a> — MCP je vrstva 4. Tato lekce ji rozvíjí do detailu.</li>
+  <li><a href="0007-hooks.html">B5 — Hooks</a> — MCP dává dosah, hook drží hranici. Rizikové MCP tools bez hooku jsou brána bez brzdy.</li>
+</ul>
+
+<p><strong>Praktický úkol (25 minut):</strong> Vyber externí systém, se kterým teď pracuješ ručně (databáze, Git, souborový systém). Najdi hotový MCP server (většina běžných existuje) a připoj ho v <code>settings.json</code>. Dej agentovi úkol, který dřív vyžadoval kopírování dat ven — a pozoruj, že teď sáhne rovnou ke zdroji. Pak si rozmysli: který <em>tool</em> tohoto serveru by měl jistit hook?</p>
+
+<p><strong>Příští lekce:</strong></p>
+<ul>
+  <li><em>Subagents (vrstva 5)</em> — poslední vrstva rámce pěti otázek: orchestrace. Jak jeden agent řídí víc podřízených agentů pro paralelní nebo izolovanou práci (např. review bezpečnosti vs. správnosti zvlášť). Memory, Skills, Hooks a MCP jsou stavební kameny — Subagents je skládají do postupu.</li>
+</ul>
+
+<p><strong>Propojení do curricula:</strong></p>
+<ul>
+  <li><em>C1 — FAIR4RS</em> — MCP může standardizovat přístup k datovým repozitářům a metadatům; FAIR přístupnost (A) má v MCP praktický nástroj.</li>
+  <li><em>A5 — Agile Manifesto</em> — „fungující software nad dokumentací": MCP je fungující standard, ne specifikační dokument. Přijali ho, protože řeší reálný M×N problém, ne protože je hezky navržený.</li>
+</ul>
+
+<!-- Footer -->
+<div class="lesson-nav">
+  <div>
+    <span class="nav-label">Předchozí lekce</span>
+    <a href="0007-hooks.html">← B5 — Hooks</a>
+  </div>
+  <div>
+    <span class="nav-label">Příští lekce</span>
+    <a href="0009-subagents.html">Subagents (vrstva 5) →</a>
+  </div>
+</div>
+
+<p style="margin-top:2rem; font-size:0.8rem; color: var(--muted); font-family: var(--font-sans);">
+  Máš otázku? Vrať se do Claude Code a napiš ji — agent je tvůj učitel a může rozvinout libovolný bod z této lekce.
+</p>
+
+</div>
+</div>
+
+<script>
+const scores = {};
+function check(qid, correct, okMsg, failMsg) {
+  const selected = document.querySelector(`input[name="${qid}"]:checked`);
+  const fb = document.getElementById(`${qid}-fb`);
+  if (!selected) {
+    fb.textContent = 'Vyber jednu odpověď.';
+    fb.className = 'quiz-feedback incorrect';
+    fb.style.display = 'block';
+    return;
+  }
+  const isCorrect = selected.value === correct;
+  fb.textContent = isCorrect ? '✓ ' + okMsg : '✗ ' + failMsg;
+  fb.className = 'quiz-feedback ' + (isCorrect ? 'correct' : 'incorrect');
+  fb.style.display = 'block';
+  scores[qid] = isCorrect;
+  document.querySelectorAll(`input[name="${qid}"]`).forEach(r => r.disabled = true);
+  document.querySelector(`#${qid} .quiz-check`).disabled = true;
+  if (Object.keys(scores).length === 4) {
+    const n = Object.values(scores).filter(Boolean).length;
+    const el = document.getElementById('quiz-score');
+    el.style.display = 'block';
+    if (n === 4) {
+      el.innerHTML = '<strong>✓ 4/4 — Výborně.</strong> Praktický úkol: připoj jeden hotový MCP server (DB, Git, filesystem) v settings.json, dej agentovi úkol nad živým zdrojem — a rozmysli, který tool by měl jistit hook.';
+    } else if (n >= 3) {
+      el.innerHTML = `<strong>${n}/4 — Téměř.</strong> Přečti znovu sekci 2 (M×N → M+N) a sekci 9 (nepochopení). Klíč: MCP je standard, který ruší kombinatoriku integrací, a je to dosah (harness), ne bezpečnostní vrstva.`;
+    } else {
+      el.innerHTML = `<strong>${n}/4 — Vrať se.</strong> Přečti znovu sekci 1 a 2 — co MCP je (protokol, ne nástroj) a jaký problém řeší (M×N → M+N). Pak sekci 3 — tools vs. resources. Výsledek: MCP je dosah, standardizovaný jako LSP.`;
+    }
+  }
+}
+</script>
+</body>
+</html>

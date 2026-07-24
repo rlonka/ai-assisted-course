@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>D1 — Context engineering | AI-assisted RSE</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    .cmp { width: 100%; border-collapse: collapse; font-size: 0.87rem; margin: 1rem 0 1.5rem; }
+    .cmp th { font-family: var(--font-sans); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.5rem 0.75rem; text-align: left; border-bottom: 2px solid var(--text); }
+    .cmp td { padding: 0.55rem 0.75rem; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+    .cmp tr:last-child td { border-bottom: none; }
+
+    /* Context window layers */
+    .ctx { display: flex; flex-direction: column; gap: 0.4rem; margin: 1.25rem 0 0.6rem; max-width: 620px; }
+    .ctx-layer { display: grid; grid-template-columns: 11rem 1fr; gap: 0.8rem; align-items: baseline; border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 4px; padding: 0.55rem 0.9rem; background: var(--bg-card); font-size: 0.84rem; }
+    .ctx-layer .cl-name { font-family: var(--font-mono); font-size: 0.80rem; color: var(--accent); }
+    .ctx-layer .cl-desc { color: var(--muted); font-size: 0.82rem; }
+    @media (max-width: 480px) { .ctx-layer { grid-template-columns: 1fr; gap: 0.2rem; } }
+
+    .code-example { background: #1a1a2e; color: #e2e8f0; border-radius: 6px; padding: 1rem 1.2rem; font-family: var(--font-mono); font-size: 0.80rem; line-height: 1.6; margin: 1rem 0 0.6rem; overflow-x: auto; }
+    .code-example .cm-comment { color: #718096; }
+    .code-example .cm-bad  { color: #fc8181; }
+    .code-example .cm-good { color: #90cdf4; }
+    .code-cap { font-size: 0.78rem; color: var(--muted); margin: 0 0 1.5rem; font-family: var(--font-sans); }
+
+    .in-out { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0 1.5rem; }
+    .in-out-box { border-radius: 4px; padding: 0.8rem 1rem; font-size: 0.86rem; }
+    .in-box  { background: var(--green-light);  border: 1px solid #b7dfc8; }
+    .out-box { background: var(--red-light);     border: 1px solid #f9b8b8; }
+    .in-out-box h4 { font-family: var(--font-sans); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; margin: 0 0 0.5rem; color: var(--muted); }
+    .in-out-box ul { margin: 0; padding-left: 1.1rem; }
+    .in-out-box li { margin-bottom: 0.3rem; }
+    @media (max-width: 480px) { .in-out { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<div class="page">
+<div class="content">
+
+<header class="lesson-header">
+  <div class="lesson-meta">
+    <span class="tag">D1</span>
+    <span class="tag">Týden 10</span>
+    Blok D: Praxe a zavádění
+  </div>
+  <h1>Context engineering</h1>
+  <p class="lesson-subtitle">Kvalita výstupu je funkcí toho, co model vidí. „Prompt engineering" nebyla nikdy o kouzelných slovech — je to editorská práce s obsahem kontextového okna.</p>
+</header>
+
+<div class="progress-bar">
+  <div class="progress-dot done" title="Blok A — kompletní"></div>
+  <div class="progress-dot done" title="Blok B — kompletní"></div>
+  <div class="progress-dot done" title="Blok C — kompletní"></div>
+  <div class="progress-dot current" title="D1 — Context engineering (aktuální)"></div>
+  <div class="progress-dot" title="D2 — Verifikace a code review"></div>
+  <div class="progress-dot" title="D3 — Bezpečnost a citlivá data"></div>
+  <div class="progress-dot" title="D4 — Licence a provenance"></div>
+  <div class="progress-dot" title="D5 — Zavádění v týmu"></div>
+</div>
+
+<h2>1 — Jádro</h2>
+
+<p><strong>Context engineering</strong> je disciplína cíleného sestavení toho, co model vidí, než začne odpovídat. Model neví nic o tvém problému kromě dvou zdrojů: co se naučil při tréninku, a co je <em>právě teď</em> v jeho kontextovém okně. To druhé je jediné, co ovládáš — a rozhoduje o kvalitě výstupu víc než jakákoliv „chytrá" formulace.</p>
+
+<p>Dlouho se tomu říkalo „prompt engineering" a evokovalo to hledání magických frází. To bylo zavádějící. Skutečná práce není vymyslet zaklínadlo — je to <em>kurátorství</em>: dostat do okna přesně ty instrukce, kód, doménový jazyk a příklady, které model potřebuje, a nezanést ho šumem. Je to editorská, ne alchymistická dovednost.</p>
+
+<div class="callout">
+  <div class="callout-label">Jedno pravidlo</div>
+  <p>Model nedokáže vzít v úvahu to, co nemá v kontextu. Většina špatných výstupů není chyba modelu — je to chybějící nebo utopený kontext. Než viníš model, zeptej se: „vidělo to vůbec všechno, co bylo potřeba?"</p>
+</div>
+
+<h2>2 — Kontextové okno je vzácný zdroj</h2>
+
+<p>Kontextové okno je konečné a každý token v něm soupeří o pozornost. Dvě selhání jsou zrcadlová: <em>příliš málo</em> (model nemá klíčovou informaci a domýšlí si) a <em>příliš mnoho</em> (podstatné se utopí v balastu — „context rot"). Cíl není okno naplnit, ale nabít ho <strong>signálem</strong>.</p>
+
+<table class="cmp">
+  <tr><th>Málo kontextu</th><th>Zašuměný kontext</th><th>Kurátorovaný kontext</th></tr>
+  <tr>
+    <td>„Naparsuj ten soubor" (jaký formát? co je výstup?)</td>
+    <td>Vysypeš celé repo do promptu</td>
+    <td>Relevantní soubor + formát + příklad výstupu + doménový termín</td>
+  </tr>
+  <tr>
+    <td>Model si domyslí formát → mimo</td>
+    <td>Podstatné se ztratí v balastu → mimo</td>
+    <td>Model má přesně, co potřebuje → trefa</td>
+  </tr>
+</table>
+
+<p>To je most na celý blok B: <strong>harness</strong> (B1) je stroj, který kontext skládá — čte soubory, spouští nástroje, vkládá výsledky. Context engineering je dovednost, jak ten stroj řídit: co mu dát přečíst, jak zadat úkol, kdy začít načisto.</p>
+
+<h2>3 — Vrstvy kontextu</h2>
+
+<p>Kontext není jeden text — skládá se z vrstev s různou životností. Vědět, co patří do které, je jádro dovednosti:</p>
+
+<div class="ctx">
+  <div class="ctx-layer"><span class="cl-name">CLAUDE.md / paměť</span><span class="cl-desc">Trvalá vrstva: doménový jazyk (A4), konvence, „jak tu pracujeme". Platí napříč sezeními. (B3)</span></div>
+  <div class="ctx-layer"><span class="cl-name">Načtené soubory</span><span class="cl-desc">Relevantní kód a data pro tenhle úkol. Harness je čte na vyžádání.</span></div>
+  <div class="ctx-layer"><span class="cl-name">Zadání úkolu</span><span class="cl-desc">Co chceš, v jakém formátu, s jakými omezeními a příklady.</span></div>
+  <div class="ctx-layer"><span class="cl-name">Výsledky nástrojů</span><span class="cl-desc">Výstupy testů, běhů, vyhledávání — zpětná vazba pro další krok.</span></div>
+  <div class="ctx-layer"><span class="cl-name">Historie konverzace</span><span class="cl-desc">Dosavadní průběh. Roste — a časem se sama stává šumem (proto se hodí začít načisto).</span></div>
+</div>
+
+<p>Praktický důsledek: <em>trvalé</em> věci (doménový slovník, konvence) patří do CLAUDE.md, ne do každého promptu zvlášť. <em>Jednorázové</em> věci (tenhle konkrétní úkol) patří do zadání. Když to pleteš — opakuješ konvence v každém promptu, nebo naopak čekáš, že si model zapamatuje jednorázový detail navždy — plýtváš oknem i svým časem.</p>
+
+<h2>4 — Konkrétní techniky</h2>
+
+<div class="in-out">
+  <div class="in-out-box in-box">
+    <h4>Nabíjí kontext signálem ✓</h4>
+    <ul>
+      <li><strong>Buď konkrétní:</strong> formát výstupu, meze, cíl — ne „udělej to hezčí"</li>
+      <li><strong>Dej příklad:</strong> jeden vzor vstup→výstup řekne víc než odstavec popisu</li>
+      <li><strong>Odkaž na soubory:</strong> ať model čte reálný kód, ne tvůj popis z paměti</li>
+      <li><strong>Dej doménový jazyk (A4):</strong> správné termíny místo generických</li>
+      <li><strong>Rozděl úkol:</strong> menší krok = míň místa pro odbočení (agilní smyčka, A5)</li>
+    </ul>
+  </div>
+  <div class="in-out-box out-box">
+    <h4>Zanáší kontext šumem ✗</h4>
+    <ul>
+      <li>Vágní zadání („zlepši to") → model si domyslí cíl</li>
+      <li>Vysypání celého repa → podstatné se utopí</li>
+      <li>Popisování kódu slovy místo jeho načtení → hraje na tichou poštu</li>
+      <li>Dlouhá zašuměná historie → začni raději načisto</li>
+      <li>Protichůdné instrukce nastřádané v jednom okně</li>
+    </ul>
+  </div>
+</div>
+
+<div class="code-example">
+<span class="cm-comment"># Zašuměné zadání — model si domýšlí</span>
+<span class="cm-bad">"napiš mi funkci na ta data"</span>
+
+<span class="cm-comment"># Kurátorované — formát, vstup, doménový termín, příklad</span>
+<span class="cm-good">"Přečti si data/spektrum.csv (sloupce: vlnová_délka[nm], intenzita).</span>
+<span class="cm-good"> Napiš funkci najdi_piky(spektrum) -> list[Pik], která vrátí lokální</span>
+<span class="cm-good"> maxima nad prahem. Pik má vlnovou_délku a výšku. Příklad: viz test_piky.py."</span>
+</div>
+<p class="code-cap">Rozdíl není v délce ani v chytrosti slov — je v tom, kolik nejistoty jsi z okna odstranil.</p>
+
+<h2>5 — Proč to teď rozhoduje víc než dřív</h2>
+
+<p>Když AI píše čím dál větší kusy práce, přesouvá se tvoje páka z <em>psaní kódu</em> na <em>sestavení kontextu, ze kterého kód vznikne</em>. To je posun rolí, ne jen technika: RSE, který umí skvěle kurátorovat kontext, dostane z průměrného modelu lepší výsledky než ten, kdo umí programovat líp, ale krmí model šumem.</p>
+
+<p>Zároveň je to obrana proti trust gapu (C4): čím líp je kontext postavený, tím míň si model domýšlí — a domýšlení je přesně to, co plodí věrohodně vypadající nesmysly. Dobrý kontext nezaručí správnost (to dělá až verifikace, D2), ale dramaticky sníží počet chyb, které vůbec vzniknou. Context engineering je prevence; review je léčba.</p>
+
+<h2>6 — Historický kontext</h2>
+
+<ul>
+  <li><strong>Od „prompt" k „context".</strong> Rané období (2020–2023) hledalo kouzelné fráze („act as an expert…"). Ukázalo se, že nosič kvality není formulace, ale obsah okna — pojmenování se posunulo na <em>context engineering</em>.</li>
+  <li><strong>Retrieval-augmented generation (RAG).</strong> Formalizace myšlenky „přines modelu relevantní kus, než odpoví". Průmyslová verze téhož principu, který děláš ručně, když odkážeš na soubor.</li>
+  <li><strong>Agentní harness (B).</strong> Nástroje jako Claude Code automatizují sestavení kontextu — čtou soubory, spouští testy, vkládají výsledky. Context engineering se z ruční práce stal částečně prací nástroje, který řídíš.</li>
+  <li><strong>Systémové karty a instrukce.</strong> Vrstva trvalých instrukcí (CLAUDE.md) je institucionalizovaný kontext — místo opakování v každém promptu.</li>
+</ul>
+
+<h2>7 — Tři příklady</h2>
+
+<div class="examples">
+  <div class="example-card">
+    <div class="example-label">Vědec-kodér</div>
+    <p>Ptá se modelu „proč mi ta simulace diverguje?" a dostává obecné rady. Chybí kontext. Když místo toho načte relevantní soubor, přiloží chybový výstup a řekne „časový krok je 0.01, řeším Navierovy-Stokesovy rovnice, viz konfigurace", dostane cílenou odpověď. Naučí se, že model není věštec — je to systém, který pracuje s tím, co vidí.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">RSE vývojář</div>
+    <p>Zapíše konvence týmu, doménový slovník (A4) a „jak tu stavíme" do CLAUDE.md jednou — místo aby to opakoval v každém promptu. Pro konkrétní úkoly pak píše krátká, konkrétní zadání s odkazem na soubory a příkladem výstupu. Když sezení zašumí, začne načisto místo aby bojoval s rozbředlou historií. Kontext řídí vědomě, jako každý jiný zdroj.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">Manažer / PI</div>
+    <p>Vidí, že dva lidé se stejným nástrojem mají velmi různé výsledky, a myslí si, že jde o „talent na AI". Realita: liší se dovedností kurátorovat kontext. Praktický dopad: investice do sdíleného CLAUDE.md a doménového slovníku zvedne výstup celého týmu víc než upgrade modelu. Context engineering je týmová infrastruktura, ne individuální trik.</p>
+  </div>
+</div>
+
+<h2>8 — Propojení na ostatní lekce</h2>
+
+<ul>
+  <li><strong>B1 — Harness:</strong> Harness je stroj, který kontext sestavuje; context engineering je dovednost, jak ho řídit. Neoddělitelné.</li>
+  <li><strong>B3 — Memory a CLAUDE.md:</strong> Trvalá vrstva kontextu. Sem patří vše, co má platit napříč sezeními.</li>
+  <li><strong>A4 — DDD:</strong> Doménový jazyk je nejcennější kus kontextu — jazyk, kterým modelu sdělíš svou doménu.</li>
+  <li><strong>C4 — Trust gap:</strong> Dobrý kontext snižuje domýšlení, a tím počet věrohodně vypadajících chyb. Prevence před verifikací.</li>
+</ul>
+
+<h2>9 — Nejčastější nepochopení</h2>
+
+<div class="callout amber"><div class="callout-label">Nepochopení 1</div><p>„Existuje kouzelná formulace promptu, kterou když najdu, model bude vždycky dobrý."</p></div>
+<div class="callout green"><div class="callout-label">Skutečnost</div><p>Nosič kvality není formulace, ale obsah okna. Žádné zaklínadlo nenahradí chybějící relevantní soubor nebo doménový termín. „Chytrá slova" na prázdném kontextu nefungují; obyčejná slova na dobře postaveném kontextu ano. Práce je editorská, ne magická.</p></div>
+
+<div class="callout amber"><div class="callout-label">Nepochopení 2</div><p>„Čím víc kontextu dám, tím líp — přiložím rovnou celé repo."</p></div>
+<div class="callout green"><div class="callout-label">Skutečnost</div><p>Víc není líp — víc <em>signálu</em> je líp. Vysypání celého repa utopí to podstatné (context rot) a zhorší výsledek. Cíl je kurátorství: přesně relevantní soubory, ne všechny. Okno je vzácný zdroj, ne skladiště.</p></div>
+
+<div class="callout amber"><div class="callout-label">Nepochopení 3</div><p>„Context engineering je jen dočasná berlička, než budou modely dost chytré."</p></div>
+<div class="callout green"><div class="callout-label">Skutečnost</div><p>Ani nejchytřejší model neví, co mu neřekneš — tvoje data, tvou doménu, tvůj cíl. Sestavení relevantního kontextu je informační problém, ne problém inteligence modelu. Čím schopnější modely, tím větší páka je dát jim správný kontext, ne menší.</p></div>
+
+<h2>10 — Spicy teze</h2>
+
+<div class="spicy"><p>„Prompt engineering" bylo jedno z nejšťastnějších přejmenování v historii oboru — protože zamaskovalo, jak nudná a jak zásadní ta dovednost doopravdy je. Není v ní žádná magie slov; je to editorská dřina — rozhodnout, co model uvidí a co ne. A přesně proto ji lidé podceňují: čekají tajný trik a dostanou disciplínu kurátora. Kdo hledá zaklínadlo, prohrává s tím, kdo prostě dá modelu správný soubor.</p></div>
+
+<h2>11 — Primární zdroje</h2>
+
+<ul class="resource-list">
+  <li><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank">Effective context engineering for AI agents — Anthropic</a><span class="why">Proč: Přímo o tom, jak kontext sestavovat pro agentní systémy — vrstvy, kurátorství, práce s oknem. Jádro téhle lekce v aplikované podobě.</span></li>
+  <li><a href="https://www.promptingguide.ai/" target="_blank">Prompt Engineering Guide</a><span class="why">Proč: Přehled konkrétních technik (příklady, dekompozice, formát). Ber jako katalog nástrojů, ne jako hledání zaklínadel.</span></li>
+  <li><a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview" target="_blank">Claude — prompt engineering overview (Anthropic docs)</a><span class="why">Proč: Praktická referenční příručka k tomu, jak zadávat úkoly konkrétně a s příklady. Nutné minimum pro každodenní práci.</span></li>
+</ul>
+
+<h2>12 — Feynmanovo cvičení</h2>
+
+<div class="quiz" id="quiz-main">
+  <div class="quiz-header">Feynmanův test — Context engineering</div>
+
+  <div class="quiz-question" id="q1">
+    <div class="quiz-q">1. Model dá špatnou odpověď. Proč je první otázka „vidělo to všechno potřebné?", ne „je model hloupý?"</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q1" value="a"> Není — špatná odpověď vždy znamená slabý model</label></li>
+      <li><label><input type="radio" name="q1" value="b"> Model dokáže vzít v úvahu jen to, co má v kontextu; většina špatných výstupů je chybějící nebo utopený kontext, ne selhání modelu</label></li>
+      <li><label><input type="radio" name="q1" value="c"> Protože modely jsou vždy dokonalé</label></li>
+      <li><label><input type="radio" name="q1" value="d"> Protože stačí zopakovat prompt hlasitěji</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q1','b','Přesně. Model pracuje jen s tím, co je v okně (plus trénink). Když mu chybí relevantní soubor, formát nebo doménový termín, domýšlí si — a to plodí chyby. Než viníš model, ověř kontext. To je nejlevnější oprava, kterou máš.','Ne. Model bere v úvahu jen to, co má v kontextu. Většina špatných výstupů není slabý model, ale chybějící nebo zašuměný kontext. První a nejlevnější oprava je zkontrolovat, jestli model vůbec viděl vše potřebné.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q1-fb"></div>
+  </div>
+
+  <div class="quiz-question" id="q2">
+    <div class="quiz-q">2. Proč není „přilož celé repo do promptu" dobrá strategie?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q2" value="a"> Je — víc kontextu je vždy líp</label></li>
+      <li><label><input type="radio" name="q2" value="b"> Okno je vzácný zdroj; balast utopí to podstatné (context rot) a zhorší výsledek — cíl je signál, ne objem</label></li>
+      <li><label><input type="radio" name="q2" value="c"> Protože repo je tajné</label></li>
+      <li><label><input type="radio" name="q2" value="d"> Není žádný důvod, klidně to dělej</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q2','b','Správně. Víc není líp — víc signálu je líp. Kontextové okno je konečné a každý irelevantní token soupeří o pozornost s tím podstatným. Vysypání repa je context rot: podstatné se ztratí. Kurátorství (relevantní soubory, ne všechny) poráží objem.','Ne. Okno je vzácný zdroj. Vysypání celého repa utopí to podstatné v balastu (context rot) a výsledek zhorší. Nejde o objem, ale o signál — přilož jen relevantní soubory.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q2-fb"></div>
+  </div>
+
+  <div class="quiz-question" id="q3">
+    <div class="quiz-q">3. Co patří do CLAUDE.md a co do jednorázového zadání úkolu?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q3" value="a"> Všechno do každého promptu, CLAUDE.md není potřeba</label></li>
+      <li><label><input type="radio" name="q3" value="b"> Trvalé věci (doménový slovník, konvence, „jak tu pracujeme") do CLAUDE.md; jednorázové věci (tenhle konkrétní úkol, formát, příklad) do zadání</label></li>
+      <li><label><input type="radio" name="q3" value="c"> Všechno do CLAUDE.md, zadání má být prázdné</label></li>
+      <li><label><input type="radio" name="q3" value="d"> Je to jedno, model si vše pamatuje navždy</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q3','b','Výborně. Vrstvy kontextu mají různou životnost. Trvalé (konvence, doménový jazyk) patří do CLAUDE.md, ať to neopakuješ. Jednorázové (tenhle úkol) patří do zadání. Plést to — opakovat konvence pořád, nebo čekat, že si model zapamatuje jednorázový detail — plýtvá oknem i časem.','Ne. Vrstvy mají různou životnost. Trvalé věci (doménový slovník, konvence) patří jednou do CLAUDE.md; jednorázové (konkrétní úkol, formát) do zadání. Model si jednorázový detail nezapamatuje navždy a opakovat konvence v každém promptu je plýtvání.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q3-fb"></div>
+  </div>
+
+  <div class="quiz-question" id="q4">
+    <div class="quiz-q">4. Jak context engineering souvisí s trust gapem (C4)?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q4" value="a"> Nesouvisí nijak</label></li>
+      <li><label><input type="radio" name="q4" value="b"> Dobrý kontext snižuje, kolik si model domýšlí, a tím počet věrohodně vypadajících chyb; je to prevence, kterou pak doplňuje verifikace jako léčba</label></li>
+      <li><label><input type="radio" name="q4" value="c"> Nahrazuje verifikaci úplně — s dobrým kontextem není třeba ověřovat</label></li>
+      <li><label><input type="radio" name="q4" value="d"> Zhoršuje trust gap, protože model zní jistěji</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q4','b','Přesně. Domýšlení plodí věrohodně vypadající nesmysly (trust gap). Čím líp postavený kontext, tím míň si model domýšlí, tím míň chyb vznikne. Ale pozor: dobrý kontext je prevence, ne záruka. Správnost potvrdí až verifikace (D2). Context engineering snižuje počet chyb; review je chytá.','Ne. Dobrý kontext snižuje domýšlení, a tím počet chyb — to je prevence trust gapu. Ale nenahrazuje verifikaci: správnost potvrdí až ověření (D2). Context engineering je léčba prevencí, review je léčba diagnózou.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q4-fb"></div>
+  </div>
+
+  <div class="quiz-score" id="quiz-score"></div>
+</div>
+
+<h2>13 — Co dál</h2>
+
+<p><strong>Co musíš znát před touto lekcí:</strong></p>
+<ul>
+  <li><a href="0002-harness-vs-guardrails.html">B1 — Harness vs. Guardrails</a> — stroj, který kontext sestavuje.</li>
+  <li><a href="0005-memory-a-claude-md.html">B3 — Memory a CLAUDE.md</a> — trvalá vrstva kontextu.</li>
+</ul>
+
+<p><strong>Praktický úkol (20 minut):</strong> Vezmi poslední prompt, kde ti model dal špatný výsledek. Přepiš ho: přidej relevantní soubor, formát výstupu, jeden příklad a doménový termín. Porovnej výsledky. Pak přesuň všechno trvalé (konvence, slovník) z promptu do CLAUDE.md a zkus úkol znovu s krátkým zadáním.</p>
+
+<p><strong>Příští lekce:</strong> <em>D2 — Verifikace a code review AI výstupů.</em> Context engineering snižuje chyby; D2 je o tom, jak zbývající chytit.</p>
+
+<div class="lesson-nav">
+  <div><span class="nav-label">Předchozí lekce</span><a href="0017-agile-manifesto.html">← A5 — Agile Manifesto</a></div>
+  <div><span class="nav-label">Příští lekce</span><a href="0019-verifikace-code-review.html">D2 — Verifikace a code review →</a></div>
+</div>
+
+<p style="margin-top:2rem; font-size:0.8rem; color: var(--muted); font-family: var(--font-sans);">Máš otázku? Vrať se do Claude Code a napiš ji — agent je tvůj učitel a může rozvinout libovolný bod z této lekce.</p>
+
+</div>
+</div>
+
+<script>
+const scores = {};
+function check(qid, correct, okMsg, failMsg) {
+  const selected = document.querySelector(`input[name="${qid}"]:checked`);
+  const fb = document.getElementById(`${qid}-fb`);
+  if (!selected) { fb.textContent = 'Vyber jednu odpověď.'; fb.className = 'quiz-feedback incorrect'; fb.style.display = 'block'; return; }
+  const isCorrect = selected.value === correct;
+  fb.textContent = isCorrect ? '✓ ' + okMsg : '✗ ' + failMsg;
+  fb.className = 'quiz-feedback ' + (isCorrect ? 'correct' : 'incorrect');
+  fb.style.display = 'block';
+  scores[qid] = isCorrect;
+  document.querySelectorAll(`input[name="${qid}"]`).forEach(r => r.disabled = true);
+  document.querySelector(`#${qid} .quiz-check`).disabled = true;
+  if (Object.keys(scores).length === 4) {
+    const n = Object.values(scores).filter(Boolean).length;
+    const el = document.getElementById('quiz-score');
+    el.style.display = 'block';
+    if (n === 4) { el.innerHTML = '<strong>✓ 4/4 — Výborně.</strong> Kontext je jediné, co u modelu opravdu ovládáš. Praktický úkol: vezmi špatný prompt, donabíj ho signálem (soubor, formát, příklad, doménový termín) a přesuň trvalé věci do CLAUDE.md.'; }
+    else if (n >= 3) { el.innerHTML = `<strong>${n}/4 — Téměř.</strong> Přečti znovu sekci 2 (okno jako vzácný zdroj) a 3 (vrstvy). Klíč: kurátorství signálu, ne objem; trvalé do CLAUDE.md, jednorázové do zadání.`; }
+    else { el.innerHTML = `<strong>${n}/4 — Vrať se.</strong> Přečti sekci 1 a 2 — kvalita výstupu je funkcí obsahu okna, ne chytrých slov, a okno je vzácný zdroj, ne skladiště.`; }
+  }
+}
+</script>
+</body>
+</html>

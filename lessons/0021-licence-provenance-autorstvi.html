@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>D4 — Licence, provenance a autorství | AI-assisted RSE</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    .cmp { width: 100%; border-collapse: collapse; font-size: 0.87rem; margin: 1rem 0 1.5rem; }
+    .cmp th { font-family: var(--font-sans); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.5rem 0.75rem; text-align: left; border-bottom: 2px solid var(--text); }
+    .cmp td { padding: 0.55rem 0.75rem; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+    .cmp tr:last-child td { border-bottom: none; }
+
+    .qs { display: flex; flex-direction: column; gap: 0.5rem; margin: 1.25rem 0 0.6rem; max-width: 640px; }
+    .q-row { display: grid; grid-template-columns: 12rem 1fr; gap: 0.8rem; align-items: baseline; border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 4px; padding: 0.55rem 0.9rem; background: var(--bg-card); font-size: 0.85rem; }
+    .q-row .q-k { font-family: var(--font-sans); font-weight: 600; color: var(--accent); font-size: 0.82rem; }
+    .q-row .q-v { color: var(--muted); line-height: 1.45; }
+    @media (max-width: 480px) { .q-row { grid-template-columns: 1fr; gap: 0.2rem; } }
+
+    .in-out { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0 1.5rem; }
+    .in-out-box { border-radius: 4px; padding: 0.8rem 1rem; font-size: 0.86rem; }
+    .in-box  { background: var(--green-light);  border: 1px solid #b7dfc8; }
+    .out-box { background: var(--red-light);     border: 1px solid #f9b8b8; }
+    .in-out-box h4 { font-family: var(--font-sans); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; margin: 0 0 0.5rem; color: var(--muted); }
+    .in-out-box ul { margin: 0; padding-left: 1.1rem; }
+    .in-out-box li { margin-bottom: 0.3rem; }
+    @media (max-width: 480px) { .in-out { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<div class="page">
+<div class="content">
+
+<header class="lesson-header">
+  <div class="lesson-meta">
+    <span class="tag">D4</span>
+    <span class="tag">Týden 13</span>
+    Blok D: Praxe a zavádění
+  </div>
+  <h1>Licence, provenance a autorství</h1>
+  <p class="lesson-subtitle">Komu patří kód, který napsal model? Jak přiznat, že u toho AI byla? A kdo za to ručí? Ve vědě, kde je citace měna a reprodukovatelnost povinnost, nejsou tyhle otázky formalita.</p>
+</header>
+
+<div class="progress-bar">
+  <div class="progress-dot done" title="Blok A — kompletní"></div>
+  <div class="progress-dot done" title="Blok B — kompletní"></div>
+  <div class="progress-dot done" title="Blok C — kompletní"></div>
+  <div class="progress-dot done" title="D1 — Context engineering"></div>
+  <div class="progress-dot done" title="D2 — Verifikace a code review"></div>
+  <div class="progress-dot done" title="D3 — Bezpečnost a citlivá data"></div>
+  <div class="progress-dot current" title="D4 — Licence, provenance a autorství (aktuální)"></div>
+  <div class="progress-dot" title="D5 — Zavádění v týmu"></div>
+</div>
+
+<h2>1 — Jádro</h2>
+
+<p>Tahle lekce spojuje tři otázky, které AI-generovaný kód otevírá a které mají ve vědě zvlášť ostrou hranu:</p>
+
+<div class="qs">
+  <div class="q-row"><span class="q-k">Licence</span><span class="q-v">Smí ten kód vůbec vzniknout a být použit tak, jak chceš? Nereprodukoval model něco pod cizí licencí?</span></div>
+  <div class="q-row"><span class="q-k">Provenance</span><span class="q-v">Je zaznamenáno, že u vzniku byla AI — jak, kterým modelem, na jaký prompt? (Provenance je princip FAIR, C1.)</span></div>
+  <div class="q-row"><span class="q-k">Autorství</span><span class="q-v">Kdo je autor a kdo ručí? AI není autor; odpovědnost nese člověk.</span></div>
+</div>
+
+<p>Společný jmenovatel všech tří je <strong>dohledatelnost a odpovědnost</strong>. Věda stojí na tom, že víš, odkud co pochází, smíš to použít a někdo za to ručí. AI do téhle triády vnáší nejistotu — a úkolem RSE je tu nejistotu spravovat, ne ignorovat.</p>
+
+<div class="callout">
+  <div class="callout-label">Jedno pravidlo</div>
+  <p>AI není autor a nemůže nést odpovědnost — tu vždy nese člověk, který výstup přijal. Nemůžeš citovat tušení a nemůžeš vinit model. Provenance (záznam, že a jak u toho AI byla) je způsob, jak zůstaneš odpovědný za kód, který jsi nenapsal.</p>
+</div>
+
+<h2>2 — Licence: dva různé problémy</h2>
+
+<p>„Licence AI kódu" míchá dvě odlišné otázky. Rozpleť je:</p>
+
+<table class="cmp">
+  <tr><th>&nbsp;</th><th>Vstupní problém</th><th>Výstupní problém</th></tr>
+  <tr><td>Otázka</td><td>Nereprodukoval model kus cizího licencovaného kódu?</td><td>Pod jakou licencí smíš výstup šířit ty?</td></tr>
+  <tr><td>Riziko</td><td>„Contaminace" — např. GPL úryvek ve tvém MIT projektu</td><td>Nejasné autorské právo na strojově generovaný text</td></tr>
+  <tr><td>Obrana</td><td>Ověř neobvyklé/rozsáhlé bloky, hlídej známé vzory, nech si ukázat zdroj</td><td>Znej politiku poskytovatele; drž člověka v roli autora</td></tr>
+</table>
+
+<p>Vstupní problém je reálný hlavně u <em>velkých, doslovných</em> bloků — model může reprodukovat rozpoznatelný kus tréninkového kódu i s jeho licenčními závazky. U krátkých idiomů (smyčka, standardní volání) je riziko nízké. Praktické pravidlo: čím větší a osobitější blok model „vyplivne" najednou, tím víc se hodí ověřit, že nejde o citaci cizího díla — copyleft licence (GPL) mohou nakazit celý projekt.</p>
+
+<p>Výstupní problém je právně nedořešený a liší se dle jurisdikce — v mnoha z nich čistě strojově generovaný text nemusí požívat autorskoprávní ochrany. Prakticky to řešíš tím, že <strong>člověk zůstává autorem</strong>: výběrem, úpravou a verifikací (D2) vzniká lidský tvůrčí příspěvek, který kód ukotví.</p>
+
+<h2>3 — Provenance: zapiš, že u toho AI byla</h2>
+
+<p><strong>Provenance</strong> je záznam původu — odkud artefakt pochází a jak vznikl. Je to jeden z pilířů FAIR4RS (C1): reprodukovatelná věda potřebuje vědět, jak software vznikl. AI do procesu vnáší krok, který se dřív nezaznamenával — a který teď zaznamenat patří.</p>
+
+<p>Nejde o byrokracii, ale o dvě konkrétní hodnoty. Za prvé <em>reprodukovatelnost</em> (C2): když se za rok ptáš „jak vznikla tahle analýza?", odpověď „vygeneroval ji model X na tenhle prompt" je součást metody. Za druhé <em>odpovědnost</em>: provenance drží stopu k člověku, který výstup přijal. Co konkrétně zaznamenat, je otázka míry — od minima (že AI byla použita) po detail (model, verze, prompt) u klíčových částí. Ve vědeckém softwaru míří dobrá praxe k tomu více, ne méně: raději v commit messagi, changelogu nebo metodách zmínit, kde AI hrála podstatnou roli.</p>
+
+<h2>4 — Autorství: AI není autor</h2>
+
+<p>Vědecké časopisy i společnosti se shodly rychle a jasně: <strong>AI nemůže být autorem</strong> článku ani softwaru. Autorství totiž neznamená jen „napsal text" — znamená <em>nést odpovědnost</em> za dílo, ručit za jeho správnost a umět ho obhájit. To model nemůže. Může být nástrojem (jako statistický software), ne autorem.</p>
+
+<p>Z toho plyne praktický standard, který uzavírá blok B i D2: člověk, který AI použil, je plně odpovědný za výsledek. „Vygeneroval to model" není v článku obhajoba o nic víc než „spletl se Excel". Použití AI se <em>přiznává</em> (typicky v sekci metody/poděkování dle politiky časopisu), ale odpovědnost se nepřenáší. Přiznání + odpovědnost jdou ruku v ruce: řekneš, že jsi nástroj použil, a ručíš za to, co z něj vzešlo.</p>
+
+<h2>5 — Praktická hygiena</h2>
+
+<div class="in-out">
+  <div class="in-out-box in-box">
+    <h4>Drží tě v čistém ✓</h4>
+    <ul>
+      <li><strong>Přiznej</strong> podstatné použití AI (metody, poděkování, commit)</li>
+      <li><strong>Zaznamenej provenance</strong> u klíčových částí — model, kontext, prompt</li>
+      <li><strong>Ověř velké doslovné bloky</strong> na cizí licenci před použitím</li>
+      <li><strong>Znej licenční politiku</strong> svého AI nástroje (kdo vlastní výstup)</li>
+      <li><strong>Zůstaň autorem:</strong> vyber, uprav, ověř — lidský příspěvek ukotví dílo</li>
+    </ul>
+  </div>
+  <div class="in-out-box out-box">
+    <h4>Dostane tě do problému ✗</h4>
+    <ul>
+      <li>Zamlčení, že klíčovou analýzu napsala AI</li>
+      <li>Uvedení modelu jako spoluautora</li>
+      <li>Vložení velkého vygenerovaného bloku bez kontroly původu</li>
+      <li>„Model to napsal" jako obhajoba chyby v publikaci</li>
+      <li>Žádný záznam, jak kód vznikl → nereprodukovatelné</li>
+    </ul>
+  </div>
+</div>
+
+<h2>6 — Historický kontext</h2>
+
+<ul>
+  <li><strong>Provenance ve vědě.</strong> Dohledatelnost původu dat a metod je stará vědecká norma; FAIR4RS (2022) ji rozšířil explicitně na software. AI přidala nový krok, který do provenance patří.</li>
+  <li><strong>Politiky časopisů (2023).</strong> Nature, Science, ICMJE a další rychle stanovily: AI nesmí být autor; použití se přiznává. Reakce na vlnu generativních nástrojů.</li>
+  <li><strong>US Copyright Office a soudy (2023–).</strong> Rozhodnutí, že čistě strojově generovaný výstup nepožívá autorskoprávní ochrany bez lidského tvůrčího příspěvku. Právní stav se stále vyvíjí.</li>
+  <li><strong>Spory o tréninková data (Copilot, obrazové modely).</strong> Otevřená otázka, nakolik výstup nese licenční závazky tréninkového kódu. Motivuje opatrnost u velkých doslovných bloků.</li>
+</ul>
+
+<h2>7 — Tři příklady</h2>
+
+<div class="examples">
+  <div class="example-card">
+    <div class="example-label">Vědec-kodér</div>
+    <p>Napsal analýzu k článku převážně s AI. Neví, jestli to má přiznat. Rozhodne se ano — do sekce metody napíše, že klíčové skripty vznikly s asistencí modelu, a do repozitáře uloží prompty a verzi modelu. Když se pak recenzent ptá „jak jste к tomu došli?", má provenance po ruce. Přiznání ho nezdiskreditovalo — naopak posílilo reprodukovatelnost (C2).</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">RSE vývojář</div>
+    <p>Model mu vygeneroval nezvykle rozsáhlou, osobitou funkci najednou. Zpozorní: může to být reprodukovaný cizí kód pod copyleft licencí, který by nakazil jeho MIT projekt. Nechá si ukázat, odkud vzor pochází, a raději funkci přepíše vlastními slovy. Do repozitáře nastaví konvenci: podstatný AI příspěvek se zmiňuje v commit messagi. Provenance je součást hygieny, ne dodatečná práce.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">Manažer / PI</div>
+    <p>Ptá se, jaká má být politika skupiny k AI a publikacím. Nastaví tři pravidla podle politik časopisů: (1) AI nikdy jako autor; (2) podstatné použití se přiznává v metodách; (3) odpovědnost za výsledek nese vždy člověk. Rámuje to jasně: přiznat AI není přiznání slabosti, je to vědecká poctivost — stejná jako uvést použitý přístroj nebo statistický software.</p>
+  </div>
+</div>
+
+<h2>8 — Propojení na ostatní lekce</h2>
+
+<ul>
+  <li><strong>C1 — FAIR4RS:</strong> Provenance je přímo princip FAIR. AI přidala krok do vzniku softwaru, který do záznamu původu patří.</li>
+  <li><strong>C2 — Reprodukovatelnost:</strong> „Jak tenhle kód vznikl" je součást metody. Bez provenance AI použití nereprodukuješ.</li>
+  <li><strong>D2 — Verifikace:</strong> Ownership — odesílaný kód je tvůj, ručíš za něj. Autorství je táž myšlenka na úrovni publikace.</li>
+  <li><strong>D3 — Bezpečnost:</strong> Sesterská lekce governance. D3 řeší vstup (co poslat do modelu), D4 výstup (komu patří a jak přiznat, co vyjde).</li>
+</ul>
+
+<h2>9 — Nejčastější nepochopení</h2>
+
+<div class="callout amber"><div class="callout-label">Nepochopení 1</div><p>„Když přiznám, že jsem použil AI, budu vypadat, že jsem to nezvládl sám."</p></div>
+<div class="callout green"><div class="callout-label">Skutečnost</div><p>Přiznat nástroj je vědecká poctivost, ne přiznání slabosti — stejně jako uvedeš použitý spektrometr nebo statistický balík. Zamlčení naopak ohrožuje reprodukovatelnost a při odhalení působí jako neúplné vykázání metody. Transparentnost posiluje, netají.</p></div>
+
+<div class="callout amber"><div class="callout-label">Nepochopení 2</div><p>„Model je můj hlavní přispěvatel, uvedu ho jako spoluautora."</p></div>
+<div class="callout green"><div class="callout-label">Skutečnost</div><p>AI nemůže být autor — autorství znamená nést odpovědnost a umět dílo obhájit, což model nedokáže. Politiky časopisů to výslovně zakazují. AI se uvádí jako použitý nástroj (v metodách/poděkování), ne jako autor. Autoři jsou lidé, kteří za dílo ručí.</p></div>
+
+<div class="callout amber"><div class="callout-label">Nepochopení 3</div><p>„Kód vyplivl model, takže na něm nemůže váznout cizí licence."</p></div>
+<div class="callout green"><div class="callout-label">Skutečnost</div><p>Model se učil na cizím kódu a může reprodukovat rozpoznatelný blok i s jeho licenčními závazky — hlavně u velkých, osobitých úseků. Copyleft (GPL) může nakazit celý projekt. U rozsáhlých doslovných bloků ověř původ nebo je přepiš. Riziko je nízké u idiomů, reálné u velkých kusů.</p></div>
+
+<h2>10 — Spicy teze</h2>
+
+<div class="spicy"><p>Nejtišší integritní problém AI ve vědě není plagiát ani halucinace — je to <em>ztráta provenance</em>. Když analýzu napíše model a nikdo nezaznamená jak, vznikne výsledek bez rodokmenu: nikdo neví, odkud přišel, nikdo ho neumí zopakovat, a přesto se pod něj někdo podepsal. Věda se za staletí naučila ptát „odkud to víš?" — a generativní AI nabízí svůdnou zkratku, jak na tu otázku přestat umět odpovědět. Provenance není papírování; je to jediná věc, která drží tvůj podpis spojený s tím, za co ručíš.</p></div>
+
+<h2>11 — Primární zdroje</h2>
+
+<ul class="resource-list">
+  <li><a href="https://www.nature.com/nature-portfolio/editorial-policies/ai" target="_blank">Nature — AI a autorství (editorial policy)</a><span class="why">Proč: Přímý zdroj pravidla „AI není autor, použití se přiznává". Referenční politika, o kterou se opře většina vědeckých oborů.</span></li>
+  <li><a href="https://www.nature.com/articles/s41597-022-01710-x" target="_blank">FAIR Principles for Research Software (FAIR4RS)</a><span class="why">Proč: Kde je provenance zakotvena jako princip. Rámuje, proč záznam „jak software vznikl" (včetně AI) patří k reprodukovatelné vědě.</span></li>
+  <li><a href="https://www.copyright.gov/ai/" target="_blank">US Copyright Office — AI initiative</a><span class="why">Proč: Aktuální stav autorskoprávní otázky u strojově generovaného výstupu a role lidského příspěvku. Rámuje výstupní licenční problém ze sekce 2.</span></li>
+</ul>
+
+<h2>12 — Feynmanovo cvičení</h2>
+
+<div class="quiz" id="quiz-main">
+  <div class="quiz-header">Feynmanův test — Licence, provenance a autorství</div>
+
+  <div class="quiz-question" id="q1">
+    <div class="quiz-q">1. Proč AI nemůže být uvedena jako spoluautor článku nebo softwaru?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q1" value="a"> Může, pokud napsala většinu textu</label></li>
+      <li><label><input type="radio" name="q1" value="b"> Autorství znamená nést odpovědnost za dílo a umět ho obhájit — to model nedokáže; může být jen nástroj, ne autor (a politiky časopisů to výslovně zakazují)</label></li>
+      <li><label><input type="radio" name="q1" value="c"> Může, ale jen v poděkování</label></li>
+      <li><label><input type="radio" name="q1" value="d"> Nemůže jen proto, že nemá e-mail</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q1','b','Přesně. Autorství není „napsal text" — je to nést odpovědnost a ručit za správnost, což model nemůže. Proto je AI nástroj (jako statistický software), ne autor; časopisy to výslovně zakazují. Použití se přiznává v metodách/poděkování, autoři jsou lidé, kteří za dílo ručí.','Ne. Autorství znamená nést odpovědnost za dílo a obhájit ho — model to nedokáže, ať napsal jakkoli velkou část. Je to nástroj, ne autor. Použití se přiznává, ale mezi autory AI nepatří.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q1-fb"></div>
+  </div>
+
+  <div class="quiz-question" id="q2">
+    <div class="quiz-q">2. Co je provenance a proč u AI-generovaného kódu záleží?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q2" value="a"> Licenční poplatek za model</label></li>
+      <li><label><input type="radio" name="q2" value="b"> Záznam původu — jak artefakt vznikl; u AI drží reprodukovatelnost (jak analýza vznikla) i odpovědnost (stopa k člověku), je to princip FAIR (C1)</label></li>
+      <li><label><input type="radio" name="q2" value="c"> Nástroj na detekci plagiátů</label></li>
+      <li><label><input type="radio" name="q2" value="d"> Typ open-source licence</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q2','b','Správně. Provenance = záznam původu (jak artefakt vznikl). AI přidala krok, který se dřív nezaznamenával. Dvě hodnoty: reprodukovatelnost (za rok víš, jak analýza vznikla — model, prompt) a odpovědnost (stopa k člověku, který výstup přijal). Je to pilíř FAIR4RS. Ne papírování — způsob, jak zůstaneš odpovědný.','Ne. Provenance je záznam původu — jak artefakt vznikl. U AI drží reprodukovatelnost (jak analýza vznikla) a odpovědnost (stopa k člověku). Je to princip FAIR (C1), ne poplatek ani detektor plagiátů.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q2-fb"></div>
+  </div>
+
+  <div class="quiz-question" id="q3">
+    <div class="quiz-q">3. Model ti najednou vygeneroval rozsáhlý, osobitý blok kódu. Proč zpozornět z licenčního hlediska?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q3" value="a"> Není důvod — co vyplivne model, nemá žádnou licenci</label></li>
+      <li><label><input type="radio" name="q3" value="b"> Model se učil na cizím kódu a velký doslovný blok může být reprodukce díla pod cizí licencí; copyleft (GPL) by mohl nakazit celý projekt — proto ověř původ nebo přepiš</label></li>
+      <li><label><input type="radio" name="q3" value="c"> Protože velký blok je vždy chybný</label></li>
+      <li><label><input type="radio" name="q3" value="d"> Protože AI kód nikdy nefunguje</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q3','b','Výborně. Riziko „contaminace" je reálné u velkých, osobitých bloků — model může reprodukovat rozpoznatelný kus tréninkového kódu i s jeho licencí. Copyleft (GPL) úryvek v MIT projektu je problém. U krátkých idiomů je riziko nízké, u velkých doslovných úseků reálné: ověř zdroj, nebo přepiš vlastními slovy.','Ne. To, že kód „vyplivl model", ho nezbavuje cizí licence. Model se učil na licencovaném kódu a velký doslovný blok může nést jeho závazky (např. GPL), které nakazí projekt. U rozsáhlých osobitých úseků ověř původ nebo přepiš.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q3-fb"></div>
+  </div>
+
+  <div class="quiz-question" id="q4">
+    <div class="quiz-q">4. „V publikaci byla chyba, ale tu část psal model, takže za ni nemůžu." Kde je problém?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q4" value="a"> Nikde — model je zodpovědný</label></li>
+      <li><label><input type="radio" name="q4" value="b"> Odpovědnost nese vždy člověk, který výstup přijal; „model to napsal" není obhajoba o nic víc než „spletl se Excel“ — přiznání použití a odpovědnost jdou spolu, nepřenášejí se na nástroj</label></li>
+      <li><label><input type="radio" name="q4" value="c"> Problém je jen v tom, že jsi AI vůbec použil</label></li>
+      <li><label><input type="radio" name="q4" value="d"> Odpovědný je výrobce modelu</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q4','b','Přesně. Autorství = odpovědnost, a ta se na nástroj nepřenáší. „Model to napsal" neobstojí stejně jako „spletl se Excel". Přiznat použití AI ano (poctivost), ale ručit musíš ty. Přiznání a odpovědnost jdou ruku v ruce — řekneš, že jsi nástroj použil, a stojíš za výsledkem. To je táž ownership jako v D2.','Ne. Odpovědnost nese člověk, který výstup přijal — nepřenáší se na model ani jeho výrobce. „Model to napsal" není obhajoba. Použití se přiznává, ale za správnost ručíš ty, stejně jako u jakéhokoli nástroje.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q4-fb"></div>
+  </div>
+
+  <div class="quiz-score" id="quiz-score"></div>
+</div>
+
+<h2>13 — Co dál</h2>
+
+<p><strong>Co musíš znát před touto lekcí:</strong></p>
+<ul>
+  <li><a href="0013-fair4rs.html">C1 — FAIR4RS</a> — provenance jako princip reprodukovatelné vědy.</li>
+  <li><a href="0019-verifikace-code-review.html">D2 — Verifikace</a> — ownership: odesílaný kód je tvůj a ručíš za něj.</li>
+</ul>
+
+<p><strong>Praktický úkol (20 minut):</strong> Vezmi projekt, kde jsi použil AI, a doplň provenance: do README nebo commit historie zaznamenej, kde AI hrála podstatnou roli (a ideálně model/verzi). Pak si najdi politiku k AI u časopisu tvého oboru a napiš si dvě věty, které bys dal do sekce metody. Nakonec projdi, jestli v kódu není nezvykle velký vygenerovaný blok, jehož původ bys měl ověřit.</p>
+
+<p><strong>Příští lekce:</strong> <em>D5 — Zavádění v týmu.</em> Poslední lekce kurzu: jak tohle všechno — nástroje, verifikaci, bezpečnost, governance — dostat do praxe celé skupiny.</p>
+
+<div class="lesson-nav">
+  <div><span class="nav-label">Předchozí lekce</span><a href="0020-bezpecnost-citliva-data.html">← D3 — Bezpečnost a citlivá data</a></div>
+  <div><span class="nav-label">Příští lekce</span><a href="0022-zavadeni-v-tymu.html">D5 — Zavádění v týmu →</a></div>
+</div>
+
+<p style="margin-top:2rem; font-size:0.8rem; color: var(--muted); font-family: var(--font-sans);">Máš otázku? Vrať se do Claude Code a napiš ji — agent je tvůj učitel a může rozvinout libovolný bod z této lekce.</p>
+
+</div>
+</div>
+
+<script>
+const scores = {};
+function check(qid, correct, okMsg, failMsg) {
+  const selected = document.querySelector(`input[name="${qid}"]:checked`);
+  const fb = document.getElementById(`${qid}-fb`);
+  if (!selected) { fb.textContent = 'Vyber jednu odpověď.'; fb.className = 'quiz-feedback incorrect'; fb.style.display = 'block'; return; }
+  const isCorrect = selected.value === correct;
+  fb.textContent = isCorrect ? '✓ ' + okMsg : '✗ ' + failMsg;
+  fb.className = 'quiz-feedback ' + (isCorrect ? 'correct' : 'incorrect');
+  fb.style.display = 'block';
+  scores[qid] = isCorrect;
+  document.querySelectorAll(`input[name="${qid}"]`).forEach(r => r.disabled = true);
+  document.querySelector(`#${qid} .quiz-check`).disabled = true;
+  if (Object.keys(scores).length === 4) {
+    const n = Object.values(scores).filter(Boolean).length;
+    const el = document.getElementById('quiz-score');
+    el.style.display = 'block';
+    if (n === 4) { el.innerHTML = '<strong>✓ 4/4 — Výborně.</strong> Dohledatelnost a odpovědnost. Praktický úkol: doplň provenance do projektu a připrav dvě věty o AI do sekce metody dle politiky svého oboru.'; }
+    else if (n >= 3) { el.innerHTML = `<strong>${n}/4 — Téměř.</strong> Přečti znovu sekci 3 (provenance) a 4 (autorství). Klíč: AI není autor, použití se přiznává, provenance drží reprodukovatelnost i odpovědnost.`; }
+    else { el.innerHTML = `<strong>${n}/4 — Vrať se.</strong> Přečti sekci 1 a 4 — společný jmenovatel je dohledatelnost a odpovědnost; AI je nástroj, ne autor, a odpovědnost nese vždy člověk.`; }
+  }
+}
+</script>
+</body>
+</html>

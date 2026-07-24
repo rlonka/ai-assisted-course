@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>B3 — Memory a CLAUDE.md | AI-assisted RSE</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    /* Hierarchy diagram */
+    .hierarchy {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      margin: 1.5rem 0;
+      max-width: 460px;
+    }
+    .hier-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.55rem 1rem;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      font-family: var(--font-sans);
+      font-size: 0.86rem;
+    }
+    .hier-icon { font-size: 1rem; width: 1.4rem; text-align: center; flex-shrink: 0; }
+    .hier-path { font-family: var(--font-mono); font-size: 0.82rem; min-width: 11rem; }
+    .hier-desc { color: var(--muted); font-size: 0.80rem; }
+    .hier-row.global  { border-color: #a0aec0; background: #f7fafc; }
+    .hier-row.project { border-color: #63b3ed; background: #ebf8ff; }
+    .hier-row.local   { border-color: #68d391; background: #f0fff4; }
+    .hier-arrow { font-size: 0.8rem; color: var(--muted); padding-left: 1.4rem; font-family: var(--font-sans); }
+
+    /* Memory type comparison */
+    .mem-compare {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.87rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .mem-compare th {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+      border-bottom: 2px solid var(--text);
+    }
+    .mem-compare td {
+      padding: 0.55rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    .mem-compare tr:last-child td { border-bottom: none; }
+    .mem-compare .col-file { font-family: var(--font-mono); font-size: 0.80rem; }
+
+    /* In / Out lists */
+    .in-out {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .in-out-box {
+      border-radius: 4px;
+      padding: 0.8rem 1rem;
+      font-size: 0.86rem;
+    }
+    .in-box  { background: var(--green-light);  border: 1px solid #b7dfc8; }
+    .out-box { background: var(--red-light);     border: 1px solid #f9b8b8; }
+    .in-out-box h4 {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin: 0 0 0.5rem;
+      color: var(--muted);
+    }
+    .in-out-box ul { margin: 0; padding-left: 1.1rem; }
+    .in-out-box li { margin-bottom: 0.3rem; }
+    @media (max-width: 480px) { .in-out { grid-template-columns: 1fr; } }
+
+    /* Code example block */
+    .claude-md-example {
+      background: #1a1a2e;
+      color: #e2e8f0;
+      border-radius: 6px;
+      padding: 1rem 1.2rem;
+      font-family: var(--font-mono);
+      font-size: 0.80rem;
+      line-height: 1.6;
+      margin: 1rem 0 1.5rem;
+      overflow-x: auto;
+    }
+    .claude-md-example .cm-comment { color: #718096; }
+    .claude-md-example .cm-heading { color: #90cdf4; font-weight: 700; }
+    .claude-md-example .cm-key     { color: #fbd38d; }
+    .claude-md-example .cm-val     { color: #c6f6d5; }
+  </style>
+</head>
+<body>
+<div class="page">
+<div class="content">
+
+<!-- Header -->
+<header class="lesson-header">
+  <div class="lesson-meta">
+    <span class="tag">B3</span>
+    <span class="tag">Týden 2</span>
+    Blok B: Agentní paradigma
+  </div>
+  <h1>Memory a CLAUDE.md</h1>
+  <p class="lesson-subtitle">Jak dát agentovi trvalou paměť projektu — co psát, co ne, a jak se liší tři typy paměti v Claude Code</p>
+</header>
+
+<!-- Progress -->
+<div class="progress-bar">
+  <div class="progress-dot done"    title="A3 — No Silver Bullet"></div>
+  <div class="progress-dot done"    title="B1 — Harness vs. Guardrails"></div>
+  <div class="progress-dot done"    title="A1 — TDD"></div>
+  <div class="progress-dot done"    title="B2 — Rámec pěti otázek"></div>
+  <div class="progress-dot current" title="B3 — Memory a CLAUDE.md (aktuální)"></div>
+  <div class="progress-dot"         title="B4–B5"></div>
+  <div class="progress-dot"         title="A2, C1, C2"></div>
+  <div class="progress-dot"         title="C3, C4, A4, B9"></div>
+</div>
+
+<!-- 1. Jádro -->
+<h2>1 — Jádro</h2>
+
+<p>Agent nemá paměť mezi sezeními — pokud mu ji nedáš. Každá nová session začíná od nuly: prázdný kontext, žádná znalost tvého projektu, žádné konvence. <strong>CLAUDE.md</strong> tento problém řeší: je to soubor, který Claude Code přečte automaticky na začátku každé session a přidá do kontextu. Není to prompt — je to <em>konfigurace projektu pro agenta</em>.</p>
+
+<p>Správně napsaný CLAUDE.md znamená: agent ví, jak projekt vypadá, jaký má styl, co jsou jeho invarianty, a jaký jazyk domény tým používá — bez toho, abys to musel vysvětlovat pokaždé znovu.</p>
+
+<div class="callout">
+  <div class="callout-label">Jedno pravidlo</div>
+  <p>Cokoliv, co jsi napsal do promptu více než jednou, patří do CLAUDE.md. Cokoliv, co agent potřebuje vědět o projektu — ne o úkolu — patří do CLAUDE.md.</p>
+</div>
+
+<!-- 2. Tři typy paměti -->
+<h2>2 — Tři typy paměti v Claude Code</h2>
+
+<p>Claude Code rozlišuje tři různé mechanismy paměti. Jsou navzájem nezávislé, řeší různé problémy, a nesměšují se.</p>
+
+<table class="mem-compare">
+  <tr>
+    <th>Soubor / mechanismus</th>
+    <th>Kdo píše</th>
+    <th>Kdy se čte</th>
+    <th>Co patří dovnitř</th>
+  </tr>
+  <tr>
+    <td class="col-file">CLAUDE.md</td>
+    <td>Ty (ručně)</td>
+    <td>Každá session automaticky</td>
+    <td>Konvence projektu, ubiquitous language, invarianty, tech stack</td>
+  </tr>
+  <tr>
+    <td class="col-file">.claude/memory/</td>
+    <td>Agent (automaticky)</td>
+    <td>Na žádost, nebo když je relevantní</td>
+    <td>Dočasné poznámky, co si agent zapamatoval napříč sezeními</td>
+  </tr>
+  <tr>
+    <td class="col-file">.claude/settings.json</td>
+    <td>Ty (ručně nebo přes /config)</td>
+    <td>Při startu Claude Code</td>
+    <td>Konfigurace nástrojů, povolení, hooky — ne instrukce pro model</td>
+  </tr>
+</table>
+
+<div class="callout amber">
+  <div class="callout-label">Nejčastější záměna</div>
+  <p><code>settings.json</code> není paměť pro agenta — je to konfigurace harness. <code>.claude/memory/</code> není pro tebe — je to zápisník agenta. Ty píšeš do <code>CLAUDE.md</code>; agent si píše do <code>memory/</code>; systém si čte ze <code>settings.json</code>.</p>
+</div>
+
+<!-- 3. Hierarchie -->
+<h2>3 — Hierarchie CLAUDE.md souborů</h2>
+
+<p>CLAUDE.md existuje ve třech vrstvách. Claude Code je načte všechny a sloučí do kontextu — přičemž specifičtější soubor má přednost.</p>
+
+<div class="hierarchy">
+  <div class="hier-row global">
+    <span class="hier-icon">🌍</span>
+    <span class="hier-path">~/.claude/CLAUDE.md</span>
+    <span class="hier-desc">Globální — platí pro všechny projekty</span>
+  </div>
+  <div class="hier-arrow">↓ přidá se k</div>
+  <div class="hier-row project">
+    <span class="hier-icon">📁</span>
+    <span class="hier-path">./CLAUDE.md</span>
+    <span class="hier-desc">Projektový — v kořeni repozitáře</span>
+  </div>
+  <div class="hier-arrow">↓ přidá se k</div>
+  <div class="hier-row local">
+    <span class="hier-icon">📄</span>
+    <span class="hier-path">./.claude/CLAUDE.md</span>
+    <span class="hier-desc">Lokální — přepsání pro konkrétní kontext</span>
+  </div>
+</div>
+
+<p>Globální CLAUDE.md je místo pro preference, které chceš ve všech projektech — tvůj preferovaný styl odpovědí, jazyk (česky / anglicky), co agent nikdy nesmí dělat bez potvrzení. Projektový CLAUDE.md je pro znalost konkrétního projektu — a měl by být součástí repozitáře, verze-kontrolovaný, sdílený s týmem.</p>
+
+<!-- 4. Co patří dovnitř -->
+<h2>4 — Co patří do CLAUDE.md (a co ne)</h2>
+
+<div class="in-out">
+  <div class="in-out-box in-box">
+    <h4>Patří dovnitř ✓</h4>
+    <ul>
+      <li>Tech stack a verze (<em>"Python 3.12, pytest, numpy"</em>)</li>
+      <li>Ubiquitous language domény (<em>"simulation step = jeden časový krok fyziky"</em>)</li>
+      <li>Konvence pojmenování (<em>"proměnné v snake_case, třídy PascalCase"</em>)</li>
+      <li>Testovací strategie (<em>"unit testy v tests/, integrační v tests/integration/"</em>)</li>
+      <li>Invarianty a omezení (<em>"výstupní pole musí mít dtype float64"</em>)</li>
+      <li>Struktura projektu (<em>"src/ je zdrojový kód, data/ nikdy necommituj"</em>)</li>
+      <li>Workflow pravidla (<em>"commituj jen zelené testy"</em>)</li>
+    </ul>
+  </div>
+  <div class="in-out-box out-box">
+    <h4>Nepatří dovnitř ✗</h4>
+    <ul>
+      <li>Přihlašovací údaje, tokeny, secrets</li>
+      <li>Dočasný stav (<em>"teď pracuji na feature X"</em>)</li>
+      <li>Debugging poznámky (<em>"bug byl v řádku 42"</em>)</li>
+      <li>Instrukce pro konkrétní úkol (to patří do promptu)</li>
+      <li>Obsah, který je v kódu — agent kód přečte sám</li>
+      <li>Celý README — shrň, nevkopíruj</li>
+    </ul>
+  </div>
+</div>
+
+<p>Pravidlo: CLAUDE.md popisuje <em>jak projekt funguje</em>, ne <em>co chceš udělat dnes</em>. Pokud záznam zastarává rychleji než jednou za měsíc, nepatří tam.</p>
+
+<!-- 5. Jak psát záznamy -->
+<h2>5 — Jak psát záznamy: technika</h2>
+
+<p>Špatný záznam v CLAUDE.md je delší než jeden tweet a popisuje proč, ne co. Dobrý záznam je deklarativní, konkrétní, a bez vysvětlování.</p>
+
+<div class="claude-md-example">
+<span class="cm-comment"># Špatně — příliš obecné, bez akčního obsahu</span>
+Tento projekt používá Python a numpy. Měli jsme problémy s výkonem,
+proto jsme přešli na vektorizované operace. Kód by měl být čitelný.
+
+<span class="cm-comment"># Dobře — konkrétní, deklarativní, actionable</span>
+<span class="cm-heading">## Stack</span>
+<span class="cm-key">- Python 3.12, numpy 2.0, pytest 8.x</span>
+<span class="cm-key">- Výstupy: HDF5 (h5py), nikdy CSV pro výsledky &gt; 1 MB</span>
+
+<span class="cm-heading">## Konvence</span>
+<span class="cm-key">- Pole: vždy dtype=float64, shape (N, 3) pro 3D vektory</span>
+<span class="cm-key">- Testy: jeden test = jeden fyzikální invariant</span>
+<span class="cm-key">- Žádné pandas v src/ — jen v notebooks/</span>
+
+<span class="cm-heading">## Ubiquitous language</span>
+<span class="cm-key">- "particle" = jeden simulovaný objekt (ne "object", ne "agent")</span>
+<span class="cm-key">- "step" = jeden časový krok dt, ne iterace smyčky</span>
+<span class="cm-key">- "ensemble" = kolekce nezávislých simulation runs</span>
+</div>
+
+<p>Záznamy jsou krátké proto, že agent celý soubor načte do kontextu. Čím kratší a konkrétnější, tím spolehlivěji instrukce platí. Vágní instrukce ("kód by měl být čitelný") agent interpretuje — konkrétní instrukce ("žádné pandas v src/") platí vždy.</p>
+
+<!-- 6. Auto-memory vs CLAUDE.md -->
+<h2>6 — Co je .claude/memory/ a k čemu slouží</h2>
+
+<p>Claude Code si může sám psát poznámky do <code>.claude/memory/</code> — to jsou soubory, které agent vytváří při sezeních, pokud ho instruuješ, aby si něco zapamatoval (nebo pokud má auto-memory zapnutou). Tyto soubory <em>nejsi ty</em> — jsou to agentovy zápisky.</p>
+
+<p>Rozdíl v praxi:</p>
+
+<ul>
+  <li><strong>CLAUDE.md</strong> — ty píšeš: "Tento projekt nikdy nepoužívá globální proměnné." Agent to přečte každou session.</li>
+  <li><strong>.claude/memory/</strong> — agent si napíše: "Uživatel preferuje stručné odpovědi bez bulleted lists." Agent si to přečte, když to potřebuje.</li>
+</ul>
+
+<div class="callout green">
+  <div class="callout-label">Praktické rozlišení</div>
+  <p>Pokud chceš, aby instrukce platila vždy a přesně tak, jak jsi ji napsal → CLAUDE.md. Pokud chceš, aby si agent postupně akumuloval znalost o tobě → dovol mu psát do memory/. Obojí pracuje vedle sebe; nemíchej je.</p>
+</div>
+
+<!-- 7. Tři příklady -->
+<h2>7 — Tři příklady</h2>
+
+<div class="examples">
+  <div class="example-card">
+    <div class="example-label">Vědec-kodér</div>
+    <p>Fyzikální simulace. CLAUDE.md obsahuje tři záznamy: fyzikální jednotky (SI, žádné CGS), invarianty výstupu (energie se musí konzervovat v mezích 1e-6), a pojmy domény (particle, ensemble, timestep). Bez těchto záznamů agent navrhuje kód, který simulaci "funguje" ale porušuje fyzikální konzistenci. S nimi: první návrh splňuje invarianty.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">RSE vývojář</div>
+    <p>Větší tým, Python + Rust backend. CLAUDE.md je verze-kontrolovaný, commitovaný do repozitáře, každý vývojář ho má. Obsahuje: ADR (architecture decision records) v jedné větě každý, API konvence, jak se navrhuje CI. Výsledek: každý člen týmu dostane ze stejného promptu výsledek v souladu s architekturou — ne podle toho, co si agent "myslí" je standard.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">Manažer / PI</div>
+    <p>Tým nasadil Claude Code, ale každý vývojář má vlastní CLAUDE.md (nebo žádný). Po třech měsících: kód je inkonzistentní, code review trvá dvakrát déle než dřív, protože agent navrhl každému jiný styl. Sdílený projektový CLAUDE.md je tedy <em>technická infrastruktura</em>, ne osobní preference — stejně jako sdílený linter konfigurační soubor.</p>
+  </div>
+</div>
+
+<!-- 8. Propojení -->
+<h2>8 — Propojení na ostatní lekce</h2>
+
+<ul>
+  <li><strong>B2 — Rámec pěti otázek:</strong> Memory je vrstva 1 — základ, na kterém stojí Skills, Hooks, MCP a Subagents. Bez CLAUDE.md jsou ostatní vrstvy nepředvídatelné, protože agent pracuje s jiným implicitním kontextem.</li>
+  <li><strong>A4 — Domain-Driven Design:</strong> Ubiquitous Language z DDD (Evans, 2003) jde přímo do CLAUDE.md. Pojmy domény, které tým sdílí, jsou přesně to, co agent potřebuje znát natrvalo. CLAUDE.md je glossary projektu.</li>
+  <li><strong>B1 — Harness vs. Guardrails:</strong> CLAUDE.md je hlavní harness komponent — pozitivní architektura. Dáváš agentovi znalost projektu. Guardrails (hooks) jsou negativní architektura — definuješ, co nesmí. Obojí spolupracuje.</li>
+  <li><strong>A1 — TDD:</strong> Testovací konvence patří do CLAUDE.md. "Jeden test = jeden invariant", "testy v tests/unit/", "fixtures v conftest.py" — agent pak generuje testy v souladu s projektem, ne podle defaultů.</li>
+</ul>
+
+<!-- 9. Nejčastější nepochopení -->
+<h2>9 — Nejčastější nepochopení</h2>
+
+<div class="callout amber">
+  <div class="callout-label">Nepochopení 1</div>
+  <p>"CLAUDE.md je jako README — napíšu ho jednou a pak ho nebudu měnit."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>CLAUDE.md je živý dokument. Přidáváš záznamy, když zjistíš, že opakuješ stejný prompt. Odstraňuješ záznamy, které zastaraly. Dobré pravidlo: po každých deseti sezeních projdi CLAUDE.md a odstraň, co je nepravdivé nebo co agent ignoruje.</p>
+</div>
+
+<div class="callout amber">
+  <div class="callout-label">Nepochopení 2</div>
+  <p>"Čím víc toho napíšu do CLAUDE.md, tím lépe agent rozumí projektu."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>Příliš dlouhý CLAUDE.md má opačný efekt: agent diluje pozornost po celém dokumentu a důležité instrukce ztratí váhu. Pravidlo palce: CLAUDE.md by měl být čitelný za pět minut. Pokud je delší, rozděl ho tematicky nebo odstraň, co není akcidentálně specifické pro projekt.</p>
+</div>
+
+<div class="callout amber">
+  <div class="callout-label">Nepochopení 3</div>
+  <p>"Agent instrukce v CLAUDE.md vždy uposlechne."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>CLAUDE.md prochází modelem — model ho interpretuje, ne vykonává mechanicky. Vágní instrukce ("buď opatrný") agent ignoruje nebo interpretuje libovolně. Konkrétní, kontrolovatelné instrukce ("žádný přímý commit do main") fungují lépe. Pro kritické invarianty použij hook (guardrail) — ne CLAUDE.md.</p>
+</div>
+
+<!-- 10. Spicy teze -->
+<h2>10 — Spicy teze</h2>
+
+<div class="spicy">
+  <p>CLAUDE.md není soubor pro agenta. Je to sdílená specifikace projektu — stejně jako architektonické rozhodnutí nebo testovací strategie. Tým bez sdíleného CLAUDE.md nemá AI problém. Má disciplinární problém: neví, co je norma projektu, a agent jim to přesně zrcadlí.</p>
+</div>
+
+<!-- 11. Primární zdroje -->
+<h2>11 — Primární zdroje</h2>
+
+<ul class="resource-list">
+  <li>
+    <a href="https://docs.anthropic.com/en/docs/claude-code/memory" target="_blank">Claude Code — Memory (CLAUDE.md)</a>
+    <span class="why">Proč: Oficiální dokumentace. Přečti celou stránku (10 min) — obsahuje přesná pravidla pro hierarchii souborů, co se načítá automaticky a co ne, a jak funguje auto-memory. Základní zdroj pro tuto lekci.</span>
+  </li>
+  <li>
+    <a href="https://www.domainlanguage.com/ddd/blue-book/" target="_blank">Domain-Driven Design — Eric Evans (2003), kap. 1–2</a>
+    <span class="why">Proč: Ubiquitous Language (kap. 2) je historická kotva pro CLAUDE.md. Evans psal pro tým sdílející jazyk domény — CLAUDE.md je tentýž princip aplikovaný na agenta. Kap. 2 je 20 stran; stačí první polovina.</span>
+  </li>
+  <li>
+    <a href="https://docs.anthropic.com/en/docs/claude-code/settings" target="_blank">Claude Code — Settings &amp; Permissions</a>
+    <span class="why">Proč: Pochopíš, co patří do settings.json a co do CLAUDE.md — jsou to různé věci pro různé vrstvy systému. Přečti sekci "Project settings" a "Permissions".</span>
+  </li>
+</ul>
+
+<!-- 12. Feynmanovo cvičení -->
+<h2>12 — Feynmanovo cvičení</h2>
+
+<div class="quiz" id="quiz-main">
+  <div class="quiz-header">Feynmanův test — Memory a CLAUDE.md</div>
+
+  <!-- Q1 -->
+  <div class="quiz-question" id="q1">
+    <div class="quiz-q">1. Výzkumník napsal do CLAUDE.md: "Teď pracuji na refaktoringu parseru — zatím nerušit." Za tři týdny se diví, proč agent odmítá pracovat na jiných věcech. Jaká je příčina?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q1" value="a"> CLAUDE.md nelze měnit za běhu — musíš restartovat Claude Code</label></li>
+      <li><label><input type="radio" name="q1" value="b"> Do CLAUDE.md patří stav projektu, ne dočasné instrukce — agent stale čte zastaralý kontext</label></li>
+      <li><label><input type="radio" name="q1" value="c"> Agent ignoruje CLAUDE.md po třech týdnech kvůli cache expiraci</label></li>
+      <li><label><input type="radio" name="q1" value="d"> CLAUDE.md nepodporuje instrukce v první osobě</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q1','b','Přesně. CLAUDE.md je pro trvalé znalosti projektu — ne pro dočasný stav session. Dočasné instrukce patří do promptu. CLAUDE.md by měl být pravdivý i za půl roku.','Ne. Problém je jiný: do CLAUDE.md patří trvalé znalosti, ne dočasný stav. Agent ho čte každou session — a "teď pracuji na..." přestalo být pravda po prvním commitu.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q1-fb"></div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="quiz-question" id="q2">
+    <div class="quiz-q">2. Tým má CLAUDE.md verze-kontrolovaný v repozitáři. Nový člen chce přidat osobní preference (preferuje krátké odpovědi). Kam je správně uložit?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q2" value="a"> Do projektového CLAUDE.md — aby to ostatní také viděli</label></li>
+      <li><label><input type="radio" name="q2" value="b"> Do globálního ~/.claude/CLAUDE.md nebo .claude/memory/ — osobní preference nepatří do sdíleného souboru</label></li>
+      <li><label><input type="radio" name="q2" value="c"> Do .claude/settings.json — tam je sekce pro osobní nastavení</label></li>
+      <li><label><input type="radio" name="q2" value="d"> Preferencím je lepší se vyhnout — agent neumí konzistentně dodržovat styl</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q2','b','Správně. Projektový CLAUDE.md je sdílený dokument — mění se konsenzem, ne osobními preferencemi. Globální ~/.claude/CLAUDE.md je přesně pro tohle: platí jen pro tebe, napříč všemi projekty.','Ne. Osobní preference do sdíleného souboru nepatří — přepisují kontext pro celý tým. Globální CLAUDE.md nebo memory/ jsou správná místa pro individuální nastavení.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q2-fb"></div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="quiz-question" id="q3">
+    <div class="quiz-q">3. Agent konzistentně ignoruje instrukci "nikdy necommituj přímo do main". Navrhni správné řešení.</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q3" value="a"> Přeformuluj instrukci — agent možná nerozumí "main"</label></li>
+      <li><label><input type="radio" name="q3" value="b"> Přesuň instrukci do hooku (guardrail) — hook je deterministický, CLAUDE.md prochází modelem a může být ignorován</label></li>
+      <li><label><input type="radio" name="q3" value="c"> Přidej instrukci do .claude/memory/ — ta má vyšší prioritu</label></li>
+      <li><label><input type="radio" name="q3" value="d"> Přidej instrukci do .claude/settings.json pod "rules"</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q3','b','Přesně. CLAUDE.md je probabilistický — model ho interpretuje. Hook je deterministický — shell skript, exit code 2, agent se zastaví vždy. Pro kritické invarianty je správná vrstva guardrail, ne harness.','Ne. Přeformulování nebo přesun v rámci harness vrstvy problém neřeší. Pokud agent instrukci ignoruje, problém je v tom, že prochází modelem. Správná vrstva je hook (guardrail) — deterministická.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q3-fb"></div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="quiz-question" id="q4">
+    <div class="quiz-q">4. Proč je "ubiquitous language" z DDD přímou analogií k obsahu CLAUDE.md?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q4" value="a"> Protože DDD a Claude Code jsou produkty stejné firmy</label></li>
+      <li><label><input type="radio" name="q4" value="b"> Protože oba řeší problém sdíleného pojmového jazyka: Evans pro tým, CLAUDE.md pro agenta — aby "particle" znamenalo totéž pro všechny</label></li>
+      <li><label><input type="radio" name="q4" value="c"> Protože DDD doporučuje ukládat doménový model do souborů, nikoliv do kódu</label></li>
+      <li><label><input type="radio" name="q4" value="d"> Protože ubiquitous language v DDD také popisuje systémové konvence jako snake_case</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q4','b','Výborně. Evans: tým musí sdílet jazyk domény, jinak každý mluví o jiné věci a spolupráce se rozpadá. CLAUDE.md: agent musí znát jazyk domény projektu, jinak navrhuje generické řešení. Stejný problém; jiné médium.','Ne. Analogie je hlubší: jde o sdílený pojmový jazyk. Evans řeší konverzaci v týmu; CLAUDE.md řeší konverzaci s agentem. V obou případech bez sdíleného jazyka domény vznikají zmatky a inkonzistentní výstupy.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q4-fb"></div>
+  </div>
+
+  <div class="quiz-score" id="quiz-score"></div>
+</div>
+
+<!-- 13. Co dál -->
+<h2>13 — Co dál</h2>
+
+<p><strong>Co musíš znát před touto lekcí:</strong></p>
+<ul>
+  <li><a href="0004-ramec-peti-otazek.html">B2 — Rámec pěti otázek</a> — Memory je vrstva 1. Tato lekce ji rozvíjí do detailu.</li>
+  <li><a href="0002-harness-vs-guardrails.html">B1 — Harness vs. Guardrails</a> — CLAUDE.md je harness; pro kritické invarianty je potřeba guardrail (hook).</li>
+</ul>
+
+<p><strong>Praktický úkol (20 minut):</strong> Vezmi libovolný projekt, na kterém teď pracuješ. Napiš minimální CLAUDE.md — tech stack (2–3 řádky), tři pojmy ubiquitous language, dva konvencí invarianty. Otevři Claude Code a dej agentovi úkol, který normálně vyžaduje kontext projektu. Porovnej výsledek s výsledkem bez CLAUDE.md.</p>
+
+<p><strong>Příští lekce:</strong></p>
+<ul>
+  <li><em>B4 — Skills a slash commands</em> — vrstva 2 rámce pěti otázek. Jak enkapsulovat opakované workflows jako <code>/skill-name</code>, kdy skill postavit a kdy si vystačit s promptem.</li>
+</ul>
+
+<p><strong>Propojení do curricula:</strong></p>
+<ul>
+  <li><em>A4 — Domain-Driven Design</em> — celá lekce o ubiquitous language a bounded contexts. Ubiquitous language z A4 jde přímo do CLAUDE.md sekce "Pojmy domény".</li>
+  <li><em>C3 — Deskilling</em> — špatný CLAUDE.md agenta naučí špatným vzorům. Pokud agent postupně přebírá rozhodnutí, která patří tobě, může to být signál, že CLAUDE.md mu dává příliš volnou ruku.</li>
+</ul>
+
+<!-- Footer -->
+<div class="lesson-nav">
+  <div>
+    <span class="nav-label">Předchozí lekce</span>
+    <a href="0004-ramec-peti-otazek.html">← B2 — Rámec pěti otázek</a>
+  </div>
+  <div>
+    <span class="nav-label">Příští lekce</span>
+    <a href="0006-skills-a-slash-commands.html">B4 — Skills a slash commands →</a>
+  </div>
+</div>
+
+<p style="margin-top:2rem; font-size:0.8rem; color: var(--muted); font-family: var(--font-sans);">
+  Máš otázku? Vrať se do Claude Code a napiš ji — agent je tvůj učitel a může rozvinout libovolný bod z této lekce.
+</p>
+
+</div>
+</div>
+
+<script>
+const scores = {};
+function check(qid, correct, okMsg, failMsg) {
+  const selected = document.querySelector(`input[name="${qid}"]:checked`);
+  const fb = document.getElementById(`${qid}-fb`);
+  if (!selected) {
+    fb.textContent = 'Vyber jednu odpověď.';
+    fb.className = 'quiz-feedback incorrect';
+    fb.style.display = 'block';
+    return;
+  }
+  const isCorrect = selected.value === correct;
+  fb.textContent = isCorrect ? '✓ ' + okMsg : '✗ ' + failMsg;
+  fb.className = 'quiz-feedback ' + (isCorrect ? 'correct' : 'incorrect');
+  fb.style.display = 'block';
+  scores[qid] = isCorrect;
+  document.querySelectorAll(`input[name="${qid}"]`).forEach(r => r.disabled = true);
+  document.querySelector(`#${qid} .quiz-check`).disabled = true;
+  if (Object.keys(scores).length === 4) {
+    const n = Object.values(scores).filter(Boolean).length;
+    const el = document.getElementById('quiz-score');
+    el.style.display = 'block';
+    if (n === 4) {
+      el.innerHTML = '<strong>✓ 4/4 — Výborně.</strong> Praktický úkol: otevři libovolný projekt a napiš minimální CLAUDE.md — tech stack, tři pojmy domény, dva invarianty. Pak spusť agenta a porovnej kvalitu návrhu s a bez CLAUDE.md.';
+    } else if (n >= 3) {
+      el.innerHTML = `<strong>${n}/4 — Téměř.</strong> Přečti znovu sekci 4 (co patří / co nepatří) a sekci 9 (nepochopení). Klíčové: CLAUDE.md je pro trvalé znalosti, ne dočasný stav; pro kritické invarianty je správná vrstva hook, ne CLAUDE.md.`;
+    } else {
+      el.innerHTML = `<strong>${n}/4 — Vrať se.</strong> Přečti znovu sekce 2 a 3 — tři typy paměti a hierarchii. Pak sekci 5 — jak psát záznamy. Výsledek by měl být jasný: CLAUDE.md, memory/ a settings.json řeší tři různé věci.`;
+    }
+  }
+}
+</script>
+</body>
+</html>

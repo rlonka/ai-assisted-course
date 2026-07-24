@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>D3 — Bezpečnost a citlivá data | AI-assisted RSE</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    .cmp { width: 100%; border-collapse: collapse; font-size: 0.87rem; margin: 1rem 0 1.5rem; }
+    .cmp th { font-family: var(--font-sans); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.5rem 0.75rem; text-align: left; border-bottom: 2px solid var(--text); }
+    .cmp td { padding: 0.55rem 0.75rem; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+    .cmp tr:last-child td { border-bottom: none; }
+
+    /* Data classification */
+    .classify { display: flex; flex-direction: column; gap: 0.5rem; margin: 1.25rem 0 0.6rem; }
+    .cls { display: grid; grid-template-columns: auto 1fr; gap: 0.8rem; align-items: baseline; border-radius: 6px; padding: 0.7rem 1rem; font-size: 0.85rem; }
+    .cls .cls-tag { font-family: var(--font-sans); font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 999px; white-space: nowrap; }
+    .cls.green  { background: var(--green-light); border: 1px solid #b7dfc8; }
+    .cls.green  .cls-tag { background: #38a169; color: #fff; }
+    .cls.amber  { background: #fffaf0; border: 1px solid #f0d9a8; }
+    .cls.amber  .cls-tag { background: #d69e2e; color: #fff; }
+    .cls.red    { background: var(--red-light); border: 1px solid #f9b8b8; }
+    .cls.red    .cls-tag { background: #e53e3e; color: #fff; }
+    .cls .cls-t { line-height: 1.45; }
+
+    .in-out { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0 1.5rem; }
+    .in-out-box { border-radius: 4px; padding: 0.8rem 1rem; font-size: 0.86rem; }
+    .in-box  { background: var(--green-light);  border: 1px solid #b7dfc8; }
+    .out-box { background: var(--red-light);     border: 1px solid #f9b8b8; }
+    .in-out-box h4 { font-family: var(--font-sans); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; margin: 0 0 0.5rem; color: var(--muted); }
+    .in-out-box ul { margin: 0; padding-left: 1.1rem; }
+    .in-out-box li { margin-bottom: 0.3rem; }
+    @media (max-width: 480px) { .in-out { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<div class="page">
+<div class="content">
+
+<header class="lesson-header">
+  <div class="lesson-meta">
+    <span class="tag">D3</span>
+    <span class="tag">Týden 12</span>
+    Blok D: Praxe a zavádění
+  </div>
+  <h1>Bezpečnost a citlivá data</h1>
+  <p class="lesson-subtitle">Poslat kód nebo data do modelu znamená poslat je třetí straně. Ve vědě, kde jsou v sázce osobní data, embargované výsledky a patentovatelné IP, je pohodlí vložení textu tou největší zranitelností.</p>
+</header>
+
+<div class="progress-bar">
+  <div class="progress-dot done" title="Blok A — kompletní"></div>
+  <div class="progress-dot done" title="Blok B — kompletní"></div>
+  <div class="progress-dot done" title="Blok C — kompletní"></div>
+  <div class="progress-dot done" title="D1 — Context engineering"></div>
+  <div class="progress-dot done" title="D2 — Verifikace a code review"></div>
+  <div class="progress-dot current" title="D3 — Bezpečnost a citlivá data (aktuální)"></div>
+  <div class="progress-dot" title="D4 — Licence a provenance"></div>
+  <div class="progress-dot" title="D5 — Zavádění v týmu"></div>
+</div>
+
+<h2>1 — Jádro</h2>
+
+<p>Když vložíš kód nebo data do modelu běžícího v cloudu, <strong>opustí tvůj stroj a putují na server třetí strany</strong>. Podle smluvních podmínek se tam mohou logovat, uchovávat, zpracovávat lidmi nebo použít k tréninku. To není hypotéza — je to výchozí realita, dokud smlouva neříká jinak. Bezpečnost v AI-assisted vývoji začíná jedinou otázkou: <em>„smí tahle konkrétní věc opustit náš perimetr?"</em></p>
+
+<p>Pro vědu je tahle otázka ostřejší než pro běžný software. RSE pracuje s daty, která mají právní a etický režim: osobní údaje pod GDPR, medicínská data, embargované nebo nepublikované výsledky, patentovatelné IP, data pod smlouvou s průmyslovým partnerem, utajované projekty. U každého z nich může nekontrolované vložení do modelu znamenat porušení zákona, smlouvy nebo etického schválení — ne jen „úlet".</p>
+
+<div class="callout">
+  <div class="callout-label">Jedno pravidlo</div>
+  <p>Než něco vložíš do modelu, zeptej se: „kdyby tohle skončilo v logu poskytovatele nebo v tréninkových datech, je to problém?" Pokud si nejsi jistý, chovej se, jako by ano. Data, která jednou opustí perimetr, nevrátíš — a log nezapomíná.</p>
+</div>
+
+<h2>2 — Klasifikuj, než pošleš</h2>
+
+<p>Ne všechna data jsou stejná. Základní dovednost je roztřídit, co posíláš, do tří košů — a podle koše volit nástroj:</p>
+
+<div class="classify">
+  <div class="cls green"><span class="cls-tag">Volné</span><span class="cls-t"><strong>Veřejný / open-source kód, neutajené algoritmy, syntetická data.</strong> Můžou do cloudového modelu bez obav. Tady je AI plně k dispozici.</span></div>
+  <div class="cls amber"><span class="cls-tag">Podmíněné</span><span class="cls-t"><strong>Interní kód bez tajemství, anonymizovaná data, nepublikované metody.</strong> Jen s poskytovatelem, který má zero-retention / enterprise smlouvu a negarantuje trénink na tvých datech.</span></div>
+  <div class="cls red"><span class="cls-tag">Nikdy do cloudu</span><span class="cls-t"><strong>Osobní/medicínská data (GDPR), embargované výsledky, patentovatelné IP, tajemství, přihlašovací údaje.</strong> Jen lokální / on-prem model, nebo vůbec.</span></div>
+</div>
+
+<p>Nejčastější reálná chyba není poslat celý dataset pacientů — to lidé tuší. Je to vložit <em>úryvek</em>: chybovou hlášku s reálným jménem, konfiguraci s API klíčem, kus dat „jen na ukázku". Klasifikace se týká i úryvků. Jedno jméno v chybové hlášce je pořád osobní údaj.</p>
+
+<h2>3 — HPC a vědecký kontext: tři reálná omezení</h2>
+
+<p>RSE na superpočítači řeší věci, které běžný vývojář ne. Tři jsou zásadní:</p>
+
+<table class="cmp">
+  <tr><th>Omezení</th><th>Co to znamená pro AI</th></tr>
+  <tr><td><strong>Data residency</strong></td><td>Data nesmí opustit zemi/EU (grant, GDPR, smlouva). Cloudový model v USA je pak vyloučený — musí zůstat lokální.</td></tr>
+  <tr><td><strong>Air-gapped systémy</strong></td><td>Utajené nebo kritické clustery nemají internet. Cloudový model tam fyzicky nedosáhne; jediná cesta je self-hosted model uvnitř perimetru.</td></tr>
+  <tr><td><strong>Smluvní režim dat</strong></td><td>Data od průmyslového partnera nebo z klinické studie mají smlouvu, která přesně určuje, kdo je smí zpracovat. Poskytovatel modelu v ní typicky není.</td></tr>
+</table>
+
+<p>Dobrá zpráva: HPC prostředí je ideální pro <strong>lokální a self-hosted modely</strong>. Máš výpočetní kapacitu provozovat schopný open-weights model uvnitř svého perimetru — a pak platí, že data nikam neodcházejí. To je pro citlivou vědu často jediná cesta, jak AI vůbec využít legálně. Otázka není „cloud, nebo nic", ale „cloud pro volné, lokální model pro citlivé".</p>
+
+<h2>4 — Praktická obrana</h2>
+
+<div class="in-out">
+  <div class="in-out-box in-box">
+    <h4>Snižuje riziko ✓</h4>
+    <ul>
+      <li><strong>Klasifikuj data</strong> předem — koš zelený/podmíněný/nikdy</li>
+      <li><strong>Znej smlouvu poskytovatele:</strong> zero-retention? trénink na tvých datech? kde běží?</li>
+      <li><strong>Lokální / on-prem model</strong> pro cokoliv citlivého — HPC to umožňuje</li>
+      <li><strong>Hooks (B5)</strong> které zablokují odeslání souborů se secrety nebo z citlivých adresářů</li>
+      <li><strong>Secret management:</strong> klíče v env/vaultu, nikdy v kódu, který jde do modelu</li>
+      <li><strong>Anonymizace</strong> dřív, než cokoliv opustí perimetr</li>
+    </ul>
+  </div>
+  <div class="in-out-box out-box">
+    <h4>Zvyšuje riziko ✗</h4>
+    <ul>
+      <li>Vložení chybové hlášky s reálnými daty „jen na debug"</li>
+      <li>Konfigurace nebo <code>.env</code> s klíči do promptu</li>
+      <li>Předpoklad, že „to je jen úryvek, na tom nezáleží"</li>
+      <li>Použití osobního cloudového účtu na pracovní citlivá data</li>
+      <li>Žádná znalost toho, co poskytovatel s daty dělá</li>
+    </ul>
+  </div>
+</div>
+
+<p>Zvláštní zmínku zaslouží <strong>hooks (B5)</strong>: guardrail, který mechanicky zabrání odeslat soubor se secretem nebo z adresáře s citlivými daty, je spolehlivější než lidská disciplína. Člověk se unaví a přehlédne; hook ne. Bezpečnost, která stojí jen na tom, že si „dáš pozor", selže — postav ji do nástroje.</p>
+
+<h2>5 — Prompt injection: nová třída zranitelnosti</h2>
+
+<p>Kromě „co posílám ven" je tu i „co pouštím dovnitř". <strong>Prompt injection</strong> je útok, kdy škodlivé instrukce ukryté v datech, která agent zpracovává (issue na GitHubu, obsah webu, komentář v kódu), unesou jeho chování — třeba ho navedou vyzradit obsah souborů nebo spustit nebezpečný příkaz.</p>
+
+<p>Pro agentní vývoj (blok B) je to reálné riziko: agent, který čte externí obsah a má nástroje (spouští příkazy, čte soubory), může být tímto obsahem manipulován. Obrana: <em>nedůvěřuj datům jako instrukcím</em>, drž agenta v guardrailech (B1) s omezenými právy, a u čehokoliv, co agent udělá na základě externího obsahu, plati verifikace (D2) dvojnásob. Text z internetu není příkaz — a agent to sám nepozná.</p>
+
+<h2>6 — Historický kontext</h2>
+
+<ul>
+  <li><strong>GDPR (2018).</strong> Osobní údaje mají v EU přísný režim — přenos třetí straně vyžaduje právní základ. AI to nezměnila; jen přidala snadný způsob, jak režim omylem porušit vložením do promptu.</li>
+  <li><strong>Data residency a suverenita.</strong> Granty a smlouvy dlouho vyžadují, aby data zůstala v jurisdikci. EuroHPC a národní centra (jako IT4Innovations) to řeší on-prem infrastrukturou — přirozený domov pro lokální modely.</li>
+  <li><strong>Zero-retention a enterprise smlouvy.</strong> Poskytovatelé zavedli režimy, kde se data nelogují ani netrénují. To posunulo „podmíněná" data do hry — ale jen se smlouvou, ne s výchozím účtem.</li>
+  <li><strong>Open-weights modely.</strong> Dostupnost schopných modelů ke stažení udělala z „lokální model" reálnou volbu, ne kompromis. Pro citlivou vědu klíčový posun.</li>
+</ul>
+
+<h2>7 — Tři příklady</h2>
+
+<div class="examples">
+  <div class="example-card">
+    <div class="example-label">Vědec-kodér</div>
+    <p>Ladí skript na klinických datech a chce od AI pomoc s chybou. Chystá se vložit chybovou hlášku — jenže obsahuje ID a diagnózu pacienta. Zastaví se: tohle je GDPR a etické schválení studie to zakazuje. Místo toho chybu reprodukuje na syntetických datech a vloží tu. Naučí se, že klasifikace se týká i „nevinného" úryvku a že anonymizace předchází vložení, ne až po něm.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">RSE vývojář</div>
+    <p>Nastaví týmu jasnou politiku: veřejný kód → cloud OK; interní → jen přes enterprise účet se zero-retention; citlivá data → jen lokální model na clusteru. Zavede hook (B5), který blokuje odeslání souborů z adresáře <code>data/sensitive/</code> a čehokoliv, co vypadá jako klíč. Bezpečnost nestojí na tom, že si každý pamatuje pravidla — stojí v nástroji, který je vynutí.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">Manažer / PI</div>
+    <p>Musí zodpovědět otázku etické komise: „posílají naši lidé data studie do AI?" Bez politiky nezná odpověď — a to je samo o sobě riziko. Zavede klasifikaci dat, schválený seznam nástrojů a režimů, a on-prem model pro citlivé projekty. Rámuje to ne jako zákaz AI, ale jako <em>podmínky, za kterých je AI legální</em>. Otázka není „AI ano/ne", ale „která data kam".</p>
+  </div>
+</div>
+
+<h2>8 — Propojení na ostatní lekce</h2>
+
+<ul>
+  <li><strong>B5 — Hooks:</strong> Mechanický guardrail, který zablokuje odeslání secretů nebo citlivých souborů. Bezpečnost patří do nástroje, ne do lidské paměti.</li>
+  <li><strong>B1 — Harness vs. Guardrails:</strong> Agent s nástroji a právy je mocný i nebezpečný. Perimetr práv omezuje škodu z prompt injection.</li>
+  <li><strong>C1 — FAIR4RS:</strong> Data mají režim (přístupnost, licence, právní status). Bezpečnost je respektování toho režimu i vůči modelu.</li>
+  <li><strong>D2 — Verifikace:</strong> Cokoliv agent udělá na základě externího obsahu, ověřuj dvojnásob — kvůli prompt injection.</li>
+</ul>
+
+<h2>9 — Nejčastější nepochopení</h2>
+
+<div class="callout amber"><div class="callout-label">Nepochopení 1</div><p>„Je to jen malý úryvek / jen chybová hláška, na tom nezáleží."</p></div>
+<div class="callout green"><div class="callout-label">Skutečnost</div><p>Klasifikace se týká i úryvků. Jedno jméno v chybové hlášce je osobní údaj, jeden klíč v konfiguraci je únik, jedna nepublikovaná rovnice je vyzrazené IP. Velikost není kritérium — kritérium je, co ten úryvek obsahuje. Nejčastější reálné úniky jsou drobné, ne velké.</p></div>
+
+<div class="callout amber"><div class="callout-label">Nepochopení 2</div><p>„Používáme AI, takže citlivá data prostě posílat nemůžeme — AI a věda se vylučují."</p></div>
+<div class="callout green"><div class="callout-label">Skutečnost</div><p>Otázka není „AI ano/ne", ale „která data kam". Volný kód do cloudu, citlivá data do lokálního modelu na clusteru. HPC prostředí je pro self-hosted modely ideální — máš kapacitu i perimetr. AI se s citlivou vědou nevylučuje; jen vyžaduje správný nástroj pro správný koš dat.</p></div>
+
+<div class="callout amber"><div class="callout-label">Nepochopení 3</div><p>„Poskytovatel přece nebude trénovat na mých datech / číst je."</p></div>
+<div class="callout green"><div class="callout-label">Skutečnost</div><p>Výchozí režim mnoha služeb data loguje a některé je i používá ke zlepšování. „Nebude" platí jen tehdy, když to smlouva výslovně říká (zero-retention, enterprise). Předpoklad není politika. Znej konkrétní podmínky svého účtu — ne dojem o tom, co „asi" dělají.</p></div>
+
+<h2>10 — Spicy teze</h2>
+
+<div class="spicy"><p>Nejnebezpečnější vlastnost AI nástrojů není, že by byly zákeřné — je to, že jsou <em>pohodlné</em>. Vložit chybovou hlášku i s reálnými daty trvá vteřinu a odměna přijde hned; porušení GDPR se ohlásí za rok, když už je pozdě. Celá bezpečnost AI-assisted vývoje je souboj mezi okamžitým pohodlím a odloženou škodou, a lidská disciplína ten souboj spolehlivě prohrává. Proto bezpečnost, která stojí na „dej si pozor", není bezpečnost — je to jen seznam lidí, kteří se ještě nespálili. Postav ji do nástroje, nebo se spálíš taky.</p></div>
+
+<h2>11 — Primární zdroje</h2>
+
+<ul class="resource-list">
+  <li><a href="https://gdpr.eu/what-is-gdpr/" target="_blank">What is GDPR — přehled</a><span class="why">Proč: Základ, co jsou osobní údaje a proč jejich přenos třetí straně vyžaduje právní základ. Rámuje „nikdy do cloudu" koš pro vědecká data o lidech.</span></li>
+  <li><a href="https://owasp.org/www-project-top-10-for-large-language-model-applications/" target="_blank">OWASP Top 10 for LLM Applications</a><span class="why">Proč: Přehled bezpečnostních rizik LLM aplikací včetně prompt injection a úniku dat. Praktický katalog toho, čeho se v agentním vývoji vyvarovat.</span></li>
+  <li><a href="https://simonwillison.net/series/prompt-injection/" target="_blank">Prompt injection — série Simona Willisona</a><span class="why">Proč: Nejlepší srozumitelné vysvětlení prompt injection a proč u agentů s nástroji nejde snadno vyřešit. Nutné pro pochopení sekce 5.</span></li>
+</ul>
+
+<h2>12 — Feynmanovo cvičení</h2>
+
+<div class="quiz" id="quiz-main">
+  <div class="quiz-header">Feynmanův test — Bezpečnost a citlivá data</div>
+
+  <div class="quiz-question" id="q1">
+    <div class="quiz-q">1. Co se ve výchozím režimu stane s kódem, který vložíš do cloudového modelu?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q1" value="a"> Zůstane na tvém stroji, nikam neputuje</label></li>
+      <li><label><input type="radio" name="q1" value="b"> Opustí tvůj perimetr a putuje na server třetí strany, kde se může logovat, uchovávat i použít k tréninku — dokud smlouva neříká výslovně jinak</label></li>
+      <li><label><input type="radio" name="q1" value="c"> Automaticky se šifruje a smaže po vteřině</label></li>
+      <li><label><input type="radio" name="q1" value="d"> Poskytovatel ho ze zákona nikdy nesmí vidět</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q1','b','Přesně. Cloudový model = server třetí strany. Výchozí realita je, že data mohou být logována, uchovávána a u některých služeb i použita ke zlepšování modelu. „Nebude" platí jen se smlouvou (zero-retention, enterprise). Proto první otázka vždy zní: smí tahle věc opustit náš perimetr?','Ne. Ve výchozím režimu data opustí tvůj stroj a jdou na server poskytovatele, kde se mohou logovat i trénovat. Bezpečné „nebude" platí jen tehdy, když to smlouva výslovně garantuje — ne automaticky.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q1-fb"></div>
+  </div>
+
+  <div class="quiz-question" id="q2">
+    <div class="quiz-q">2. Chceš od AI pomoc s chybou, ale hláška obsahuje ID a diagnózu pacienta. Co je správně?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q2" value="a"> Vložit to — je to jen krátká hláška, na úryvku nezáleží</label></li>
+      <li><label><input type="radio" name="q2" value="b"> Nevkládat: jedno jméno/diagnóza je osobní údaj pod GDPR; reprodukovat chybu na syntetických/anonymizovaných datech a vložit až tu</label></li>
+      <li><label><input type="radio" name="q2" value="c"> Vložit to, ale napsat modelu, ať to zapomene</label></li>
+      <li><label><input type="radio" name="q2" value="d"> AI se vzdát úplně, věda a AI se vylučují</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q2','b','Správně. Klasifikace se týká i úryvků — jméno a diagnóza v chybové hlášce jsou osobní/medicínská data (nejcitlivější koš). Anonymizace nebo syntetická data předcházejí vložení, ne až po něm. „Napiš modelu, ať zapomene" nefunguje: co jednou opustí perimetr, nevrátíš.','Ne. Velikost úryvku není kritérium — obsah ano. Jméno a diagnóza jsou osobní/medicínská data pod GDPR. Správně: reprodukovat chybu na syntetických/anonymizovaných datech a vložit až ta. A ne, AI se s vědou nevylučuje — jen vyžaduje správný koš a nástroj.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q2-fb"></div>
+  </div>
+
+  <div class="quiz-question" id="q3">
+    <div class="quiz-q">3. Proč je HPC / vědecké centrum dobrým prostředím pro citlivá data a AI zároveň?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q3" value="a"> Protože na clusteru žádná pravidla neplatí</label></li>
+      <li><label><input type="radio" name="q3" value="b"> Má výpočetní kapacitu a perimetr provozovat schopný lokální/self-hosted model uvnitř — takže citlivá data nemusí nikam odejít, a přesto lze AI využít</label></li>
+      <li><label><input type="radio" name="q3" value="c"> Protože cluster automaticky anonymizuje vše</label></li>
+      <li><label><input type="radio" name="q3" value="d"> Není — na HPC se AI použít nedá</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q3','b','Výborně. HPC řeší data residency i air-gap tím, že umožňuje self-hosted open-weights model uvnitř perimetru. Citlivá data pak nikam neodcházejí a AI je přesto k dispozici. Otázka není „cloud, nebo nic", ale „cloud pro volné, lokální model pro citlivé". Vědecká centra jsou pro tenhle model ideální.','Ne. HPC je výhoda proto, že máš kapacitu i perimetr provozovat lokální model — citlivá data zůstanou uvnitř a AI přesto použiješ. Pravidla platí pořád; cluster nic automaticky neanonymizuje. Jde o self-hosted model, ne o výjimku z bezpečnosti.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q3-fb"></div>
+  </div>
+
+  <div class="quiz-question" id="q4">
+    <div class="quiz-q">4. Proč nestačí spoléhat na to, že si lidé „dají pozor", a jak to souvisí s hooky (B5)?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q4" value="a"> Stačí — disciplinovaný člověk nikdy nechybuje</label></li>
+      <li><label><input type="radio" name="q4" value="b"> Pohodlí vložení je okamžité, škoda odložená; lidská disciplína ten souboj prohrává, proto se bezpečnost staví do nástroje — hook mechanicky zablokuje odeslání secretů či citlivých souborů</label></li>
+      <li><label><input type="radio" name="q4" value="c"> Hooky jsou zbytečné, důležitá je jen dobrá vůle</label></li>
+      <li><label><input type="radio" name="q4" value="d"> Souvisí to jen s rychlostí, ne s bezpečností</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q4','b','Přesně. Vložit citlivý úryvek trvá vteřinu a odměna je okamžitá; porušení se ohlásí později. Člověk se unaví a přehlédne — disciplína ten souboj prohrává. Proto se bezpečnost staví do nástroje: hook (B5) mechanicky zablokuje odeslání souborů se secrety nebo z citlivých adresářů. Bezpečnost na „dej si pozor" je jen seznam těch, co se ještě nespálili.','Ne. Lidská disciplína prohrává souboj mezi okamžitým pohodlím a odloženou škodou — každý se jednou unaví. Proto bezpečnost patří do nástroje: hook (B5) zablokuje odeslání secretů či citlivých souborů mechanicky, bez spoléhání na pozornost.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q4-fb"></div>
+  </div>
+
+  <div class="quiz-score" id="quiz-score"></div>
+</div>
+
+<h2>13 — Co dál</h2>
+
+<p><strong>Co musíš znát před touto lekcí:</strong></p>
+<ul>
+  <li><a href="0007-hooks.html">B5 — Hooks</a> — mechanický guardrail, kam bezpečnost patří.</li>
+  <li><a href="0013-fair4rs.html">C1 — FAIR4RS</a> — data mají režim (licence, přístupnost, právní status), který se respektuje i vůči modelu.</li>
+</ul>
+
+<p><strong>Praktický úkol (20 minut):</strong> Roztřiď data a kód svého projektu do tří košů (volné / podmíněné / nikdy do cloudu). U „nikdy" napiš, jaký lokální nebo on-prem model bys použil. Pak se podívej, jestli tvůj poslední týden promptů neobsahoval něco z červeného koše — a nastav si aspoň jeden hook (B5), který by budoucí únik zablokoval.</p>
+
+<p><strong>Příští lekce:</strong> <em>D4 — Licence, provenance a autorství.</em> Ošetřil jsi, co do modelu smí; D4 řeší, komu patří a jak přiznat, co z něj vyjde.</p>
+
+<div class="lesson-nav">
+  <div><span class="nav-label">Předchozí lekce</span><a href="0019-verifikace-code-review.html">← D2 — Verifikace a code review</a></div>
+  <div><span class="nav-label">Příští lekce</span><a href="0021-licence-provenance-autorstvi.html">D4 — Licence a provenance →</a></div>
+</div>
+
+<p style="margin-top:2rem; font-size:0.8rem; color: var(--muted); font-family: var(--font-sans);">Máš otázku? Vrať se do Claude Code a napiš ji — agent je tvůj učitel a může rozvinout libovolný bod z této lekce.</p>
+
+</div>
+</div>
+
+<script>
+const scores = {};
+function check(qid, correct, okMsg, failMsg) {
+  const selected = document.querySelector(`input[name="${qid}"]:checked`);
+  const fb = document.getElementById(`${qid}-fb`);
+  if (!selected) { fb.textContent = 'Vyber jednu odpověď.'; fb.className = 'quiz-feedback incorrect'; fb.style.display = 'block'; return; }
+  const isCorrect = selected.value === correct;
+  fb.textContent = isCorrect ? '✓ ' + okMsg : '✗ ' + failMsg;
+  fb.className = 'quiz-feedback ' + (isCorrect ? 'correct' : 'incorrect');
+  fb.style.display = 'block';
+  scores[qid] = isCorrect;
+  document.querySelectorAll(`input[name="${qid}"]`).forEach(r => r.disabled = true);
+  document.querySelector(`#${qid} .quiz-check`).disabled = true;
+  if (Object.keys(scores).length === 4) {
+    const n = Object.values(scores).filter(Boolean).length;
+    const el = document.getElementById('quiz-score');
+    el.style.display = 'block';
+    if (n === 4) { el.innerHTML = '<strong>✓ 4/4 — Výborně.</strong> Otázka není „AI ano/ne", ale „která data kam". Praktický úkol: roztřiď data do tří košů a nastav aspoň jeden hook proti úniku.'; }
+    else if (n >= 3) { el.innerHTML = `<strong>${n}/4 — Téměř.</strong> Přečti znovu sekci 2 (klasifikace) a 4 (obrana). Klíč: klasifikuj i úryvky, znej smlouvu poskytovatele, citlivé jen lokálně, bezpečnost do nástroje.`; }
+    else { el.innerHTML = `<strong>${n}/4 — Vrať se.</strong> Přečti sekci 1 a 2 — vložení do cloudu = přenos třetí straně, a data se třídí do tří košů podle citlivosti, ne podle velikosti úryvku.`; }
+  }
+}
+</script>
+</body>
+</html>

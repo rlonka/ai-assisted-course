@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A5 — Agile Manifesto | AI-assisted RSE</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    /* Value pairs (left over right) */
+    .values {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin: 1.25rem 0 0.8rem;
+    }
+    .value {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 0.7rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.7rem 0.9rem;
+      background: var(--bg-card);
+      font-size: 0.86rem;
+    }
+    .value .v-left  { font-weight: 600; color: var(--text); text-align: right; }
+    .value .v-right { color: var(--muted); text-align: left; }
+    .value .v-over  {
+      font-family: var(--font-sans);
+      font-size: 0.66rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.15rem 0.55rem;
+      white-space: nowrap;
+    }
+    @media (max-width: 520px) {
+      .value { grid-template-columns: 1fr; text-align: center; gap: 0.3rem; }
+      .value .v-left, .value .v-right { text-align: center; }
+    }
+    .values-note { text-align: center; font-family: var(--font-sans); font-size: 0.8rem; color: var(--muted); margin: 0 0 1.5rem; font-style: italic; }
+
+    /* Comparison table */
+    .cmp {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.87rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .cmp th {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+      border-bottom: 2px solid var(--text);
+    }
+    .cmp td {
+      padding: 0.55rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    .cmp tr:last-child td { border-bottom: none; }
+
+    /* Loop diagram */
+    .loop {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin: 1.25rem 0 0.6rem;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+    }
+    .loop-step {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.5rem 0.85rem;
+      background: var(--bg-card);
+    }
+    .loop-step.hot { border-color: #68d391; background: #f0fff4; }
+    .loop-arrow { color: var(--muted); font-size: 1.1rem; }
+
+    /* In / Out */
+    .in-out {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .in-out-box { border-radius: 4px; padding: 0.8rem 1rem; font-size: 0.86rem; }
+    .in-box  { background: var(--green-light);  border: 1px solid #b7dfc8; }
+    .out-box { background: var(--red-light);     border: 1px solid #f9b8b8; }
+    .in-out-box h4 { font-family: var(--font-sans); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; margin: 0 0 0.5rem; color: var(--muted); }
+    .in-out-box ul { margin: 0; padding-left: 1.1rem; }
+    .in-out-box li { margin-bottom: 0.3rem; }
+    @media (max-width: 480px) { .in-out { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<div class="page">
+<div class="content">
+
+<!-- Header -->
+<header class="lesson-header">
+  <div class="lesson-meta">
+    <span class="tag">A5</span>
+    <span class="tag">Týden 9</span>
+    Blok A: Klasické disciplíny
+  </div>
+  <h1>Agile Manifesto</h1>
+  <p class="lesson-subtitle">Hodnoty, ne ceremonie. Krátká zpětná vazba a fungující software nad plánem — přesně ten rytmus, který agentní vývoj zrychluje na maximum. A přesně ten, který dokáže i tiše rozbít.</p>
+</header>
+
+<!-- Progress -->
+<div class="progress-bar">
+  <div class="progress-dot done"    title="A3 — No Silver Bullet"></div>
+  <div class="progress-dot done"    title="A1 — TDD"></div>
+  <div class="progress-dot done"    title="A2 — Refactoring"></div>
+  <div class="progress-dot done"    title="A4 — Domain-Driven Design"></div>
+  <div class="progress-dot done"    title="B1–B6 + Subagents — blok B"></div>
+  <div class="progress-dot done"    title="C1–C5 — blok C"></div>
+  <div class="progress-dot current" title="A5 — Agile Manifesto (aktuální) — dokončuje blok A"></div>
+  <div class="progress-dot"         title="Blok D — Praxe a zavádění"></div>
+</div>
+
+<!-- 1. Jádro -->
+<h2>1 — Jádro</h2>
+
+<p><strong>Agile Manifesto</strong> (2001) je čtyřvětý dokument, který postavil <em>hodnoty</em> nad procesy. Vznikl jako vzpoura proti těžkopádnému vývoji (kompletní specifikace předem, dlouhé plány, dokumentace místo funkčního kódu). Není to metodika ani sada rituálů — je to prohlášení o tom, čemu dávat přednost, když se rozhoduješ.</p>
+
+<p>Jádro jsou čtyři dvojice „<em>tohle</em> před <em>tamtím</em>". Pravá strana není špatná — je hodnotná. Ale když jde do tuhého, levá strana vyhrává:</p>
+
+<div class="values">
+  <div class="value"><span class="v-left">Jednotlivci a interakce</span><span class="v-over">před</span><span class="v-right">procesy a nástroji</span></div>
+  <div class="value"><span class="v-left">Fungující software</span><span class="v-over">před</span><span class="v-right">vyčerpávající dokumentací</span></div>
+  <div class="value"><span class="v-left">Spolupráce se zákazníkem</span><span class="v-over">před</span><span class="v-right">vyjednáváním o smlouvě</span></div>
+  <div class="value"><span class="v-left">Reakce na změnu</span><span class="v-over">před</span><span class="v-right">plněním plánu</span></div>
+</div>
+<p class="values-note">„To znamená, že i když si ceníme položek napravo, ceníme si víc těch nalevo."</p>
+
+<div class="callout">
+  <div class="callout-label">Jedno pravidlo</div>
+  <p>Agilní není o rychlosti výstupu — je o krátkosti <em>zpětné vazby</em>. Smyslem je co nejrychleji zjistit, jestli jdeš správným směrem, a levně změnit kurz. AI zrychluje produkci kódu; agilní hodnoty ptají po tom, jestli zrychluje i to učení — nebo jen výrobu.</p>
+</div>
+
+<!-- 2. Hodnoty vs. ceremonie -->
+<h2>2 — Hodnoty, ne „scrum"</h2>
+
+<p>Největší nepochopení agilního přístupu: záměna za rituály. Denní stand-upy, story pointy, sprinty, burndown grafy — to jsou <em>praktiky</em>, které z manifestu odvodily konkrétní frameworky (Scrum, XP). Manifest sám o žádné z nich nemluví. Když tým dělá všechny ceremonie a přitom ignoruje hodnoty, dělá „cargo cult agile" — formu bez podstaty.</p>
+
+<table class="cmp">
+  <tr>
+    <th>Agilní hodnota</th>
+    <th>Cargo cult (forma bez podstaty)</th>
+  </tr>
+  <tr>
+    <td>Krátká zpětná vazba, rychlé učení</td>
+    <td>Sprinty, protože „to se má"</td>
+  </tr>
+  <tr>
+    <td>Fungující software každý krok</td>
+    <td>Demo, kde se ukazuje, co „skoro funguje"</td>
+  </tr>
+  <tr>
+    <td>Reakce na změnu jako norma</td>
+    <td>Change request proces, který změnu ztěžuje</td>
+  </tr>
+  <tr>
+    <td>Jednotlivci a interakce</td>
+    <td>Nástroj (Jira), který interakci nahradí tiketem</td>
+  </tr>
+</table>
+
+<p>Pro vědu to má úlevnou pointu: <strong>nemusíš zavádět Scrum, abys pracoval agilně.</strong> Výzkum je ze své podstaty iterativní — hypotéza, experiment, revize. To <em>je</em> agilní smyčka, jen se slovníkem vědy. Hodnoty sedí; ceremonie z korporátního product managementu na vědecký tým většinou nepatří.</p>
+
+<!-- 3. Smyčka zpětné vazby -->
+<h2>3 — Srdce agilního je smyčka</h2>
+
+<p>Všechny čtyři hodnoty se sbíhají do jedné mechaniky: <strong>krátká smyčka zpětné vazby</strong>. Udělej malý kus, zjisti, jestli funguje a jestli je to správná věc, uprav směr, opakuj. Čím kratší smyčka, tím levnější omyl — protože ho odhalíš dřív, než na něm postavíš měsíc práce.</p>
+
+<div class="loop">
+  <div class="loop-step hot">malý krok</div>
+  <div class="loop-arrow">→</div>
+  <div class="loop-step">fungující výsledek</div>
+  <div class="loop-arrow">→</div>
+  <div class="loop-step">zpětná vazba</div>
+  <div class="loop-arrow">→</div>
+  <div class="loop-step">uprav směr</div>
+  <div class="loop-arrow">↺</div>
+</div>
+<p class="values-note">Totéž jsi viděl u TDD (red-green-refactor) i refactoringu (malé bezpečné kroky). Agile je ten princip povýšený na hodnotu celého vývoje.</p>
+
+<p>Tady je klíčové slovo <em>„fungující"</em>. Smyčka se uzavře jen tehdy, když každý krok skončí něčím, co <strong>prokazatelně funguje</strong> — ne „vypadá hotově". Fungující software je ten, který prošel testem, ne ten, který se vygeneroval. Bez toho ověření nemáš zpětnou vazbu, jen iluzi pokroku. A přesně sem míří celé napětí s AI.</p>
+
+<!-- 4. AI a agile: zrychlení i past -->
+<h2>4 — AI a agile: turbo na smyčce</h2>
+
+<p>Agilní hodnoty a agentní vývoj do sebe zapadají skoro dokonale — a přitom je tu jedna zrádná trhlina. AI radikálně zkracuje smyčku: nápad → kód → výsledek za minuty místo dnů. To je agilní sen. Ale zkracuje jen produkci; jestli zkrátí i <em>učení</em>, závisí na tobě.</p>
+
+<div class="in-out">
+  <div class="in-out-box in-box">
+    <h4>AI zesiluje agilní hodnoty ✓</h4>
+    <ul>
+      <li>Smyčka nápad→fungující kód se zkrátí na minuty — víc iterací, dřív poznáš omyl</li>
+      <li>„Reakce na změnu" zlevní: přepsat směr je levné, když kód píše agent</li>
+      <li>Prototyp k ověření hypotézy vznikne hned → rychlejší učení</li>
+      <li>Míň lpění na plánu: když je změna levná, plán smí být volnější</li>
+    </ul>
+  </div>
+  <div class="in-out-box out-box">
+    <h4>AI rozbíjí „fungující" ✗</h4>
+    <ul>
+      <li>Rychlá produkce kódu, který <em>není</em> fungující (netestovaný) — iluze pokroku</li>
+      <li>Zpětná vazba se přeskočí: „vypadá hotově" nahradí „prokazatelně funguje" (C4)</li>
+      <li>Objem místo směru: hodně kódu ≠ správný kód (opak agilního učení)</li>
+      <li>„Reakce na změnu" se zvrhne v bezcílné bloudění bez plánu vůbec</li>
+    </ul>
+  </div>
+</div>
+
+<p>Rozhodující posun: <strong>AI přesouvá úzké hrdlo z psaní na ověřování.</strong> Když byl drahý kód, agile optimalizoval jeho produkci. Teď je kód levný a vzácné je vědět, <em>jestli je správný a jestli řešíš správný problém</em>. Proto v AI-assisted vývoji nabývá slovo „fungující" ve „fungujícím softwaru" na váze — je to jediná pojistka, že zrychlá smyčka opravdu učí, a ne jen chrlí. Agilní disciplína (testy, krátké ověřitelné kroky, reakce na reálnou zpětnou vazbu) není s AI méně důležitá — je <em>víc</em>, protože je jediné, co drží rychlost u směru.</p>
+
+<!-- 5. Napětí: nástroj vs. jednotlivci -->
+<h2>5 — Napětí: „jednotlivci a interakce před nástroji"</h2>
+
+<p>Jedna hodnota si s AI zaslouží pozornost zvlášť: <em>„jednotlivci a interakce před procesy a nástroji"</em>. AI je nástroj — a to mocný. Neporušuje ho jeho používání samo o sobě?</p>
+
+<p>Ne — pokud si pamatuješ, co ta hodnota chrání. Chrání <strong>lidský úsudek a komunikaci</strong> před tím, aby je nahradil neosobní mechanismus. AI tuhle hodnotu podpírá, když <em>zesiluje</em> jednotlivce (rychlejší prototyp k rozhovoru, víc času na myšlení místo psaní boilerplate). Porušuje ji, když <em>nahradí</em> úsudek („agent to napsal, tak je to asi dobře") nebo interakci (nikdo se s expertem nebavil, model si doménu domyslel). Nástroj ve službě člověka = agilní. Člověk ve službě nástroje = přesně to, proti čemu manifest vznikl.</p>
+
+<!-- 6. Historický kontext -->
+<h2>6 — Historický kontext</h2>
+
+<ul>
+  <li><strong>Snowbird, únor 2001.</strong> 17 lidí (Kent Beck, Ward Cunningham, Martin Fowler, Ron Jeffries, Robert Martin a další) sepsalo manifest — 4 hodnoty a 12 principů. Reakce na „waterfall": těžké procesy, kompletní specifikace předem.</li>
+  <li><strong>Předchůdci: XP a Scrum (90. léta).</strong> Extreme Programming (Beck) přineslo TDD, párové programování, continuous integration. Scrum přinesl sprinty a role. Manifest je destiloval na společné hodnoty.</li>
+  <li><strong>12 principů za manifestem.</strong> Rozvádějí hodnoty do konkrétna: „dodávej fungující software často", „vítej změnu i pozdě", „udržitelné tempo", „jednoduchost". Krátké, stojí za přečtení celé.</li>
+  <li><strong>Osud: úspěch i zvrhnutí.</strong> Agile vyhrálo tak, že se z něj stal průmysl certifikací a ceremonií — přesně ta „forma nad podstatou", proti níž hodnoty stály. Řada původních signatářů to veřejně kritizuje.</li>
+</ul>
+
+<p>Pointa pro publikum: manifest je krátký, hodnotový a 20+ let starý. AI ho nezneplatnila — vrací nás k jeho jádru. Když je kód levný a smyčka rychlá, hodnoty (fungující software, krátká zpětná vazba, reakce na změnu) jsou najednou dosažitelnější než kdy dřív — pokud si udržíš disciplínu, kterou ceremonie zastřely.</p>
+
+<!-- 7. Tři příklady -->
+<h2>7 — Tři příklady</h2>
+
+<div class="examples">
+  <div class="example-card">
+    <div class="example-label">Vědec-kodér</div>
+    <p>Nikdy nedělal „agile" a myslí si, že se ho netýká. Přitom jeho výzkum <em>je</em> agilní smyčka: hypotéza → rychlý skript → výsledek → revize hypotézy. S AI se ta smyčka zkrátí z dnů na minuty — může vyzkoušet pět variant analýzy za odpoledne. Past: nechá si od AI vygenerovat pět skriptů, ale žádný neověří proti známému výsledku. Řešení: každý krok smyčky uzavře malým testem nebo kontrolou na datech, kde zná odpověď. Pak je rychlost skutečné učení, ne chrlení grafů.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">RSE vývojář</div>
+    <p>Zná agilní praktiky (CI, malé PR, iterace). S AI drží tempo, ale zpřísňuje ověřování: „fungující software" znamená se zeleným testem, ne s hezkým diffem. Zavede pravidlo, že žádný AI-generovaný kus nejde do main bez testu a review — protože rychlost produkce bez ověření není agile, je to jen rychlejší hromadění nezvěřeného dluhu. Zároveň využívá levnou „reakci na změnu": když se ukáže, že směr je špatný, nechá agenta přepsat, místo aby zachraňoval slepou uličku.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">Manažer / PI</div>
+    <p>V pokušení zavést na vědecký tým Scrum s ceremoniemi. Lepší čtení: agile jsou hodnoty, ne rituály — nevnucuj sprinty lidem, jejichž práce je ze své podstaty iterativní. Měř <em>fungující výsledky</em> a krátkost zpětné vazby, ne dodržování procesu. Na AI se dívej agilní otázkou: „zkrátila nám smyčka učení, nebo jen roste objem nezvěřeného kódu?" Velocity měřená v řádcích je anti-agilní past; agilní metrika je „jak rychle poznáme, že jdeme špatně".</p>
+  </div>
+</div>
+
+<!-- 8. Propojení -->
+<h2>8 — Propojení na ostatní lekce</h2>
+
+<ul>
+  <li><strong>A1 — TDD:</strong> Red-green-refactor je agilní smyčka v malém. Test-first je konkrétní provedení „fungujícího softwaru každý krok". XP, odkud TDD pochází, je přímý předchůdce manifestu.</li>
+  <li><strong>A2 — Refactoring:</strong> Malé bezpečné kroky a udržitelné tempo jsou agilní princip. Refactoring je jak se vypořádat se změnou, aniž bys nabíral dluh — „reakce na změnu" v praxi.</li>
+  <li><strong>A3 — No Silver Bullet:</strong> Iterace existuje právě proto, že esenciální složitost nejde vyřešit dokonalým plánem předem. Agile je odpověď na to, že úplné poznání dopředu není možné.</li>
+  <li><strong>C4 — Trust gap:</strong> „Fungující software" naráží na past plynulosti. AI-generovaný kód vypadá hotově; agilní hodnota trvá na tom, že fungující = ověřené, ne že vypadá hotově.</li>
+</ul>
+
+<!-- 9. Nejčastější nepochopení -->
+<h2>9 — Nejčastější nepochopení</h2>
+
+<div class="callout amber">
+  <div class="callout-label">Nepochopení 1</div>
+  <p>„Být agilní znamená dělat sprinty, stand-upy a používat Jiru."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>To jsou ceremonie odvozené frameworky (Scrum), ne agile samotné. Manifest o žádné z nich nemluví — mluví o hodnotách. Tým může dělat všechny rituály a přitom být hluboce neagilní (cargo cult), nebo nedělat žádný a přitom žít podle hodnot (krátká zpětná vazba, fungující software). Nezaměňuj formu za podstatu.</p>
+</div>
+
+<div class="callout amber">
+  <div class="callout-label">Nepochopení 2</div>
+  <p>„Agile znamená žádné plánování a žádnou dokumentaci."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>Manifest říká „<em>před</em>", ne „<em>místo</em>". Pravá strana je hodnotná — plán i dokumentace mají místo. Jde o prioritu, když jsou v konfliktu: reagovat na realitu je cennější než držet se neaktuálního plánu. Navíc v AI-assisted vývoji dokumentace ožila — <code>CLAUDE.md</code> a doménový slovník (A4) nejsou mrtvé papíry, jsou to spustitelný kontext pro agenta. „Fungující software před dokumentací" neznamená bez ní.</p>
+</div>
+
+<div class="callout amber">
+  <div class="callout-label">Nepochopení 3</div>
+  <p>„S AI jsme agilní automaticky — iterujeme přece rychle."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>Rychlá produkce není agilní smyčka. Smyčka se uzavře jen ověřenou zpětnou vazbou — „fungující" software, ne „vygenerovaný". Když chrlíš kód, který nikdo neověřil ani neukázal reálnému uživateli, iteruješ naprázdno: rychle produkuješ, ale neučíš se. To je opak agilního. AI zrychluje smyčku jen tehdy, když každý krok skutečně uzavřeš ověřením.</p>
+</div>
+
+<!-- 10. Spicy teze -->
+<h2>10 — Spicy teze</h2>
+
+<div class="spicy">
+  <p>Agile posledních dvacet let umíralo na obřady — sprinty, story pointy a certifikace pohřbily hodnoty pod procesem, přesně to, proti čemu manifest vznikl. A pak přišla AI a udělala nechtěně to, co armáda agilních koučů nedokázala: udělala fungující software každý krok a reakci na změnu <em>levnou</em>, a tím vrátila hodnoty do hry. Jenže stejným tahem podstrčila i nejrafinovanější anti-agilní past v historii — smyčku, která se točí rychleji než kdy dřív, ale netočí se kolem učení, jen kolem produkce. Rychlost bez ověření není agilita, je to jen dražší způsob, jak se mýlit ve větším rozlišení.</p>
+</div>
+
+<!-- 11. Primární zdroje -->
+<h2>11 — Primární zdroje</h2>
+
+<ul class="resource-list">
+  <li>
+    <a href="https://agilemanifesto.org/" target="_blank">Manifesto for Agile Software Development (2001)</a>
+    <span class="why">Proč: Originál. Čtyři věty, přečteš za minutu. Načti si i seznam 17 signatářů — je to who's who oboru (Beck, Fowler, Cunningham, Martin). Kratší text s větším dopadem těžko najdeš.</span>
+  </li>
+  <li>
+    <a href="https://agilemanifesto.org/principles.html" target="_blank">12 principů za Agilním manifestem</a>
+    <span class="why">Proč: Rozvádí hodnoty do konkrétna — „dodávej často", „vítej změnu", „udržitelné tempo", „jednoduchost". Tady se hodnoty stávají použitelnými. Nutné minimum vedle samotného manifestu.</span>
+  </li>
+  <li>
+    <a href="https://martinfowler.com/articles/agile-aus-2018.html" target="_blank">The State of Agile Software in 2018 — Martin Fowler</a>
+    <span class="why">Proč: Jeden ze signatářů kriticky o tom, jak se agile zvrhlo v průmysl ceremonií („Agile Industrial Complex"). Přesně ta perspektiva „hodnoty, ne rituály", kterou tahle lekce staví.</span>
+  </li>
+</ul>
+
+<!-- 12. Feynmanovo cvičení -->
+<h2>12 — Feynmanovo cvičení</h2>
+
+<div class="quiz" id="quiz-main">
+  <div class="quiz-header">Feynmanův test — Agile Manifesto</div>
+
+  <!-- Q1 -->
+  <div class="quiz-question" id="q1">
+    <div class="quiz-q">1. Kolega říká „jsme agilní, děláme denní stand-upy a sprinty". Proč to samo o sobě nic nedokazuje?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q1" value="a"> Dokazuje — stand-upy a sprinty jsou definice agile</label></li>
+      <li><label><input type="radio" name="q1" value="b"> Stand-upy a sprinty jsou ceremonie odvozené frameworky (Scrum), ne agile samo; tým je může dělat všechny a přitom ignorovat hodnoty (cargo cult), nebo naopak žít podle hodnot bez nich</label></li>
+      <li><label><input type="radio" name="q1" value="c"> Nedokazuje, protože agile vyžaduje ještě burndown grafy</label></li>
+      <li><label><input type="radio" name="q1" value="d"> Dokazuje, pokud u toho používají Jiru</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q1','b','Přesně. Manifest mluví o hodnotách, ne o rituálech — stand-upy a sprinty jsou praktiky odvozené Scrumem. Forma bez podstaty je cargo cult: všechny ceremonie, žádné hodnoty. A naopak: vědec, který iteruje hypotéza→experiment→revize, je agilní bez jediného sprintu. Nezaměňuj formu za podstatu.','Ne. Sprinty a stand-upy jsou ceremonie z frameworků (Scrum), ne agile samotné. Manifest o nich vůbec nemluví — mluví o hodnotách. Dělat všechny rituály a ignorovat hodnoty je cargo cult; žít podle hodnot bez rituálů je pořád agilní.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q1-fb"></div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="quiz-question" id="q2">
+    <div class="quiz-q">2. AI ti za pět minut vygeneruje pět verzí analýzy, žádnou jsi neověřil. Proč to není agilní, i když jsi „rychle iteroval"?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q2" value="a"> Je to agilní — rychlá iterace je přesně agile</label></li>
+      <li><label><input type="radio" name="q2" value="b"> Agilní smyčka se uzavře jen ověřenou zpětnou vazbou — „fungující" software, ne „vygenerovaný"; bez ověření rychle produkuješ, ale neučíš se, což je opak agilního</label></li>
+      <li><label><input type="radio" name="q2" value="c"> Není, protože agile zakazuje používat AI</label></li>
+      <li><label><input type="radio" name="q2" value="d"> Je, pokud těch verzí uděláš aspoň deset</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q2','b','Správně. Klíč je slovo „fungující". Smyčka nápad→výsledek→zpětná vazba→úprava se uzavře jen tehdy, když každý krok skončí něčím prokazatelně funkčním. Bez ověření iteruješ naprázdno — produkuješ objem, ale nezískáváš žádné učení. AI zrychluje produkci; agilní je jen tehdy, když zrychlí i to učení, což vyžaduje ověření každého kroku.','Ne. Rychlá produkce není agilní smyčka. Smyčka se uzavře jen ověřenou zpětnou vazbou — fungující (otestovaný) výsledek, ne vygenerovaný. Bez ověření jen chrlíš objem a neučíš se, což je pravý opak agilního přístupu. „Fungující" v manifestu dělá těžkou práci.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q2-fb"></div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="quiz-question" id="q3">
+    <div class="quiz-q">3. „Jednotlivci a interakce před procesy a nástroji." AI je mocný nástroj — porušuje jeho používání tuhle hodnotu?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q3" value="a"> Ano, každý nástroj tuhle hodnotu porušuje</label></li>
+      <li><label><input type="radio" name="q3" value="b"> Ne samo o sobě: hodnota chrání lidský úsudek a komunikaci; AI ji podpírá, když zesiluje jednotlivce, a porušuje ji, až když nahradí úsudek („agent to napsal, tak dobré") nebo interakci s expertem</label></li>
+      <li><label><input type="radio" name="q3" value="c"> Ne, protože AI není nástroj, ale kolega</label></li>
+      <li><label><input type="radio" name="q3" value="d"> Ano, proto se AI a agile vylučují</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q3','b','Výborně. Hodnota nechrání před nástroji obecně — chrání lidský úsudek a komunikaci před tím, aby je nahradil neosobní mechanismus. AI ve službě člověka (rychlejší prototyp k rozhovoru, víc času na myšlení) hodnotu podpírá. AI, která nahradí úsudek nebo interakci s expertem, ji porušuje. Nástroj ve službě člověka = agilní; člověk ve službě nástroje = to, proti čemu manifest vznikl.','Ne. Hodnota nezakazuje nástroje — chrání lidský úsudek a komunikaci. AI ji podpírá, když zesiluje jednotlivce (víc času na myšlení, rychlý prototyp k rozhovoru), a porušuje ji teprve tehdy, když nahradí úsudek nebo interakci s expertem. Záleží, kdo komu slouží.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q3-fb"></div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="quiz-question" id="q4">
+    <div class="quiz-q">4. Jak AI mění, kde je úzké hrdlo vývoje, a co z toho plyne pro agilní disciplínu?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q4" value="a"> AI odstranila všechna úzká hrdla, disciplína už není potřeba</label></li>
+      <li><label><input type="radio" name="q4" value="b"> Úzké hrdlo se přesouvá z psaní kódu na ověřování (je správný? řeším správný problém?); proto je agilní disciplína — testy, ověřené kroky, reálná zpětná vazba — s AI důležitější, ne méně</label></li>
+      <li><label><input type="radio" name="q4" value="c"> Hrdlo se přesouvá na rychlost psaní, takže jde jen o výkon modelu</label></li>
+      <li><label><input type="radio" name="q4" value="d"> Nic se nemění, hrdlo je pořád psaní kódu</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q4','b','Přesně. Když byl kód drahý, agile optimalizoval jeho produkci. AI udělala kód levným — a vzácným se stalo vědět, jestli je správný a jestli řešíš správný problém. Hrdlo se přesunulo z psaní na ověřování. Proto slovo „fungující" nabývá na váze a agilní disciplína (testy, krátké ověřitelné kroky, reálná zpětná vazba) je jediné, co drží rychlost u směru. Víc důležitá, ne méně.','Ne. AI přesouvá úzké hrdlo z psaní kódu na ověřování — kód je teď levný, vzácné je vědět, jestli je správný a jestli řešíš správnou věc. Právě proto je agilní disciplína (testy, ověřené kroky, reálná zpětná vazba) s AI důležitější, ne zbytečná. Drží rychlost u směru.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q4-fb"></div>
+  </div>
+
+  <div class="quiz-score" id="quiz-score"></div>
+</div>
+
+<!-- 13. Co dál -->
+<h2>13 — Co dál</h2>
+
+<p><strong>Co musíš znát před touto lekcí:</strong></p>
+<ul>
+  <li><a href="0003-tdd.html">A1 — TDD</a> — red-green-refactor je agilní smyčka v malém; „fungující software každý krok" v praxi.</li>
+  <li><a href="0001-no-silver-bullet.html">A3 — No Silver Bullet</a> — iterace existuje proto, že dokonalý plán předem není možný.</li>
+</ul>
+
+<p><strong>Praktický úkol (20 minut):</strong> Vezmi rozdělanou úlohu a vědomě ji rozsekej na nejmenší kroky, kde každý končí něčím <em>fungujícím</em> (ověřeným testem nebo kontrolou). Nech AI udělat jeden krok, ověř ho, teprve pak zadej další. Po každém se ptej „naučil jsem se tímhle krokem něco, nebo jsem jen vyrobil kód?" Sleduj rozdíl mezi agilní smyčkou (rychlé učení) a jen rychlou produkcí.</p>
+
+<p><strong>Blok A dokončen 🎉.</strong> Klasické disciplíny máš kompletní: A1 TDD, A2 Refactoring, A3 No Silver Bullet, A4 DDD, A5 Agile. Dohromady tvoří jazyk, kterým poznáš, co je na AI-assisted vývoji staré a osvědčené a co je skutečně nové.</p>
+
+<p><strong>Příští blok:</strong></p>
+<ul>
+  <li><em>Blok D — Praxe a zavádění.</em> Jak dostat AI-assisted vývoj do reálné práce výzkumné organizace. Začínáme D1 — Context engineering.</li>
+</ul>
+
+<!-- Footer -->
+<div class="lesson-nav">
+  <div>
+    <span class="nav-label">Předchozí lekce</span>
+    <a href="0016-domain-driven-design.html">← A4 — Domain-Driven Design</a>
+  </div>
+  <div>
+    <span class="nav-label">Příští lekce</span>
+    <a href="0018-context-engineering.html">D1 — Context engineering →</a>
+  </div>
+</div>
+
+<p style="margin-top:2rem; font-size:0.8rem; color: var(--muted); font-family: var(--font-sans);">
+  Máš otázku? Vrať se do Claude Code a napiš ji — agent je tvůj učitel a může rozvinout libovolný bod z této lekce.
+</p>
+
+</div>
+</div>
+
+<script>
+const scores = {};
+function check(qid, correct, okMsg, failMsg) {
+  const selected = document.querySelector(`input[name="${qid}"]:checked`);
+  const fb = document.getElementById(`${qid}-fb`);
+  if (!selected) {
+    fb.textContent = 'Vyber jednu odpověď.';
+    fb.className = 'quiz-feedback incorrect';
+    fb.style.display = 'block';
+    return;
+  }
+  const isCorrect = selected.value === correct;
+  fb.textContent = isCorrect ? '✓ ' + okMsg : '✗ ' + failMsg;
+  fb.className = 'quiz-feedback ' + (isCorrect ? 'correct' : 'incorrect');
+  fb.style.display = 'block';
+  scores[qid] = isCorrect;
+  document.querySelectorAll(`input[name="${qid}"]`).forEach(r => r.disabled = true);
+  document.querySelector(`#${qid} .quiz-check`).disabled = true;
+  if (Object.keys(scores).length === 4) {
+    const n = Object.values(scores).filter(Boolean).length;
+    const el = document.getElementById('quiz-score');
+    el.style.display = 'block';
+    if (n === 4) {
+      el.innerHTML = '<strong>✓ 4/4 — Výborně.</strong> Tím máš hotový celý blok A. Praktický úkol: rozsekej rozdělanou úlohu na nejmenší kroky, kde každý končí něčím ověřeně fungujícím. Po každém se ptej „naučil jsem se tím něco, nebo jsem jen vyrobil kód?" — to je rozdíl mezi agilní smyčkou a rychlou produkcí.';
+    } else if (n >= 3) {
+      el.innerHTML = `<strong>${n}/4 — Téměř.</strong> Přečti znovu sekci 3 (smyčka) a sekci 4 (AI a agile). Klíč: agile je o krátkosti zpětné vazby, ne o rychlosti výstupu; a „fungující" znamená ověřené, ne vygenerované. AI zrychlí smyčku jen tehdy, když každý krok uzavřeš ověřením.`;
+    } else {
+      el.innerHTML = `<strong>${n}/4 — Vrať se.</strong> Přečti znovu sekci 1 a 2 — agile jsou hodnoty (fungující software, reakce na změnu), ne ceremonie (sprinty, stand-upy). Pak sekci 4 — proč AI zrychluje smyčku jen tehdy, když každý krok skutečně ověříš.`;
+    }
+  }
+}
+</script>
+</body>
+</html>

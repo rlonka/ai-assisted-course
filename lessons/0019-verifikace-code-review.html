@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>D2 — Verifikace a code review | AI-assisted RSE</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    .cmp { width: 100%; border-collapse: collapse; font-size: 0.87rem; margin: 1rem 0 1.5rem; }
+    .cmp th { font-family: var(--font-sans); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.5rem 0.75rem; text-align: left; border-bottom: 2px solid var(--text); }
+    .cmp td { padding: 0.55rem 0.75rem; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+    .cmp tr:last-child td { border-bottom: none; }
+
+    /* Checklist */
+    .checklist { display: flex; flex-direction: column; gap: 0.4rem; margin: 1rem 0 1.5rem; max-width: 640px; }
+    .check-item { display: grid; grid-template-columns: auto 1fr; gap: 0.7rem; align-items: baseline; border: 1px solid var(--border); border-radius: 4px; padding: 0.55rem 0.9rem; background: var(--bg-card); font-size: 0.85rem; }
+    .check-item .ci-q { font-weight: 600; color: var(--accent); font-family: var(--font-mono); font-size: 0.9rem; }
+    .check-item .ci-t { line-height: 1.45; }
+
+    .in-out { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0 1.5rem; }
+    .in-out-box { border-radius: 4px; padding: 0.8rem 1rem; font-size: 0.86rem; }
+    .in-box  { background: var(--green-light);  border: 1px solid #b7dfc8; }
+    .out-box { background: var(--red-light);     border: 1px solid #f9b8b8; }
+    .in-out-box h4 { font-family: var(--font-sans); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; margin: 0 0 0.5rem; color: var(--muted); }
+    .in-out-box ul { margin: 0; padding-left: 1.1rem; }
+    .in-out-box li { margin-bottom: 0.3rem; }
+    @media (max-width: 480px) { .in-out { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<div class="page">
+<div class="content">
+
+<header class="lesson-header">
+  <div class="lesson-meta">
+    <span class="tag">D2</span>
+    <span class="tag">Týden 11</span>
+    Blok D: Praxe a zavádění
+  </div>
+  <h1>Verifikace a code review AI výstupů</h1>
+  <p class="lesson-subtitle">Když se kód zlevnil, ověření podražilo. Review přestal být zdvořilost a stal se povinnou, nepřeskočitelnou vrstvou — a review AI kódu se dělá jinak než review kódu od člověka.</p>
+</header>
+
+<div class="progress-bar">
+  <div class="progress-dot done" title="Blok A — kompletní"></div>
+  <div class="progress-dot done" title="Blok B — kompletní"></div>
+  <div class="progress-dot done" title="Blok C — kompletní"></div>
+  <div class="progress-dot done" title="D1 — Context engineering"></div>
+  <div class="progress-dot current" title="D2 — Verifikace a code review (aktuální)"></div>
+  <div class="progress-dot" title="D3 — Bezpečnost a citlivá data"></div>
+  <div class="progress-dot" title="D4 — Licence a provenance"></div>
+  <div class="progress-dot" title="D5 — Zavádění v týmu"></div>
+</div>
+
+<h2>1 — Jádro</h2>
+
+<p><strong>Verifikace</strong> je krok, ve kterém prokážeš, že to, co model vyprodukoval, skutečně dělá správnou věc správně — ne že to tak <em>vypadá</em>. V AI-assisted vývoji to není volitelná fáze na konci, ale ta nejdůležitější práce, kterou děláš. Když AI zlevnila psaní kódu, přesunulo se úzké hrdlo na ověřování — a tam teď leží tvá odpovědnost.</p>
+
+<p>Klíčový posun z A5: dřív bylo vzácné napsat kód, dnes je vzácné <em>vědět, že je správný</em>. Code review se tím proměnil z kolegiální zdvořilosti („mrknu ti na to") na povinnou bezpečnostní vrstvu, bez které se kód nesmí hnout dál. A protože AI kód vypadá uhlazeně a sebejistě (trust gap, C4), je pokušení review přeskočit největší přesně tam, kde je nejnebezpečnější.</p>
+
+<div class="callout">
+  <div class="callout-label">Jedno pravidlo</div>
+  <p>Nesmíš odeslat kód, kterému nerozumíš — bez ohledu na to, kdo (nebo co) ho napsal. Když ho nechápeš natolik, abys ho uměl obhájit řádek po řádku, nezreviewoval jsi ho; jen jsi ho schválil. A schválení bez porozumění je jen pomalejší způsob, jak přijmout chybu.</p>
+</div>
+
+<h2>2 — Proč je AI review jiný než lidský review</h2>
+
+<p>Reviewovat kód od agenta není totéž co reviewovat kód od kolegy. Tři rozdíly mění celou hru — a všechny táhnou stejným směrem: k větší ostražitosti.</p>
+
+<table class="cmp">
+  <tr><th>&nbsp;</th><th>Review kódu od člověka</th><th>Review kódu od AI</th></tr>
+  <tr><td>Záměr</td><td>Můžeš se autora zeptat „proč"</td><td>Není koho se ptát; „proč" musíš rekonstruovat sám</td></tr>
+  <tr><td>Objem</td><td>Omezený tempem člověka</td><td>Obrovský — snadno víc, než stíháš poctivě ověřit</td></tr>
+  <tr><td>Vzhled</td><td>Odráží jistotu i nejistotu autora</td><td>Vždy uhlazený a sebejistý, i když je špatně (C4)</td></tr>
+  <tr><td>Typ chyb</td><td>Překlepy, nedomyšlené okraje</td><td>Halucinované API, věrohodně vypadající nesmysl, tiché posuny</td></tr>
+</table>
+
+<p>Nejzrádnější je poslední řádek. Člověk, který si není jistý, to obvykle dá najevo — nejistým commit messagem, otazníkem v komentáři. Model nikdy. Vygeneruje neexistující funkci knihovny se stejnou elegancí jako správný kód. Review AI výstupu proto nemůže spoléhat na „vypadá to sebejistě" — sebejistota je konstantní, ne signál.</p>
+
+<h2>3 — Co konkrétně ověřovat</h2>
+
+<p>Ověřování není mlhavý „přečtu si to". Je to sada konkrétních otázek, které kladeš každému diffu:</p>
+
+<div class="checklist">
+  <div class="check-item"><span class="ci-q">1</span><span class="ci-t"><strong>Dělá to správnou věc?</strong> Řeší to zadaný problém, ne podobný? (Souvisí se specifikací, ne jen s kódem.)</span></div>
+  <div class="check-item"><span class="ci-q">2</span><span class="ci-t"><strong>Dělá to tu věc správně?</strong> Okrajové případy, dělení nulou, prázdný vstup, jednotky (A4).</span></div>
+  <div class="check-item"><span class="ci-q">3</span><span class="ci-t"><strong>Existuje všechno, co volá?</strong> Halucinované API, neexistující parametry, smyšlené funkce knihovny.</span></div>
+  <div class="check-item"><span class="ci-q">4</span><span class="ci-t"><strong>Mluví to jazykem domény?</strong> Sedí termíny a model na to, jak o problému mluvíš (A4)?</span></div>
+  <div class="check-item"><span class="ci-q">5</span><span class="ci-t"><strong>Prokazuje to test?</strong> Je chování ověřené testem, ne jen okem (A1)?</span></div>
+  <div class="check-item"><span class="ci-q">6</span><span class="ci-t"><strong>Rozumím tomu natolik, abych to obhájil?</strong> Když ne, není to hotové.</span></div>
+</div>
+
+<p>Zvlášť pro vědu je kritická otázka 2 a 4: tiché posuny v jednotkách, znaménkách nebo okrajových podmínkách nezpůsobí pád — způsobí <em>tiše jiný výsledek</em>. To je nejhorší typ chyby, protože projde, publikuje se a odhalí se až když někdo nereplikuje (C2). Test, který drží známý výsledek, je jediná spolehlivá pojistka.</p>
+
+<h2>4 — Techniky, které fungují</h2>
+
+<div class="in-out">
+  <div class="in-out-box in-box">
+    <h4>Ověřuje ✓</h4>
+    <ul>
+      <li><strong>Testy first (A1):</strong> nech chování prokázat testem, ne pohledem</li>
+      <li><strong>Malé diffy:</strong> co nepřečteš celé, nezreviewuješ — žádej krátké kroky</li>
+      <li><strong>Spusť to:</strong> na reálných datech, kde znáš odpověď</li>
+      <li><strong>Nech model vysvětlit:</strong> „proč tenhle řádek?" odhalí domýšlení</li>
+      <li><strong>Adversariální čtení:</strong> hledej, čím to rozbít, ne důvod to schválit</li>
+      <li><strong>Druhý agent na review (subagenti, 0009):</strong> nezávislá kontrola</li>
+    </ul>
+  </div>
+  <div class="in-out-box out-box">
+    <h4>Není review ✗</h4>
+    <ul>
+      <li>„Vypadá dobře" po zběžném přelétnutí</li>
+      <li>Schválení velkého diffu, který jsi nepřečetl celý</li>
+      <li>Spoléhání na to, že model zní sebejistě</li>
+      <li>Přijetí kódu, kterému nerozumíš, „protože to prošlo"</li>
+      <li>Zelené testy, které napsal tentýž model bez tvé kontroly</li>
+    </ul>
+  </div>
+</div>
+
+<p>Poslední bod je záludný: nech si od AI napsat testy (skvělé využití), ale <em>testy samotné pak taky zreviewuj</em>. Model, který napíše chybný kód, umí napsat i test, který tu chybu posvětí. Zelená bez zkontrolovaného testu není důkaz — je to dvakrát nezkontrolovaný předpoklad.</p>
+
+<h2>5 — Ownership: podepisuješ se pod to ty</h2>
+
+<p>Nejdůležitější mentální posun celé lekce: <strong>za AI-generovaný kód neseš odpovědnost stejně, jako bys ho napsal sám.</strong> „Napsala to AI" není obhajoba — v článku, v produkci, u reviewera. V okamžiku, kdy to odešleš, je to tvůj kód a tvůj podpis pod jeho správností.</p>
+
+<p>To rámuje verifikaci ne jako byrokracii, ale jako převzetí vlastnictví. Standard je jednoduchý a nesmlouvavý: kód, který odesíláš, musíš rozumět tak, jako bys ho napsal — protože z hlediska odpovědnosti jsi ho napsal. Tenhle standard tě zároveň chrání před deskillingem (C3): kdo ověřuje s porozuměním, drží si dovednost číst a hodnotit kód; kdo jen odklikává, ji ztrácí.</p>
+
+<h2>6 — Historický kontext</h2>
+
+<ul>
+  <li><strong>Fagan inspections (1976).</strong> Formální peer review kódu má 50 let. Ukázalo, že najít chybu při čtení je mnohonásobně levnější než v produkci. AI ten poměr jen posunula dál.</li>
+  <li><strong>Pull request review (GitHub, ~2008).</strong> Institucionalizoval review jako bránu před sloučením. Právě tuhle bránu teď AI zaplavuje objemem — a proto je disciplína důležitější.</li>
+  <li><strong>„Trust but verify" a code ownership.</strong> Princip, že za kód ručí ten, kdo ho odešle, ne ten (nebo to), kdo ho napsal. AI z něj udělala centrální pravidlo, ne floskuli.</li>
+  <li><strong>Automatizovaný review (linters, CI, AI reviewery).</strong> Stroje chytají třídu chyb, ale nenahrazují lidské porozumění záměru a doméně — přesouvají pozornost k tomu, co stroj neuvidí.</li>
+</ul>
+
+<h2>7 — Tři příklady</h2>
+
+<div class="examples">
+  <div class="example-card">
+    <div class="example-label">Vědec-kodér</div>
+    <p>Nechá AI napsat analýzu a spustí ji — vyjdou hezké grafy. Skoro to publikuje. Místo toho ověří: pustí kód na datasetu, kde zná správný výsledek. Vyjde jiné číslo — model tiše zaměnil pořadí os. Kdyby věřil vzhledu, publikoval by chybu. Poučení: u vědeckého kódu se ověřuje proti známé odpovědi, ne proti tomu, že „to běží".</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">RSE vývojář</div>
+    <p>Zavede pravidlo: AI-generovaný kód jde do main jen s testem a s reviewem, kde reviewer rozumí každému řádku. Žádá od agenta malé diffy, protože velký diff se nedá poctivě zreviewovat. Testy psané modelem sám kontroluje — ví, že model umí posvětit vlastní chybu. Na nezávislou kontrolu pouští druhého agenta, ale finální podpis je jeho.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">Manažer / PI</div>
+    <p>Slyší „AI zvýšila produktivitu o 40 %". Správná otázka: „a kapacita na verifikaci vzrostla taky?" Když se kód generuje rychleji, než ho tým stíhá ověřit, nevzniká zrychlení — vzniká fronta nezvěřeného rizika. Nastaví normu: rychlost se měří v <em>ověřeném</em> kódu, ne vygenerovaném. A připomene: „napsala to AI" nikoho nezbaví odpovědnosti.</p>
+  </div>
+</div>
+
+<h2>8 — Propojení na ostatní lekce</h2>
+
+<ul>
+  <li><strong>C4 — Trust gap:</strong> Přímý základ. Plynulost ≠ správnost; sebejistota modelu je konstantní, ne signál. Verifikace je kalibrovaná odpověď na trust gap.</li>
+  <li><strong>A1 — TDD:</strong> Testy jsou hlavní nástroj verifikace. „Fungující" znamená prokázané testem, ne okem.</li>
+  <li><strong>A5 — Agile:</strong> Úzké hrdlo se přesunulo z psaní na ověřování; „fungující software" je ověřený, ne vygenerovaný.</li>
+  <li><strong>C3 — Deskilling:</strong> Kdo ověřuje s porozuměním, drží si dovednost; kdo odklikává, ji ztrácí. Review je obrana proti deskillingu.</li>
+</ul>
+
+<h2>9 — Nejčastější nepochopení</h2>
+
+<div class="callout amber"><div class="callout-label">Nepochopení 1</div><p>„Testy prošly zeleně, takže je kód ověřený."</p></div>
+<div class="callout green"><div class="callout-label">Skutečnost</div><p>Zelené testy jsou důkaz jen tehdy, když víš, že testy testují správnou věc. Model, který napíše chybný kód, umí napsat i test, který chybu posvětí. Zkontroluj i testy — a měj aspoň jeden, který drží známý výsledek. Nezkontrolovaná zelená je dvakrát nezkontrolovaný předpoklad.</p></div>
+
+<div class="callout amber"><div class="callout-label">Nepochopení 2</div><p>„Kód vypadá čistě a sebejistě, takže je nejspíš správně."</p></div>
+<div class="callout green"><div class="callout-label">Skutečnost</div><p>Sebejistota AI výstupu je konstantní — vypadá stejně uhlazeně, když je správně i když halucinuje neexistující API. Vzhled proto není signál kvality (C4). Ověřuješ chování a existenci volaných věcí, ne dojem z formátování.</p></div>
+
+<div class="callout amber"><div class="callout-label">Nepochopení 3</div><p>„Kód napsala AI, takže za případnou chybu nemůžu já."</p></div>
+<div class="callout green"><div class="callout-label">Skutečnost</div><p>V okamžiku, kdy kód odešleš, je tvůj — se vším, co dělá. „Napsala to AI" není obhajoba u reviewera, v produkci ani v článku. Odpovědnost se přenosem na nástroj neředí. Proto platí: nerozumíš-li tomu, neodesílej to.</p></div>
+
+<h2>10 — Spicy teze</h2>
+
+<div class="spicy"><p>Review, který přeskočíš, protože kód vypadá dobře, je přesně ten review, který jsi nejvíc potřeboval. AI totiž nezhoršila kvalitu kódu — zhoršila kvalitu <em>signálů</em>, podle kterých kvalitu odhadujeme. Uhlazenost, sebejistota, „prostě to běží" bývaly slabé, ale nenulové známky, že autor věděl, co dělá. Teď je model rozdává zdarma ke správnému i k halucinovanému kódu se stejnou lehkostí. Kdo čte diff a hledá důvod ho schválit, prohrál dřív, než začal; ověřuje jen ten, kdo hledá, čím ho rozbít.</p></div>
+
+<h2>11 — Primární zdroje</h2>
+
+<ul class="resource-list">
+  <li><a href="https://google.github.io/eng-practices/review/reviewer/" target="_blank">Google Engineering Practices — Code Review</a><span class="why">Proč: Nejlepší veřejný standard, jak reviewovat. Co hledat, jak dát ownership, proč malé změny. Přenositelné na review AI výstupů beze zbytku.</span></li>
+  <li><a href="https://martinfowler.com/bliki/SelfTestingCode.html" target="_blank">Self-Testing Code — Martin Fowler</a><span class="why">Proč: Proč jsou testy pojistkou správnosti a co znamená „fungující". Přímý most na A1 a na to, jak verifikovat chování, ne dojem.</span></li>
+  <li><a href="https://queue.acm.org/detail.cfm?id=3454124" target="_blank">The Fagan Inspection a historie code review (ACM Queue)</a><span class="why">Proč: Kontext — proč review jako disciplína existuje 50 let a proč se najití chyby při čtení vyplácí. Ukotvení, že AI review nevynalezla, jen zostřila.</span></li>
+</ul>
+
+<h2>12 — Feynmanovo cvičení</h2>
+
+<div class="quiz" id="quiz-main">
+  <div class="quiz-header">Feynmanův test — Verifikace a code review</div>
+
+  <div class="quiz-question" id="q1">
+    <div class="quiz-q">1. Proč je review kódu od AI náročnější než review kódu od kolegy?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q1" value="a"> Není — je to totéž</label></li>
+      <li><label><input type="radio" name="q1" value="b"> Není koho se zeptat na záměr, objem je obrovský a výstup je vždy uhlazený a sebejistý, i když je špatně — sebejistota přestala být signál</label></li>
+      <li><label><input type="radio" name="q1" value="c"> AI kód je vždy horší, takže stačí ho zamítnout</label></li>
+      <li><label><input type="radio" name="q1" value="d"> AI kód je vždy lepší, takže review není třeba</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q1','b','Přesně. Tři rozdíly: chybí autor, kterého by ses zeptal na „proč"; objem snadno přeroste tvou kapacitu ověřit; a výstup je uhlazený a sebejistý bez ohledu na správnost. Poslední je nejzrádnější — člověk nejistotu dá najevo, model nikdy. Sebejistota je konstantní, ne signál.','Ne. Rozdíly jsou reálné: není koho se zeptat na záměr, objem je obrovský a AI výstup vypadá vždy sebejistě i když halucinuje. Právě proto se review AI kódu nesmí opírat o dojem „vypadá to jistě".')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q1-fb"></div>
+  </div>
+
+  <div class="quiz-question" id="q2">
+    <div class="quiz-q">2. AI ti napsala kód i testy, testy jsou zelené. Proč to ještě není ověřené?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q2" value="a"> Je — zelené testy jsou vždy dostatečný důkaz</label></li>
+      <li><label><input type="radio" name="q2" value="b"> Model, který napsal chybný kód, umí napsat i test, který chybu posvětí; musíš zkontrolovat i testy a mít aspoň jeden, který drží známý výsledek</label></li>
+      <li><label><input type="radio" name="q2" value="c"> Není, protože testy od AI vždy lžou</label></li>
+      <li><label><input type="radio" name="q2" value="d"> Je, pokud jich je aspoň deset</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q2','b','Správně. Zelená je důkaz jen tehdy, když víš, že test testuje správnou věc. Tentýž model, co napsal chybu, umí napsat test, který ji posvětí — chyba a její „důkaz" pak souhlasí. Zkontroluj testy a měj aspoň jeden na známém výsledku. Nezkontrolovaná zelená je dvakrát nezkontrolovaný předpoklad.','Ne. Zelené testy od AI nejsou automaticky důkaz. Model, který udělal chybu v kódu, ji umí posvětit i v testu. Musíš testy zkontrolovat a mít aspoň jeden, který drží nezávisle známý výsledek.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q2-fb"></div>
+  </div>
+
+  <div class="quiz-question" id="q3">
+    <div class="quiz-q">3. „Tu chybu jsem nezpůsobil já, kód napsala AI." Kde je problém?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q3" value="a"> Nikde — je to legitimní obhajoba</label></li>
+      <li><label><input type="radio" name="q3" value="b"> V okamžiku, kdy kód odešleš, je tvůj se vším, co dělá; odpovědnost se přenosem na nástroj neředí, proto nerozumíš-li kódu, nesmíš ho odeslat</label></li>
+      <li><label><input type="radio" name="q3" value="c"> Problém je jen v tom, že jsi použil AI vůbec</label></li>
+      <li><label><input type="radio" name="q3" value="d"> Žádný, odpovědnost nese vždy výrobce modelu</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q3','b','Výborně. Ownership je jádro lekce. Kód, který odešleš, je tvůj podpis pod jeho správností — u reviewera, v produkci i v článku. „Napsala to AI" není obhajoba. Standard: rozumět odesílanému kódu tak, jako bys ho napsal, protože z hlediska odpovědnosti jsi ho napsal. To tě zároveň chrání před deskillingem.','Ne. Odpovědnost se přenosem na nástroj neředí. Jakmile kód odešleš, je tvůj se vším všudy. „Napsala to AI" neobstojí nikde. Proto platí: kterému kódu nerozumíš, ten neodesílej.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q3-fb"></div>
+  </div>
+
+  <div class="quiz-question" id="q4">
+    <div class="quiz-q">4. Manažer hlásí „AI zrychlila vývoj o 40 %". Jaká je správná agilní otázka?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q4" value="a"> „Můžeme to zrychlit na 80 %?"</label></li>
+      <li><label><input type="radio" name="q4" value="b"> „Vzrostla úměrně i kapacita na verifikaci?" — když se kód generuje rychleji, než ho tým ověří, nevzniká zrychlení, ale fronta nezvěřeného rizika</label></li>
+      <li><label><input type="radio" name="q4" value="c"> „Kolik řádků denně teď napíšeme?"</label></li>
+      <li><label><input type="radio" name="q4" value="d"> „Můžeme propustit revievery?"</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q4','b','Přesně. Úzké hrdlo se přesunulo z psaní na ověřování. Když produkce předběhne verifikaci, rozdíl se nehromadí jako hotová práce, ale jako fronta nezvěřeného rizika. Rychlost se proto měří v ověřeném kódu, ne vygenerovaném — a řádky za den jsou anti-metrika (A5).','Ne. Zrychlení produkce bez odpovídající kapacity na ověření není zrychlení — je to rostoucí fronta nezvěřeného rizika. Správná otázka míří na verifikaci: stíháme ověřit, co vygenerujeme? Řádky za den nic neříkají.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q4-fb"></div>
+  </div>
+
+  <div class="quiz-score" id="quiz-score"></div>
+</div>
+
+<h2>13 — Co dál</h2>
+
+<p><strong>Co musíš znát před touto lekcí:</strong></p>
+<ul>
+  <li><a href="0011-trust-gap.html">C4 — Trust gap</a> — plynulost ≠ správnost; základ, proč verifikace vůbec musí být.</li>
+  <li><a href="0003-tdd.html">A1 — TDD</a> — testy jako hlavní nástroj ověření chování.</li>
+</ul>
+
+<p><strong>Praktický úkol (25 minut):</strong> Vezmi poslední kus kódu, který ti napsala AI a tys ho schválil „na oko". Projdi ho šesti otázkami ze sekce 3. U každého řádku, kterému úplně nerozumíš, se zeptej modelu „proč tohle?" a ověř odpověď. Pak najdi dataset se známým výsledkem a spusť to. Kolik chyb nebo nejasností jsi našel, které „vypadaly dobře"?</p>
+
+<p><strong>Příští lekce:</strong> <em>D3 — Bezpečnost a citlivá data.</em> Ověřuješ, co model vyprodukoval; D3 je o tom, co do modelu vůbec smíš poslat.</p>
+
+<div class="lesson-nav">
+  <div><span class="nav-label">Předchozí lekce</span><a href="0018-context-engineering.html">← D1 — Context engineering</a></div>
+  <div><span class="nav-label">Příští lekce</span><a href="0020-bezpecnost-citliva-data.html">D3 — Bezpečnost a citlivá data →</a></div>
+</div>
+
+<p style="margin-top:2rem; font-size:0.8rem; color: var(--muted); font-family: var(--font-sans);">Máš otázku? Vrať se do Claude Code a napiš ji — agent je tvůj učitel a může rozvinout libovolný bod z této lekce.</p>
+
+</div>
+</div>
+
+<script>
+const scores = {};
+function check(qid, correct, okMsg, failMsg) {
+  const selected = document.querySelector(`input[name="${qid}"]:checked`);
+  const fb = document.getElementById(`${qid}-fb`);
+  if (!selected) { fb.textContent = 'Vyber jednu odpověď.'; fb.className = 'quiz-feedback incorrect'; fb.style.display = 'block'; return; }
+  const isCorrect = selected.value === correct;
+  fb.textContent = isCorrect ? '✓ ' + okMsg : '✗ ' + failMsg;
+  fb.className = 'quiz-feedback ' + (isCorrect ? 'correct' : 'incorrect');
+  fb.style.display = 'block';
+  scores[qid] = isCorrect;
+  document.querySelectorAll(`input[name="${qid}"]`).forEach(r => r.disabled = true);
+  document.querySelector(`#${qid} .quiz-check`).disabled = true;
+  if (Object.keys(scores).length === 4) {
+    const n = Object.values(scores).filter(Boolean).length;
+    const el = document.getElementById('quiz-score');
+    el.style.display = 'block';
+    if (n === 4) { el.innerHTML = '<strong>✓ 4/4 — Výborně.</strong> Ověření je teď hlavní práce, ne poslední krok. Praktický úkol: vezmi kód schválený „na oko" a projdi ho šesti otázkami + spusť na známém výsledku.'; }
+    else if (n >= 3) { el.innerHTML = `<strong>${n}/4 — Téměř.</strong> Přečti znovu sekci 2 (proč je AI review jiný) a 5 (ownership). Klíč: sebejistota není signál, zelená bez zkontrolovaného testu není důkaz, a odesílaný kód je tvůj.`; }
+    else { el.innerHTML = `<strong>${n}/4 — Vrať se.</strong> Přečti sekci 1 a 2 — verifikace je hlavní práce, ne zdvořilost, a AI výstup vypadá vždy sebejistě bez ohledu na správnost.`; }
+  }
+}
+</script>
+</body>
+</html>

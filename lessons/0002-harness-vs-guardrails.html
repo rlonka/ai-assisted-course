@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>B1 — Harness vs. Guardrails | AI-assisted RSE</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    /* Lesson-specific: architecture diagram */
+    .arch-diagram {
+      margin: 1.5rem 0;
+      font-family: var(--font-sans);
+      font-size: 0.82rem;
+    }
+    .arch-layer {
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.6rem 1rem;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      position: relative;
+    }
+    .arch-layer .arch-name {
+      font-weight: 700;
+      min-width: 110px;
+    }
+    .arch-layer .arch-desc {
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+    .arch-layer.layer-user    { border-color: #a0aec0; background: #f7fafc; }
+    .arch-layer.layer-harness { border-color: #63b3ed; background: #ebf8ff; }
+    .arch-layer.layer-model   { border-color: var(--text); background: var(--text); color: white; }
+    .arch-layer.layer-model .arch-desc { color: #a0aec0; }
+    .arch-layer.layer-guard   { border-color: #fc8181; background: #fff5f5; }
+    .arch-layer.layer-action  { border-color: #68d391; background: #f0fff4; }
+    .arch-arrow {
+      text-align: center;
+      color: var(--muted);
+      font-size: 1rem;
+      margin: 0.1rem 0;
+    }
+
+    /* comparison table */
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .compare-table th {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+      border-bottom: 2px solid var(--text);
+    }
+    .compare-table td {
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .compare-table tr:last-child td { border-bottom: none; }
+    .compare-table .col-harness { color: #2b6cb0; }
+    .compare-table .col-guard   { color: #9b2c2c; }
+  </style>
+</head>
+<body>
+<div class="page">
+<div class="content">
+
+<!-- Header -->
+<header class="lesson-header">
+  <div class="lesson-meta">
+    <span class="tag">B1</span>
+    <span class="tag">Týden 1</span>
+    Blok B: Agentní paradigma
+  </div>
+  <h1>Harness vs. Guardrails</h1>
+  <p class="lesson-subtitle">Architektura systému kolem modelu — co dává agentovi schopnosti a co ho drží v mezích</p>
+</header>
+
+<!-- Progress -->
+<div class="progress-bar" title="Curriculum progress">
+  <div class="progress-dot done"    title="A3 — hotovo"></div>
+  <div class="progress-dot current" title="B1 — aktuální"></div>
+  <div class="progress-dot" title="A1"></div>
+  <div class="progress-dot" title="B2"></div>
+  <div class="progress-dot" title="B3–B5"></div>
+  <div class="progress-dot" title="A2, C1, C2"></div>
+  <div class="progress-dot" title="C3, C4, A5"></div>
+  <div class="progress-dot" title="A4, B9"></div>
+</div>
+
+<!-- 1. Jádro -->
+<h2>1 — Jádro</h2>
+
+<p>Model samotný neumí nic specifického. To, co ho dělá užitečným pro konkrétní práci, je <strong>harness</strong> — veškerý kontext, nástroje a konfigurace, které ho obklopují. To, co ho drží od nebezpečného jednání, jsou <strong>guardrails</strong> — deterministické zábrany, které neprojdou přes model vůbec. Harness je pozitivní architektura: přidáváš, co agent potřebuje umět. Guardrails jsou negativní architektura: definuješ, co nesmí. V Claude Code jsou obojí explicitní a programovatelné — ne přednastavené a skryté.</p>
+
+<div class="callout">
+  <div class="callout-label">Proč to musíš umět přednášet</div>
+  <p>Většina lidí si myslí, že AI nástroj je jen "model + API". Harness/guardrails ti dá jazyk pro rozhovor o tom, <em>jak se AI integruje do vědeckého workflow</em> — co tým musí nakonfigurovat, kde jsou rizika, kde je odpovědnost.</p>
+</div>
+
+<!-- 2. Historický kontext -->
+<h2>2 — Historický kontext</h2>
+
+<p>Koncept není nový. Harness = prostředí, ve kterém agent operuje. Guardrails = omezení jeho autonomie. Analogie:</p>
+
+<ul>
+  <li><strong>Unix shell (1969):</strong> shell je harness (dává programům I/O, proměnné, pipes), file permissions jsou guardrails.</li>
+  <li><strong>Kubernetes (2014):</strong> pod je harness (CPU, memory, volumes, env vars), RBAC a network policies jsou guardrails.</li>
+  <li><strong>Claude Code (2025):</strong> CLAUDE.md, MCP servery, skills, nástroje = harness. Hooks s exit code 2, permission system = guardrails.</li>
+</ul>
+
+<p>Vzor je starý. Co je nové: model v centru je <em>nepředvídatelnější</em> než program. Proto jsou guardrails důležitější než dřív — a harness je složitější než dřív, protože kontext rozhoduje víc než API.</p>
+
+<!-- 3. Architektura -->
+<h2>3 — Jak to funguje v Claude Code</h2>
+
+<p>Každý request projde touto sekvencí:</p>
+
+<div class="arch-diagram">
+  <div class="arch-layer layer-user">
+    <span class="arch-name">Uživatel</span>
+    <span class="arch-desc">Prompt, příkaz, nebo trigger z hooku</span>
+  </div>
+  <div class="arch-arrow">↓</div>
+  <div class="arch-layer layer-harness">
+    <span class="arch-name">Harness</span>
+    <span class="arch-desc">CLAUDE.md načten → memory → skills aktivní → MCP servery připojeny → nástroje definovány</span>
+  </div>
+  <div class="arch-arrow">↓</div>
+  <div class="arch-layer layer-model">
+    <span class="arch-name">Model</span>
+    <span class="arch-desc">Reasonuje, generuje akce (tool calls, text)</span>
+  </div>
+  <div class="arch-arrow">↓</div>
+  <div class="arch-layer layer-guard">
+    <span class="arch-name">Guardrails</span>
+    <span class="arch-desc">Hooks zkontrolují akci před spuštěním — exit code 2 = blokace, permission system = allowlist/blocklist</span>
+  </div>
+  <div class="arch-arrow">↓</div>
+  <div class="arch-layer layer-action">
+    <span class="arch-name">Akce</span>
+    <span class="arch-desc">Soubor upraven, příkaz spuštěn, výsledek vrácen modelu</span>
+  </div>
+</div>
+
+<p>Klíčový detail: guardrails běží <strong>mimo model</strong>. Shell hook spustíš v Bashi — neprochází přes LLM inference. To znamená, že jsou spolehlivé i když model halucinuje.</p>
+
+<table class="compare-table">
+  <tr>
+    <th>Vlastnost</th>
+    <th class="col-harness">Harness</th>
+    <th class="col-guard">Guardrails</th>
+  </tr>
+  <tr>
+    <td>Otázka</td>
+    <td class="col-harness">Co agent <em>umí</em>?</td>
+    <td class="col-guard">Co agent <em>nesmí</em>?</td>
+  </tr>
+  <tr>
+    <td>Implementace</td>
+    <td class="col-harness">CLAUDE.md, skills, MCP, memory</td>
+    <td class="col-guard">Hooks (exit code 2), permission system</td>
+  </tr>
+  <tr>
+    <td>Charakter</td>
+    <td class="col-harness">Probabilistický — model interpretuje kontext</td>
+    <td class="col-guard">Deterministický — kód rozhoduje, ne model</td>
+  </tr>
+  <tr>
+    <td>Selže tiše?</td>
+    <td class="col-harness">Ano — špatný harness = generické chování</td>
+    <td class="col-guard">Ne — hook s exit 2 agenta vždy zastaví</td>
+  </tr>
+  <tr>
+    <td>Kde žije</td>
+    <td class="col-harness">CLAUDE.md, .claude/ adresář</td>
+    <td class="col-guard">settings.json → hooks sekce</td>
+  </tr>
+</table>
+
+<!-- 4. Tři příklady -->
+<h2>4 — Tři příklady</h2>
+
+<div class="examples">
+  <div class="example-card">
+    <div class="example-label">Vědec-kodér</div>
+    <p><strong>Harness:</strong> CLAUDE.md obsahuje, jaký numerický solver projekt používá, jaká je konvence pojmenování proměnných, kde jsou testovací data. Agent bez toho generuje generický Python.<br><strong>Guardrail:</strong> Hook blokuje jakýkoliv <code>git push</code> bez manuálního potvrzení. Produkční výsledky nemůže agent pushovat sám.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">RSE vývojář</div>
+    <p><strong>Harness:</strong> MCP server zpřístupňuje agentovi dokumentaci HPC clusteru a job scheduling API. Agent může navrhovat SLURM skripty správně pro konkrétní systém.<br><strong>Guardrail:</strong> Permission system: <code>Bash</code> nástroj povolen jen pro read-only příkazy (<code>grep</code>, <code>ls</code>, <code>cat</code>). Spouštění jobů prochází schválením.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">Manažer / PI</div>
+    <p>Tým řekne: "Nasadili jsme AI, ale nedělá nic specifického pro náš projekt." Příčina: harness je prázdný — agent nemá kontext domény. Guardrails možná fungují (agent nic nerozbíjí), ale harness je slabý, takže výstup je generický a zbytečný.</p>
+  </div>
+</div>
+
+<!-- 5. Propojení -->
+<h2>5 — Propojení na rámec pěti otázek</h2>
+
+<p>Harness a guardrails jsou architekturální meta-koncepty. Pět otázek (<a href="0004-ramec-peti-otazek.html">lekce B2</a>) je jejich inventář:</p>
+
+<ul>
+  <li><strong>Memory (CLAUDE.md)</strong> — hlavní harness komponent. Dává modelu esenciální znalost projektu.</li>
+  <li><strong>Skills</strong> — harness + guardrail hybrid. Skill definuje <em>jak</em> má agent přistoupit k úkolu (harness), a tím zároveň omezuje, co neudělá (soft guardrail).</li>
+  <li><strong>Hooks</strong> — čistý guardrail. Deterministické, mimo model, exit code 2 = tvrdá blokace.</li>
+  <li><strong>MCP</strong> — harness rozšíření. Přidává agentovi nástroje (databáze, API, filesystem) bez nutnosti je psát do promptu.</li>
+  <li><strong>Subagents</strong> — harness vzor. Orchestrátor deleguje na specializované agenty, každý se svým harness kontextem.</li>
+</ul>
+
+<div class="callout green">
+  <div class="callout-label">Pravidlo palce</div>
+  <p>Pokud agent dělá špatné věci → problém je v <strong>guardrails</strong>. Pokud agent dělá generické věci → problém je v <strong>harness</strong>.</p>
+</div>
+
+<!-- 6. Nejčastější nepochopení -->
+<h2>6 — Nejčastější nepochopení</h2>
+
+<div class="callout amber">
+  <div class="callout-label">Co si lidé myslí</div>
+  <p>"Guardrails jsou to, co AI firma nastavila. Já je nemohu ovlivnit."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Co to skutečně je</div>
+  <p>V Claude Code jsou guardrails <em>tvoje</em> — píšeš je ty jako shellové skripty v <code>settings.json</code>. Anthropic má vlastní policy-level guardrails (model refuses), ale to je jiná vrstva. Lokální guardrails jsou pod tvou kontrolou a jsou deterministické — nespoléhají na to, že model "odmítne".</p>
+</div>
+
+<div class="callout amber">
+  <div class="callout-label">Druhé nepochopení</div>
+  <p>"Víc guardrails = bezpečnější agent."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>Přehnaně omezený agent je zbytečný — to je "OH NO" extrém (<a href="#">B8</a>). Guardrails bez dobrého harness znamená: agent nic nezkazí, ale taky nic neudělá. Cíl je rovnováha — silný harness (agent ví, co dělat) + cílené guardrails (agent nemůže způsobit katastrofu).</p>
+</div>
+
+<!-- 7. Spicy teze -->
+<h2>7 — Spicy teze</h2>
+
+<div class="spicy">
+  <p>Většina týmů investuje čas do guardrails, protože selhání jsou viditelná. Harness ignorují, protože špatný harness selže tiše — agent prostě dělá průměrné věci a tým si myslí, že AI je přeceňovaná.</p>
+</div>
+
+<!-- 8. Primární zdroje -->
+<h2>8 — Primární zdroje</h2>
+
+<ul class="resource-list">
+  <li>
+    <a href="https://docs.anthropic.com/en/docs/claude-code/hooks" target="_blank">Claude Code Docs — Hooks</a>
+    <span class="why">Proč: přesná specifikace hooku, exit code 2, event typy. Primární zdroj pro guardrails část. Přečti celou stránku — je krátká.</span>
+  </li>
+  <li>
+    <a href="https://docs.anthropic.com/en/docs/claude-code/memory" target="_blank">Claude Code Docs — Memory</a>
+    <span class="why">Proč: CLAUDE.md je hlavní harness komponent. Tato stránka vysvětluje hierarchii (global / projekt / local) a co patří kam.</span>
+  </li>
+  <li>
+    <a href="https://docs.anthropic.com/en/docs/claude-code/settings" target="_blank">Claude Code Docs — Settings &amp; Permissions</a>
+    <span class="why">Proč: permission system (allowedTools, blockedTools) je druhý hlavní guardrail mechanismus. Ukazuje, jak se harness a guardrails konfigurují ze stejného místa.</span>
+  </li>
+</ul>
+
+<!-- 9. Feynmanovo cvičení -->
+<h2>9 — Feynmanovo cvičení</h2>
+
+<div class="quiz" id="quiz-main">
+  <div class="quiz-header">Feynmanův test — Harness vs. Guardrails</div>
+
+  <!-- Q1 -->
+  <div class="quiz-question" id="q1">
+    <div class="quiz-q">1. Tým si stěžuje: "Agent nám generuje generický kód, který neodpovídá našemu projektu." Co je příčina?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q1" value="a"> Guardrails jsou příliš přísné a blokují správné akce</label></li>
+      <li><label><input type="radio" name="q1" value="b"> Harness je slabý — agent nemá kontext projektu</label></li>
+      <li><label><input type="radio" name="q1" value="c"> Model není dostatečně výkonný pro tento use-case</label></li>
+      <li><label><input type="radio" name="q1" value="d"> Skills nejsou správně nainstalovány v systému</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q1','b','Správně. Generický výstup = slabý harness. Agent nemá v kontextu nic specifického pro projekt — CLAUDE.md je buď prázdný nebo chybí.','Ne. Guardrails blokují akce, ne kvalitu výstupu. Generický kód = harness problém.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q1-fb"></div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="quiz-question" id="q2">
+    <div class="quiz-q">2. Hook s exit code 2 se liší od instrukce v CLAUDE.md tím, že…</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q2" value="a"> Hook funguje jen pro Bash příkazy, CLAUDE.md pro všechny nástroje</label></li>
+      <li><label><input type="radio" name="q2" value="b"> Hook je deterministický a neprochází modelem, CLAUDE.md model interpretuje</label></li>
+      <li><label><input type="radio" name="q2" value="c"> Hook se nastavuje v rozhraní, CLAUDE.md se edituje ručně v editoru</label></li>
+      <li><label><input type="radio" name="q2" value="d"> Hook platí globálně, CLAUDE.md platí jen pro aktuální projekt</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q2','b','Přesně. To je klíčový rozdíl. CLAUDE.md = model ho přečte a (možná) uposlechne. Hook = shell skript, buď projde nebo ne, model to neovlivní.','Ne. Klíčový rozdíl je determinismus. Hook je kód, CLAUDE.md je text pro model — spolehlivost je zásadně jiná.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q2-fb"></div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="quiz-question" id="q3">
+    <div class="quiz-q">3. MCP server pro HPC cluster je příklad…</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q3" value="a"> guardrail — omezuje přístup k produkčním zdrojům</label></li>
+      <li><label><input type="radio" name="q3" value="b"> harness — rozšiřuje, co agent může vidět a dělat</label></li>
+      <li><label><input type="radio" name="q3" value="c"> skill — definuje opakovaný workflow pro konkrétní úkol</label></li>
+      <li><label><input type="radio" name="q3" value="d"> memory — ukládá doménové znalosti pro budoucí kontext</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q3','b','Správně. MCP rozšiřuje schopnosti agenta — harness. Přidáváš nové nástroje (read job queue, submit job). Pokud chceš omezit co agent s nimi dělá, přidáš guardrail zvlášť.','Ne. MCP je harness komponent — přidává schopnosti. Guardrail by byl hook nebo permission rule, který omezuje, co agent s MCP nástrojem smí udělat.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q3-fb"></div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="quiz-question" id="q4">
+    <div class="quiz-q">4. Agent se chová bezpečně (nic nerozbíjí), ale výzkumník ho přestane používat, protože "nápovědy jsou k ničemu". Přesná diagnóza:</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q4" value="a"> Guardrails jsou příliš slabé — agent nemá dost omezení</label></li>
+      <li><label><input type="radio" name="q4" value="b"> Guardrails fungují, harness je prázdný — výstup je bezpečný ale generický</label></li>
+      <li><label><input type="radio" name="q4" value="c"> Skills chybí — agent nezná žádné vědecké workflow postupy</label></li>
+      <li><label><input type="radio" name="q4" value="d"> Model je příliš opatrný — Anthropic guardrails blokují vědecký obsah</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q4','b','Výborně. Bezpečný + generický = guardrails OK, harness slabý. Tohle je nejčastější selhání nasazení. Agent neudělá nic špatného, ale taky nic užitečného.','Ne. Harness prázdný = generický výstup. Guardrails se starají o bezpečnost, harness o relevanciu. Jsou to různé problémy.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q4-fb"></div>
+  </div>
+
+  <div class="quiz-score" id="quiz-score"></div>
+</div>
+
+<!-- 10. Propojení -->
+<h2>10 — Co dál</h2>
+
+<p><strong>Co musíš znát před touto lekcí:</strong> <a href="0001-no-silver-bullet.html">A3 — No Silver Bullet</a> — esenciální vs. akcidentální komplexita. Harness útočí na akcidentální; guardrails chrání před tím, aby AI neprodukovala novou akcidentální komplexitu skrytě.</p>
+
+<p><strong>Příští týden (Týden 2):</strong></p>
+<ul>
+  <li><em>A1 — TDD</em> — jak psát testy napřed tak, aby agent měl jasný cíl (harness pro kvalitu)</li>
+  <li><a href="0004-ramec-peti-otazek.html">B2 — Rámec pěti otázek</a> — inventory všech harness a guardrail komponent v Claude Code</li>
+</ul>
+
+<p><strong>Propojení do curricula:</strong></p>
+<ul>
+  <li><em>B3 — Skills</em> — skill je harness komponent s vestavěným soft guardrailem</li>
+  <li><em>B5 — Hooks</em> — celá lekce o guardrails; konkrétní příklady exit code 2</li>
+  <li><em>B8 — YOLO vs. OH NO</em> — YOLO = žádné guardrails, OH NO = přehnaně mnoho; harness ignorovaný v obou</li>
+</ul>
+
+<!-- Footer -->
+<div class="lesson-nav">
+  <div>
+    <span class="nav-label">Předchozí lekce</span>
+    <a href="0001-no-silver-bullet.html">← A3 — No Silver Bullet</a>
+  </div>
+  <div>
+    <span class="nav-label">Příští lekce (Týden 2)</span>
+    <a href="0004-ramec-peti-otazek.html">B2 — Rámec pěti otázek →</a>
+  </div>
+</div>
+
+<p style="margin-top:2rem; font-size:0.8rem; color: var(--muted); font-family: var(--font-sans);">
+  Máš otázku? Vrať se do Claude Code a napiš ji — agent je tvůj učitel a může rozvinout libovolný bod z této lekce.
+</p>
+
+</div>
+</div>
+
+<script>
+const scores = {};
+function check(qid, correct, okMsg, failMsg) {
+  const selected = document.querySelector(`input[name="${qid}"]:checked`);
+  const fb = document.getElementById(`${qid}-fb`);
+  if (!selected) {
+    fb.textContent = 'Vyber jednu odpověď.';
+    fb.className = 'quiz-feedback incorrect';
+    fb.style.display = 'block';
+    return;
+  }
+  const isCorrect = selected.value === correct;
+  fb.textContent = isCorrect ? '✓ ' + okMsg : '✗ ' + failMsg;
+  fb.className = 'quiz-feedback ' + (isCorrect ? 'correct' : 'incorrect');
+  fb.style.display = 'block';
+  scores[qid] = isCorrect;
+  document.querySelectorAll(`input[name="${qid}"]`).forEach(r => r.disabled = true);
+  document.querySelector(`#${qid} .quiz-check`).disabled = true;
+  if (Object.keys(scores).length === 4) {
+    const n = Object.values(scores).filter(Boolean).length;
+    const el = document.getElementById('quiz-score');
+    el.style.display = 'block';
+    if (n === 4) {
+      el.innerHTML = '<strong>✓ 4/4 — Skvěle.</strong> Rozumíš rozdílu. Teď přečti dokumentaci hooku (10 min) a pojmenuj jeden harness gap ve svém aktuálním projektu.';
+    } else if (n >= 3) {
+      el.innerHTML = `<strong>${n}/4 — Téměř.</strong> Projdi znovu tabulku v sekci 3 — klíčový rozdíl je "deterministický vs. probabilistický".`;
+    } else {
+      el.innerHTML = `<strong>${n}/4 — Vrať se.</strong> Přečti znovu sekce 1 a 3. Pak zkus: napiš na papír 3 věci z tvého projektu, které patří do harness, a 1 věc, která patří do guardrails.`;
+    }
+  }
+}
+</script>
+</body>
+</html>

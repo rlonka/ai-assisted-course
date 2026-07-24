@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C3 — Deskilling | AI-assisted RSE</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    /* In / Out lists */
+    .in-out {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .in-out-box {
+      border-radius: 4px;
+      padding: 0.8rem 1rem;
+      font-size: 0.86rem;
+    }
+    .in-box  { background: var(--green-light);  border: 1px solid #b7dfc8; }
+    .out-box { background: var(--red-light);     border: 1px solid #f9b8b8; }
+    .in-out-box h4 {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin: 0 0 0.5rem;
+      color: var(--muted);
+    }
+    .in-out-box ul { margin: 0; padding-left: 1.1rem; }
+    .in-out-box li { margin-bottom: 0.3rem; }
+    @media (max-width: 480px) { .in-out { grid-template-columns: 1fr; } }
+
+    /* Mechanism / spiral */
+    .spiral {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      margin: 1.25rem 0 1.5rem;
+      max-width: 520px;
+    }
+    .spiral-step {
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+      padding: 0.55rem 0.9rem;
+      border-radius: 4px;
+      border: 1px solid #f9b8b8;
+      background: var(--red-light);
+      font-size: 0.85rem;
+    }
+    .spiral-n {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--red);
+      min-width: 1.4rem;
+      font-weight: 700;
+    }
+    .spiral-arrow { color: var(--muted); font-size: 0.78rem; padding-left: 1.4rem; font-family: var(--font-sans); }
+
+    /* Skill type table */
+    .cmp {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.87rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .cmp th {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+      border-bottom: 2px solid var(--text);
+    }
+    .cmp td {
+      padding: 0.55rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    .cmp tr:last-child td { border-bottom: none; }
+
+    /* Data callout */
+    .datum {
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+      background: var(--amber-light);
+      border: 1px solid #f0d8a8;
+      border-radius: 6px;
+      padding: 1rem 1.2rem;
+      margin: 1.25rem 0 1.5rem;
+    }
+    .datum .big {
+      font-family: var(--font-sans);
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--amber);
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .datum .txt { font-size: 0.86rem; line-height: 1.5; }
+  </style>
+</head>
+<body>
+<div class="page">
+<div class="content">
+
+<!-- Header -->
+<header class="lesson-header">
+  <div class="lesson-meta">
+    <span class="tag">C3</span>
+    <span class="tag">Týden 5</span>
+    Blok C: Vědecký software
+  </div>
+  <h1>Deskilling</h1>
+  <p class="lesson-subtitle">Měřitelná eroze dovedností, když nástroj převezme myšlení, které sis měl nechat. Kritický protipól k celému bloku B.</p>
+</header>
+
+<!-- Progress -->
+<div class="progress-bar">
+  <div class="progress-dot done"    title="A3 — No Silver Bullet"></div>
+  <div class="progress-dot done"    title="A1 — TDD"></div>
+  <div class="progress-dot done"    title="B1–B2 — Harness, rámec pěti otázek"></div>
+  <div class="progress-dot done"    title="B3–B6 + Subagents — vrstvy harness"></div>
+  <div class="progress-dot current" title="C3 — Deskilling (aktuální)"></div>
+  <div class="progress-dot"         title="C1, C2 — FAIR4RS, reprodukovatelnost"></div>
+  <div class="progress-dot"         title="C4, C5 — trust gap, vědecký vs. produkční SW"></div>
+  <div class="progress-dot"         title="A4, A5, D-blok"></div>
+</div>
+
+<!-- 1. Jádro -->
+<h2>1 — Jádro</h2>
+
+<p>Celý blok B byl o síle: memory, skills, hooks, MCP, subagenty. Tahle lekce je jeho svědomí. <strong>Deskilling</strong> je postupná ztráta dovednosti proto, že ji za tebe dělá nástroj. Není to nový jev — přinesly ho kalkulačky, GPS, autopilot. AI ho jen zrychlila a přesunula z okraje (rutina) do jádra (úsudek).</p>
+
+<p>Nebezpečí není, že by tě AI udělala hloupým. Nebezpečí je jemnější: <em>cítíš se produktivní</em>, zatímco tvoje nosné dovednosti — čtení kódu, ladění, kritická revize — tiše zakrňují. A zjistíš to až ve chvíli, kdy je potřebuješ a ony tam nejsou.</p>
+
+<div class="callout">
+  <div class="callout-label">Jedno pravidlo</div>
+  <p>Automatizuj mechaniku, ne úsudek. Když deleguješ psaní, ušetříš čas. Když deleguješ <em>porozumění</em>, kupuješ si rychlost dnes za neschopnost zítra.</p>
+</div>
+
+<!-- 2. Data -->
+<h2>2 — Co říkají data</h2>
+
+<p>Tohle není morální panika ani technofobie — je to měřitelný jev.</p>
+
+<div class="datum">
+  <span class="big">1,7×</span>
+  <span class="txt">Podle State of AI Coding (2026) obsahuje AI-generovaný kód řádově <strong>1,7× více issues</strong> než kód psaný člověkem. Klíčový důsledek: revizní dovednost je najednou <em>kritičtější</em> než dřív — přesně ve chvíli, kdy ji AI eroduje. To je jádro <em>trust gap</em> (C4).</span>
+</div>
+
+<p>Anthropic i další měří dopad AI asistence na dovednosti napřímo. Vzorec je konzistentní: krátkodobě roste rychlost, dlouhodobě u lidí, kteří přestanou sami rozhodovat, klesá schopnost chybu odhalit. Produktivita a kompetence se rozejdou — a rozdíl je vidět, až když nástroj selže nebo vyrobí věrohodný nesmysl.</p>
+
+<!-- 3. Mechanismus -->
+<h2>3 — Mechanismus: jak eroze probíhá</h2>
+
+<p>Deskilling není událost, je to spirála. Každý krok je individuálně rozumný — problém je jejich smyčka:</p>
+
+<div class="spiral">
+  <div class="spiral-step"><span class="spiral-n">1</span> AI vyrobí věrohodný výstup rychle a většinou správně.</div>
+  <div class="spiral-arrow">↓ protože je to většinou správně…</div>
+  <div class="spiral-step"><span class="spiral-n">2</span> Přestaneš to pořádně ověřovat — revize se zdá zbytečná.</div>
+  <div class="spiral-arrow">↓ bez procvičování…</div>
+  <div class="spiral-step"><span class="spiral-n">3</span> Revizní a ladicí dovednost zakrňuje.</div>
+  <div class="spiral-arrow">↓ a pak přijde ten 1 z 10 případů…</div>
+  <div class="spiral-step"><span class="spiral-n">4</span> Věrohodná chyba projde — a ty ji už neumíš chytit.</div>
+</div>
+
+<p>Zákeřné je, že prvních pár otáček spirály <em>funguje</em>. Odměna (rychlost) je okamžitá, náklad (zakrnělá dovednost) je odložený a neviditelný. Proto se deskilling nedá ubránit vůlí v momentě — musíš ho ošetřit systémem, stejně jako každý jiný odložený náklad.</p>
+
+<!-- 4. Mechanika vs úsudek -->
+<h2>4 — Klíčové rozlišení: mechanika vs. úsudek</h2>
+
+<p>Ne každá delegace je deskilling. Rozhoduje, <em>co</em> deleguješ. Delegovat mechaniku je čistý zisk; delegovat úsudek je půjčka na účet budoucí kompetence.</p>
+
+<table class="cmp">
+  <tr>
+    <th>Deleguješ mechaniku (bezpečné)</th>
+    <th>Deleguješ úsudek (rizikové)</th>
+  </tr>
+  <tr>
+    <td>Vygeneruj boilerplate, přepiš syntax</td>
+    <td>Rozhodni, jestli je ten návrh správný</td>
+  </tr>
+  <tr>
+    <td>Napiš opakující se test podle vzoru</td>
+    <td>Rozhodni, co se vlastně má testovat</td>
+  </tr>
+  <tr>
+    <td>Zformátuj, přejmenuj, refaktoruj mechanicky</td>
+    <td>Posuď, jestli je architektura zdravá</td>
+  </tr>
+  <tr>
+    <td>Najdi v dokumentaci, shrň API</td>
+    <td>Rozhodni, jestli tomu rozumíš dost na nasazení</td>
+  </tr>
+</table>
+
+<div class="callout amber">
+  <div class="callout-label">Test, který si polož</div>
+  <p>„Kdyby AI zmizela, uměl bych tenhle krok udělat sám?" U mechaniky je odpověď „ano, jen pomaleji" — to je v pořádku. U úsudku, kde je odpověď „už si nejsem jistý", právě probíhá deskilling. To je hranice, kterou musíš hlídat.</p>
+</div>
+
+<!-- 5. Které dovednosti chránit -->
+<h2>5 — Které dovednosti chránit</h2>
+
+<p>Ne všechny dovednosti jsou stejně cenné. Některé ztratíš bez následků (ruční počítání odmocnin), jiné jsou <em>nosné</em> — drží celou tvou kompetenci a jejich ztráta je nevratná v krizi.</p>
+
+<ul>
+  <li><strong>Čtení cizího kódu.</strong> Když neumíš přečíst, co AI napsala, nemůžeš to zodpovědně nasadit. Tohle je nosná dovednost číslo jedna.</li>
+  <li><strong>Ladění a hledání příčiny.</strong> AI umí navrhnout opravu; najít <em>skutečnou</em> příčinu ve složitém systému je úsudek, který se procvičuje jen děláním.</li>
+  <li><strong>Kritická revize.</strong> Rozpoznat věrohodný nesmysl. Přesně ta dovednost, kterou 1,7× více issues vyžaduje — a kterou pohodlí eroduje nejrychleji.</li>
+  <li><strong>Doménový úsudek.</strong> Vědět, jestli výsledek dává fyzikální/vědecký smysl. AI nezná tvůj obor tak jako ty; když tuhle kotvu ztratíš, ztratíš schopnost říct „tohle je špatně, i když to vypadá dobře".</li>
+</ul>
+
+<!-- 6. Kdy je AI pomoc a kdy past -->
+<h2>6 — Kdy je delegace v pořádku (a kdy je to past)</h2>
+
+<div class="in-out">
+  <div class="in-out-box in-box">
+    <h4>V pořádku ✓</h4>
+    <ul>
+      <li>Deleguješ mechaniku, kterou už umíš a nudí tě</li>
+      <li>Výstup vždy sám přečteš a rozumíš mu</li>
+      <li>Používáš AI jako partnera k diskusi, ne jako orákulum</li>
+      <li>Necháváš si prostor pravidelně řešit věci „ručně"</li>
+      <li>AI ti rozšiřuje dosah v oboru, který ovládáš</li>
+    </ul>
+  </div>
+  <div class="in-out-box out-box">
+    <h4>Past ✗</h4>
+    <ul>
+      <li>Nasazuješ kód, kterému úplně nerozumíš</li>
+      <li>Přestal jsi výstup ověřovat, protože „to většinou sedí"</li>
+      <li>Učíš se nový obor tak, že za tebe myslí AI</li>
+      <li>Neumíš říct, proč je řešení správné — jen že „AI to tak dala"</li>
+      <li>Cítíš se produktivní, ale bez AI bys úkol nezvládl</li>
+    </ul>
+  </div>
+</div>
+
+<p>Pravidlo palce: AI má být <em>kolo</em>, ne <em>invalidní vozík</em>. Kolo tě zrychlí, ale pořád šlapeš a sílíš. Vozík tě odveze — a svaly ochabnou. Rozdíl není v nástroji, ale v tom, jestli u toho pořád vykonáváš tu dovednost, nebo ji předáváš.</p>
+
+<!-- 7. Historický kontext -->
+<h2>7 — Historický kontext</h2>
+
+<ul>
+  <li><strong>Ironie automatizace (Bainbridge, 1983).</strong> Čím víc systém automatizuješ, tím kritičtější — a zároveň méně procvičený — je lidský operátor, když má zasáhnout. Klasická studie, která předpověděla přesně tenhle problém desítky let před AI.</li>
+  <li><strong>Air France 447 (2009).</strong> Piloti zvyklí na autopilota nedokázali ručně ustát letadlo, když automatika vypadla. Tragický důkaz, že nosnou dovednost nelze „mít v záloze" bez procvičování.</li>
+  <li><strong>Kalkulačka a GPS.</strong> Ztráta počtů z hlavy a prostorové paměti — deskilling, který většina lidí přijala jako přijatelný. Poučení: některé dovednosti ztratit můžeš, jiné ne. Rozdíl je, jestli jsou nosné.</li>
+  <li><strong>Braverman, Labor and Monopoly Capital (1974).</strong> Deskilling jako oddělení „conception" (rozhodování) od „execution" (vykonávání). AI riskuje totéž u vývojáře: necháš si execution, ztratíš conception — nebo naopak, a v tom je celý rozdíl.</li>
+</ul>
+
+<p>Pointa pro publikum: tohle není o AI. Je to sto let stará otázka, kterou každá automatizační vlna klade znovu — jen teď míří na kognitivní práci, kterou vědci považovali za svou nedotknutelnou doménu.</p>
+
+<!-- 8. Tři příklady -->
+<h2>8 — Tři příklady</h2>
+
+<div class="examples">
+  <div class="example-card">
+    <div class="example-label">Vědec-kodér</div>
+    <p>Doktorand nechá AI napsat celý analytický pipeline. Funguje, výsledky vypadají rozumně, jde to do paperu. O rok později recenzent najde chybu v normalizaci — a doktorand neumí vysvětlit ani opravit vlastní kód, protože mu nikdy pořádně nerozuměl. Delegoval úsudek (co je správná analýza), ne jen mechaniku. Nosná dovednost — doménový úsudek nad vlastními daty — se nikdy nevytvořila.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">RSE vývojář</div>
+    <p>Senior RSE ví, že junioři v týmu se učí obor přes AI — a přestávají číst cizí kód. Zavede pravidlo: AI píše, ale autor musí umět kód obhájit v review, jako by ho psal sám. „Nevím, AI to tak dala" není přijatelná odpověď. Tím udrží revizní a čtecí dovednost živou — dělá z ověřování povinný krok, ne volitelný.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">Manažer / PI</div>
+    <p>PI vidí, že tým dodává rychleji, a je nadšený. Za rok zjistí, že nikdo v týmu už neumí sám odladit produkční incident bez AI — a když nástroj vypadne nebo vyrobí věrohodný nesmysl, tým je paralyzovaný. Rychlost byla reálná, ale kompetence tiše erodovala. Deskilling je organizační riziko: měř nejen output, ale i to, jestli tým udrží dovednost bez nástroje.</p>
+  </div>
+</div>
+
+<!-- 9. Propojení -->
+<h2>9 — Propojení na ostatní lekce</h2>
+
+<ul>
+  <li><strong>Celý blok B:</strong> Tahle lekce je jeho protiváha. Memory, Skills, Hooks, MCP, Subagents dávají obrovskou sílu — deskilling je cena, kterou platíš, když tu sílu použiješ k delegování úsudku, ne mechaniky.</li>
+  <li><strong>C4 — Trust gap:</strong> 1,7× více issues v AI kódu znamená, že revizní dovednost je kritičtější než kdy dřív. Deskilling ji ale eroduje. Ty dvě lekce jsou dvě strany téže mince: víc chyb + míň schopnosti je chytat.</li>
+  <li><strong>B4 — Skills:</strong> „Skill má automatizovat rutinu, ne myšlení" — to je hranice deskillingu vyjádřená v harness. Skill, který zabalí <em>rozhodování</em>, je přesně ta past.</li>
+  <li><strong>A1 — TDD:</strong> Testy jsou externí kotva proti erozi úsudku. Když si nejsi jistý vlastní revizí, red-green cyklus drží objektivní pravdu mimo tvou (nebo AI) hlavu.</li>
+</ul>
+
+<!-- 10. Nejčastější nepochopení -->
+<h2>10 — Nejčastější nepochopení</h2>
+
+<div class="callout amber">
+  <div class="callout-label">Nepochopení 1</div>
+  <p>„Deskilling je jen technofobie — kalkulačku taky používáme a nevadí to."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>Právě proto je kalkulačka dobrý příklad — ukazuje, že <em>některé</em> dovednosti ztratit můžeš (počty z hlavy), protože nejsou nosné. Problém je, když AI eroduje nosné dovednosti: čtení kódu, ladění, úsudek. Otázka není „ztrácíme dovednost?", ale „ztrácíme <em>nosnou</em> dovednost?". Rozlišení je celá pointa, ne argument proti ní.</p>
+</div>
+
+<div class="callout amber">
+  <div class="callout-label">Nepochopení 2</div>
+  <p>„Když jsem produktivnější, tak se přece nezhoršuju."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>Produktivita a kompetence se můžou rozejít — a v tom je nebezpečí. Krátkodobě rychlost roste, zatímco dovednost pod ní tiše klesá. Rozdíl se neprojeví, dokud nástroj nefunguje nebo nevyrobí věrohodnou chybu. Pocit produktivity je právě ten signál, který deskilling maskuje.</p>
+</div>
+
+<div class="callout amber">
+  <div class="callout-label">Nepochopení 3</div>
+  <p>„Řešení je nepoužívat AI a dělat všechno ručně."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>To je stejná chyba z druhé strany. Odmítnout mocný nástroj kvůli riziku deskillingu je jako odmítnout kolo ze strachu z lenosti. Řešení není abstinence — je to <em>vědomá</em> delegace: automatizuj mechaniku, drž si úsudek, a nech si prostor procvičovat nosné dovednosti. Metakognice, ne odmítání.</p>
+</div>
+
+<!-- 11. Spicy teze -->
+<h2>11 — Spicy teze</h2>
+
+<div class="spicy">
+  <p>Deskilling neudělá z vědce hlupáka. Udělá z něj člověka, který se cítí kompetentní, dokud nenastane chvíle, kdy na kompetenci opravdu záleží — a ta chvíle vždycky nastane. Nejnebezpečnější není vývojář, který AI neumí. Je to ten, který jí umí tak dobře, že už dávno neví, co by uměl bez ní — a neví ani to, že to neví.</p>
+</div>
+
+<!-- 12. Primární zdroje -->
+<h2>12 — Primární zdroje</h2>
+
+<ul class="resource-list">
+  <li>
+    <a href="https://www.anthropic.com/research" target="_blank">Anthropic — výzkum dopadu AI na dovednosti (2025)</a>
+    <span class="why">Proč: Primární data o měřitelném dopadu AI asistence na kompetence. Hledej studie o „skill" a „reliance". Základ pro tvrzení, že deskilling je měřitelný, ne dojem.</span>
+  </li>
+  <li>
+    <a href="https://newrelic.com/resources/report/state-of-ai-coding" target="_blank">State of AI Coding 2026 (New Relic)</a>
+    <span class="why">Proč: Zdroj čísla 1,7× více issues v AI kódu a dat o trust gap. Propojuje deskilling s C4 — proč je revizní dovednost kritičtější právě teď. Přečti shrnutí a sekci o kvalitě kódu.</span>
+  </li>
+  <li>
+    <a href="https://www.ise.ncsu.edu/wp-content/uploads/2017/02/Bainbridge_1983_Ironies-of-Automation.pdf" target="_blank">Ironies of Automation — Lisanne Bainbridge (1983)</a>
+    <span class="why">Proč: Historická kotva. Klasický text, který 40 let před AI popsal, proč automatizace dělá lidského operátora kritičtějším i méně způsobilým zároveň. Krátké (6 stran), zásadní. Přečti celé.</span>
+  </li>
+</ul>
+
+<!-- 13. Feynmanovo cvičení -->
+<h2>13 — Feynmanovo cvičení</h2>
+
+<div class="quiz" id="quiz-main">
+  <div class="quiz-header">Feynmanův test — Deskilling</div>
+
+  <!-- Q1 -->
+  <div class="quiz-question" id="q1">
+    <div class="quiz-q">1. Kolega říká: „Kalkulačku používáme desítky let a nikomu to neublížilo, deskilling je panika." Kde je jeho argument neúplný?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q1" value="a"> Nikde — má úplnou pravdu, kalkulačka dokazuje, že deskilling je neškodný</label></li>
+      <li><label><input type="radio" name="q1" value="b"> Kalkulačka eroduje ne-nosnou dovednost (počty z hlavy); nebezpečí AI je v erozi nosných dovedností — čtení kódu, ladění, úsudek. Rozdíl je, jestli je dovednost nosná</label></li>
+      <li><label><input type="radio" name="q1" value="c"> Kalkulačky ve skutečnosti zhoršují matematické schopnosti u všech uživatelů</label></li>
+      <li><label><input type="radio" name="q1" value="d"> Argument je špatný, protože AI není nástroj jako kalkulačka</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q1','b','Přesně. Kalkulačka je dobrý příklad — ukazuje, že ztratit ne-nosnou dovednost (počty z hlavy) je přijatelné. Problém nastává, když AI eroduje nosné dovednosti: čtení kódu, ladění, kritický úsudek. Otázka není „ztrácíme dovednost?", ale „ztrácíme nosnou dovednost?".','Ne. Kolegův příklad není špatný — je neúplný. Kalkulačka eroduje ne-nosnou dovednost, a to je OK. AI ale míří na nosné dovednosti (čtení kódu, ladění, úsudek), jejichž ztráta je v krizi nevratná. Rozlišení nosná/ne-nosná je jádro.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q1-fb"></div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="quiz-question" id="q2">
+    <div class="quiz-q">2. Který z těchto případů je zdravá delegace, a ne deskilling?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q2" value="a"> Nasadíš AI kód do produkce, aniž bys mu úplně rozuměl, protože testy prošly</label></li>
+      <li><label><input type="radio" name="q2" value="b"> Necháš AI vygenerovat boilerplate, který bys uměl napsat sám, přečteš ho a rozumíš mu</label></li>
+      <li><label><input type="radio" name="q2" value="c"> Učíš se nový obor tak, že za tebe rozhoduje AI, co je správně</label></li>
+      <li><label><input type="radio" name="q2" value="d"> Obhajuješ řešení v review slovy „AI to tak navrhla"</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q2','b','Správně. Deleguješ mechaniku (boilerplate), kterou umíš, a výstup si přečteš a rozumíš mu. Test „kdyby AI zmizela, uměl bych to?" dává „ano, jen pomaleji". Ostatní varianty delegují úsudek — rozhodnutí o správnosti, porozumění, obhajobu — což je právě deskilling.','Ne. Zdravá delegace = mechanika, kterou umíš + výstup přečteš a rozumíš mu. Ostatní varianty (nasadit bez porozumění, učit se přes AI, obhajovat „AI to tak dala") delegují úsudek — to je deskilling. Rozhoduje, CO deleguješ.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q2-fb"></div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="quiz-question" id="q3">
+    <div class="quiz-q">3. Proč je 1,7× více issues v AI kódu (C4) přímo propojené s deskillingem?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q3" value="a"> Není propojené — jsou to dvě nezávislá témata</label></li>
+      <li><label><input type="radio" name="q3" value="b"> Víc chyb v AI kódu činí revizní dovednost kritičtější než dřív — přesně tu dovednost, kterou deskilling eroduje. Roste potřeba a zároveň klesá schopnost</label></li>
+      <li><label><input type="radio" name="q3" value="c"> Protože AI kód má víc chyb, měli bychom ho přestat používat</label></li>
+      <li><label><input type="radio" name="q3" value="d"> Protože 1,7× je způsobeno tím, že lidé neumí psát prompty</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q3','b','Výborně. To je ta osudová kombinace: AI produkuje víc chyb (potřeba revize roste), a zároveň pohodlím eroduje revizní dovednost (schopnost revize klesá). Nůžky se rozevírají — víc věrohodných chyb potkává míň schopnosti je chytit. Proto jsou C3 a C4 dvě strany jedné mince.','Ne. Propojení je konkrétní: 1,7× více chyb znamená, že revizní dovednost je kritičtější než kdy dřív — a deskilling právě tuhle dovednost eroduje. Potřeba roste, schopnost klesá. To není důvod AI zavrhnout, ale důvod chránit revizní dovednost.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q3-fb"></div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="quiz-question" id="q4">
+    <div class="quiz-q">4. Jaká je správná odpověď na riziko deskillingu?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q4" value="a"> Přestat používat AI a dělat všechno ručně</label></li>
+      <li><label><input type="radio" name="q4" value="b"> Vědomá delegace: automatizovat mechaniku, držet si úsudek, a systémově si nechat prostor procvičovat nosné dovednosti</label></li>
+      <li><label><input type="radio" name="q4" value="c"> Používat AI na všechno, ať se dovednost přesune jinam</label></li>
+      <li><label><input type="radio" name="q4" value="d"> Spolehnout se, že si dovednost udržíš „v záloze" i bez procvičování</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q4','b','Přesně. Abstinence (a) je stejná chyba z druhé strany — odmítnout mocný nástroj kvůli riziku. Řešení je metakognice: vědět, co deleguješ. Mechaniku ano, úsudek ne. A protože je to odložený náklad, ošetři ho systémem (povinná revize, občas ručně), ne vůlí v momentě. Varianta (d) je přesně omyl, který vyvrátila Air France 447 — dovednost bez procvičování v záloze není.','Ne. Abstinence (a) i slepé spoléhání (c, d) jsou špatně. Správná odpověď je vědomá delegace: automatizuj mechaniku, drž si úsudek, systémově si nech prostor procvičovat nosné dovednosti. Dovednost „v záloze" bez procvičování neexistuje — to ukázala Air France 447.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q4-fb"></div>
+  </div>
+
+  <div class="quiz-score" id="quiz-score"></div>
+</div>
+
+<!-- 14. Co dál -->
+<h2>14 — Co dál</h2>
+
+<p><strong>Co musíš znát před touto lekcí:</strong></p>
+<ul>
+  <li><a href="0004-ramec-peti-otazek.html">B2 — Rámec pěti otázek</a> — celý blok B je síla, kterou tahle lekce vyvažuje. Deskilling je cena za špatně použitou delegaci.</li>
+  <li><a href="0006-skills-a-slash-commands.html">B4 — Skills</a> — „automatizuj rutinu, ne myšlení" je hranice deskillingu v praxi.</li>
+</ul>
+
+<p><strong>Praktický úkol (20 minut):</strong> Projdi svou práci s AI za poslední týden a roztřiď ji do dvou sloupců: <em>delegoval jsem mechaniku</em> vs. <em>delegoval jsem úsudek</em>. U každé položky ve druhém sloupci si polož test: „Kdyby AI zmizela, uměl bych to sám?" Kde je odpověď „už si nejsem jistý", tam právě probíhá deskilling — a je to tvůj seznam nosných dovedností k procvičení.</p>
+
+<p><strong>Příští lekce (dokončení bloku C):</strong></p>
+<ul>
+  <li><em>C4 — Trust gap</em> — druhá strana téže mince: 1,7× více issues a proč je revizní dovednost kritičtější než kdy dřív.</li>
+  <li><em>C1 — FAIR4RS, C2 — Reprodukovatelnost</em> — jak agentní paradigma pomáhá (a škodí) vědecké kvalitě software.</li>
+</ul>
+
+<!-- Footer -->
+<div class="lesson-nav">
+  <div>
+    <span class="nav-label">Předchozí lekce</span>
+    <a href="0009-subagents.html">← Subagents — vrstva 5</a>
+  </div>
+  <div>
+    <span class="nav-label">Příští lekce</span>
+    <a href="#">C4 — Trust gap →</a>
+  </div>
+</div>
+
+<p style="margin-top:2rem; font-size:0.8rem; color: var(--muted); font-family: var(--font-sans);">
+  Máš otázku? Vrať se do Claude Code a napiš ji — agent je tvůj učitel a může rozvinout libovolný bod z této lekce.
+</p>
+
+</div>
+</div>
+
+<script>
+const scores = {};
+function check(qid, correct, okMsg, failMsg) {
+  const selected = document.querySelector(`input[name="${qid}"]:checked`);
+  const fb = document.getElementById(`${qid}-fb`);
+  if (!selected) {
+    fb.textContent = 'Vyber jednu odpověď.';
+    fb.className = 'quiz-feedback incorrect';
+    fb.style.display = 'block';
+    return;
+  }
+  const isCorrect = selected.value === correct;
+  fb.textContent = isCorrect ? '✓ ' + okMsg : '✗ ' + failMsg;
+  fb.className = 'quiz-feedback ' + (isCorrect ? 'correct' : 'incorrect');
+  fb.style.display = 'block';
+  scores[qid] = isCorrect;
+  document.querySelectorAll(`input[name="${qid}"]`).forEach(r => r.disabled = true);
+  document.querySelector(`#${qid} .quiz-check`).disabled = true;
+  if (Object.keys(scores).length === 4) {
+    const n = Object.values(scores).filter(Boolean).length;
+    const el = document.getElementById('quiz-score');
+    el.style.display = 'block';
+    if (n === 4) {
+      el.innerHTML = '<strong>✓ 4/4 — Výborně.</strong> Praktický úkol: roztřiď svou práci s AI na „delegoval jsem mechaniku" vs. „delegoval jsem úsudek". U druhého sloupce test: „Kdyby AI zmizela, uměl bych to?" Kde „už nevím" = tvůj seznam nosných dovedností k procvičení.';
+    } else if (n >= 3) {
+      el.innerHTML = `<strong>${n}/4 — Téměř.</strong> Přečti znovu sekci 4 (mechanika vs. úsudek) a sekci 5 (nosné dovednosti). Klíč: rozhoduje, CO deleguješ. Mechaniku bezpečně, úsudek rizikově — a nosné dovednosti (čtení kódu, ladění, revize) chraň nejvíc.`;
+    } else {
+      el.innerHTML = `<strong>${n}/4 — Vrať se.</strong> Přečti znovu sekci 1 a 3 — co deskilling je a jak probíhá spirála. Pak sekci 6 — kolo vs. vozík. Výsledek: řešení není abstinence, ale vědomá delegace mechaniky při zachování úsudku.`;
+    }
+  }
+}
+</script>
+</body>
+</html>

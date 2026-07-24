@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subagents — vrstva 5 | AI-assisted RSE</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    /* Comparison table */
+    .cmp {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.87rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .cmp th {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+      border-bottom: 2px solid var(--text);
+    }
+    .cmp td {
+      padding: 0.55rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    .cmp tr:last-child td { border-bottom: none; }
+    .cmp .col-name { font-family: var(--font-mono); font-size: 0.80rem; white-space: nowrap; }
+
+    /* In / Out lists */
+    .in-out {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .in-out-box {
+      border-radius: 4px;
+      padding: 0.8rem 1rem;
+      font-size: 0.86rem;
+    }
+    .in-box  { background: var(--green-light);  border: 1px solid #b7dfc8; }
+    .out-box { background: var(--red-light);     border: 1px solid #f9b8b8; }
+    .in-out-box h4 {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin: 0 0 0.5rem;
+      color: var(--muted);
+    }
+    .in-out-box ul { margin: 0; padding-left: 1.1rem; }
+    .in-out-box li { margin-bottom: 0.3rem; }
+    @media (max-width: 480px) { .in-out { grid-template-columns: 1fr; } }
+
+    /* Code example block */
+    .code-example {
+      background: #1a1a2e;
+      color: #e2e8f0;
+      border-radius: 6px;
+      padding: 1rem 1.2rem;
+      font-family: var(--font-mono);
+      font-size: 0.80rem;
+      line-height: 1.6;
+      margin: 1rem 0 1.5rem;
+      overflow-x: auto;
+    }
+    .code-example .cm-comment { color: #718096; }
+    .code-example .cm-heading { color: #90cdf4; font-weight: 700; }
+    .code-example .cm-key     { color: #fbd38d; }
+    .code-example .cm-val     { color: #c6f6d5; }
+
+    /* Three reasons cards */
+    .reasons {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.8rem;
+      margin: 1.25rem 0 1.5rem;
+    }
+    .reason {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.85rem 0.95rem;
+      background: var(--bg-card);
+      font-size: 0.84rem;
+    }
+    .reason .r-icon { font-size: 1.2rem; }
+    .reason h4 {
+      font-family: var(--font-sans);
+      font-size: 0.86rem;
+      margin: 0.35rem 0 0.4rem;
+    }
+    .reason p { margin: 0; color: var(--muted); font-size: 0.82rem; line-height: 1.45; }
+    @media (max-width: 560px) { .reasons { grid-template-columns: 1fr; } }
+
+    /* Orchestration diagram */
+    .orch {
+      margin: 1.25rem 0 1.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.80rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1rem 1.2rem;
+      line-height: 1.7;
+      color: var(--text);
+      overflow-x: auto;
+    }
+    .orch .o-main { color: var(--accent); font-weight: 700; }
+    .orch .o-sub  { color: var(--green); }
+    .orch .o-note { color: var(--muted); }
+
+    /* Five-layer recap */
+    .layers {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      margin: 1rem 0 1.5rem;
+      max-width: 560px;
+    }
+    .layer-row {
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+      padding: 0.5rem 0.9rem;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      font-size: 0.85rem;
+    }
+    .layer-n {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--muted);
+      min-width: 1.5rem;
+    }
+    .layer-name { font-weight: 600; min-width: 6rem; }
+    .layer-role { color: var(--muted); font-size: 0.83rem; }
+    .layer-row.here { border-color: var(--accent); background: var(--accent-light); }
+  </style>
+</head>
+<body>
+<div class="page">
+<div class="content">
+
+<!-- Header -->
+<header class="lesson-header">
+  <div class="lesson-meta">
+    <span class="tag">Vrstva 5</span>
+    <span class="tag">Týden 4</span>
+    Blok B: Agentní paradigma
+  </div>
+  <h1>Subagents — orchestrace</h1>
+  <p class="lesson-subtitle">Jak jeden agent řídí víc podřízených agentů — každý s vlastním kontextem, rolí a nástroji. Poslední vrstva rámce pěti otázek.</p>
+</header>
+
+<!-- Progress -->
+<div class="progress-bar">
+  <div class="progress-dot done"    title="A3 — No Silver Bullet"></div>
+  <div class="progress-dot done"    title="B1 — Harness vs. Guardrails"></div>
+  <div class="progress-dot done"    title="B2 — Rámec pěti otázek"></div>
+  <div class="progress-dot done"    title="B3 — Memory a CLAUDE.md"></div>
+  <div class="progress-dot done"    title="B4 — Skills a slash commands"></div>
+  <div class="progress-dot done"    title="B5 — Hooks"></div>
+  <div class="progress-dot done"    title="B6 — MCP"></div>
+  <div class="progress-dot current" title="Subagents — vrstva 5 (aktuální)"></div>
+</div>
+
+<!-- 1. Jádro -->
+<h2>1 — Jádro</h2>
+
+<p>Doteď jsme mluvili o <em>jednom</em> agentovi s jedním kontextem. <strong>Subagent</strong> je oddělený agent, kterého hlavní agent spustí jako podřízeného — s <em>vlastním</em> kontextovým oknem, <em>vlastní</em> rolí a <em>vlastní</em> sadou nástrojů. Hlavní agent úkol rozloží, rozdělí ho mezi subagenty a jejich výsledky zase složí dohromady.</p>
+
+<p>Tohle je vrstva 5 rámce pěti otázek: <em>„Jak je práce orchestrovaná?"</em> Memory, Skills, Hooks a MCP jsou stavební kameny jednoho agenta. Subagents je skládají do <strong>postupu s víc agenty</strong> — a je to poslední, nejvyšší vrstva. Kdo ji nepotřebuje, nemusí ji používat; ale kdo dělá velké nebo vícepohledové úlohy, bez ní narazí na strop jednoho kontextu.</p>
+
+<div class="callout">
+  <div class="callout-label">Jedno pravidlo</div>
+  <p>Subagent není „chytřejší agent". Je to <em>oddělený kontext</em>, kterému deleguješ kus práce a zpátky dostaneš jen závěr. Hodnota je v izolaci a specializaci — ne ve větším množství výpočtu.</p>
+</div>
+
+<!-- 2. Proč subagent -->
+<h2>2 — Proč subagent: tři důvody</h2>
+
+<p>Subagenta si nespouštíš pro efekt. Spouštíš ho, když platí aspoň jeden ze tří důvodů:</p>
+
+<div class="reasons">
+  <div class="reason">
+    <span class="r-icon">🧹</span>
+    <h4>Izolace kontextu</h4>
+    <p>Subagent udělá velké hledání nebo pročte tisíc řádků a vrátí jen závěr. Hlavní kontext zůstane čistý — nezahltíš ho meziprací.</p>
+  </div>
+  <div class="reason">
+    <span class="r-icon">⚡</span>
+    <h4>Paralelismus</h4>
+    <p>Nezávislé kusy práce běží současně, každý ve svém agentovi. Tři revize místo tří po sobě — wall-clock je nejpomalejší kus, ne jejich součet.</p>
+  </div>
+  <div class="reason">
+    <span class="r-icon">🎯</span>
+    <h4>Specializace</h4>
+    <p>Každý subagent má úzkou roli a jen potřebné nástroje. Reviewer bezpečnosti a reviewer správnosti jsou dva různé pohledy — ne jeden rozmělněný.</p>
+  </div>
+</div>
+
+<p>Když neplatí ani jeden — úkol je malý, sekvenční a vejde se do jednoho kontextu — subagent jen přidá režii. Orchestrace má cenu jen tam, kde je co orchestrovat.</p>
+
+<!-- 3. Subagent vs skill vs delší prompt -->
+<h2>3 — Subagent vs. skill vs. delší prompt</h2>
+
+<table class="cmp">
+  <tr>
+    <th>&nbsp;</th>
+    <th>Delší prompt</th>
+    <th>Skill</th>
+    <th>Subagent</th>
+  </tr>
+  <tr>
+    <td class="col-name">Kontext</td>
+    <td>Sdílený, roste</td>
+    <td>Sdílený, roste</td>
+    <td>Vlastní, oddělený</td>
+  </tr>
+  <tr>
+    <td class="col-name">Kdo pracuje</td>
+    <td>Tentýž agent</td>
+    <td>Tentýž agent</td>
+    <td>Jiný agent</td>
+  </tr>
+  <tr>
+    <td class="col-name">Paralelně?</td>
+    <td>Ne</td>
+    <td>Ne</td>
+    <td>Ano</td>
+  </tr>
+  <tr>
+    <td class="col-name">Co se vrátí</td>
+    <td>Vše v kontextu</td>
+    <td>Vše v kontextu</td>
+    <td>Jen finální závěr</td>
+  </tr>
+  <tr>
+    <td class="col-name">Na co</td>
+    <td>Jednoduchý úkol</td>
+    <td>Opakovaný postup</td>
+    <td>Izolace / paralelismus / specializace</td>
+  </tr>
+</table>
+
+<div class="callout amber">
+  <div class="callout-label">Klíčové rozlišení</div>
+  <p>Skill je postup pro <em>tentýž</em> agent — sdílí kontext, běží sériově. Subagent je <em>jiný</em> agent — vlastní kontext, může běžet paralelně, a vrátí ti jen závěr, ne celou svou práci. Když potřebuješ, aby se mezipráce nevlila do hlavního kontextu, není to skill — je to subagent.</p>
+</div>
+
+<!-- 4. Anatomie -->
+<h2>4 — Anatomie subagentu</h2>
+
+<p>Subagent se v Claude Code definuje jako soubor v <code>.claude/agents/</code>: frontmatter (jméno, popis, povolené nástroje, model) a systémový prompt, který určuje jeho roli. Hlavní agent ho pak vyvolá jménem a předá mu úkol.</p>
+
+<div class="code-example">
+<span class="cm-comment"># .claude/agents/security-reviewer.md</span>
+
+<span class="cm-comment">---</span>
+<span class="cm-key">name:</span> <span class="cm-val">security-reviewer</span>
+<span class="cm-key">description:</span> <span class="cm-val">Zkontroluje diff výhradně z pohledu bezpečnosti —</span>
+             <span class="cm-val">secrets, injection, oprávnění. Vrátí seznam nálezů.</span>
+<span class="cm-key">tools:</span> <span class="cm-val">Read, Grep, Bash</span>       <span class="cm-comment"># jen co role potřebuje</span>
+<span class="cm-key">model:</span> <span class="cm-val">sonnet</span>
+<span class="cm-comment">---</span>
+
+<span class="cm-heading"># Role</span>
+
+Jsi bezpečnostní recenzent. Čteš POUZE bezpečnost — ne styl,
+ne výkon. Pro každý nález uveď soubor, řádek a dopad.
+Buď adversariální: hledej, jak to zneužít. Když nic nenajdeš,
+řekni to. Tvá finální zpráva je návratová hodnota — vrať data,
+ne konverzaci.
+</div>
+
+<p>Dvě věci na tom záleží. <strong>Úzká sada nástrojů</strong> — reviewer nepotřebuje <code>Write</code>, tak ho nedostane (guardrail přes omezení schopností). A <strong>finální zpráva je návratová hodnota</strong> — subagent nevrací uživateli konverzaci, vrací hlavnímu agentovi strukturovaný závěr, který ten dál zpracuje.</p>
+
+<!-- 5. Orchestrační vzory -->
+<h2>5 — Orchestrační vzory</h2>
+
+<p>Subagenty se skládají do několika opakovaných vzorů. Tři, které pokryjí většinu potřeb:</p>
+
+<div class="orch">
+<span class="o-main">HLAVNÍ AGENT</span> rozloží úkol
+   │
+   ├─ <span class="o-sub">subagent: correctness-reviewer</span>  ┐
+   ├─ <span class="o-sub">subagent: security-reviewer</span>    ├─ běží paralelně
+   └─ <span class="o-sub">subagent: performance-reviewer</span> ┘
+   │
+   ▼
+<span class="o-main">HLAVNÍ AGENT</span> složí tři závěry → jedna zpráva
+   <span class="o-note">(každý subagent měl vlastní kontext; hlavní vidí jen výsledky)</span>
+</div>
+
+<ul>
+  <li><strong>Fan-out (rozděl a paralelizuj).</strong> Nezávislé kusy práce běží současně, každý ve svém agentovi. Klasika: revize velkého diffu z několika pohledů zároveň.</li>
+  <li><strong>Specializované role.</strong> Každý subagent má jinou perspektivu a jiné nástroje. Bezpečnost, správnost, výkon — tři různé pohledy dají víc než jeden agent, který je má rozmělnit dohromady.</li>
+  <li><strong>Izolace kontextu.</strong> Jeden subagent spálí kontext na obrovské prohledávání kódu a vrátí jen tři relevantní soubory. Hlavní agent nikdy neviděl ten tisíc přečtených řádků — jen závěr.</li>
+</ul>
+
+<!-- 6. Kdy subagent -->
+<h2>6 — Kdy subagent (a kdy ne)</h2>
+
+<div class="in-out">
+  <div class="in-out-box in-box">
+    <h4>Použij subagenty ✓</h4>
+    <ul>
+      <li>Nezávislá práce, která může běžet paralelně</li>
+      <li>Kontextově náročný podúkol, kde chceš jen závěr</li>
+      <li>Vícepohledová úloha (bezpečnost × správnost × výkon)</li>
+      <li>Chceš izolovat rizikový krok do agenta s úzkými právy</li>
+      <li>Velká úloha, která se nevejde do jednoho kontextu</li>
+    </ul>
+  </div>
+  <div class="in-out-box out-box">
+    <h4>Nespouštěj subagenty ✗</h4>
+    <ul>
+      <li>Úkol je malý — režie orchestrace převáží přínos</li>
+      <li>Kroky jsou těsně provázané a potřebují sdílený kontext</li>
+      <li>Potřebuješ vidět celé mezirozvažování, ne jen závěr</li>
+      <li>Sériový postup pro tentýž kontext → stačí skill</li>
+      <li>Spouštíš je „pro efekt", bez izolace/paralelismu/specializace</li>
+    </ul>
+  </div>
+</div>
+
+<p>Subagents je nejmocnější a zároveň nejdražší vrstva rámce. Každý subagent je celý agent — má režii startu, vlastní kontext, vlastní běh. Vyplatí se, když je co paralelizovat nebo izolovat. Na malý sekvenční úkol je to jako svolat schůzi kvůli jednomu e-mailu.</p>
+
+<!-- 7. Historický kontext -->
+<h2>7 — Historický kontext</h2>
+
+<p>Orchestrace víc pracovníků je jeden z nejstarších vzorů v inženýrství i v organizaci práce:</p>
+
+<ul>
+  <li><strong>Distribuované systémy a map-reduce.</strong> Rozděl úlohu na nezávislé kusy, zpracuj paralelně, slož výsledky. Subagent fan-out je map-reduce nad agenty — mapa = subagenty, reduce = hlavní agent.</li>
+  <li><strong>Fork/join a divide-and-conquer.</strong> Rozděl problém, vyřeš části nezávisle, spoj řešení. Základní algoritmický vzor přenesený na agenty.</li>
+  <li><strong>Separation of concerns.</strong> Každý subagent má jednu odpovědnost. Bezpečnostní recenzent neřeší výkon — stejně jako dobře navržený modul dělá jednu věc.</li>
+  <li><strong>Delegace v týmu.</strong> Vedoucí rozloží práci, přidělí specialistům, složí výstupy. Subagents je organizační design aplikovaný na agenty — a naráží na tytéž limity: příliš delegace = režie koordinace přebije přínos.</li>
+</ul>
+
+<p>Pointa pro publikum: kdo někdy vedl tým nebo psal paralelní kód, mentální model už má. Subagent je delegace — se všemi jejími výhodami i s tím, že špatně rozdělená práce je horší než žádné dělení.</p>
+
+<!-- 8. Propojení — rámec se uzavírá -->
+<h2>8 — Propojení: rámec pěti otázek se uzavírá</h2>
+
+<p>Touto vrstvou je rámec kompletní. Pět otázek, pět vrstev — inventář, který rozhoduje, jestli agent pracuje pro tebe, nebo ty pro něj:</p>
+
+<div class="layers">
+  <div class="layer-row"><span class="layer-n">1</span><span class="layer-name">Memory</span><span class="layer-role">Co agent trvale ví — CLAUDE.md (B3)</span></div>
+  <div class="layer-row"><span class="layer-n">2</span><span class="layer-name">Skills</span><span class="layer-role">Jaké postupy jsou enkapsulované (B4)</span></div>
+  <div class="layer-row"><span class="layer-n">3</span><span class="layer-name">Hooks</span><span class="layer-role">Jaké hranice jsou deterministické (B5)</span></div>
+  <div class="layer-row"><span class="layer-n">4</span><span class="layer-name">MCP</span><span class="layer-role">Jaký dosah k externím zdrojům (B6)</span></div>
+  <div class="layer-row here"><span class="layer-n">5</span><span class="layer-name">Subagents</span><span class="layer-role">Jak je práce orchestrovaná (tato lekce)</span></div>
+</div>
+
+<ul>
+  <li><strong>B2 — Rámec pěti otázek:</strong> Subagents je vrstva 5 — vrchol. Předchozí čtyři vrstvy vybavují jednoho agenta; tahle jich skládá víc dohromady.</li>
+  <li><strong>B5 — Hooks:</strong> Subagent s úzkou sadou nástrojů je sám o sobě guardrail — omezuješ, co může udělat, tím, co mu dáš do ruky. Recenzent bez <code>Write</code> nemůže nic pokazit.</li>
+  <li><strong>B6 — MCP:</strong> Subagenty mohou mít různý MCP přístup — jeden vidí databázi, druhý ne. Orchestrace + dosah dohromady určují, kdo má na co sáhnout.</li>
+  <li><strong>B4 — Skills:</strong> Skill orchestruje kroky pro jeden kontext; subagent orchestruje víc kontextů. Složitý skill, který dělá tři nezávislé věci, je často kandidát na tři subagenty.</li>
+</ul>
+
+<!-- 9. Nejčastější nepochopení -->
+<h2>9 — Nejčastější nepochopení</h2>
+
+<div class="callout amber">
+  <div class="callout-label">Nepochopení 1</div>
+  <p>„Víc subagentů = lepší výsledek. Rozdělím každý úkol na co nejvíc agentů."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>Orchestrace má režii. Každý subagent stojí start, vlastní kontext a koordinaci na konci. U malého nebo těsně provázaného úkolu režie přebije přínos — přesně jako přehnaná delegace v týmu. Subagenty se vyplatí, jen když je co paralelizovat, izolovat nebo specializovat. Počet agentů není metrika kvality.</p>
+</div>
+
+<div class="callout amber">
+  <div class="callout-label">Nepochopení 2</div>
+  <p>„Subagent vidí všechno, co ví hlavní agent — sdílí kontext."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>Naopak — subagent má <em>vlastní, oddělený</em> kontext. To je jeho celý smysl. Dostane jen to, co mu hlavní agent předá v zadání, a vrátí jen finální závěr. Pokud subagent potřebuje kontext, musíš mu ho dát explicitně v úkolu. Izolace je feature, ne chyba — ale musíš s ní počítat.</p>
+</div>
+
+<div class="callout amber">
+  <div class="callout-label">Nepochopení 3</div>
+  <p>„Subagent je jen skill, který běží automaticky na pozadí."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>Skill je postup pro tentýž agent ve sdíleném kontextu. Subagent je jiný agent s vlastním kontextem, který může běžet paralelně a vrací jen závěr. Rozdíl není „na pozadí" — je to oddělený kontext a možnost paralelismu. To skill neumí.</p>
+</div>
+
+<!-- 10. Spicy teze -->
+<h2>10 — Spicy teze</h2>
+
+<div class="spicy">
+  <p>Většina lidí sahá po subagentech ze špatného důvodu — protože „multi-agent" zní pokročile. Ale orchestrace je poslední vrstva schválně: má smysl teprve tehdy, když máš zvládnuté první čtyři. Agent bez pořádné memory, bez skillů, bez guardrails a bez dosahu se nezlepší tím, že ho naklonuješ pětkrát — jen pětkrát zopakuje tentýž zmatek paralelně. Kdo řeší problém přidáním agentů, obvykle nevyřešil problém s jedním.</p>
+</div>
+
+<!-- 11. Primární zdroje -->
+<h2>11 — Primární zdroje</h2>
+
+<ul class="resource-list">
+  <li>
+    <a href="https://docs.anthropic.com/en/docs/claude-code/sub-agents" target="_blank">Claude Code — Subagents</a>
+    <span class="why">Proč: Oficiální dokumentace. Přečti celou stránku (15 min) — jak se subagent definuje v <code>.claude/agents/</code>, frontmatter (nástroje, model), jak ho hlavní agent vyvolá, jak funguje vrácení výsledku. Základ pro tuto lekci.</span>
+  </li>
+  <li>
+    <a href="https://www.anthropic.com/engineering/built-multi-agent-research-system" target="_blank">Anthropic — How we built a multi-agent research system</a>
+    <span class="why">Proč: Reálný orchestrační pattern (fan-out + syntéza) popsaný lidmi, co ho stavěli. Ukazuje, kdy multi-agent pomáhá a kdy je režie zbytečná. Nejlepší zdroj pro „kdy ano, kdy ne".</span>
+  </li>
+  <li>
+    <a href="https://research.google/pubs/pub62/" target="_blank">MapReduce — Dean &amp; Ghemawat (2004)</a>
+    <span class="why">Proč: Historická kotva. Map (rozděl na nezávislé kusy) + reduce (slož výsledky) je přesně fan-out vzor subagentů. Přečti úvod a sekci o modelu — pochopíš, že orchestrace agentů je starý vzor v novém hávu.</span>
+  </li>
+</ul>
+
+<!-- 12. Feynmanovo cvičení -->
+<h2>12 — Feynmanovo cvičení</h2>
+
+<div class="quiz" id="quiz-main">
+  <div class="quiz-header">Feynmanův test — Subagents</div>
+
+  <!-- Q1 -->
+  <div class="quiz-question" id="q1">
+    <div class="quiz-q">1. V čem je zásadní rozdíl mezi skillem a subagentem, když oba můžou obsahovat víckrokovou práci?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q1" value="a"> Subagent je chytřejší, protože běží na výkonnějším modelu</label></li>
+      <li><label><input type="radio" name="q1" value="b"> Skill běží v tomtéž kontextu sériově; subagent má vlastní oddělený kontext, může běžet paralelně a vrací jen finální závěr</label></li>
+      <li><label><input type="radio" name="q1" value="c"> Skill umí volat nástroje, subagent ne</label></li>
+      <li><label><input type="radio" name="q1" value="d"> Žádný — subagent je jen jméno pro skill spuštěný na pozadí</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q1','b','Přesně. Skill je postup pro tentýž agent ve sdíleném kontextu, sériově. Subagent je jiný agent s vlastním kontextem — může běžet paralelně a hlavnímu agentovi vrátí jen závěr, ne celou svou práci. Izolace kontextu a paralelismus jsou to podstatné.','Ne. Není to o „chytřejším modelu" ani „na pozadí". Skill = tentýž kontext, sériově. Subagent = vlastní oddělený kontext, možný paralelismus, vrací jen finální závěr. To skill neumí — a je to celý důvod, proč subagenty existují.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q1-fb"></div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="quiz-question" id="q2">
+    <div class="quiz-q">2. Chceš zrevidovat velký diff z pohledu bezpečnosti, správnosti a výkonu. Proč tři subagenty místo jednoho agenta se všemi třemi pokyny?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q2" value="a"> Tři subagenty jsou levnější než jeden agent</label></li>
+      <li><label><input type="radio" name="q2" value="b"> Specializace + paralelismus: každý má úzkou roli a vlastní pohled (nerozmělní se), a běží současně místo po sobě</label></li>
+      <li><label><input type="radio" name="q2" value="c"> Jeden agent nezvládne přečíst diff</label></li>
+      <li><label><input type="radio" name="q2" value="d"> Protože multi-agent vždy dá lepší výsledek než jeden agent</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q2','b','Správně. Dva ze tří důvodů pro subagenty naráz: specializace (úzká role = ostřejší pohled, nerozmělněná pozornost) a paralelismus (tři revize současně, ne po sobě). Jeden agent se třemi pokyny všechny tři pohledy míchá a řeší je sériově.','Ne. Není to o ceně ani o tom, že „multi-agent je vždy lepší". Důvody jsou konkrétní: specializace (každý subagent má úzkou roli a ostřejší pohled) a paralelismus (běží současně). Jeden agent by tři pohledy rozmělnil a dělal sériově.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q2-fb"></div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="quiz-question" id="q3">
+    <div class="quiz-q">3. Spustíš subagenta, aby ověřil jeden řádek konfigurace. Je to dobré použití?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q3" value="a"> Ano — čím víc subagentů, tím robustnější řešení</label></li>
+      <li><label><input type="radio" name="q3" value="b"> Ne — malý úkol bez izolace, paralelismu ani specializace; režie orchestrace převáží přínos, udělá to hlavní agent sám</label></li>
+      <li><label><input type="radio" name="q3" value="c"> Ano — subagenty jsou vždy bezpečnější než přímá práce</label></li>
+      <li><label><input type="radio" name="q3" value="d"> Ne — subagenty neumí číst konfiguraci</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q3','b','Přesně. Subagent se vyplatí jen při izolaci, paralelismu nebo specializaci. Ověření jednoho řádku nesplňuje ani jedno — režie startu a koordinace převáží jakýkoliv přínos. To je jako svolat schůzi kvůli jednomu e-mailu. Udělá to hlavní agent přímo.','Ne. Počet subagentů není metrika kvality. Malý sekvenční úkol bez izolace/paralelismu/specializace jen přidá režii. Subagent se vyplatí, když je co orchestrovat — ověření jednoho řádku není.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q3-fb"></div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="quiz-question" id="q4">
+    <div class="quiz-q">4. Subagentovi jsi zadal „zkontroluj tenhle modul", ale on nezná kontext projektu, který má hlavní agent v paměti. Proč?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q4" value="a"> Chyba konfigurace — subagent má vždy sdílet kontext hlavního agenta</label></li>
+      <li><label><input type="radio" name="q4" value="b"> Subagent má vlastní oddělený kontext; dostane jen to, co mu předáš v zadání — kontext mu musíš dát explicitně</label></li>
+      <li><label><input type="radio" name="q4" value="c"> Subagenty nemají přístup k souborům projektu</label></li>
+      <li><label><input type="radio" name="q4" value="d"> Kontext se ztratil kvůli paralelnímu běhu</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q4','b','Výborně. Oddělený kontext je celý smysl subagenta — ale znamená to, že co mu nepředáš v zadání, to neví. CLAUDE.md a jeho vlastní nástroje ano; průběžný stav hlavního agenta ne. Když potřebuje kontext, dej mu ho explicitně v úkolu.','Ne. To není chyba ani ztráta — je to design. Subagent má vlastní oddělený kontext (to je jeho smysl: izolace). Ví jen to, co mu předáš v zadání, plus své vlastní zdroje. Potřebný kontext mu musíš dát explicitně.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q4-fb"></div>
+  </div>
+
+  <div class="quiz-score" id="quiz-score"></div>
+</div>
+
+<!-- 13. Co dál -->
+<h2>13 — Co dál</h2>
+
+<p><strong>Co musíš znát před touto lekcí:</strong></p>
+<ul>
+  <li><a href="0004-ramec-peti-otazek.html">B2 — Rámec pěti otázek</a> — Subagents je vrstva 5. Bez celého rámce nedává orchestrace kontext.</li>
+  <li><a href="0006-skills-a-slash-commands.html">B4 — Skills</a> — hranice skill (jeden kontext) vs. subagent (víc kontextů) je jádro této lekce.</li>
+</ul>
+
+<p><strong>Praktický úkol (30 minut):</strong> Vezmi netriviální diff nebo modul. Definuj dva subagenty v <code>.claude/agents/</code> — jeden pro správnost, jeden pro bezpečnost, každý s úzkou sadou nástrojů (bez <code>Write</code>). Nech je zrevidovat tentýž kód paralelně a porovnej jejich dva závěry s tím, co dá jeden agent s pokynem „zkontroluj správnost i bezpečnost". Pak si zkus opačný extrém: spusť subagenta na triviální úkol a pocítíš režii, o které mluví sekce 6.</p>
+
+<p><strong>Konec bloku B.</strong> Rámec pěti otázek je kompletní: Memory, Skills, Hooks, MCP, Subagents. Umíš teď pojmenovat každou vrstvu agentního harness a říct, kam co patří — a hlavně, kam co <em>nepatří</em>.</p>
+
+<p><strong>Příští blok — C: Vědecký software.</strong></p>
+<ul>
+  <li><em>C1 — FAIR4RS</em> — FAIR principy pro vědecký software, ne jen data. Kde agentní paradigma pomáhá reprodukovatelnosti a přístupnosti.</li>
+  <li><em>C3 — Deskilling</em> — měřitelný dopad AI na dovednosti. Kritický protipól celého bloku B: nástroje jsou mocné, ale co dělají s tvým úsudkem?</li>
+</ul>
+
+<!-- Footer -->
+<div class="lesson-nav">
+  <div>
+    <span class="nav-label">Předchozí lekce</span>
+    <a href="0008-mcp.html">← B6 — MCP</a>
+  </div>
+  <div>
+    <span class="nav-label">Příští lekce</span>
+    <a href="#">Blok C — Vědecký software →</a>
+  </div>
+</div>
+
+<p style="margin-top:2rem; font-size:0.8rem; color: var(--muted); font-family: var(--font-sans);">
+  Máš otázku? Vrať se do Claude Code a napiš ji — agent je tvůj učitel a může rozvinout libovolný bod z této lekce.
+</p>
+
+</div>
+</div>
+
+<script>
+const scores = {};
+function check(qid, correct, okMsg, failMsg) {
+  const selected = document.querySelector(`input[name="${qid}"]:checked`);
+  const fb = document.getElementById(`${qid}-fb`);
+  if (!selected) {
+    fb.textContent = 'Vyber jednu odpověď.';
+    fb.className = 'quiz-feedback incorrect';
+    fb.style.display = 'block';
+    return;
+  }
+  const isCorrect = selected.value === correct;
+  fb.textContent = isCorrect ? '✓ ' + okMsg : '✗ ' + failMsg;
+  fb.className = 'quiz-feedback ' + (isCorrect ? 'correct' : 'incorrect');
+  fb.style.display = 'block';
+  scores[qid] = isCorrect;
+  document.querySelectorAll(`input[name="${qid}"]`).forEach(r => r.disabled = true);
+  document.querySelector(`#${qid} .quiz-check`).disabled = true;
+  if (Object.keys(scores).length === 4) {
+    const n = Object.values(scores).filter(Boolean).length;
+    const el = document.getElementById('quiz-score');
+    el.style.display = 'block';
+    if (n === 4) {
+      el.innerHTML = '<strong>✓ 4/4 — Výborně.</strong> Rámec pěti otázek máš kompletní. Praktický úkol: definuj dva specializované subagenty (správnost + bezpečnost, bez Write), nech je revidovat paralelně a porovnej s jedním agentem. Pak pocítí režii na triviálním úkolu.';
+    } else if (n >= 3) {
+      el.innerHTML = `<strong>${n}/4 — Téměř.</strong> Přečti znovu sekci 2 (tři důvody) a sekci 3 (subagent vs. skill). Klíč: subagent = vlastní oddělený kontext + paralelismus + vrací jen závěr. Vyplatí se jen při izolaci, paralelismu nebo specializaci.`;
+    } else {
+      el.innerHTML = `<strong>${n}/4 — Vrať se.</strong> Přečti znovu sekci 1 a 2 — co subagent je (oddělený kontext, ne chytřejší agent) a proč ho spustíš. Pak sekci 6 — kdy ano, kdy ne. Výsledek: orchestrace má cenu jen tam, kde je co orchestrovat.`;
+    }
+  }
+}
+</script>
+</body>
+</html>

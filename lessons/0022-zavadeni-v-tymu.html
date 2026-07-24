@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>D5 — Zavádění v týmu | AI-assisted RSE</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    .cmp { width: 100%; border-collapse: collapse; font-size: 0.87rem; margin: 1rem 0 1.5rem; }
+    .cmp th { font-family: var(--font-sans); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.5rem 0.75rem; text-align: left; border-bottom: 2px solid var(--text); }
+    .cmp td { padding: 0.55rem 0.75rem; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+    .cmp tr:last-child td { border-bottom: none; }
+
+    /* Two failure modes */
+    .poles { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0.8rem; align-items: stretch; margin: 1.25rem 0 0.6rem; }
+    .pole { border: 1px solid var(--border); border-radius: 6px; padding: 0.9rem 1rem; background: var(--bg-card); }
+    .pole h4 { font-family: var(--font-sans); margin: 0 0 0.4rem; font-size: 0.9rem; }
+    .pole p { margin: 0; font-size: 0.82rem; color: var(--muted); line-height: 1.45; }
+    .pole.ban { border-color: #fc8181; background: #fff5f5; }
+    .pole.force { border-color: #f0b429; background: #fffaf0; }
+    .pole-mid { display: flex; align-items: center; justify-content: center; font-family: var(--font-sans); font-size: 0.78rem; font-weight: 700; color: var(--accent); }
+    @media (max-width: 560px) { .poles { grid-template-columns: 1fr; } .pole-mid { padding: 0.3rem; } }
+
+    .qs { display: flex; flex-direction: column; gap: 0.45rem; margin: 1rem 0 1.5rem; max-width: 640px; }
+    .q-row { display: grid; grid-template-columns: 10rem 1fr; gap: 0.8rem; align-items: baseline; border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 4px; padding: 0.55rem 0.9rem; background: var(--bg-card); font-size: 0.85rem; }
+    .q-row .q-k { font-family: var(--font-sans); font-weight: 600; color: var(--accent); font-size: 0.82rem; }
+    .q-row .q-v { color: var(--muted); line-height: 1.45; }
+    @media (max-width: 480px) { .q-row { grid-template-columns: 1fr; gap: 0.2rem; } }
+  </style>
+</head>
+<body>
+<div class="page">
+<div class="content">
+
+<header class="lesson-header">
+  <div class="lesson-meta">
+    <span class="tag">D5</span>
+    <span class="tag">Týden 14</span>
+    Blok D: Praxe a zavádění
+  </div>
+  <h1>Zavádění v týmu</h1>
+  <p class="lesson-subtitle">Zavedení AI do výzkumné skupiny není technický problém, ale sociální. Zákaz i příkaz dělají stejnou chybu — nahrazují úsudek pravidlem. Poslední lekce kurzu.</p>
+</header>
+
+<div class="progress-bar">
+  <div class="progress-dot done" title="Blok A — kompletní"></div>
+  <div class="progress-dot done" title="Blok B — kompletní"></div>
+  <div class="progress-dot done" title="Blok C — kompletní"></div>
+  <div class="progress-dot done" title="D1 — Context engineering"></div>
+  <div class="progress-dot done" title="D2 — Verifikace a code review"></div>
+  <div class="progress-dot done" title="D3 — Bezpečnost a citlivá data"></div>
+  <div class="progress-dot done" title="D4 — Licence, provenance a autorství"></div>
+  <div class="progress-dot current" title="D5 — Zavádění v týmu (aktuální) — poslední lekce"></div>
+</div>
+
+<h2>1 — Jádro</h2>
+
+<p>Všechno z předchozích 21 lekcí je znalost jednotlivce. <strong>Zavádění</strong> je otázka, jak z ní udělat schopnost <em>skupiny</em> — a to je jiný problém. Není technický, je sociální: mění se návyky, dělba práce, kdo komu důvěřuje a co se smí říct nahlas. Nástroj nasadíš za den; kulturu, ve které se používá dobře, buduješ měsíce.</p>
+
+<p>Vedení skupiny (PI, vedoucí RSE týmu) má tři páky: <strong>politiku</strong> (co se smí a za jakých podmínek), <strong>vzdělávání</strong> (aby lidé uměli AI používat i ověřovat) a <strong>kulturu</strong> (aby o tom mohli mluvit otevřeně). Když jedna chybí, ostatní neúčinkují: politika bez vzdělávání plodí obcházení, vzdělávání bez kultury plodí tichý strach.</p>
+
+<div class="callout">
+  <div class="callout-label">Jedno pravidlo</div>
+  <p>Cílem zavádění není maximalizovat používání AI ani ho minimalizovat — je jím zachovat kvalitu a odpovědnost, když se způsob práce mění. Metrika není „kolik AI", ale „drží nám kvalita a učí se lidé".</p>
+</div>
+
+<h2>2 — Dvě selhání: zákaz a příkaz</h2>
+
+<p>Skupiny sklouzávají ke dvěma protilehlým chybám. Obě vypadají jako „rozhodnutí" a obě ve skutečnosti utíkají od úsudku:</p>
+
+<div class="poles">
+  <div class="pole ban">
+    <h4>🚫 Plošný zákaz</h4>
+    <p>„AI u nás nepoužíváme." Výsledek: lidé ji používají tajně, bez pravidel, bez sdílení, bez bezpečnosti (D3). Riziko neroste na nulu — jen zmizí z dohledu.</p>
+  </div>
+  <div class="pole-mid">vs.</div>
+  <div class="pole force">
+    <h4>⚡ Plošný příkaz</h4>
+    <p>„Všichni musí AI používat, ať stoupne produktivita." Výsledek: tlak generovat objem, přeskočená verifikace (D2), deskilling juniorů (C3). Rychlost bez směru.</p>
+  </div>
+</div>
+
+<p>Obě chyby mají stejný kořen: nahrazují <em>úsudek</em> jednoduchým pravidlem. Ale kde AI pomáhá a kde škodí, závisí na úkolu, datech a člověku — to žádné plošné pravidlo nezachytí. Zdravé zavádění dává <strong>rámec a hranice</strong> (co je citlivé, co se musí ověřit, co přiznat), uvnitř kterých lidé rozhodují sami. Guardrail, ne zákaz; podpora, ne příkaz.</p>
+
+<h2>3 — Co dát do politiky</h2>
+
+<p>Dobrá politika je krátká a staví na tom, co už z kurzu znáš. Nemusíš vymýšlet nic nového — jen to zapsat:</p>
+
+<div class="qs">
+  <div class="q-row"><span class="q-k">Data (D3)</span><span class="q-v">Klasifikace: co smí do cloudu, co jen do lokálního modelu, co nikam. Hooky jako guardrail.</span></div>
+  <div class="q-row"><span class="q-k">Verifikace (D2)</span><span class="q-v">AI kód jde dál jen ověřený a s reviewem. Odesílatel ručí, „napsala to AI" není obhajoba.</span></div>
+  <div class="q-row"><span class="q-k">Provenance (D4)</span><span class="q-v">Podstatné použití AI se přiznává a zaznamenává. AI není autor.</span></div>
+  <div class="q-row"><span class="q-k">Sdílený kontext</span><span class="q-v">Společný CLAUDE.md a doménový slovník (A4, B3) — infrastruktura, ne osobní trik.</span></div>
+</div>
+
+<p>Všimni si: politika není seznam zákazů, ale zápis společných standardů kvality. A klíčové je, že většina z nich už existuje pro „normální" kód (review, ownership, dokumentace metody) — AI je jen zostřuje. Nezavádíš nový režim; adaptuješ ten, který máš.</p>
+
+<h2>4 — Vzdělávání: uč verifikaci, ne tlačítka</h2>
+
+<p>Nejčastější omyl při školení: učit, <em>jak nástroj ovládat</em> (kam kliknout, jak napsat prompt). To je nejmenší část. Kritická dovednost, kterou tým potřebuje, je <strong>verifikace a úsudek</strong> — poznat, kdy AI výstupu věřit a jak ho ověřit (D2, trust gap C4). Ovládání se každý naučí sám za odpoledne; kalibrovaný skepticismus je to, co dělá rozdíl mezi zrychlením a hromaděním rizika.</p>
+
+<p>Zvláštní pozor na <strong>juniory a deskilling (C3)</strong>: kdo se učí řemeslo a přitom nechává AI dělat základy, které ještě nezvládl sám, si nevybuduje úsudek potřebný k ověřování. Zdravé zavádění chrání prostor, kde se junior učí věci od základů — ne aby byl pomalejší z principu, ale aby získal dovednost, bez níž je verifikace nemožná. Senior AI zrychluje; junior s AI může přeskočit učení. Tenhle rozdíl musí politika i mentoring vidět.</p>
+
+<h2>5 — Kultura: aby se o tom dalo mluvit</h2>
+
+<p>Poslední a nejtěžší páka. Když panuje tichý dojem, že „přiznat použití AI = přiznat, že to neumím", stane se dvojí zlo: lidé AI používají skrytě (takže bez sdílených pravidel a bezpečnosti) a nikdo se nedělí o to, co funguje. Naopak když je normální říct „tohle mi pomohla napsat AI, tady je jak jsem to ověřil", governance i učení fungují.</p>
+
+<p>Vedení tuhle kulturu tvoří příkladem a rámováním: AI je nástroj jako každý jiný (D4) — přiznat jeho použití je poctivost, ne slabost. Psychologické bezpečí říct „nevím, jestli je tohle správně, pojďme to ověřit" je přesně to, co drží trust gap (C4) pod kontrolou na úrovni týmu. Skupina, kde se o AI mlčí, není skupina bez rizika — je to skupina, která svá rizika nevidí.</p>
+
+<h2>6 — Historický kontext</h2>
+
+<ul>
+  <li><strong>Technologické adopce (Rogers, Diffusion of Innovations, 1962).</strong> Zavádění novinky je sociální proces s early adopters a opozdilci — ne přepnutí vypínače. Platí i pro AI.</li>
+  <li><strong>DevOps a psychologické bezpečí (Westrum, State of DevOps reports).</strong> Výzkum ukázal, že výkon týmů koreluje s kulturou, kde se smí mluvit o chybách. Přímo aplikovatelné na governance AI.</li>
+  <li><strong>Shadow IT.</strong> Historická lekce: co vedení zakáže, ale lidé to potřebují, používají potají a bez kontroly. Plošný zákaz AI je shadow IT v přímém přenosu.</li>
+  <li><strong>Reprodukovatelná věda a open science.</strong> Hnutí za transparentnost metod dává přirozený rámec, do kterého přiznání AI (D4) a provenance zapadají bez třecích ploch.</li>
+</ul>
+
+<h2>7 — Tři příklady</h2>
+
+<div class="examples">
+  <div class="example-card">
+    <div class="example-label">Vědec-kodér</div>
+    <p>Je v týmu, kde se o AI oficiálně mlčí, a používá ji potají. Necítí se jistý, jestli smí do modelu vložit data, a nemá si s kým poradit. Když vedoucí zavede jasnou politiku (co kam, jak ověřit, přiznat) a řekne „je normální to používat, mluvme o tom", uleví se mu — začne sdílet, co funguje, a přestane riskovat naslepo. Zavádění mu dalo hranice, uvnitř kterých je klidný.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">RSE vývojář</div>
+    <p>Dostane za úkol připravit adopci pro skupinu. Neškolí „jak psát prompty" — to nechá na samostudium. Místo toho postaví sdílený CLAUDE.md s doménovým slovníkem (A4), nastaví hooky pro bezpečnost (D3) a vede workshop o verifikaci (D2) a trust gapu (C4). Ví, že infrastruktura a úsudek jsou to, co zvedne celý tým, ne návod na tlačítka.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">Manažer / PI</div>
+    <p>Je v pokušení buď AI zakázat (kvůli riziku), nebo nařídit (kvůli produktivitě). Rozpozná, že obojí je útěk od úsudku. Zvolí třetí cestu: krátká politika (data, verifikace, provenance), investice do vzdělávání ve verifikaci, a osobní příklad otevřenosti. Metriku „kolik AI" nahradí otázkou „drží nám kvalita a učí se lidé?". Chrání prostor, kde junioři získávají základy, aby uměli ověřovat.</p>
+  </div>
+</div>
+
+<h2>8 — Propojení na ostatní lekce</h2>
+
+<ul>
+  <li><strong>D2 / D3 / D4:</strong> Politika je jejich zápis na úroveň týmu — verifikace, bezpečnost dat, provenance jako sdílené standardy.</li>
+  <li><strong>C3 — Deskilling:</strong> Zavádění musí chránit prostor, kde junioři budují úsudek. Bez něj je verifikace nemožná.</li>
+  <li><strong>C4 — Trust gap:</strong> Kultura otevřenosti drží kalibrovanou důvěru na úrovni skupiny, ne jen jednotlivce.</li>
+  <li><strong>B — celý blok:</strong> Sdílený CLAUDE.md, hooky, skills a guardraily jsou týmová infrastruktura, kterou zavádění staví.</li>
+</ul>
+
+<h2>9 — Nejčastější nepochopení</h2>
+
+<div class="callout amber"><div class="callout-label">Nepochopení 1</div><p>„Nejbezpečnější je AI prostě zakázat, dokud tomu nerozumíme."</p></div>
+<div class="callout green"><div class="callout-label">Skutečnost</div><p>Plošný zákaz nesníží riziko na nulu — přesune ho do stínu. Lidé, kteří AI potřebují, ji použijí potají, bez pravidel, bez bezpečnosti a bez sdílení (shadow IT). Riziko, které nevidíš, neřídíš. Rámec s hranicemi je bezpečnější než zákaz, který se obchází.</p></div>
+
+<div class="callout amber"><div class="callout-label">Nepochopení 2</div><p>„Zavedeme AI = koupíme licence a proškolíme lidi na ovládání nástroje."</p></div>
+<div class="callout green"><div class="callout-label">Skutečnost</div><p>Ovládání je nejmenší část a naučí se samo. Kritické je vybudovat úsudek a verifikaci (D2, C4) a sdílenou infrastrukturu (CLAUDE.md, hooky). Zavádění je sociální a kulturní projekt, ne nákup a klikací kurz. Licence nezmění návyky ani důvěru.</p></div>
+
+<div class="callout amber"><div class="callout-label">Nepochopení 3</div><p>„Úspěch zavádění změříme růstem produktivity / počtem řádků."</p></div>
+<div class="callout green"><div class="callout-label">Skutečnost</div><p>Objem je anti-metrika (A5, D2). Kód se generuje rychle; otázka je, jestli je ověřený a jestli se lidé učí. Správné metriky: drží kvalita? stíháme verifikaci? budují junioři úsudek? mluví se o AI otevřeně? „Kolik AI" neměří nic, co ti záleží.</p></div>
+
+<h2>10 — Spicy teze</h2>
+
+<div class="spicy"><p>Organizace, která AI zakáže, a organizace, která ji nařídí, dělají naprosto stejnou chybu — obě nahradily úsudek pravidlem, protože úsudek je těžký a pravidlo je pohodlné. Jenže celá hodnota AI-assisted vývoje leží přesně tam, kde plošné pravidlo selhává: v rozhodnutí <em>tady ano, tady ne, tady ověř dvakrát</em>. Vedení, které to rozhodnutí vezme lidem z rukou — ať zákazem, nebo příkazem — nezískalo kontrolu, jen si namluvilo, že ji má. Skutečná governance nedává odpovědi; buduje lidi, kteří je umějí najít.</p></div>
+
+<h2>11 — Primární zdroje</h2>
+
+<ul class="resource-list">
+  <li><a href="https://cloud.google.com/architecture/devops/devops-culture-westrum-organizational-culture" target="_blank">Westrum organizational culture — DORA / Google Cloud</a><span class="why">Proč: Výzkumem podložené, proč kultura otevřenosti (kde se smí mluvit o chybách) předpovídá výkon týmu. Přímý základ sekce 5.</span></li>
+  <li><a href="https://en.wikipedia.org/wiki/Diffusion_of_innovations" target="_blank">Diffusion of Innovations — Everett Rogers</a><span class="why">Proč: Klasický rámec, jak se novinky šíří skupinou (early adopters → opozdilci). Ukotvuje, že zavádění je sociální proces, ne přepnutí vypínače.</span></li>
+  <li><a href="https://martinfowler.com/articles/exploring-gen-ai.html" target="_blank">Exploring Generative AI — Martin Fowler / Thoughtworks</a><span class="why">Proč: Průběžné praktické poznámky, jak týmy reálně zavádějí generativní AI do vývoje — přínosy i pasti. Most mezi teorií a praxí zavádění.</span></li>
+</ul>
+
+<h2>12 — Feynmanovo cvičení</h2>
+
+<div class="quiz" id="quiz-main">
+  <div class="quiz-header">Feynmanův test — Zavádění v týmu</div>
+
+  <div class="quiz-question" id="q1">
+    <div class="quiz-q">1. Proč plošný zákaz AI ve skupině nesnižuje riziko na nulu?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q1" value="a"> Snižuje — zákaz je nejbezpečnější řešení</label></li>
+      <li><label><input type="radio" name="q1" value="b"> Lidé, kteří AI potřebují, ji použijí potají — bez pravidel, bezpečnosti a sdílení (shadow IT); riziko se nezmenší, jen zmizí z dohledu, a co nevidíš, neřídíš</label></li>
+      <li><label><input type="radio" name="q1" value="c"> Nesnižuje, protože AI se nedá zakázat technicky</label></li>
+      <li><label><input type="radio" name="q1" value="d"> Snižuje, ale jen u seniorů</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q1','b','Přesně. Zákaz přesune používání do stínu (shadow IT): kdo AI potřebuje, použije ji potají — bez klasifikace dat, bez hooků, bez sdílení, co funguje. Riziko se nesníží, jen zmizí z dohledu vedení. A riziko, které nevidíš, neřídíš. Rámec s hranicemi je bezpečnější než obcházený zákaz.','Ne. Zákaz nesníží riziko na nulu — přesune ho do stínu. Lidé AI použijí potají, bez pravidel a bezpečnosti (shadow IT). To je horší než řízené používání: riziko, které nevidíš, nemůžeš řídit.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q1-fb"></div>
+  </div>
+
+  <div class="quiz-question" id="q2">
+    <div class="quiz-q">2. Co mají společného plošný zákaz a plošný příkaz AI?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q2" value="a"> Nic, jsou to opaky</label></li>
+      <li><label><input type="radio" name="q2" value="b"> Oba nahrazují úsudek jednoduchým pravidlem — ale kde AI pomáhá a kde škodí závisí na úkolu, datech a člověku, což plošné pravidlo nezachytí; správný je rámec s hranicemi, uvnitř kterých lidé rozhodují</label></li>
+      <li><label><input type="radio" name="q2" value="c"> Oba maximalizují produktivitu</label></li>
+      <li><label><input type="radio" name="q2" value="d"> Oba jsou vždy správné</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q2','b','Správně. Zákaz i příkaz vypadají jako opaky, ale mají stejný kořen: utíkají od úsudku k pohodlnému plošnému pravidlu. Jenže hodnota AI leží přesně tam, kde plošné pravidlo selhává — „tady ano, tady ne, tady ověř dvakrát". Zdravé zavádění dává rámec a hranice, uvnitř nichž lidé rozhodují sami.','Ne. Nejsou to jen opaky — mají stejný kořen. Oba nahrazují úsudek jednoduchým pravidlem, přestože kde AI pomáhá závisí na úkolu, datech a člověku. Správná cesta je rámec s hranicemi, ne plošné ano/ne.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q2-fb"></div>
+  </div>
+
+  <div class="quiz-question" id="q3">
+    <div class="quiz-q">3. Co je nejdůležitější naučit tým při zavádění AI?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q3" value="a"> Jak nástroj ovládat — kam kliknout, jak napsat prompt</label></li>
+      <li><label><input type="radio" name="q3" value="b"> Verifikaci a úsudek — kdy AI výstupu věřit a jak ho ověřit (D2, trust gap C4); ovládání se každý naučí sám, kalibrovaný skepticismus dělá rozdíl mezi zrychlením a hromaděním rizika</label></li>
+      <li><label><input type="radio" name="q3" value="c"> Nic, AI se používá intuitivně</label></li>
+      <li><label><input type="radio" name="q3" value="d"> Jen bezpečnostní pravidla, nic víc</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q3','b','Výborně. Ovládání je nejmenší část a naučí se samo za odpoledne. Kritická dovednost je verifikace a úsudek — poznat, kdy výstupu věřit a jak ho ověřit (D2, C4). To je rozdíl mezi týmem, který AI zrychluje, a týmem, který jen hromadí nezvěřené riziko. Pozor přitom na juniory a deskilling (C3).','Ne. Ovládání nástroje je triviální a naučí se samo. Kritické je vybudovat verifikaci a úsudek (D2, trust gap C4) — kalibrovaný skepticismus, který odděluje zrychlení od hromadění rizika. Klikací kurz nezmění návyky ani důvěru.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q3-fb"></div>
+  </div>
+
+  <div class="quiz-question" id="q4">
+    <div class="quiz-q">4. Proč je kultura, kde se o AI mluví otevřeně, součástí governance, ne jen „příjemný bonus"?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q4" value="a"> Není — governance jsou jen pravidla a nástroje</label></li>
+      <li><label><input type="radio" name="q4" value="b"> Když se o AI mlčí (přiznat = přiznat slabost), lidé ji používají skrytě bez pravidel a nikdo nesdílí, co funguje; otevřenost drží bezpečnost i učení a udržuje trust gap pod kontrolou na úrovni týmu</label></li>
+      <li><label><input type="radio" name="q4" value="c"> Protože porady jsou vždy dobré</label></li>
+      <li><label><input type="radio" name="q4" value="d"> Kultura s governance nesouvisí</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q4','b','Přesně. Když panuje dojem „přiznat AI = přiznat, že to neumím", stane se dvojí zlo: skryté používání bez pravidel a bezpečnosti (D3) a žádné sdílení, co funguje. Otevřenost (přiznat je poctivost, ne slabost) drží governance i učení a udržuje trust gap pod kontrolou na úrovni skupiny. Tým, kde se o AI mlčí, není bez rizika — jen svá rizika nevidí.','Ne. Kultura je jádro governance, ne bonus. Mlčení tlačí používání do stínu (bez pravidel, bez bezpečnosti) a brání sdílení. Otevřenost drží bezpečnost, učení i kalibrovanou důvěru na úrovni týmu. Skupina, kde se o AI mlčí, svá rizika jen nevidí.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q4-fb"></div>
+  </div>
+
+  <div class="quiz-score" id="quiz-score"></div>
+</div>
+
+<h2>13 — Co dál</h2>
+
+<p><strong>Co musíš znát před touto lekcí:</strong></p>
+<ul>
+  <li><a href="0019-verifikace-code-review.html">D2 — Verifikace</a>, <a href="0020-bezpecnost-citliva-data.html">D3 — Bezpečnost</a>, <a href="0021-licence-provenance-autorstvi.html">D4 — Provenance</a> — politika je jejich zápis na úroveň týmu.</li>
+  <li><a href="0010-deskilling.html">C3 — Deskilling</a> — proč zavádění musí chránit prostor, kde junioři budují úsudek.</li>
+</ul>
+
+<p><strong>Praktický úkol (30 minut):</strong> Napiš jednostránkovou AI politiku pro svou skupinu. Čtyři sekce: data (D3), verifikace (D2), provenance (D4), sdílený kontext (CLAUDE.md). U každé jednu větu „co se u nás dělá". Pak si u sebe poctivě odpověz: kloním se spíš k zákazu, nebo k příkazu? A jak bych místo toho postavil rámec s hranicemi?</p>
+
+<div class="callout green">
+  <div class="callout-label">🎓 Konec kurzu</div>
+  <p>Tímhle je celý kurz kompletní — 22 lekcí ve čtyřech blocích. <strong>A</strong> (klasické disciplíny): co je staré a osvědčené. <strong>B</strong> (rámec a vrstvy): jak nástroje fungují. <strong>C</strong> (věda a důvěra): kde je hranice jistoty. <strong>D</strong> (praxe a zavádění): jak to dostat do reálné práce. Umíš teď každý koncept vysvětlit třem publikům, propojit libovolné dva a označit, kde leží hranice tvé jistoty. To byl cíl (viz MISSION). Zbývá poslední krok: odpřednášet to.</p>
+</div>
+
+<div class="lesson-nav">
+  <div><span class="nav-label">Předchozí lekce</span><a href="0021-licence-provenance-autorstvi.html">← D4 — Licence a provenance</a></div>
+  <div><span class="nav-label">Konec kurzu</span><a href="0001-no-silver-bullet.html">Zpět na začátek — A3 →</a></div>
+</div>
+
+<p style="margin-top:2rem; font-size:0.8rem; color: var(--muted); font-family: var(--font-sans);">Máš otázku? Vrať se do Claude Code a napiš ji — agent je tvůj učitel a může rozvinout libovolný bod z této lekce.</p>
+
+</div>
+</div>
+
+<script>
+const scores = {};
+function check(qid, correct, okMsg, failMsg) {
+  const selected = document.querySelector(`input[name="${qid}"]:checked`);
+  const fb = document.getElementById(`${qid}-fb`);
+  if (!selected) { fb.textContent = 'Vyber jednu odpověď.'; fb.className = 'quiz-feedback incorrect'; fb.style.display = 'block'; return; }
+  const isCorrect = selected.value === correct;
+  fb.textContent = isCorrect ? '✓ ' + okMsg : '✗ ' + failMsg;
+  fb.className = 'quiz-feedback ' + (isCorrect ? 'correct' : 'incorrect');
+  fb.style.display = 'block';
+  scores[qid] = isCorrect;
+  document.querySelectorAll(`input[name="${qid}"]`).forEach(r => r.disabled = true);
+  document.querySelector(`#${qid} .quiz-check`).disabled = true;
+  if (Object.keys(scores).length === 4) {
+    const n = Object.values(scores).filter(Boolean).length;
+    const el = document.getElementById('quiz-score');
+    el.style.display = 'block';
+    if (n === 4) { el.innerHTML = '<strong>✓ 4/4 — Výborně, a tím máš celý kurz.</strong> Zavádění je sociální, ne technické. Praktický úkol: napiš jednostránkovou AI politiku (data, verifikace, provenance, sdílený kontext) pro svou skupinu.'; }
+    else if (n >= 3) { el.innerHTML = `<strong>${n}/4 — Téměř.</strong> Přečti znovu sekci 2 (zákaz vs. příkaz) a 4 (vzdělávání). Klíč: obě plošná pravidla utíkají od úsudku; uč verifikaci, ne ovládání; chraň učení juniorů.`; }
+    else { el.innerHTML = `<strong>${n}/4 — Vrať se.</strong> Přečti sekci 1 a 2 — zavádění je sociální problém a zákaz i příkaz dělají stejnou chybu: nahrazují úsudek pravidlem. Cíl je rámec s hranicemi.`; }
+  }
+}
+</script>
+</body>
+</html>

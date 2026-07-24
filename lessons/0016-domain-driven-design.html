@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A4 — Domain-Driven Design | AI-assisted RSE</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    /* Comparison table */
+    .cmp {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.87rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .cmp th {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+      border-bottom: 2px solid var(--text);
+    }
+    .cmp td {
+      padding: 0.55rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    .cmp tr:last-child td { border-bottom: none; }
+
+    /* Translation loss diagram */
+    .drift {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 0.6rem;
+      margin: 1.25rem 0 0.6rem;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+    }
+    .drift-box {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.7rem 0.9rem;
+      background: var(--bg-card);
+      text-align: center;
+      line-height: 1.5;
+    }
+    .drift-box.expert { border-color: #68d391; background: #f0fff4; }
+    .drift-box.code   { border-color: #fc8181; background: #fff5f5; }
+    .drift-arrow { font-size: 1.3rem; color: var(--muted); text-align: center; }
+    .drift-lbl { display:block; font-family: var(--font-sans); font-size: 0.68rem; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.35rem; }
+    @media (max-width: 480px) { .drift { grid-template-columns: 1fr; } .drift-arrow { transform: rotate(90deg); } }
+
+    /* Code before/after */
+    .code-example {
+      background: #1a1a2e;
+      color: #e2e8f0;
+      border-radius: 6px;
+      padding: 1rem 1.2rem;
+      font-family: var(--font-mono);
+      font-size: 0.80rem;
+      line-height: 1.6;
+      margin: 1rem 0 0.6rem;
+      overflow-x: auto;
+    }
+    .code-example .cm-comment { color: #718096; }
+    .code-example .cm-bad  { color: #fc8181; }
+    .code-example .cm-good { color: #90cdf4; }
+    .code-example .cm-key  { color: #c6f6d5; }
+    .code-cap { font-size: 0.78rem; color: var(--muted); margin: 0 0 1.5rem; font-family: var(--font-sans); }
+
+    /* Building blocks */
+    .blocks {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      margin: 1rem 0 1.5rem;
+      max-width: 600px;
+    }
+    .block {
+      display: flex;
+      align-items: baseline;
+      gap: 0.8rem;
+      padding: 0.5rem 0.9rem;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      font-size: 0.84rem;
+    }
+    .block-name { font-family: var(--font-mono); font-size: 0.80rem; color: var(--accent); min-width: 11rem; }
+    .block-desc { color: var(--muted); font-size: 0.82rem; }
+
+    /* In / Out */
+    .in-out {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .in-out-box { border-radius: 4px; padding: 0.8rem 1rem; font-size: 0.86rem; }
+    .in-box  { background: var(--green-light);  border: 1px solid #b7dfc8; }
+    .out-box { background: var(--red-light);     border: 1px solid #f9b8b8; }
+    .in-out-box h4 { font-family: var(--font-sans); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; margin: 0 0 0.5rem; color: var(--muted); }
+    .in-out-box ul { margin: 0; padding-left: 1.1rem; }
+    .in-out-box li { margin-bottom: 0.3rem; }
+    @media (max-width: 480px) { .in-out { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<div class="page">
+<div class="content">
+
+<!-- Header -->
+<header class="lesson-header">
+  <div class="lesson-meta">
+    <span class="tag">A4</span>
+    <span class="tag">Týden 8</span>
+    Blok A: Klasické disciplíny
+  </div>
+  <h1>Domain-Driven Design</h1>
+  <p class="lesson-subtitle">Kód mluví jazykem domény, ne jazykem počítače. Sdílený slovník mezi expertem a kódem — a přesně ten slovník teď krmíš AI, aby psala tvým jazykem, ne svým.</p>
+</header>
+
+<!-- Progress -->
+<div class="progress-bar">
+  <div class="progress-dot done"    title="A3 — No Silver Bullet"></div>
+  <div class="progress-dot done"    title="A1 — TDD"></div>
+  <div class="progress-dot done"    title="A2 — Refactoring"></div>
+  <div class="progress-dot done"    title="B1–B6 + Subagents — blok B"></div>
+  <div class="progress-dot done"    title="C1–C5 — blok C"></div>
+  <div class="progress-dot current" title="A4 — Domain-Driven Design (aktuální)"></div>
+  <div class="progress-dot"         title="A5 — Agile Manifesto"></div>
+  <div class="progress-dot"         title="Blok D — Praxe a zavádění"></div>
+</div>
+
+<!-- 1. Jádro -->
+<h2>1 — Jádro</h2>
+
+<p><strong>Domain-Driven Design (DDD)</strong> je přístup, kde <em>model domény</em> — způsob, jakým o problému mluví lidé, kteří mu rozumí — řídí podobu kódu. Ne naopak. Jména tříd, funkcí a proměnných nejsou technické zkratky, ale slova z reálné domény: <code>Spektrum</code>, <code>MřížkováBuňka</code>, <code>Trajektorie</code> — ne <code>data</code>, <code>arr</code>, <code>process()</code>.</p>
+
+<p>Celý DDD stojí na jedné myšlence: <em>software je v jádru překlad</em>. Vezmeš to, jak o problému uvažuje doménový expert, a přeložíš to do kódu. A jako každý překlad — čím větší rozdíl mezi jazykem originálu a jazykem kódu, tím víc významu se po cestě ztratí. DDD je snaha ten rozdíl smrsknout na nulu: aby kód a expert mluvili <em>stejným</em> jazykem.</p>
+
+<div class="callout">
+  <div class="callout-label">Jedno pravidlo</div>
+  <p>Když jméno v kódu neodpovídá slovu, které by řekl doménový expert, máš v systému skrytý překlad — a každý překlad je místo, kde se ztrácí význam a vznikají chyby. DDD ten překlad odstraňuje tím, že do kódu píše rovnou jazyk domény.</p>
+</div>
+
+<!-- 2. Ubiquitous language -->
+<h2>2 — Ubiquitous language: sdílený jazyk</h2>
+
+<p>Nejdůležitější pojem celého DDD. <strong>Ubiquitous language</strong> (všudypřítomný jazyk) je <em>jeden</em> slovník, který používají všichni — doménový expert v rozhovoru, vývojář v kódu, dokumentace, testy, commit messages. Žádný „business termín" na jedné straně a „technický termín" na druhé s tabulkou překladů mezi nimi.</p>
+
+<div class="drift">
+  <div class="drift-box expert">
+    <span class="drift-lbl">Doménový expert říká</span>
+    „když <strong>trajektorie</strong> zkonverguje, spočítám <strong>volnou energii</strong>"
+  </div>
+  <div class="drift-arrow">→</div>
+  <div class="drift-box code">
+    <span class="drift-lbl">Kód říká</span>
+    <span class="cm-bad">df = process(arr)</span><br>
+    <span class="cm-bad">x = compute(df, 2)</span>
+  </div>
+</div>
+<p class="code-cap">Skrytý překlad: mezi tím, jak expert mluví, a tím, co je v kódu, je propast. Každý, kdo kód čte (včetně AI), musí ten překlad dělat znovu — a pokaždé může sklouznout jinam.</p>
+
+<p>Pointa není kosmetika jmen. Je to tohle: <em>pokud to slovo neexistuje v kódu, neexistuje ani pojem</em>. Když experti mluví o „ustálené trajektorii" a „přechodné trajektorii", ale kód zná jen <code>arr</code>, ten rozdíl se v kódu ztratil — a s ním možnost ošetřit ho správně. Ubiquitous language nutí zapsat pojmy domény do kódu, čímž je zviditelní.</p>
+
+<p>A tady je most na AI: <strong>ubiquitous language je přesně to, co patří do <code>CLAUDE.md</code> (B3) a do paměti.</strong> AI je jazykově zdatná, ale <em>tvůj</em> doménový slovník nezná — vyplní mezeru generickým žargonem (<code>data</code>, <code>result</code>, <code>helper</code>). Když jí dáš slovník domény, začne psát jazykem tvé vědy, ne svým. Bez něj ti tiše zaneseš do kódu překladovou vrstvu, kterou pak nikdo neudrží.</p>
+
+<!-- 3. Bounded context -->
+<h2>3 — Bounded context: kde model platí</h2>
+
+<p>Druhý nosný pojem. Jedno slovo nemá napříč celým systémem jeden význam — a snažit se o to je chyba. <strong>Bounded context</strong> je explicitní hranice, uvnitř které má model a jeho jazyk <em>jeden konzistentní význam</em>. Za hranicí může totéž slovo znamenat něco jiného.</p>
+
+<p>Příklad z vědy: slovo <em>„vzorek"</em> znamená v kontextu <strong>měření</strong> fyzický kus materiálu v přístroji; v kontextu <strong>statistiky</strong> jednu hodnotu z rozdělení; v kontextu <strong>datového pipeline</strong> jeden řádek tabulky. Tři různé pojmy, jedno slovo. DDD neříká „sjednoť je" — říká <em>„přiznej tři kontexty a nesnaž se je slít do jednoho modelu"</em>. Hranice je feature, ne bug.</p>
+
+<table class="cmp">
+  <tr>
+    <th>Bez bounded contexts</th>
+    <th>S bounded contexts</th>
+  </tr>
+  <tr>
+    <td>Jeden „univerzální" model pro celý systém</td>
+    <td>Několik menších modelů, každý konzistentní uvnitř své hranice</td>
+  </tr>
+  <tr>
+    <td>Slovo má tři významy naráz → nedorozumění</td>
+    <td>Slovo má jeden význam v kontextu → jasnost</td>
+  </tr>
+  <tr>
+    <td>Změna v jedné části tiše rozbije jinou</td>
+    <td>Hranice izoluje dopad změny</td>
+  </tr>
+  <tr>
+    <td>AI mísí pojmy z různých částí do jednoho kódu</td>
+    <td>AI dostane jeden kontext = píše konzistentně</td>
+  </tr>
+</table>
+
+<p>Pro AI-assisted vývoj je bounded context prakticky <em>scoping nástroj</em>. Když agentovi zadáš práci uvnitř jednoho jasně ohraničeného kontextu s jeho vlastním slovníkem, drží se konzistentně. Když ho pustíš na „celý systém" bez hranic, začne pojmy míchat — přesně to, co bounded context zakazuje.</p>
+
+<!-- 4. Stavební kameny -->
+<h2>4 — Stavební kameny modelu</h2>
+
+<p>DDD dává pár pojmenovaných tvarů, do kterých se model odlévá. Nejsou to technické detaily — každý nese jiný <em>význam v doméně</em>:</p>
+
+<div class="blocks">
+  <div class="block"><span class="block-name">Entity</span><span class="block-desc">Věc s identitou, která trvá v čase (konkrétní měření #4711, i když se jeho data mění)</span></div>
+  <div class="block"><span class="block-name">Value Object</span><span class="block-desc">Věc definovaná jen hodnotou, bez identity (teplota 300 K — dvě stejné jsou zaměnitelné)</span></div>
+  <div class="block"><span class="block-name">Aggregate</span><span class="block-desc">Skupina objektů měněná jako celek, s jedním vstupním bodem, který hlídá pravidla</span></div>
+  <div class="block"><span class="block-name">Repository</span><span class="block-desc">Rozhraní pro získání a uložení agregátů, skryté za jazykem domény</span></div>
+  <div class="block"><span class="block-name">Domain Service</span><span class="block-desc">Operace domény, která nepatří žádné entitě (výpočet přes víc objektů)</span></div>
+</div>
+
+<p>Pro vědecký kód je nejcennější rozdíl <strong>Entity vs. Value Object</strong>. Teplota, rychlost, koncentrace — to jsou value objects: definuje je hodnota a jednotka, ne identita. A právě value object je místo, kam patří <em>jednotky a validace</em>: <code>Teplota(300, "K")</code>, která odmítne zápornou hodnotu, je nekonečně bezpečnější než holé <code>300.0</code>, které nikdo neuhlídá. Značná část chyb ve vědeckém kódu jsou zaměněné jednotky — value object je z modelu vymýtí.</p>
+
+<div class="code-example">
+<span class="cm-comment"># Bez modelu — jednotka žije jen v hlavě autora</span>
+<span class="cm-bad">t = 300.0            # K? °C? kdo ví</span>
+<span class="cm-bad">e = k * t            # a když někdo předá °C?</span>
+
+<span class="cm-comment"># S value objektem — jednotka a validace jsou v typu</span>
+<span class="cm-good">t = Teplota(300, "K")   # záporná K vyhodí chybu hned</span>
+<span class="cm-good">e = boltzmann_energie(t)  # nejde zavolat se špatnou jednotkou</span>
+</div>
+<p class="code-cap">Value object přesune znalost domény (jednotky, meze platnosti) z hlavy autora do kódu — kde ji uhlídá typ, ne pozornost.</p>
+
+<!-- 5. AI a DDD -->
+<h2>5 — AI a DDD: jazyk, kterým agenta řídíš</h2>
+
+<p>Tady je celý smysl téhle lekce pro AI-assisted vývoj. AI generuje plynulý kód, ale <em>tvůj</em> doménový model nezná — a když ho nedostane, dosadí generický. DDD ti dává přesně tu věc, kterou agentovi chybí: <strong>slovník a hranice domény</strong>.</p>
+
+<div class="in-out">
+  <div class="in-out-box in-box">
+    <h4>DDD dělá AI lepší ✓</h4>
+    <ul>
+      <li>Ubiquitous language v <code>CLAUDE.md</code> → AI píše tvým doménovým jazykem, ne generickým</li>
+      <li>Bounded context ohraničí úkol → agent nemísí pojmy z různých částí</li>
+      <li>Value objects s jednotkami → AI nemůže tiše zaměnit K a °C</li>
+      <li>Pojmenovaný model = agent má co číst; kód sám dokumentuje doménu</li>
+    </ul>
+  </div>
+  <div class="in-out-box out-box">
+    <h4>Kde AI model rozmělní ✗</h4>
+    <ul>
+      <li>Bez slovníku dosadí <code>data</code>, <code>result</code>, <code>process()</code> — tichý překlad zpět</li>
+      <li>Pojmy z různých kontextů slije do jednoho „univerzálního" modelu</li>
+      <li>Terminologický drift: v jednom souboru <code>vzorek</code>, ve druhém <code>sample</code>, <code>item</code></li>
+      <li>Vyrobí věrohodně vypadající model, který ale neodpovídá tvé doméně (trust gap, C4)</li>
+    </ul>
+  </div>
+</div>
+
+<p>Rozhodující posun: <strong>DDD dělá z modelu domény promptovací kontext.</strong> Dřív byl ubiquitous language „hezký ideál pro čitelnost". V AI-assisted vývoji je to <em>funkční nutnost</em> — je to jazyk, kterým agentovi vůbec sdělíš, o čem tvůj kód je. Doménový model zapsaný do <code>CLAUDE.md</code> a paměti není dokumentace pro lidi, je to <em>specifikace pro agenta</em>. A protože AI má tendenci k terminologickému driftu (dnes <code>vzorek</code>, zítra <code>sample</code>), ubiquitous language se stává kotvou, která drift zastaví. Pozor ale na trust gap (C4): AI ti nadšeně vygeneruje model, který <em>vypadá</em> doménově, ale nesedí na to, jak experti skutečně mluví — model musí ověřit doménový expert, ne plynulost diffu.</p>
+
+<!-- 6. Historický kontext -->
+<h2>6 — Historický kontext</h2>
+
+<ul>
+  <li><strong>Eric Evans, Domain-Driven Design (2003) — „modrá kniha".</strong> Kanonický zdroj. Zavedl ubiquitous language, bounded context, stavební kameny. Těžká, ale definiční kniha oboru.</li>
+  <li><strong>Vaughn Vernon, Implementing DDD (2013) — „červená kniha".</strong> Praktičtější provedení. Když modrá kniha vysvětluje <em>proč</em>, červená ukazuje <em>jak</em>.</li>
+  <li><strong>Evans, DDD Reference (2015, zdarma).</strong> Destilát všech vzorů na ~50 stran. Nutné minimum, když nechceš celou modrou knihu.</li>
+  <li><strong>Kořeny u Warda Cunninghama a analytických vzorů (Fowler).</strong> Myšlenka „model řídí kód" je starší; DDD ji pojmenovalo a systematizovalo.</li>
+</ul>
+
+<p>Pointa pro publikum: DDD je 20 let stará, zralá disciplína o <em>komunikaci</em>, ne o technologii. AI ji nevynalezla — ale dramaticky zvýšila její hodnotu. V okamžiku, kdy kód píše agent, který tvou doménu nezná, se ubiquitous language mění z „nice to have" na hlavní nástroj řízení. Kdo umí DDD, umí agentovi říct, co má stavět.</p>
+
+<!-- 7. Tři příklady -->
+<h2>7 — Tři příklady</h2>
+
+<div class="examples">
+  <div class="example-card">
+    <div class="example-label">Vědec-kodér</div>
+    <p>Píše kód pro molekulární dynamiku a všechno jsou <code>arr</code>, <code>tmp</code>, <code>data2</code>. Přitom v článcích mluví přesně: trajektorie, ansámbl, volná energie. Zapíše tenhle slovník do <code>CLAUDE.md</code> a nechá AI přejmenovat kód do jazyka své vědy. Najednou kód čte jako metoda z paperu — a když příště zadá AI úkol, agent používá <code>trajektorie</code>, ne <code>arr</code>. Bonus: zavede value object <code>Teplota</code> s jednotkou, čímž vymýtí celou třídu chyb ze záměny K/°C.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">RSE vývojář</div>
+    <p>Staví platformu, kde slovo „vzorek" znamená tři různé věci (měření / statistika / řádek dat). Místo jednoho zmateného modelu přizná tři <em>bounded contexts</em> a každý dostane vlastní sekci v <code>CLAUDE.md</code> se svým slovníkem. Když pak zadá agentovi práci, vždy uvede kontext („pracuješ v measurement contextu"), takže AI nemísí pojmy. Terminologický drift, který dřív musel odchytávat v review, teď nevzniká — hranice ho drží.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">Manažer / PI</div>
+    <p>Slyší „DDD" a myslí, že je to další technická metodologie. Správné rámování: DDD je o tom, aby kód mluvil <em>stejným jazykem jako vaši vědci</em> — ne aby vědci museli překládat do jazyka programátorů. Praktický dopad: když se model v kódu shoduje s tím, jak tým o problému mluví, nový člověk (i AI agent) se zorientuje rychleji a vzniká míň chyb z nedorozumění. Otázka na tým: „Kdyby náš doménový expert četl jména v kódu, poznal by svoji vědu, nebo by viděl cizí žargon?"</p>
+  </div>
+</div>
+
+<!-- 8. Propojení -->
+<h2>8 — Propojení na ostatní lekce</h2>
+
+<ul>
+  <li><strong>B3 — Memory a CLAUDE.md:</strong> Ubiquitous language má domov přesně tady. <code>CLAUDE.md</code> je místo, kam zapíšeš doménový slovník, aby ho agent četl. DDD dodává obsah, B3 dodává mechanismus.</li>
+  <li><strong>C1 — FAIR4RS:</strong> Interoperabilita stojí a padá se sdíleným slovníkem mezi systémy. Bounded context a jasně pojmenovaný model jsou předpoklad toho, aby si software rozuměl — DDD je mikroverze téhož principu uvnitř kódu.</li>
+  <li><strong>A2 — Refactoring:</strong> Rename není kosmetika — je to nástroj, jak dostat kód do jazyka domény. Přejmenování <code>arr</code> → <code>trajektorie</code> je refactoring ve službě modelu.</li>
+  <li><strong>C4 — Trust gap:</strong> AI ti vygeneruje věrohodně vypadající doménový model, který ale nesedí na realitu. Model musí ověřit expert, ne plynulost — kalibrovaná důvěra aplikovaná na návrh, ne jen na diff.</li>
+</ul>
+
+<!-- 9. Nejčastější nepochopení -->
+<h2>9 — Nejčastější nepochopení</h2>
+
+<div class="callout amber">
+  <div class="callout-label">Nepochopení 1</div>
+  <p>„DDD je framework nebo architektura — vrstvy, repozitáře, hodně boilerplate."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>Srdce DDD nejsou stavební kameny ani vrstvy — to je až slupka. Srdce je <em>ubiquitous language</em> a <em>bounded context</em>: aby kód mluvil jazykem domény a aby každý pojem měl jasnou hranici, kde platí. Můžeš dělat DDD v jednom skriptu bez jediné třídy „Repository" — stačí, že jména odpovídají tomu, jak experti mluví. Boilerplate je Vernonova implementace, ne Evansova podstata.</p>
+</div>
+
+<div class="callout amber">
+  <div class="callout-label">Nepochopení 2</div>
+  <p>„Máme jeden datový model pro celý systém a snažíme se, aby platil všude."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>To je přesně anti-vzor, který bounded context řeší. Jeden univerzální model, který má platit všude, buď zbytní do nesrozumitelnosti, nebo tiše lže — protože stejné slovo znamená v různých částech různé věci. DDD říká: přiznej hranice, měj víc menších konzistentních modelů. Hranice není selhání návrhu, je to návrh.</p>
+</div>
+
+<div class="callout amber">
+  <div class="callout-label">Nepochopení 3</div>
+  <p>„Jsme věda, ne byznys — DDD je pro enterprise aplikace, ne pro výzkumný kód."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>Doména neznamená „byznys" — znamená oblast problému, které někdo rozumí. Vaše doména je fyzika, chemie, klimatologie — a ta má bohatší a přesnější slovník než většina byznysů. Právě vědecký kód má nejvíc co získat: jednotky, meze platnosti, přesné pojmy. Vědecká doména je pro DDD ideální, ne výjimka. A ubiquitous language je zrovna to, co potřebuješ, aby AI psala tvým odborným jazykem.</p>
+</div>
+
+<!-- 10. Spicy teze -->
+<h2>10 — Spicy teze</h2>
+
+<div class="spicy">
+  <p>DDD bylo dvacet let podceňované jako „enterprise těžkotonážní ceremonie" — a přesně v okamžiku, kdy kód začal psát agent, se stalo tou nejdůležitější disciplínou návrhu, kterou máš. Protože AI umí syntax dokonale, ale tvoji doménu nezná ani trochu; jediné, čím ji můžeš řídit, je jazyk. Ubiquitous language přestal být otázkou čitelnosti pro lidi a stal se <em>API pro agenta</em>. Kdo neumí pojmenovat svoji doménu, nechá AI, aby ji pojmenovala za něj — a skončí s kódem, který mluví generickým žargonem stroje místo přesným jazykem své vlastní vědy.</p>
+</div>
+
+<!-- 11. Primární zdroje -->
+<h2>11 — Primární zdroje</h2>
+
+<ul class="resource-list">
+  <li>
+    <a href="https://www.domainlanguage.com/ddd/reference/" target="_blank">Domain-Driven Design Reference — Eric Evans (2015, PDF zdarma)</a>
+    <span class="why">Proč: Destilát celé modré knihy na ~50 stran. Nutné minimum — všechny klíčové vzory (ubiquitous language, bounded context, entity/value object) shrnuté a definované. Začni tady, ne u 500stránkové knihy.</span>
+  </li>
+  <li>
+    <a href="https://martinfowler.com/bliki/UbiquitousLanguage.html" target="_blank">Ubiquitous Language — Martin Fowler</a>
+    <span class="why">Proč: Krátké, ostré vysvětlení nejdůležitějšího pojmu DDD. Přesně to, co potřebuješ pochopit, abys věděl, co psát do CLAUDE.md pro agenta.</span>
+  </li>
+  <li>
+    <a href="https://martinfowler.com/bliki/BoundedContext.html" target="_blank">Bounded Context — Martin Fowler</a>
+    <span class="why">Proč: Druhý nosný pojem, vysvětlený s příklady. Rámuje, proč jeden univerzální model škodí a proč jsou hranice návrh, ne selhání.</span>
+  </li>
+</ul>
+
+<!-- 12. Feynmanovo cvičení -->
+<h2>12 — Feynmanovo cvičení</h2>
+
+<div class="quiz" id="quiz-main">
+  <div class="quiz-header">Feynmanův test — Domain-Driven Design</div>
+
+  <!-- Q1 -->
+  <div class="quiz-question" id="q1">
+    <div class="quiz-q">1. Co je ubiquitous language a proč je klíčový zrovna pro AI-assisted vývoj?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q1" value="a"> Programovací jazyk, kterému rozumí každý agent</label></li>
+      <li><label><input type="radio" name="q1" value="b"> Jeden sdílený slovník domény, který používá expert, kód, testy i dokumentace; pro AI je klíčový, protože je to jazyk, kterým agentovi sdělíš svou doménu — bez něj dosadí generický žargon</label></li>
+      <li><label><input type="radio" name="q1" value="c"> Seznam technických termínů pro programátory oddělený od byznys termínů</label></li>
+      <li><label><input type="radio" name="q1" value="d"> Univerzální datový model platný v celém systému</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q1','b','Přesně. Ubiquitous language je JEDEN slovník napříč rozhovorem, kódem, testy i dokumentací — žádný překlad mezi „byznys" a „technickou" stranou. Pro AI je to zásadní: agent zná syntax, ale ne tvou doménu. Slovník v CLAUDE.md je jazyk, kterým mu doménu předáš. Bez něj vyplní mezeru generickým data/result/process.','Ne. Ubiquitous language není programovací jazyk ani oddělený technický glosář. Je to JEDEN společný slovník domény pro všechny (expert, kód, testy). Pro AI je klíčový proto, že je to způsob, jak agentovi vůbec sdělíš, o čem tvůj kód je — jinak dosadí generický žargon.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q1-fb"></div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="quiz-question" id="q2">
+    <div class="quiz-q">2. Slovo „vzorek" znamená v měření fyzický kus materiálu, ve statistice jednu hodnotu a v pipeline jeden řádek. Co s tím říká DDD dělat?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q2" value="a"> Sjednotit vše do jednoho univerzálního modelu „Vzorek"</label></li>
+      <li><label><input type="radio" name="q2" value="b"> Přiznat tři bounded contexts, kde má slovo v každém jeden konzistentní význam, a nesnažit se je slít — hranice je návrh, ne chyba</label></li>
+      <li><label><input type="radio" name="q2" value="c"> Zakázat slovo „vzorek" a používat jen kódová čísla</label></li>
+      <li><label><input type="radio" name="q2" value="d"> Vybrat jeden správný význam a ostatní dva prohlásit za chybné</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q2','b','Správně. To je přesně účel bounded contextu. DDD neříká „sjednoť" — říká „přiznej hranice". Tři významy = tři kontexty, každý konzistentní uvnitř sebe. Snaha o jeden univerzální model buď zbytní do nesrozumitelnosti, nebo tiše lže. Pro AI navíc: zadáš agentovi kontext a on nemísí pojmy.','Ne. Sjednocovat do jednoho modelu je právě ten anti-vzor, který bounded context řeší. Jeden „univerzální" model se stejným slovem ve třech významech tiše lže. DDD říká: přiznej tři kontexty, každý s jedním konzistentním významem. Hranice je návrh, ne selhání.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q2-fb"></div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="quiz-question" id="q3">
+    <div class="quiz-q">3. Ve vědeckém kódu máš teplotu jako holé <code>300.0</code>. Proč je z pohledu DDD lepší value object <code>Teplota(300, "K")</code>?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q3" value="a"> Je to objektově orientované, což je vždy lepší</label></li>
+      <li><label><input type="radio" name="q3" value="b"> Value object přesune znalost domény (jednotka, meze platnosti, validace) z hlavy autora do typu, kde ji uhlídá kód — vymýtí celou třídu chyb ze záměny jednotek</label></li>
+      <li><label><input type="radio" name="q3" value="c"> Je to rychlejší při výpočtech</label></li>
+      <li><label><input type="radio" name="q3" value="d"> Není lepší, holé číslo je jednodušší a stačí</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q3','b','Výborně. Value object je definovaný hodnotou (a jednotkou), ne identitou — a je to ideální místo, kam uložit doménovou znalost: jednotku, meze, validaci. Záporná K vyhodí chybu hned. Holé 300.0 spoléhá na pozornost autora, že si pamatuje jednotku. Záměna jednotek je klasická vědecká chyba — value object ji z modelu odstraní.','Ne. Nejde o OOP samo o sobě ani o rychlost. Value object je cenný proto, že přesune znalost domény — jednotku, meze, validaci — z hlavy autora do typu. Holé 300.0 nikdo neuhlídá; Teplota(300,\\'K\\') odmítne nesmysl a nejde zavolat se špatnou jednotkou.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q3-fb"></div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="quiz-question" id="q4">
+    <div class="quiz-q">4. „Jsme věda, ne byznys, takže DDD se nás netýká." Kde je chyba?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q4" value="a"> Nikde — DDD je opravdu jen pro enterprise byznys aplikace</label></li>
+      <li><label><input type="radio" name="q4" value="b"> Doména neznamená byznys, ale oblast problému, které někdo rozumí; vědecká doména má bohatší a přesnější slovník než většina byznysů, takže má z DDD nejvíc co získat</label></li>
+      <li><label><input type="radio" name="q4" value="c"> Chyba je jen v tom, že věda nepotřebuje žádný software design</label></li>
+      <li><label><input type="radio" name="q4" value="d"> DDD se týká jen kódu psaného agentem, ne člověkem</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q4','b','Přesně. „Doména" = oblast problému, které někdo rozumí, ne byznys. Fyzika, chemie, klimatologie mají přesnější a bohatší slovník než většina enterprise domén — jednotky, meze platnosti, ostré pojmy. Vědecký kód je pro DDD ideální kandidát, ne výjimka. A ubiquitous language je přesně to, co potřebuješ, aby AI psala tvým odborným jazykem místo generického.','Ne. Doména neznamená byznys — znamená oblast problému, které někdo rozumí. Vědecká doména má bohatší a přesnější slovník (jednotky, meze, ostré pojmy) než většina byznysů, takže má z DDD nejvíc co získat. Věda je pro DDD ideál, ne výjimka.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q4-fb"></div>
+  </div>
+
+  <div class="quiz-score" id="quiz-score"></div>
+</div>
+
+<!-- 13. Co dál -->
+<h2>13 — Co dál</h2>
+
+<p><strong>Co musíš znát před touto lekcí:</strong></p>
+<ul>
+  <li><a href="0005-memory-a-claude-md.html">B3 — Memory a CLAUDE.md</a> — místo, kam ubiquitous language zapíšeš, aby ho agent četl.</li>
+  <li><a href="0013-fair4rs.html">C1 — FAIR4RS</a> — interoperabilita stojí na sdíleném slovníku; DDD je jeho mikroverze uvnitř kódu.</li>
+</ul>
+
+<p><strong>Praktický úkol (25 minut):</strong> Otevři svůj kód a najdi pět nejgeneričtějších jmen (<code>data</code>, <code>arr</code>, <code>process</code>, <code>result</code>, <code>tmp</code>). U každého se zeptej: „Jak by tuhle věc pojmenoval doménový expert?" Sepiš těch pět párů (generické → doménové) do <code>CLAUDE.md</code> jako začátek ubiquitous language. Pak nech AI přejmenovat kód podle nich (pozor: refactoring s klobouky z A2 — chování nezměnit). Sleduj, jak se kód začne číst jako tvoje věda — a jak agent v dalším úkolu ta slova sám použije.</p>
+
+<p><strong>Příští lekce (dokončení bloku A):</strong></p>
+<ul>
+  <li><em>A5 — Agile Manifesto</em> — kde agentní vývoj navazuje na agilní hodnoty a kde je inovuje. Poslední kus bloku A.</li>
+</ul>
+
+<!-- Footer -->
+<div class="lesson-nav">
+  <div>
+    <span class="nav-label">Předchozí lekce</span>
+    <a href="0015-refactoring.html">← A2 — Refactoring</a>
+  </div>
+  <div>
+    <span class="nav-label">Příští lekce</span>
+    <a href="0017-agile-manifesto.html">A5 — Agile Manifesto →</a>
+  </div>
+</div>
+
+<p style="margin-top:2rem; font-size:0.8rem; color: var(--muted); font-family: var(--font-sans);">
+  Máš otázku? Vrať se do Claude Code a napiš ji — agent je tvůj učitel a může rozvinout libovolný bod z této lekce.
+</p>
+
+</div>
+</div>
+
+<script>
+const scores = {};
+function check(qid, correct, okMsg, failMsg) {
+  const selected = document.querySelector(`input[name="${qid}"]:checked`);
+  const fb = document.getElementById(`${qid}-fb`);
+  if (!selected) {
+    fb.textContent = 'Vyber jednu odpověď.';
+    fb.className = 'quiz-feedback incorrect';
+    fb.style.display = 'block';
+    return;
+  }
+  const isCorrect = selected.value === correct;
+  fb.textContent = isCorrect ? '✓ ' + okMsg : '✗ ' + failMsg;
+  fb.className = 'quiz-feedback ' + (isCorrect ? 'correct' : 'incorrect');
+  fb.style.display = 'block';
+  scores[qid] = isCorrect;
+  document.querySelectorAll(`input[name="${qid}"]`).forEach(r => r.disabled = true);
+  document.querySelector(`#${qid} .quiz-check`).disabled = true;
+  if (Object.keys(scores).length === 4) {
+    const n = Object.values(scores).filter(Boolean).length;
+    const el = document.getElementById('quiz-score');
+    el.style.display = 'block';
+    if (n === 4) {
+      el.innerHTML = '<strong>✓ 4/4 — Výborně.</strong> Praktický úkol: najdi pět nejgeneričtějších jmen v kódu, přelož je do jazyka domény, zapiš do CLAUDE.md a nech AI přejmenovat (chování nezměnit). Sleduj, jak kód začne mluvit tvou vědou — a agent po tobě ta slova převezme.';
+    } else if (n >= 3) {
+      el.innerHTML = `<strong>${n}/4 — Téměř.</strong> Přečti znovu sekci 2 (ubiquitous language) a sekci 3 (bounded context). Klíč: kód má mluvit jazykem domény, ne stroje; a jedno slovo má jeden význam jen uvnitř své hranice. Pro AI je model = promptovací kontext.`;
+    } else {
+      el.innerHTML = `<strong>${n}/4 — Vrať se.</strong> Přečti znovu sekci 1 a 2 — DDD je o tom, aby kód mluvil jazykem domény (ubiquitous language), ne o vrstvách a boilerplate. Pak sekci 5 — proč je ten jazyk zrovna to, čím řídíš AI agenta.`;
+    }
+  }
+}
+</script>
+</body>
+</html>

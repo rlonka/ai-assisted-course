@@ -1,0 +1,454 @@
+/* ===================================================
+   AI-assisted RSE Course — Shared Stylesheet
+   Tufte-inspired. Print-friendly. No dependencies.
+   =================================================== */
+
+:root {
+  --text: #1a1a1a;
+  --muted: #555;
+  --accent: #2c5282;
+  --accent-light: #ebf4ff;
+  --border: #dde3ed;
+  --bg: #fdfcf9;
+  --bg-card: #ffffff;
+  --green: #276749;
+  --green-light: #f0fff4;
+  --red: #9b2c2c;
+  --red-light: #fff5f5;
+  --amber: #7b4f00;
+  --amber-light: #fffbeb;
+  --font-body: "Georgia", "Times New Roman", serif;
+  --font-mono: "SFMono-Regular", "Consolas", "Liberation Mono", monospace;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --max-width: 680px;
+  --side-width: 200px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { font-size: 18px; }
+
+body {
+  font-family: var(--font-body);
+  color: var(--text);
+  background: var(--bg);
+  margin: 0;
+  padding: 0;
+  line-height: 1.65;
+}
+
+/* ── Layout ── */
+
+.page {
+  max-width: calc(var(--max-width) + var(--side-width) + 4rem);
+  margin: 0 auto;
+  padding: 3rem 2rem 5rem;
+}
+
+.content {
+  max-width: var(--max-width);
+}
+
+/* ── Header ── */
+
+.lesson-header {
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.lesson-meta {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.75rem;
+}
+
+.lesson-meta .tag {
+  display: inline-block;
+  background: var(--accent-light);
+  color: var(--accent);
+  padding: 0.1em 0.6em;
+  border-radius: 3px;
+  margin-right: 0.5rem;
+}
+
+h1 {
+  font-family: var(--font-sans);
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0 0 0.5rem;
+  color: var(--text);
+}
+
+.lesson-subtitle {
+  font-size: 1.1rem;
+  color: var(--muted);
+  font-style: italic;
+  margin: 0;
+}
+
+/* ── Typography ── */
+
+h2 {
+  font-family: var(--font-sans);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 2.5rem 0 0.75rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--border);
+}
+
+h3 {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 1.5rem 0 0.5rem;
+}
+
+p { margin: 0 0 1rem; }
+
+strong { font-weight: 700; }
+
+em { font-style: italic; }
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+a:hover { opacity: 0.75; }
+
+/* ── Callout boxes ── */
+
+.callout {
+  border-left: 4px solid var(--accent);
+  background: var(--accent-light);
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+  border-radius: 0 4px 4px 0;
+}
+
+.callout.green {
+  border-color: var(--green);
+  background: var(--green-light);
+}
+
+.callout.amber {
+  border-color: var(--amber);
+  background: var(--amber-light);
+}
+
+.callout.red {
+  border-color: var(--red);
+  background: var(--red-light);
+}
+
+.callout-label {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.4rem;
+}
+
+.callout p:last-child { margin-bottom: 0; }
+
+/* ── Spicy thesis ── */
+
+.spicy {
+  border: 2px solid var(--text);
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+  position: relative;
+}
+
+.spicy::before {
+  content: "🌶 TEZE";
+  font-family: var(--font-sans);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  background: var(--text);
+  color: var(--bg);
+  padding: 0.15em 0.5em;
+  position: absolute;
+  top: -0.6em;
+  left: 1rem;
+}
+
+.spicy p {
+  font-size: 1.05rem;
+  font-style: italic;
+  margin: 0;
+}
+
+/* ── Examples grid ── */
+
+.examples {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0 1.5rem;
+}
+
+.example-card {
+  border: 1px solid var(--border);
+  padding: 1rem;
+  border-radius: 4px;
+  background: var(--bg-card);
+}
+
+.example-card .example-label {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+}
+
+.example-card p { margin: 0; font-size: 0.9rem; }
+
+/* ── Links list ── */
+
+.resource-list {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 1.5rem;
+}
+
+.resource-list li {
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem;
+}
+
+.resource-list li:last-child { border-bottom: none; }
+
+.resource-list .why {
+  display: block;
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin-top: 0.2rem;
+  font-style: italic;
+}
+
+/* ── Quiz ── */
+
+.quiz {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 1.5rem 0;
+}
+
+.quiz-header {
+  background: var(--text);
+  color: var(--bg);
+  padding: 0.75rem 1.25rem;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.quiz-question {
+  padding: 1.25rem 1.25rem 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.quiz-question:last-child { border-bottom: none; }
+
+.quiz-q {
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.quiz-options {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0.75rem;
+}
+
+.quiz-options li {
+  margin-bottom: 0.4rem;
+}
+
+.quiz-options label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.4rem 0.6rem;
+  border-radius: 3px;
+  border: 1px solid transparent;
+  font-size: 0.9rem;
+  transition: background 0.15s;
+}
+
+.quiz-options label:hover { background: var(--accent-light); }
+
+.quiz-options input[type="radio"] { margin-top: 0.2em; flex-shrink: 0; }
+
+.quiz-check {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 0.35rem 0.9rem;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 3px;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  cursor: pointer;
+  margin-bottom: 0.75rem;
+}
+
+.quiz-check:hover { opacity: 0.85; }
+
+.quiz-feedback {
+  display: none;
+  padding: 0.6rem 0.75rem;
+  border-radius: 3px;
+  font-size: 0.88rem;
+  margin-bottom: 0.75rem;
+}
+
+.quiz-feedback.correct {
+  background: var(--green-light);
+  color: var(--green);
+  border: 1px solid #9ae6b4;
+}
+
+.quiz-feedback.incorrect {
+  background: var(--red-light);
+  color: var(--red);
+  border: 1px solid #feb2b2;
+}
+
+.quiz-score {
+  padding: 1rem 1.25rem;
+  background: var(--bg);
+  border-top: 2px solid var(--text);
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  display: none;
+}
+
+/* ── Navigation ── */
+
+.lesson-nav {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+}
+
+.lesson-nav a {
+  color: var(--accent);
+}
+
+.nav-label {
+  color: var(--muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  display: block;
+}
+
+/* ── Progress ── */
+
+.progress-bar {
+  display: flex;
+  gap: 0.25rem;
+  margin-bottom: 2rem;
+}
+
+.progress-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+}
+
+.progress-dot.done { background: var(--green); }
+.progress-dot.current { background: var(--accent); }
+
+/* ── Code ── */
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: #f0f0ee;
+  padding: 0.1em 0.3em;
+  border-radius: 2px;
+}
+
+/* ── Two-column diagram ── */
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.col-box {
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+.col-box .col-label {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.col-box ul {
+  margin: 0;
+  padding-left: 1.2rem;
+  font-size: 0.9rem;
+}
+
+.col-box.col-green { border-color: #9ae6b4; background: var(--green-light); }
+.col-box.col-red { border-color: #feb2b2; background: var(--red-light); }
+
+/* ── Print ── */
+
+@media print {
+  body { background: white; font-size: 11pt; }
+  .quiz-check, .quiz-check { display: none; }
+  .lesson-nav { display: none; }
+  h2 { break-after: avoid; }
+  .callout, .spicy, .example-card { break-inside: avoid; }
+}
+
+/* ── Responsive ── */
+
+@media (max-width: 600px) {
+  html { font-size: 16px; }
+  .page { padding: 1.5rem 1rem 3rem; }
+  .examples { grid-template-columns: 1fr; }
+  .two-col { grid-template-columns: 1fr; }
+  h1 { font-size: 1.5rem; }
+}

@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C2 — Reprodukovatelnost | AI-assisted RSE</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    /* In / Out lists */
+    .in-out {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .in-out-box {
+      border-radius: 4px;
+      padding: 0.8rem 1rem;
+      font-size: 0.86rem;
+    }
+    .in-box  { background: var(--green-light);  border: 1px solid #b7dfc8; }
+    .out-box { background: var(--red-light);     border: 1px solid #f9b8b8; }
+    .in-out-box h4 {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin: 0 0 0.5rem;
+      color: var(--muted);
+    }
+    .in-out-box ul { margin: 0; padding-left: 1.1rem; }
+    .in-out-box li { margin-bottom: 0.3rem; }
+    @media (max-width: 480px) { .in-out { grid-template-columns: 1fr; } }
+
+    /* Code example block */
+    .code-example {
+      background: #1a1a2e;
+      color: #e2e8f0;
+      border-radius: 6px;
+      padding: 1rem 1.2rem;
+      font-family: var(--font-mono);
+      font-size: 0.80rem;
+      line-height: 1.6;
+      margin: 1rem 0 1.5rem;
+      overflow-x: auto;
+    }
+    .code-example .cm-comment { color: #718096; }
+    .code-example .cm-heading { color: #90cdf4; font-weight: 700; }
+    .code-example .cm-key     { color: #fbd38d; }
+    .code-example .cm-val     { color: #c6f6d5; }
+
+    /* Reproducibility ladder */
+    .ladder {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      margin: 1.25rem 0 1.5rem;
+      max-width: 560px;
+    }
+    .rung {
+      display: flex;
+      align-items: baseline;
+      gap: 0.8rem;
+      padding: 0.55rem 0.95rem;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      font-size: 0.85rem;
+    }
+    .rung-n {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      min-width: 1.4rem;
+      font-weight: 700;
+    }
+    .rung-t { flex: 1; }
+    .rung-tag { font-family: var(--font-sans); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+    .rung.r0 { background: var(--red-light);   border-color: #f9b8b8; }
+    .rung.r1 { background: var(--red-light);   border-color: #f9b8b8; }
+    .rung.r2 { background: var(--amber-light); border-color: #f0d8a8; }
+    .rung.r3 { background: var(--green-light); border-color: #b7dfc8; }
+    .rung.r4 { background: var(--green-light); border-color: #b7dfc8; }
+
+    /* Two-column help/harm */
+    .cmp {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.87rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .cmp th {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+      border-bottom: 2px solid var(--text);
+    }
+    .cmp td {
+      padding: 0.55rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    .cmp tr:last-child td { border-bottom: none; }
+  </style>
+</head>
+<body>
+<div class="page">
+<div class="content">
+
+<!-- Header -->
+<header class="lesson-header">
+  <div class="lesson-meta">
+    <span class="tag">C2</span>
+    <span class="tag">Týden 6</span>
+    Blok C: Vědecký software
+  </div>
+  <h1>Reprodukovatelnost</h1>
+  <p class="lesson-subtitle">Mechanický test místo dojmu — když výsledek jde zregenerovat od nuly jedním příkazem, důvěra se opře o důkaz. Přímý lék na trust gap.</p>
+</header>
+
+<!-- Progress -->
+<div class="progress-bar">
+  <div class="progress-dot done"    title="A3 — No Silver Bullet"></div>
+  <div class="progress-dot done"    title="A1 — TDD"></div>
+  <div class="progress-dot done"    title="B1–B2 — Harness, rámec pěti otázek"></div>
+  <div class="progress-dot done"    title="B3–B6 + Subagents — vrstvy harness"></div>
+  <div class="progress-dot done"    title="C3 — Deskilling"></div>
+  <div class="progress-dot done"    title="C4 — Trust gap"></div>
+  <div class="progress-dot current" title="C2 — Reprodukovatelnost (aktuální)"></div>
+  <div class="progress-dot"         title="C1, C5, A-blok, D-blok"></div>
+</div>
+
+<!-- 1. Jádro -->
+<h2>1 — Jádro</h2>
+
+<p>Trust gap (C4) skončil otázkou „jak bych poznal, že je to špatně?". <strong>Reprodukovatelnost</strong> je nejsilnější odpověď, jakou věda má: výsledek, který dokážeš <em>zregenerovat od nuly</em> ze stejného kódu a dat, není otázka důvěry — je to ověřitelný fakt. Reprodukovatelnost přesouvá důvěru z dojmu na mechanický důkaz.</p>
+
+<p>A je to zároveň místo, kde AI paradigma pomáhá nejvíc i škodí nejvíc. Pomáhá, protože agent je neúnavný na nudné instalatérské práci, kterou vědci přeskakují (připnout verze, zabalit prostředí, napsat jeden regenerující příkaz). Škodí, protože AI umí vyrobit kód, který „běží u mě", nikdo mu nerozumí, a nikdo ho nezregeneruje — reprodukovatelnostní dluh vyrobený rychleji než kdy dřív.</p>
+
+<div class="callout">
+  <div class="callout-label">Jedno pravidlo</div>
+  <p>Výsledek, který nedokážeš zregenerovat, není zjištění — je to historka. „Běželo to jednou na mém laptopu" a „je to reprodukovatelné" jsou dvě různé věci, a věda uznává jen tu druhou.</p>
+</div>
+
+<!-- 2. Co to je a co ne -->
+<h2>2 — Co reprodukovatelnost je (a co není)</h2>
+
+<p>Nejdřív dvě rozlišení, která se pletou:</p>
+
+<ul>
+  <li><strong>Reprodukovatelnost</strong> = stejný kód + stejná data → stejný výsledek. Mechanická, výpočetní vlastnost. O ní je celá tahle lekce.</li>
+  <li><strong>Replikovatelnost</strong> = nový sběr dat / nezávislá implementace → konzistentní zjištění. Silnější, vědecky náročnější — ale stojí na reprodukovatelnosti jako základu.</li>
+</ul>
+
+<p>A jedno zásadní: <strong>reprodukovatelnost je vlastnost procesu, ne výsledku.</strong> Číslo v tabulce není reprodukovatelné ani nereprodukovatelné — reprodukovatelný (nebo ne) je <em>postup, kterým jsi k němu došel</em>. Proto se reprodukovatelnost nedá „dodělat potom": buď proces zaznamenává, jak vznikl výsledek, nebo ne.</p>
+
+<div class="callout amber">
+  <div class="callout-label">Nejčastější sebeklam</div>
+  <p>„Mám výsledky uložené, takže je to reprodukovatelné." Ne — uložený výsledek je artefakt, ne proces. Reprodukovatelné je to, když ho někdo jiný (nebo ty za rok, na jiném stroji) vytvoří znovu ze zdrojů. Uložené číslo je fotka; reprodukovatelnost je recept.</p>
+</div>
+
+<!-- 3. Mechanický test -->
+<h2>3 — Mechanický test reprodukovatelnosti</h2>
+
+<p>Reprodukovatelnost není pocit ani dobrý úmysl — je to <em>test s binárním výsledkem</em>. Test zní: <strong>ve svěžím prostředí, od nuly, jedním příkazem — vznikne tentýž výsledek?</strong> Když ano, je reprodukovatelný. Když „no, ještě musíš doinstalovat…", není. Žádné mezistupně v samotném testu; buď projde, nebo ne.</p>
+
+<p>Kde na téhle stupnici projekt stojí, se ale liší — a je to žebřík, po kterém lezeš nahoru:</p>
+
+<div class="ladder">
+  <div class="rung r0"><span class="rung-n">0</span><span class="rung-t">„Běželo to jednou na mém laptopu." Nikdo neví jak.</span><span class="rung-tag">historka</span></div>
+  <div class="rung r1"><span class="rung-n">1</span><span class="rung-t">Skripty existují, ale ruční kroky a nezapsané závislosti.</span><span class="rung-tag">křehké</span></div>
+  <div class="rung r2"><span class="rung-n">2</span><span class="rung-t">Připnuté verze, README s postupem. Projde s trochou snahy.</span><span class="rung-tag">slušné</span></div>
+  <div class="rung r3"><span class="rung-n">3</span><span class="rung-t">Jeden příkaz zregeneruje vše ze zdrojů (Makefile / skript).</span><span class="rung-tag">reprodukovatelné</span></div>
+  <div class="rung r4"><span class="rung-n">4</span><span class="rung-t">Svěží kontejner + jeden příkaz + kontrola invariantů. Ověří to stroj.</span><span class="rung-tag">mechanické</span></div>
+</div>
+
+<p>Cíl pro vědecký software je rung 3–4. Klíčový skok je z 2 na 3: z „jde to, když víš jak" na „jde to jedním příkazem bez tebe". To je hranice mezi reprodukovatelností jako <em>dokumentací</em> (kterou nikdo nečte) a reprodukovatelností jako <em>spustitelným artefaktem</em> (který stroj ověří).</p>
+
+<!-- 4. /reproduce jako skill -->
+<h2>4 — Reprodukovatelnost jako skill: <code>/reproduce</code></h2>
+
+<p>Rung 4 znamená, že regeneraci umí spustit stroj — a to je přesně definice <em>skillu</em> (B4). Zabalíš postup regenerace do mechanické, agentem-spustitelné jednotky: <code>/reproduce</code>. Nemusíš na nic pamatovat; příkaz od nuly postaví prostředí, spustí pipeline a ověří, že výstup sedí na referenční hodnoty.</p>
+
+<div class="code-example">
+<span class="cm-comment"># .claude/skills/reproduce/SKILL.md</span>
+
+<span class="cm-comment">---</span>
+<span class="cm-key">name:</span> <span class="cm-val">reproduce</span>
+<span class="cm-key">description:</span> <span class="cm-val">Od nuly ve svěžím prostředí zregeneruje výsledky</span>
+             <span class="cm-val">a ověří je proti referenčním hodnotám. Selže hlasitě.</span>
+<span class="cm-comment">---</span>
+
+<span class="cm-heading"># Postup</span>
+
+1. Postav prostředí z pinned specifikace (lockfile / kontejner).
+2. Spusť celou pipeline jedním vstupním bodem — žádné ruční kroky.
+3. Porovnej výstup s `expected/` v definované toleranci.
+4. Když se liší, nahlas CO se liší a o KOLIK. Neopravuj potají.
+5. Vrať PASS/FAIL — reprodukovatelnost je binární test.
+</div>
+
+<p>Spojení tří dřívějších lekcí: <code>/reproduce</code> je <strong>skill</strong> (B4), který můžeš zavěsit na <strong>hook</strong> (B5) — Stop hook nepustí „hotovo", dokud regenerace neprojde — a tím zavře <strong>trust gap</strong> (C4): důvěra ve výsledek se opře o zelený mechanický test, ne o to, že „to vypadá dobře".</p>
+
+<!-- 5. Jak AI pomáhá a škodí -->
+<h2>5 — Jak AI reprodukovatelnosti pomáhá — a jak škodí</h2>
+
+<table class="cmp">
+  <tr>
+    <th>AI pomáhá ✓</th>
+    <th>AI škodí ✗</th>
+  </tr>
+  <tr>
+    <td>Neúnavně udělá nudné instalatérství — připne verze, napíše Dockerfile, Makefile</td>
+    <td>Vyrobí kód „běží u mě", kterému nikdo nerozumí a nezregeneruje ho</td>
+  </tr>
+  <tr>
+    <td>Napíše testy invariantů, které ověří výstup mechanicky</td>
+    <td>Zavleče skrytý stav, nepřipnuté závislosti, nedeterminismus</td>
+  </tr>
+  <tr>
+    <td>Postaví <code>/reproduce</code> pipeline, na kterou by sis nenašel čas</td>
+    <td>Rychlost svádí produkovat víc výsledků, než stíháš ověřit</td>
+  </tr>
+  <tr>
+    <td>Zkontejnerizuje prostředí, aby běželo i jinde než u tebe</td>
+    <td>Deskilling (C3): nezregeneruješ, čemu nerozumíš</td>
+  </tr>
+</table>
+
+<p>Rozhodující je, na kterou stranu tabulky AI použiješ. Nasměruj ji na <em>infrastrukturu reprodukovatelnosti</em> — plumbing, které vědci nenávidí a odkládají — a je to čistý zisk. Nech ji chrlit neověřené výsledky rychleji, než je stíháš zregenerovat, a vyrábíš reprodukovatelnostní dluh průmyslovým tempem.</p>
+
+<!-- 6. Historický kontext -->
+<h2>6 — Historický kontext</h2>
+
+<ul>
+  <li><strong>Krize reprodukovatelnosti (2010s).</strong> Psychologie, biomedicína, ML — velká část publikovaných výsledků nešla zopakovat. Ne kvůli podvodu, ale kvůli nezaznamenanému procesu. AI riziko zvětšuje: víc kódu, hůř pochopeného, rychleji.</li>
+  <li><strong>Claerbout &amp; Donoho — reproducible research (90. léta, Stanford).</strong> „Publikovaný článek je jen reklama na vědu; skutečná věda je kompletní prostředí, kód a data, které výsledek vytvořily." Přímý předchůdce myšlenky „proces, ne výsledek".</li>
+  <li><strong>Deterministické buildy a kontejnery (Docker, Nix/Guix).</strong> Softwarová disciplína vyřešila „běží u mě" připnutím prostředí do specifikace. Rung 4 reprodukovatelnosti je tenhle princip aplikovaný na vědecký výsledek.</li>
+  <li><strong>CI/CD.</strong> Automatické, deterministické ověření při každé změně. <code>/reproduce</code> zavěšený na hook je CI pro vědecký výsledek — stroj kontroluje, člověk nezapomíná.</li>
+</ul>
+
+<p>Pointa pro publikum: reprodukovatelnost je nejstarší hodnota vědy (opakovatelný experiment) potkávající nejnovější nástroj softwarového inženýrství (deterministický build). AI nic z toho neruší — jen zvyšuje sázku na obou stranách.</p>
+
+<!-- 7. Tři příklady -->
+<h2>7 — Tři příklady</h2>
+
+<div class="examples">
+  <div class="example-card">
+    <div class="example-label">Vědec-kodér</div>
+    <p>Před odevzdáním paperu nechá AI postavit <code>/reproduce</code>: Dockerfile s připnutými verzemi, jeden příkaz, který projde celou analýzu, a kontrolu klíčových čísel proti uloženým referenčním hodnotám. Zjistí, že jeden výsledek závisel na nezafixovaném seedu — nešel by zopakovat. Chybu chytil stroj před recenzentem. Reprodukovatelnost jako test, ne jako dobrý úmysl.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">RSE vývojář</div>
+    <p>Zavede pravidlo pro celou skupinu: žádný výsledek nejde do publikace bez rung-3 regenerace. AI píše plumbing (lockfiles, kontejnery, regenerující skripty), člověk ověřuje, že rozumí pipeline. <code>/reproduce</code> běží v CI při každém commitu — reprodukovatelnost se nekontroluje před deadlinem v panice, ale průběžně a mechanicky.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">Manažer / PI</div>
+    <p>Ptá se na správnou metriku zralosti skupiny: ne „kolik paperů", ale „kolik našich výsledků umí kdokoliv jiný zregenerovat jedním příkazem?". Reprodukovatelnost je pojistka proti odchodu člověka i proti věrohodné chybě. PI, který investuje do rung-4 infrastruktury, kupuje důvěryhodnost skupiny — a chrání ji před dnem, kdy někdo najde chybu v pět let starém výsledku.</p>
+  </div>
+</div>
+
+<!-- 8. Propojení -->
+<h2>8 — Propojení na ostatní lekce</h2>
+
+<ul>
+  <li><strong>C4 — Trust gap:</strong> Přímý lék. Reprodukovatelnost přesouvá důvěru z plynulosti na mechanický důkaz — „jak bych poznal, že je to špatně?" má odpověď: spustím <code>/reproduce</code> a uvidím PASS/FAIL.</li>
+  <li><strong>C3 — Deskilling:</strong> Napětí. Reprodukovatelnost vyžaduje, abys procesu <em>rozuměl</em> — nezregeneruješ, co nechápeš. Nutí tě to udržet nosnou dovednost, kterou by deskilling erodoval.</li>
+  <li><strong>B4 + B5 — Skills a Hooks:</strong> <code>/reproduce</code> je skill; zavěšený na Stop hook je z něj deterministická brána. Reprodukovatelnost je konkrétní, hodnotné využití obou vrstev harness.</li>
+  <li><strong>A1 — TDD:</strong> Kontrola invariantů v <code>/reproduce</code> je test aplikovaný na vědecký výsledek. Red-green, jen červená znamená „výsledek se nezregeneroval".</li>
+</ul>
+
+<!-- 9. Nejčastější nepochopení -->
+<h2>9 — Nejčastější nepochopení</h2>
+
+<div class="callout amber">
+  <div class="callout-label">Nepochopení 1</div>
+  <p>„Mám uložené všechny výsledky a grafy, takže je moje práce reprodukovatelná."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>Uložený výsledek je artefakt, ne proces — a reprodukovatelnost je vlastnost procesu. Reprodukovatelné je to, když ze zdrojů (kód + data + prostředí) vznikne výsledek znovu, i na cizím stroji. Uložený graf je fotka; potřebuješ recept. Test je: dokáže to zregenerovat někdo jiný jedním příkazem?</p>
+</div>
+
+<div class="callout amber">
+  <div class="callout-label">Nepochopení 2</div>
+  <p>„AI mi napsala pipeline, běží, takže reprodukovatelnost mám vyřešenou."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>„Běží u tebe teď" je rung 0–1, ne reprodukovatelnost. Otázka je, jestli běží ve svěžím prostředí, od nuly, bez ručních kroků — a jestli <em>rozumíš</em>, co dělá (jinak ji neopravíš, až selže). AI umí reprodukovatelnost postavit i tiše podkopat nepřipnutými závislostmi. Musíš ověřit rung, ne uvěřit, že „to běží".</p>
+</div>
+
+<div class="callout amber">
+  <div class="callout-label">Nepochopení 3</div>
+  <p>„Reprodukovatelnost dodělám na konci, až budou výsledky hotové."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>Nedá se dodělat potom — je to vlastnost procesu, kterým výsledek vznikl. Když proces nezaznamenával, jak k číslu došel (seed, verze, kroky), ta informace je pryč a rekonstruuješ ji z paměti a dohadů. Reprodukovatelnost se staví <em>průběžně</em> — nebo se nestaví. Proto je <code>/reproduce</code> v CI, ne v checklistu před deadlinem.</p>
+</div>
+
+<!-- 10. Spicy teze -->
+<h2>10 — Spicy teze</h2>
+
+<div class="spicy">
+  <p>Většina „reprodukovatelných" vědeckých výsledků není reprodukovatelná — jen je nikdo nezkusil zregenerovat. AI tenhle blaf zabíjí z obou stran: umožňuje reprodukovatelnost levně postavit, takže výmluva „nemám čas na plumbing" padá — a zároveň umožňuje vyrobit tolik neověřeného kódu, že bez mechanického testu se pravda utopí v objemu. Reprodukovatelnost přestává být ctnost pro pečlivé a stává se minimální hygienou. Kdo ji nemá, nepublikoval zjištění — publikoval historku, která zatím nespadla.</p>
+</div>
+
+<!-- 11. Primární zdroje -->
+<h2>11 — Primární zdroje</h2>
+
+<ul class="resource-list">
+  <li>
+    <a href="https://arxiv.org/abs/2605.17675" target="_blank">Reprodukovatelnost a AI — mechanický test a <code>/reproduce</code> skill</a>
+    <span class="why">Proč: Primární zdroj pro tuto lekci. Zavádí reprodukovatelnost jako binární mechanický test a <code>/reproduce</code> jako spustitelný artefakt. Přečti sekci o testu a o žebříku zralosti.</span>
+  </li>
+  <li>
+    <a href="https://www.researchsoftware.org/" target="_blank">FAIR4RS / Research Software — přístupnost a reprodukovatelnost</a>
+    <span class="why">Proč: Propojení s C1. Reprodukovatelnost je praktická náplň FAIR principu „Reusable" pro software. Kontext, proč je to komunitní standard, ne osobní ctnost.</span>
+  </li>
+  <li>
+    <a href="https://web.stanford.edu/~vcs/papers/RRReviewFinal.pdf" target="_blank">Reproducible Research in Computational Science — přehled (linie Claerbout/Donoho)</a>
+    <span class="why">Proč: Historická kotva. „Článek je reklama, věda je kód a data." Pochopíš, že „proces, ne výsledek" je 30 let stará, prověřená myšlenka — AI ji jen činí levnější i naléhavější.</span>
+  </li>
+</ul>
+
+<!-- 12. Feynmanovo cvičení -->
+<h2>12 — Feynmanovo cvičení</h2>
+
+<div class="quiz" id="quiz-main">
+  <div class="quiz-header">Feynmanův test — Reprodukovatelnost</div>
+
+  <!-- Q1 -->
+  <div class="quiz-question" id="q1">
+    <div class="quiz-q">1. Kolega říká: „Všechny výsledky i grafy mám uložené v repozitáři, takže moje práce je reprodukovatelná." Kde je chyba?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q1" value="a"> Nikde — uložené výsledky jsou přesně to, co reprodukovatelnost znamená</label></li>
+      <li><label><input type="radio" name="q1" value="b"> Reprodukovatelnost je vlastnost procesu, ne výsledku; uložený graf je artefakt (fotka), ne recept, kterým ho někdo jiný vytvoří znovu</label></li>
+      <li><label><input type="radio" name="q1" value="c"> Chyba je, že je má v repozitáři, měly by být v databázi</label></li>
+      <li><label><input type="radio" name="q1" value="d"> Nic — akorát by měl přidat i PDF verzi</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q1','b','Přesně. Reprodukovatelnost je vlastnost procesu, kterým výsledek vznikl — ne výsledku samotného. Uložený graf je fotka; potřebuješ recept (kód + data + prostředí + kroky), aby ho někdo jiný vytvořil znovu. Test: zregeneruje to jiný člověk jedním příkazem?','Ne. Uložený výsledek je artefakt, ne proces. Reprodukovatelnost je vlastnost postupu, kterým jsi k číslu došel — musí jít znovu vytvořit ze zdrojů, i na cizím stroji. Fotka výsledku není recept.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q1-fb"></div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="quiz-question" id="q2">
+    <div class="quiz-q">2. Co je mechanický test reprodukovatelnosti (rung 4)?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q2" value="a"> Že máš README s podrobným postupem, jak výsledky vytvořit</label></li>
+      <li><label><input type="radio" name="q2" value="b"> Že ve svěžím prostředí, od nuly, jedním příkazem vznikne tentýž výsledek a stroj ověří invarianty — binární PASS/FAIL</label></li>
+      <li><label><input type="radio" name="q2" value="c"> Že to běží na tvém laptopu pokaždé, když to spustíš</label></li>
+      <li><label><input type="radio" name="q2" value="d"> Že jsi výsledky zkontroloval očima a vypadají správně</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q2','b','Správně. Rung 4 = svěží kontejner + jeden příkaz + automatická kontrola invariantů, s binárním výsledkem. Žádné ruční kroky, žádné „ještě doinstaluj". README (rung 2) je dokumentace, kterou nikdo nespustí; „běží u mě" (rung 0–1) není reprodukovatelnost vůbec.','Ne. README ani „běží u mě" nejsou mechanický test — jsou to nižší rungy. Rung 4 je: svěží prostředí, od nuly, jeden příkaz, stroj ověří invarianty, PASS/FAIL. Klíč je, že to spustí a ověří stroj bez tebe.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q2-fb"></div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="quiz-question" id="q3">
+    <div class="quiz-q">3. Jak reprodukovatelnost konkrétně řeší trust gap (C4)?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q3" value="a"> Nijak — jsou to nesouvisející témata</label></li>
+      <li><label><input type="radio" name="q3" value="b"> Dává otázce „jak bych poznal, že je to špatně?" mechanickou odpověď: spustíš /reproduce a dostaneš PASS/FAIL — důvěra se opře o důkaz, ne o plynulost</label></li>
+      <li><label><input type="radio" name="q3" value="c"> Tím, že zakáže používat AI na výsledky</label></li>
+      <li><label><input type="radio" name="q3" value="d"> Tím, že výsledky vypadají profesionálněji, takže jim víc věříš</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q3','b','Výborně. Trust gap je propast mezi důvěrou a ověřením. Reprodukovatelnost tu propast zavírá mechanicky: místo abys věřil, že výsledek sedí, ho zregeneruješ a stroj ověří invarianty. Důvěra se opře o zelený test, ne o to, jak výstup zní. /reproduce je „jak bych poznal, že je to špatně?" v akci.','Ne. Souvislost je přímá a konkrétní: reprodukovatelnost dá kalibrující otázce z C4 mechanickou odpověď (PASS/FAIL z /reproduce). Tím přesouvá důvěru z dojmu na důkaz — ne zákazem AI ani hezčím vzhledem.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q3-fb"></div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="quiz-question" id="q4">
+    <div class="quiz-q">4. Proč nejde reprodukovatelnost „dodělat na konci", až jsou výsledky hotové?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q4" value="a"> Jde — stačí na konci napsat README a je to vyřešené</label></li>
+      <li><label><input type="radio" name="q4" value="b"> Je to vlastnost procesu vzniku výsledku; když proces nezaznamenával seed, verze a kroky, ta informace je pryč a rekonstruuje se z paměti a dohadů</label></li>
+      <li><label><input type="radio" name="q4" value="c"> Jde, ale je to trochu víc práce</label></li>
+      <li><label><input type="radio" name="q4" value="d"> Nejde, protože AI neumí psát dokumentaci zpětně</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q4','b','Přesně. Reprodukovatelnost je vlastnost procesu, ne dokument, který přilepíš na konec. Pokud proces průběžně nezaznamenával, JAK výsledek vznikl (seed, verze závislostí, pořadí kroků), tahle informace zmizí a na konci ji rekonstruuješ z paměti — nespolehlivě. Proto /reproduce běží v CI průběžně, ne v checklistu před deadlinem.','Ne. Není to jen „víc práce" — část informace o procesu (seed, přesné verze, kroky) v momentě vzniku existuje a potom nenávratně mizí. Reprodukovatelnost se staví průběžně, protože zachycuje proces, ne výsledek. Zpětné README ji nenahradí.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q4-fb"></div>
+  </div>
+
+  <div class="quiz-score" id="quiz-score"></div>
+</div>
+
+<!-- 13. Co dál -->
+<h2>13 — Co dál</h2>
+
+<p><strong>Co musíš znát před touto lekcí:</strong></p>
+<ul>
+  <li><a href="0011-trust-gap.html">C4 — Trust gap</a> — reprodukovatelnost je mechanická odpověď na „jak bych poznal, že je to špatně?".</li>
+  <li><a href="0006-skills-a-slash-commands.html">B4 — Skills</a> a <a href="0007-hooks.html">B5 — Hooks</a> — <code>/reproduce</code> je skill zavěšený na hook.</li>
+</ul>
+
+<p><strong>Praktický úkol (30 minut):</strong> Vezmi jeden svůj nedávný výsledek a zařaď ho na žebřík (0–4). Pak udělej jeden krok nahoru: pokud jsi na rung 1, připni verze a napiš jeden regenerující skript (rung 3). Nech AI postavit plumbing — Dockerfile nebo lockfile — a spusť regeneraci ve svěžím prostředí. Uvidíš, jestli tvůj výsledek byl zjištění, nebo historka.</p>
+
+<p><strong>Příští lekce:</strong></p>
+<ul>
+  <li><em>C1 — FAIR4RS</em> — FAIR principy pro vědecký software (Findable, Accessible, Interoperable, Reusable). Reprodukovatelnost je jádro „Reusable"; C1 ji zasadí do celého rámce a komunitního standardu.</li>
+</ul>
+
+<!-- Footer -->
+<div class="lesson-nav">
+  <div>
+    <span class="nav-label">Předchozí lekce</span>
+    <a href="0011-trust-gap.html">← C4 — Trust gap</a>
+  </div>
+  <div>
+    <span class="nav-label">Příští lekce</span>
+    <a href="#">C1 — FAIR4RS →</a>
+  </div>
+</div>
+
+<p style="margin-top:2rem; font-size:0.8rem; color: var(--muted); font-family: var(--font-sans);">
+  Máš otázku? Vrať se do Claude Code a napiš ji — agent je tvůj učitel a může rozvinout libovolný bod z této lekce.
+</p>
+
+</div>
+</div>
+
+<script>
+const scores = {};
+function check(qid, correct, okMsg, failMsg) {
+  const selected = document.querySelector(`input[name="${qid}"]:checked`);
+  const fb = document.getElementById(`${qid}-fb`);
+  if (!selected) {
+    fb.textContent = 'Vyber jednu odpověď.';
+    fb.className = 'quiz-feedback incorrect';
+    fb.style.display = 'block';
+    return;
+  }
+  const isCorrect = selected.value === correct;
+  fb.textContent = isCorrect ? '✓ ' + okMsg : '✗ ' + failMsg;
+  fb.className = 'quiz-feedback ' + (isCorrect ? 'correct' : 'incorrect');
+  fb.style.display = 'block';
+  scores[qid] = isCorrect;
+  document.querySelectorAll(`input[name="${qid}"]`).forEach(r => r.disabled = true);
+  document.querySelector(`#${qid} .quiz-check`).disabled = true;
+  if (Object.keys(scores).length === 4) {
+    const n = Object.values(scores).filter(Boolean).length;
+    const el = document.getElementById('quiz-score');
+    el.style.display = 'block';
+    if (n === 4) {
+      el.innerHTML = '<strong>✓ 4/4 — Výborně.</strong> Praktický úkol: zařaď jeden svůj výsledek na žebřík 0–4 a udělej krok nahoru — připni verze, napiš jeden regenerující skript, spusť ve svěžím prostředí. Uvidíš, jestli to bylo zjištění, nebo historka.';
+    } else if (n >= 3) {
+      el.innerHTML = `<strong>${n}/4 — Téměř.</strong> Přečti znovu sekci 2 (proces, ne výsledek) a sekci 3 (mechanický test + žebřík). Klíč: reprodukovatelné = jde zregenerovat od nuly jedním příkazem, ne „mám to uložené" ani „běží u mě".`;
+    } else {
+      el.innerHTML = `<strong>${n}/4 — Vrať se.</strong> Přečti znovu sekci 1 a 2 — co reprodukovatelnost je (vlastnost procesu) a co není. Pak sekci 3 — žebřík zralosti. Výsledek: „běželo to jednou" je historka, ne zjištění.`;
+    }
+  }
+}
+</script>
+</body>
+</html>

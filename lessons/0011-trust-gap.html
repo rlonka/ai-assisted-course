@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C4 — Trust gap | AI-assisted RSE</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    /* In / Out lists */
+    .in-out {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .in-out-box {
+      border-radius: 4px;
+      padding: 0.8rem 1rem;
+      font-size: 0.86rem;
+    }
+    .in-box  { background: var(--green-light);  border: 1px solid #b7dfc8; }
+    .out-box { background: var(--red-light);     border: 1px solid #f9b8b8; }
+    .in-out-box h4 {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin: 0 0 0.5rem;
+      color: var(--muted);
+    }
+    .in-out-box ul { margin: 0; padding-left: 1.1rem; }
+    .in-out-box li { margin-bottom: 0.3rem; }
+    @media (max-width: 480px) { .in-out { grid-template-columns: 1fr; } }
+
+    /* Data callout */
+    .datum {
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+      background: var(--amber-light);
+      border: 1px solid #f0d8a8;
+      border-radius: 6px;
+      padding: 1rem 1.2rem;
+      margin: 1.25rem 0 1.5rem;
+    }
+    .datum .big {
+      font-family: var(--font-sans);
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--amber);
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .datum .txt { font-size: 0.86rem; line-height: 1.5; }
+
+    /* The gap diagram */
+    .gap {
+      margin: 1.25rem 0 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.1rem 1.2rem;
+      background: var(--bg-card);
+    }
+    .gap-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin: 0.5rem 0;
+      font-size: 0.83rem;
+    }
+    .gap-label { min-width: 8.5rem; font-family: var(--font-sans); color: var(--muted); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .gap-track { flex: 1; height: 1.5rem; border-radius: 3px; background: #edf2f7; position: relative; overflow: hidden; }
+    .gap-fill { height: 100%; border-radius: 3px; display: flex; align-items: center; padding-left: 0.6rem; font-size: 0.76rem; font-weight: 700; color: #fff; }
+    .gap-trust { width: 85%; background: #f6996a; }
+    .gap-real  { width: 55%; background: #63a375; }
+    .gap-note { margin-top: 0.7rem; font-size: 0.82rem; color: var(--muted); }
+
+    /* Fluency vs correctness table */
+    .cmp {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.87rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .cmp th {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+      border-bottom: 2px solid var(--text);
+    }
+    .cmp td {
+      padding: 0.55rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    .cmp tr:last-child td { border-bottom: none; }
+
+    /* Calibration quadrant */
+    .quad {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.6rem;
+      margin: 1.25rem 0 1.5rem;
+    }
+    .quad-cell {
+      border-radius: 6px;
+      padding: 0.8rem 0.95rem;
+      font-size: 0.83rem;
+      border: 1px solid var(--border);
+    }
+    .quad-cell h4 { margin: 0 0 0.35rem; font-family: var(--font-sans); font-size: 0.8rem; }
+    .quad-cell p { margin: 0; font-size: 0.81rem; line-height: 1.45; color: var(--muted); }
+    .quad-ok   { background: var(--green-light); border-color: #b7dfc8; }
+    .quad-bad  { background: var(--red-light);   border-color: #f9b8b8; }
+    @media (max-width: 480px) { .quad { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<div class="page">
+<div class="content">
+
+<!-- Header -->
+<header class="lesson-header">
+  <div class="lesson-meta">
+    <span class="tag">C4</span>
+    <span class="tag">Týden 5</span>
+    Blok C: Vědecký software
+  </div>
+  <h1>Trust gap</h1>
+  <p class="lesson-subtitle">Propast mezi tím, jak moc AI výstupu věříme, a jak moc bychom měli. Druhá strana mince deskillingu.</p>
+</header>
+
+<!-- Progress -->
+<div class="progress-bar">
+  <div class="progress-dot done"    title="A3 — No Silver Bullet"></div>
+  <div class="progress-dot done"    title="A1 — TDD"></div>
+  <div class="progress-dot done"    title="B1–B2 — Harness, rámec pěti otázek"></div>
+  <div class="progress-dot done"    title="B3–B6 + Subagents — vrstvy harness"></div>
+  <div class="progress-dot done"    title="C3 — Deskilling"></div>
+  <div class="progress-dot current" title="C4 — Trust gap (aktuální)"></div>
+  <div class="progress-dot"         title="C1, C2 — FAIR4RS, reprodukovatelnost"></div>
+  <div class="progress-dot"         title="C5, A4, A5, D-blok"></div>
+</div>
+
+<!-- 1. Jádro -->
+<h2>1 — Jádro</h2>
+
+<p>Deskilling (C3) mluvil o tom, jak ztrácíš schopnost ověřovat. <strong>Trust gap</strong> je to, co tu prázdnotu zaplní: věříš, protože už neumíš prověřit — a věříš víc, než je oprávněné. Je to <em>propast mezi tvou důvěrou v AI výstup a jeho skutečnou spolehlivostí</em>.</p>
+
+<p>Ta propast má konkrétní důvod. AI výstup je plynulý, sebejistý, dobře naformátovaný — a to jsou u lidí signály kompetence. U AI ale <strong>plynulost neznamená správnost</strong>. Model, který se plete, se plete stejně sebejistě jako když má pravdu. Tvůj mozek to čte jako „zní to znale, bude to pravda" — a přesně tam vzniká mezera.</p>
+
+<div class="callout">
+  <div class="callout-label">Jedno pravidlo</div>
+  <p>Důvěra má být úměrná ověření, ne plynulosti. Ne „zní to přesvědčivě, tak tomu věřím", ale „prověřil jsem to úměrně sázce, tak tomu věřím tak akorát".</p>
+</div>
+
+<!-- 2. Data + gap -->
+<h2>2 — Co je ta propast</h2>
+
+<div class="datum">
+  <span class="big">1,7×</span>
+  <span class="txt">AI-generovaný kód obsahuje podle State of AI Coding (2026) zhruba <strong>1,7× více issues</strong> než kód psaný člověkem. Přesto mu vývojáři často věří <em>víc</em> než vlastnímu — protože vypadá hotově a sebejistě. Propast mezi důvěrou a spolehlivostí je měřitelná.</span>
+</div>
+
+<div class="gap">
+  <div class="gap-bar">
+    <span class="gap-label">Kolik důvěřujeme</span>
+    <div class="gap-track"><div class="gap-fill gap-trust">vysoká</div></div>
+  </div>
+  <div class="gap-bar">
+    <span class="gap-label">Kolik bychom měli</span>
+    <div class="gap-track"><div class="gap-fill gap-real">kalibrovaná</div></div>
+  </div>
+  <p class="gap-note">Rozdíl mezi pruhy je trust gap. Cílem není důvěru srazit na nulu — je to zarovnat horní pruh na skutečnou spolehlivost. Slepá důvěra i paušální nedůvěra jsou obě špatně kalibrované.</p>
+</div>
+
+<p>Všimni si: trust gap je <em>obousměrný</em>. Nadměrná důvěra (nasadíš neověřený kód) je nebezpečnější a častější, ale podceňování (odmítneš užitečný nástroj, protože „AI se plete") je taky špatná kalibrace. Obojí je selhání téhož — důvěra neodpovídá realitě.</p>
+
+<!-- 3. Past plynulosti -->
+<h2>3 — Past plynulosti: proč přeceňujeme</h2>
+
+<p>Proč vůbec věříme víc, než bychom měli? Protože AI stlačuje dohromady dva signály, které u lidí obvykle jdou ruku v ruce — a u modelu se rozpojí.</p>
+
+<table class="cmp">
+  <tr>
+    <th>Signál, který vnímáš</th>
+    <th>Co znamená u člověka</th>
+    <th>Co znamená u AI</th>
+  </tr>
+  <tr>
+    <td>Plynulý, sebejistý text</td>
+    <td>Nejspíš ví, o čem mluví</td>
+    <td>Nic — plynulý je vždy, i když se plete</td>
+  </tr>
+  <tr>
+    <td>Detailní, technické zdůvodnění</td>
+    <td>Promyslel to</td>
+    <td>Umí znít zdůvodněně i pro nesmysl</td>
+  </tr>
+  <tr>
+    <td>Žádné zaváhání, žádné „nevím"</td>
+    <td>Jistota z kompetence</td>
+    <td>Chybějící kalibrace, ne jistota</td>
+  </tr>
+</table>
+
+<p>Tohle je kognitivní jev, ne vlastnost AI: <strong>fluency heuristic</strong> — mozek si plete <em>snadnost zpracování</em> s <em>pravdivostí</em>. Co se čte hladce, to se cítí pravdivější. AI produkuje dokonale hladký text ke všemu, správnému i špatnému, a tím tuhle heuristiku systematicky obchází. Není to tvá slabost jako jednotlivce — je to bias, který máme všichni, jen ho AI industrializovala.</p>
+
+<!-- 4. Kalibrovaná důvěra -->
+<h2>4 — Kalibrovaná důvěra: cíl</h2>
+
+<p>Cílem není důvěřovat míň. Cílem je důvěřovat <em>správně</em> — tolik, kolik odpovídá ověřenosti a sázce. To se jmenuje kalibrovaná důvěra a řídí se dvěma osami: <strong>jak snadno to ověřím</strong> a <strong>jak draho to stojí, když se to pokazí</strong>.</p>
+
+<div class="quad">
+  <div class="quad-cell quad-ok">
+    <h4>Snadné ověřit + nízká sázka</h4>
+    <p>Důvěřuj volně. Boilerplate, který zkompiluje a projde testy, přejmenování, koncept k diskusi. Chyba je levná a viditelná.</p>
+  </div>
+  <div class="quad-cell quad-bad">
+    <h4>Těžké ověřit + vysoká sázka</h4>
+    <p>Důvěřuj nejmíň, ověřuj nejvíc. Numerická správnost analýzy, bezpečnostní kód, nevratná migrace dat. Tady plynulost klame nejvíc.</p>
+  </div>
+  <div class="quad-cell quad-ok">
+    <h4>Snadné ověřit + vysoká sázka</h4>
+    <p>Důvěřuj po ověření. Máš test, benchmark, referenční výsledek? Nech AI navrhnout, ale rozhodni podle kotvy, ne podle plynulosti.</p>
+  </div>
+  <div class="quad-cell quad-bad">
+    <h4>Těžké ověřit + nízká sázka</h4>
+    <p>Opatrně — snadno tu vzniká tichý dluh. Nezáleží na tom teď, ale věrohodná chyba se zabydlí a vyplave, až sázka vzroste.</p>
+  </div>
+</div>
+
+<p>Praktický nástroj: než AI výstup přijmeš, zeptej se <em>„jak bych poznal, že je to špatně?"</em> Když máš odpověď (test, kontrola, referenční hodnota), důvěřuj po jejím provedení. Když odpověď nemáš, tvá důvěra nemá o co se opřít — a to je varování, ne důvod ji dát zdarma.</p>
+
+<!-- 5. Kde důvěřovat a kde ne -->
+<h2>5 — Kde AI důvěřovat (a kde ne)</h2>
+
+<div class="in-out">
+  <div class="in-out-box in-box">
+    <h4>Důvěřuj (po ověření) ✓</h4>
+    <ul>
+      <li>Prošlapané cesty — běžné knihovny, standardní vzory</li>
+      <li>Věci s levným, rychlým ověřením (test, typecheck, běh)</li>
+      <li>Nízká sázka, vratná akce</li>
+      <li>Obor, který sám ovládáš a chybu poznáš</li>
+      <li>Mechanika, kde znáš správný výstup</li>
+    </ul>
+  </div>
+  <div class="in-out-box out-box">
+    <h4>Nedůvěřuj bez důkazu ✗</h4>
+    <ul>
+      <li>Numerická/vědecká správnost, kterou nejde snadno prověřit</li>
+      <li>Fakta, citace, čísla (halucinace zní stejně jistě)</li>
+      <li>Nevratné akce — migrace, mazání, produkce</li>
+      <li>Obor, který neznáš — nepoznáš věrohodný nesmysl</li>
+      <li>Cokoliv, kde tě přesvědčila jen plynulost</li>
+    </ul>
+  </div>
+</div>
+
+<p>Nejnebezpečnější kombinace je „neznám obor + nejde to snadno ověřit + zní to skvěle". Tam trust gap otevírá nejširší — a je to přesně situace vědce, který AI pouští do oblasti mimo svou expertízu. Plynulost tam supluje kompetenci, kterou nemáš ani ty, ani model.</p>
+
+<!-- 6. Historický kontext -->
+<h2>6 — Historický kontext</h2>
+
+<ul>
+  <li><strong>Automation bias (Parasuraman &amp; Riley, 1997).</strong> Lidé systematicky nadměrně důvěřují automatizovaným systémům — přehlédnou vlastní správný úsudek ve prospěch (chybného) doporučení stroje. Trust gap je automation bias aplikovaný na generativní AI.</li>
+  <li><strong>Kalibrovaná důvěra (Lee &amp; See, 2004).</strong> Klasický rámec „appropriate reliance": důvěra má odpovídat skutečné spolehlivosti systému, ne jeho zdání. Přesně definuje, co je cílem této lekce.</li>
+  <li><strong>„Trust but verify."</strong> Stará zásada (a jaderně-odzbrojovací doktrína): důvěra a ověření nejsou v rozporu — ověření je to, co důvěru činí oprávněnou.</li>
+  <li><strong>Automation complacency v letectví.</strong> Piloti přestali sledovat přístroje, protože „autopilot to zvládá". Alarm fatigue, sebeuspokojení — dekády zkušeností, jak nadměrná důvěra ke stroji zabíjí. AI to přináší do vědy.</li>
+</ul>
+
+<p>Pointa pro publikum: přeceňování strojů není nová lidská slabost. Je zdokumentovaná desítky let v letectví, medicíně i řízení procesů. AI jen dodala stroj, který zní chytřeji než kterýkoliv předtím — a tím past prohloubila.</p>
+
+<!-- 7. Tři příklady -->
+<h2>7 — Tři příklady</h2>
+
+<div class="examples">
+  <div class="example-card">
+    <div class="example-label">Vědec-kodér</div>
+    <p>Požádá AI o statistickou metodu mimo svůj obor. Dostane plynulý kód s odborně znějícím komentářem — a použije nesprávný test, protože „vypadalo to fundovaně". Sázka vysoká (jde to do publikace), ověření těžké (nezná statistiku dost). Přesně roh kvadrantu, kde má důvěřovat nejmíň — a plynulost ho svedla důvěřovat nejvíc. Kotva chybí: neumí říct „jak bych poznal, že je to špatně?".</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">RSE vývojář</div>
+    <p>Kalibruje důvěru přes harness, ne přes pocit. Kód s levným ověřením (projde testy, typecheck, review) pouští rychle. U nevratných věcí (migrace DB) vyžaduje důkaz — dry-run, referenční výstup. Trust gap řeší systémem: čím dražší a hůř ověřitelná akce, tím víc automatických kontrol. Důvěra je funkce ověření, ne dojmu.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">Manažer / PI</div>
+    <p>Slyší od týmu „AI to zvládá, věříme jí". Správná otázka není „věříte?", ale „<em>jak</em> to ověřujete a co by chybu odhalilo?". Když odpověď je „vypadá to dobře", je to red flag — nekalibrovaná důvěra. PI má budovat kulturu, kde se důvěra opírá o ověření, ne o plynulost — jinak tým hromadí tichý dluh věrohodných chyb.</p>
+  </div>
+</div>
+
+<!-- 8. Propojení -->
+<h2>8 — Propojení na ostatní lekce</h2>
+
+<ul>
+  <li><strong>C3 — Deskilling:</strong> Dvě strany mince. Deskilling ničí schopnost ověřit; trust gap je to, co pak zaplní prázdno. Čím míň umíš prověřit, tím víc jsi odkázaný na plynulost — a tím širší propast.</li>
+  <li><strong>C2 — Reprodukovatelnost:</strong> Mechanické ověření je přímý lék na trust gap. Když výsledek jde zregenerovat a zkontrolovat automaticky, důvěra se opře o důkaz, ne o dojem.</li>
+  <li><strong>B5 — Hooks:</strong> Guardrail je zhmotněná kalibrovaná nedůvěra. Nevěříš, že agent nepushne token — tak to deterministicky ověříš hookem. Hook je „trust but verify" v harness.</li>
+  <li><strong>A1 — TDD:</strong> Test je externí kotva důvěry. „Jak bych poznal, že je to špatně?" má v TDD hotovou odpověď — červený test. Kalibruješ důvěru podle barvy, ne podle plynulosti.</li>
+</ul>
+
+<!-- 9. Nejčastější nepochopení -->
+<h2>9 — Nejčastější nepochopení</h2>
+
+<div class="callout amber">
+  <div class="callout-label">Nepochopení 1</div>
+  <p>„Řešení trust gapu je AI nedůvěřovat a všechno po ní překontrolovat od nuly."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>Paušální nedůvěra je stejně špatná kalibrace jako slepá důvěra — jen z druhé strany. Zahodíš přínos nástroje a překontrolováváš i to, co má levné ověření. Cíl je kalibrace: důvěřuj úměrně ověřenosti a sázce. U boilerplate, který projde testy, je nedůvěra plýtvání; u nevratné migrace je namístě.</p>
+</div>
+
+<div class="callout amber">
+  <div class="callout-label">Nepochopení 2</div>
+  <p>„Když zdůvodnění zní detailně a odborně, je to spolehlivější."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>Přesně naopak — detailní, sebejisté zdůvodnění je past plynulosti v čisté formě. Model umí znít fundovaně i pro nesmysl; přesvědčivost výstupu nekoreluje s jeho správností. Sebejistota AI není signál kompetence, je to absence kalibrace. Nenech se koupit tím, jak to zní.</p>
+</div>
+
+<div class="callout amber">
+  <div class="callout-label">Nepochopení 3</div>
+  <p>„Trust gap je problém nezkušených — expert pozná, kdy AI lže."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>Expert pozná chybu <em>ve svém oboru</em>. Trust gap je nejnebezpečnější přesně tam, kde expert vstupuje <em>mimo</em> svou expertízu — a to dělá s AI pořád, protože ho pouští do sousedních oblastí. Zkušenost v jednom oboru dokonce svádí k přenesené sebejistotě jinam. Nikdo není imunní; jde jen o to, kde leží tvá hranice ověřitelnosti.</p>
+</div>
+
+<!-- 10. Spicy teze -->
+<h2>10 — Spicy teze</h2>
+
+<div class="spicy">
+  <p>Trust gap není chyba AI — je to chyba, kterou lidstvo dělá odjakživa: plete si sebejistotu s kompetencí. Vždycky jsme věřili tomu, kdo mluví hladce a bez zaváhání, i když neměl pravdu. AI je první stroj, který tuhle slabinu dokáže spustit průmyslově, na požádání, ke každému tématu. Nedělá nás důvěřivějšími — jen nám nastavuje zrcadlo, jak levně se naše důvěra dá koupit plynulostí.</p>
+</div>
+
+<!-- 11. Primární zdroje -->
+<h2>11 — Primární zdroje</h2>
+
+<ul class="resource-list">
+  <li>
+    <a href="https://newrelic.com/resources/report/state-of-ai-coding" target="_blank">State of AI Coding 2026 (New Relic)</a>
+    <span class="why">Proč: Primární zdroj čísla 1,7× a dat o trust gap přímo. Přečti shrnutí a sekci o kvalitě a důvěře — ukazuje, že propast mezi důvěrou a spolehlivostí je měřená, ne dojmová.</span>
+  </li>
+  <li>
+    <a href="https://www.researchgate.net/publication/210642531_Trust_in_Automation_Designing_for_Appropriate_Reliance" target="_blank">Trust in Automation: Designing for Appropriate Reliance — Lee &amp; See (2004)</a>
+    <span class="why">Proč: Definitivní rámec kalibrované důvěry. Zavádí „appropriate reliance" — přesně cíl této lekce. Čti úvod a sekci o kalibraci; zbytek je pro zájemce.</span>
+  </li>
+  <li>
+    <a href="https://en.wikipedia.org/wiki/Automation_bias" target="_blank">Automation bias — přehled (Parasuraman &amp; Riley 1997 a dále)</a>
+    <span class="why">Proč: Historická kotva. Desítky let výzkumu, jak lidé nadměrně důvěřují strojům — misuse, disuse, abuse. Trust gap je tenhle starý jev v nové, výřečnější podobě.</span>
+  </li>
+</ul>
+
+<!-- 12. Feynmanovo cvičení -->
+<h2>12 — Feynmanovo cvičení</h2>
+
+<div class="quiz" id="quiz-main">
+  <div class="quiz-header">Feynmanův test — Trust gap</div>
+
+  <!-- Q1 -->
+  <div class="quiz-question" id="q1">
+    <div class="quiz-q">1. AI ti vrátí kód s detailním, sebejistým a odborně znějícím komentářem. Co z toho můžeš usoudit o jeho správnosti?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q1" value="a"> Že je nejspíš správný — detailní zdůvodnění značí promyšlenost</label></li>
+      <li><label><input type="radio" name="q1" value="b"> Nic — plynulost a sebejistota u AI nekorelují se správností; model zní stejně jistě, i když se plete</label></li>
+      <li><label><input type="radio" name="q1" value="c"> Že je špatný — čím sebejistější AI, tím větší chyba</label></li>
+      <li><label><input type="radio" name="q1" value="d"> Že autor promptu byl zkušený</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q1','b','Přesně. To je jádro pasti plynulosti. U člověka sebejisté zdůvodnění naznačuje kompetenci; u AI je to jen styl výstupu — stejně hladký pro pravdu i pro nesmysl. Přesvědčivost nekoreluje se správností. Musíš ověřit, ne uvěřit tónu.','Ne. Sebejistota AI není signál správnosti (ale ani automaticky chyby). Model produkuje plynulý, fundovaně znějící text ke všemu — správnému i špatnému. Z tónu neusoudíš nic; správnost musíš ověřit nezávisle.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q1-fb"></div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="quiz-question" id="q2">
+    <div class="quiz-q">2. Ve kterém kvadrantu je trust gap nejnebezpečnější?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q2" value="a"> Snadné ověřit + nízká sázka (boilerplate)</label></li>
+      <li><label><input type="radio" name="q2" value="b"> Těžké ověřit + vysoká sázka + obor, který neznáš — plynulost tam supluje kompetenci, kterou nemáš ty ani model</label></li>
+      <li><label><input type="radio" name="q2" value="c"> Snadné ověřit + vysoká sázka (máš test)</label></li>
+      <li><label><input type="radio" name="q2" value="d"> Všude stejně — kvadrant nehraje roli</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q2','b','Správně. Kombinace „vysoká sázka + těžko ověřitelné + mimo tvůj obor" je nejhorší roh: nemáš kotvu, kterou bys chybu poznal, a plynulost výstupu zaplní prázdno falešnou jistotou. Přesně situace vědce, který AI pouští mimo svou expertízu.','Ne. Nejnebezpečnější je vysoká sázka + těžké ověření + neznámý obor. Tam nemáš čím chybu odhalit a plynulost supluje chybějící kompetenci. Kvadrant hraje zásadní roli — kalibruješ podle ověřitelnosti a sázky.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q2-fb"></div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="quiz-question" id="q3">
+    <div class="quiz-q">3. Kolega řeší trust gap tak, že po AI překontrolovává úplně všechno od nuly, včetně boilerplate. Co je na tom špatně?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q3" value="a"> Nic — maximální nedůvěra je vždy nejbezpečnější</label></li>
+      <li><label><input type="radio" name="q3" value="b"> Paušální nedůvěra je taky špatná kalibrace: zahazuje přínos nástroje a plýtvá časem tam, kde je ověření levné. Cíl je kalibrace úměrná sázce, ne nulová důvěra</label></li>
+      <li><label><input type="radio" name="q3" value="c"> Nic — akorát je pomalý, ale to je jeho problém</label></li>
+      <li><label><input type="radio" name="q3" value="d"> Špatné je, že vůbec používá AI</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q3','b','Přesně. Trust gap je obousměrný. Slepá důvěra i paušální nedůvěra jsou obě špatně kalibrované. Kolega zahazuje hodnotu nástroje a překontrolovává i to, co má levné, rychlé ověření (test, typecheck). Cíl není nulová důvěra — je to důvěra úměrná ověřenosti a sázce.','Ne. Maximální nedůvěra není správná kalibrace — je to opačný extrém. U boilerplate, který projde testy, je překontrolovávání od nuly plýtvání. Kalibruj: málo důvěry u nevratných/těžko ověřitelných věcí, víc u levně ověřitelných.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q3-fb"></div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="quiz-question" id="q4">
+    <div class="quiz-q">4. Jaká jediná otázka nejlíp kalibruje, kolik AI výstupu věřit?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q4" value="a"> „Zní to přesvědčivě?"</label></li>
+      <li><label><input type="radio" name="q4" value="b"> „Jak bych poznal, že je to špatně?" — když máš odpověď (test, kontrola, referenční hodnota), důvěřuj po jejím provedení; když ne, tvá důvěra nemá o co se opřít</label></li>
+      <li><label><input type="radio" name="q4" value="c"> „Použil model dost technických termínů?"</label></li>
+      <li><label><input type="radio" name="q4" value="d"> „Věří tomu ostatní v týmu?"</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q4','b','Výborně. Tahle otázka přesune důvěru z plynulosti na ověření. Máš-li konkrétní způsob, jak chybu odhalit, důvěřuj po jeho provedení. Nemáš-li žádný, je to varování — tvá důvěra by stála jen na tom, jak to zní. Přesně to odděluje kalibrovanou důvěru od pasti plynulosti.','Ne. „Zní to přesvědčivě?" je právě past plynulosti. Kalibrující otázka je „Jak bych poznal, že je to špatně?" — přesune důvěru z dojmu na ověření. Když odpověď nemáš, tvá důvěra nemá kotvu, a to je signál opatrnosti.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q4-fb"></div>
+  </div>
+
+  <div class="quiz-score" id="quiz-score"></div>
+</div>
+
+<!-- 13. Co dál -->
+<h2>13 — Co dál</h2>
+
+<p><strong>Co musíš znát před touto lekcí:</strong></p>
+<ul>
+  <li><a href="0010-deskilling.html">C3 — Deskilling</a> — párová lekce. Deskilling ničí schopnost ověřit; trust gap zaplní vzniklou prázdnotu.</li>
+  <li><a href="0007-hooks.html">B5 — Hooks</a> — guardrail je kalibrovaná nedůvěra zhmotněná v deterministické kontrole.</li>
+</ul>
+
+<p><strong>Praktický úkol (20 minut):</strong> Vezmi tři nedávné AI výstupy, kterým jsi uvěřil. U každého zpětně odpověz: „Jak bych poznal, že je to špatně?" a „Provedl jsem to, nebo jsem uvěřil, protože to znělo dobře?" Pak si každý zařaď do kvadrantu (ověřitelnost × sázka). Cíl: uvidíš, kolik své důvěry jsi dal za plynulost místo za důkaz.</p>
+
+<p><strong>Příští lekce:</strong></p>
+<ul>
+  <li><em>C2 — Reprodukovatelnost</em> — přímý lék na trust gap. Mechanický test, že výsledek jde zregenerovat, přesouvá důvěru z dojmu na důkaz. Jak agentní paradigma reprodukovatelnosti pomáhá i škodí.</li>
+</ul>
+
+<!-- Footer -->
+<div class="lesson-nav">
+  <div>
+    <span class="nav-label">Předchozí lekce</span>
+    <a href="0010-deskilling.html">← C3 — Deskilling</a>
+  </div>
+  <div>
+    <span class="nav-label">Příští lekce</span>
+    <a href="#">C2 — Reprodukovatelnost →</a>
+  </div>
+</div>
+
+<p style="margin-top:2rem; font-size:0.8rem; color: var(--muted); font-family: var(--font-sans);">
+  Máš otázku? Vrať se do Claude Code a napiš ji — agent je tvůj učitel a může rozvinout libovolný bod z této lekce.
+</p>
+
+</div>
+</div>
+
+<script>
+const scores = {};
+function check(qid, correct, okMsg, failMsg) {
+  const selected = document.querySelector(`input[name="${qid}"]:checked`);
+  const fb = document.getElementById(`${qid}-fb`);
+  if (!selected) {
+    fb.textContent = 'Vyber jednu odpověď.';
+    fb.className = 'quiz-feedback incorrect';
+    fb.style.display = 'block';
+    return;
+  }
+  const isCorrect = selected.value === correct;
+  fb.textContent = isCorrect ? '✓ ' + okMsg : '✗ ' + failMsg;
+  fb.className = 'quiz-feedback ' + (isCorrect ? 'correct' : 'incorrect');
+  fb.style.display = 'block';
+  scores[qid] = isCorrect;
+  document.querySelectorAll(`input[name="${qid}"]`).forEach(r => r.disabled = true);
+  document.querySelector(`#${qid} .quiz-check`).disabled = true;
+  if (Object.keys(scores).length === 4) {
+    const n = Object.values(scores).filter(Boolean).length;
+    const el = document.getElementById('quiz-score');
+    el.style.display = 'block';
+    if (n === 4) {
+      el.innerHTML = '<strong>✓ 4/4 — Výborně.</strong> Praktický úkol: vezmi tři AI výstupy, kterým jsi uvěřil, a u každého odpověz „Jak bych poznal, že je to špatně?" a „Ověřil jsem, nebo uvěřil plynulosti?". Zařaď do kvadrantu ověřitelnost × sázka.';
+    } else if (n >= 3) {
+      el.innerHTML = `<strong>${n}/4 — Téměř.</strong> Přečti znovu sekci 3 (past plynulosti) a sekci 4 (kalibrovaná důvěra). Klíč: plynulost ≠ správnost, a důvěra má být úměrná ověření a sázce, ne dojmu. Kalibrující otázka: „Jak bych poznal, že je to špatně?".`;
+    } else {
+      el.innerHTML = `<strong>${n}/4 — Vrať se.</strong> Přečti znovu sekci 1 a 2 — co trust gap je a že je obousměrný. Pak sekci 4 — kvadrant důvěry. Výsledek: cíl není míň důvěry, ale kalibrovaná důvěra opřená o ověření.`;
+    }
+  }
+}
+</script>
+</body>
+</html>

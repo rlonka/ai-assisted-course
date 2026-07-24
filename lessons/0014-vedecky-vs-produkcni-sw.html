@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C5 — Vědecký vs. produkční software | AI-assisted RSE</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    /* Comparison table */
+    .cmp {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.87rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .cmp th {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+      border-bottom: 2px solid var(--text);
+    }
+    .cmp td {
+      padding: 0.55rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    .cmp tr:last-child td { border-bottom: none; }
+    .cmp .col-dim { font-family: var(--font-sans); font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap; }
+
+    /* In / Out lists */
+    .in-out {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .in-out-box {
+      border-radius: 4px;
+      padding: 0.8rem 1rem;
+      font-size: 0.86rem;
+    }
+    .in-box  { background: var(--red-light);  border: 1px solid #f9b8b8; }
+    .out-box { background: var(--red-light);  border: 1px solid #f9b8b8; }
+    .in-out-box h4 {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin: 0 0 0.5rem;
+      color: var(--red);
+    }
+    .in-out-box ul { margin: 0; padding-left: 1.1rem; }
+    .in-out-box li { margin-bottom: 0.3rem; }
+    @media (max-width: 480px) { .in-out { grid-template-columns: 1fr; } }
+
+    /* Brooks 9x quadrant */
+    .brooks {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.6rem;
+      margin: 1.25rem 0 0.6rem;
+    }
+    .bq {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.8rem 0.95rem;
+      background: var(--bg-card);
+    }
+    .bq .bq-mult { font-family: var(--font-sans); font-size: 1.4rem; font-weight: 800; line-height: 1; }
+    .bq .bq-name { font-family: var(--font-sans); font-weight: 700; font-size: 0.85rem; margin: 0.3rem 0 0.25rem; }
+    .bq .bq-desc { margin: 0; font-size: 0.79rem; color: var(--muted); line-height: 1.45; }
+    .bq1 { background: var(--green-light); border-color: #b7dfc8; }
+    .bq1 .bq-mult { color: var(--green); }
+    .bq2 .bq-mult, .bq3 .bq-mult { color: var(--amber); }
+    .bq4 { background: var(--red-light); border-color: #f9b8b8; }
+    .bq4 .bq-mult { color: var(--red); }
+    .brooks-note { font-size: 0.8rem; color: var(--muted); margin: 0 0 1.5rem; }
+    @media (max-width: 480px) { .brooks { grid-template-columns: 1fr; } }
+
+    /* Decision heuristic */
+    .decide {
+      background: var(--accent-light);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 4px;
+      padding: 0.9rem 1.1rem;
+      margin: 1.25rem 0 1.5rem;
+      font-size: 0.87rem;
+    }
+    .decide ol { margin: 0.5rem 0 0; padding-left: 1.2rem; }
+    .decide li { margin-bottom: 0.35rem; }
+  </style>
+</head>
+<body>
+<div class="page">
+<div class="content">
+
+<!-- Header -->
+<header class="lesson-header">
+  <div class="lesson-meta">
+    <span class="tag">C5</span>
+    <span class="tag">Týden 6</span>
+    Blok C: Vědecký software
+  </div>
+  <h1>Vědecký vs. produkční software</h1>
+  <p class="lesson-subtitle">Dvě různá řemesla s různými cíli — a proč je slepé míchání jejich standardů chyba oběma směry. Kde RSE stojí a jak AI posouvá kompromis.</p>
+</header>
+
+<!-- Progress -->
+<div class="progress-bar">
+  <div class="progress-dot done"    title="A3 — No Silver Bullet"></div>
+  <div class="progress-dot done"    title="A1 — TDD"></div>
+  <div class="progress-dot done"    title="B1–B2 — Harness, rámec pěti otázek"></div>
+  <div class="progress-dot done"    title="B3–B6 + Subagents — vrstvy harness"></div>
+  <div class="progress-dot done"    title="C3 — Deskilling"></div>
+  <div class="progress-dot done"    title="C4 — Trust gap"></div>
+  <div class="progress-dot done"    title="C2 — Reprodukovatelnost, C1 — FAIR4RS"></div>
+  <div class="progress-dot current" title="C5 — Vědecký vs. produkční SW (aktuální)"></div>
+</div>
+
+<!-- 1. Jádro -->
+<h2>1 — Jádro</h2>
+
+<p>Vědecký software a produkční software jsou <em>dvě různá řemesla</em>, ne dvě úrovně kvality téhož. Vědecký kód existuje, aby zodpověděl otázku — často žije jeden paper a umře. Produkční kód existuje, aby spolehlivě sloužil uživatelům — žije roky a musí vydržet, co po něm nikdo nečekal. Optimalizují na jiné věci.</p>
+
+<p>Chyba není psát vědecký kód „nekvalitně". Chyba je <strong>plést si standardy jednoho světa se standardy druhého</strong> — obojím směrem. Přehnané inženýrství skriptu, který třikrát běží, je plýtvání. Podceněné inženýrství prototypu, který se tiše stal páteří laborky, je časovaná bomba. Klíčová dovednost není „psát dokonalý kód", ale <em>vědět, který druh právě píšeš</em>.</p>
+
+<div class="callout">
+  <div class="callout-label">Jedno pravidlo</div>
+  <p>Otázka není „je ten kód kvalitní?", ale „kvalitní <em>na co</em>?". Vědecký kód má být správný vědecky a reprodukovatelný. Produkční kód má být spolehlivý a udržovatelný. Nároč na kód to, co jeho účel vyžaduje — ne víc, ne míň.</p>
+</div>
+
+<!-- 2. Osa rozdílů -->
+<h2>2 — V čem se liší</h2>
+
+<table class="cmp">
+  <tr>
+    <th>Rozměr</th>
+    <th>Vědecký software</th>
+    <th>Produkční software</th>
+  </tr>
+  <tr>
+    <td class="col-dim">Účel</td>
+    <td>Zodpovědět otázku, prozkoumat</td>
+    <td>Spolehlivě poskytovat službu</td>
+  </tr>
+  <tr>
+    <td class="col-dim">Životnost</td>
+    <td>Často krátká — jeden paper</td>
+    <td>Dlouhá — roky provozu</td>
+  </tr>
+  <tr>
+    <td class="col-dim">Uživatelé</td>
+    <td>Autor + pár kolegů</td>
+    <td>Mnoho, neznámých</td>
+  </tr>
+  <tr>
+    <td class="col-dim">Co je „správně"</td>
+    <td>Vědecká validita — modeluje realitu?</td>
+    <td>Funguje dle specifikace, zvládá edge cases</td>
+  </tr>
+  <tr>
+    <td class="col-dim">Požadavky</td>
+    <td>Vyvíjejí se, předem neznámé</td>
+    <td>Definované dopředu</td>
+  </tr>
+  <tr>
+    <td class="col-dim">Metrika úspěchu</td>
+    <td>Vhled, publikace</td>
+    <td>Dostupnost, počet obsloužených</td>
+  </tr>
+</table>
+
+<p>Tyhle rozdíly nejsou nedostatky vědeckého softwaru — jsou to jiné optimalizační cíle. Vědecký kód, který mění směr každý týden podle toho, co data ukážou, <em>nemá</em> mít předem zabetonovanou architekturu. Produkční služba, kterou používá tisíc lidí, <em>nesmí</em> spadnout na edge case. Každý svět má pravdu ve svém kontextu.</p>
+
+<!-- 3. Past oběma směry -->
+<h2>3 — Past v obou směrech</h2>
+
+<div class="in-out">
+  <div class="in-out-box in-box">
+    <h4>✗ Přehnané inženýrství vědy</h4>
+    <ul>
+      <li>Mikroslužby a Kubernetes pro skript na jednu analýzu</li>
+      <li>100% pokrytí testy kódu, který třikrát běží a umře</li>
+      <li>Měsíc na CI/CD pipeline místo na vědu</li>
+      <li>Abstrakce „pro budoucí flexibilitu", která nikdy nepřijde</li>
+    </ul>
+  </div>
+  <div class="in-out-box out-box">
+    <h4>✗ Podceněné inženýrství páteře</h4>
+    <ul>
+      <li>„Prototyp" bez testů, který používá celá skupina</li>
+      <li>Nedokumentovaný skript, na kterém stojí tři papery</li>
+      <li>Nástroj, co zná jen jeho autor — a ten odchází</li>
+      <li>Nula reprodukovatelnosti u kódu v produkčním nasazení</li>
+    </ul>
+  </div>
+</div>
+
+<p>Obě chyby pramení z téhož: z neschopnosti pojmenovat, který druh softwaru to je. Vlevo obětuješ vědu inženýrskému rituálu, který účel nevyžaduje. Vpravo necháš kritickou infrastrukturu na úrovni jednorázového skriptu. A ta pravá past je zákeřnější, protože přichází <em>plíživě</em> — nikdo nerozhodl „tohle bude páteř laborky", ono se to jen stalo.</p>
+
+<!-- 4. Nebezpečná zóna -->
+<h2>4 — Nebezpečná zóna: přechod věda → produkce</h2>
+
+<p>Nejrizikovější okamžik není psaní vědeckého ani produkčního kódu — je to <strong>chvíle, kdy se první tiše mění v druhý</strong>. Prototyp, který měl žít týden, začne používat kolega. Pak celá skupina. Pak stojí na jeho výstupu grant. A pořád má nula testů, nula dokumentace, jednoho člověka, co ho umí spustit — protože nikdo neoznačil ten přechod.</p>
+
+<p>Fred Brooks to vyčíslil už v roce 1975: mezi „program, který napíšeš" a „produkt, který jiní spolehlivě používají" je řádový rozdíl v úsilí.</p>
+
+<div class="brooks">
+  <div class="bq bq1">
+    <div class="bq-mult">1×</div>
+    <div class="bq-name">Program</div>
+    <p class="bq-desc">Běží u tebe, na tvých datech. Vědecký prototyp.</p>
+  </div>
+  <div class="bq bq2">
+    <div class="bq-mult">3×</div>
+    <div class="bq-name">Programový produkt</div>
+    <p class="bq-desc">+ testy, dokumentace, obecnost, cizí vstupy.</p>
+  </div>
+  <div class="bq bq3">
+    <div class="bq-mult">3×</div>
+    <div class="bq-name">Programový systém</div>
+    <p class="bq-desc">+ rozhraní, integrace do většího celku.</p>
+  </div>
+  <div class="bq bq4">
+    <div class="bq-mult">9×</div>
+    <div class="bq-name">Systémový produkt</div>
+    <p class="bq-desc">Obojí naráz. To, co lidé myslí „hotovým softwarem".</p>
+  </div>
+</div>
+<p class="brooks-note">Brooks, <em>The Mythical Man-Month</em> (1975): produkt použitelný ostatními stojí ~9× víc než tentýž program, co běží jen tobě. Kdo čeká produkční spolehlivost za cenu prototypu, počítá s 1× a dostane 9× účet.</p>
+
+<div class="decide">
+  <strong>Než napíšeš řádek, rozhodni se — a přehodnoť, když se to změní:</strong>
+  <ol>
+    <li>Kolikrát tohle poběží? (jednou → prototyp; pořád → produkt)</li>
+    <li>Kdo to spustí kromě mě? (nikdo → prototyp; cizí lidé → produkt)</li>
+    <li>Co se stane, když to tiše selže? (nic → prototyp; padne grant/služba → produkt)</li>
+    <li>Stojí na tom výsledek, který jde do světa? (ne → prototyp; ano → aspoň FAIR + reprodukovatelnost)</li>
+  </ol>
+</div>
+
+<!-- 5. Jak AI posouvá kompromis -->
+<h2>5 — Jak AI posouvá kompromis</h2>
+
+<p>AI nemění, že ty dva světy existují — mění <em>cenu</em>, za kterou se pohybuješ mezi nimi. A to třemi způsoby zároveň:</p>
+
+<ul>
+  <li><strong>Podlaha se zvedá.</strong> Testy, dokumentace, CI, FAIR metadata — nudné plumbing, které dělalo z prototypu produkt „3× dráž", teď stojí zlomek. Stará výmluva „nemám čas na inženýrství" slábne. I vědecký prototyp si dnes zaslouží aspoň LICENSE, README a reprodukovatelnost, protože je to levné.</li>
+  <li><strong>Objem roste.</strong> Zároveň AI chrlí prototypy rychleji než kdy dřív — a víc prototypů znamená víc kandidátů, kteří se tiše stanou páteří. Nebezpečná zóna (sekce 4) se zaplňuje rychleji.</li>
+  <li><strong>Úsudek je důležitější, ne míň.</strong> Když je inženýrství levné, svádí to dělat ho i tam, kde netřeba (přehnané inženýrství vědy je taky levnější, a proto lákavější). Rozhodnutí „kolik tenhle kód zaslouží" nemizí — zostřuje se, protože děláš víc kódu za nižší cenu za kus.</li>
+</ul>
+
+<p>Návaznost na A3 (No Silver Bullet): AI seká <em>akcidentální</em> komplexitu — plumbing, boilerplate, testy. <em>Esenciální</em> komplexitu vědeckého softwaru — je ten model správně? ptá se ta analýza na správnou věc? — neseká vůbec. Podlaha se zvedá u akcidentálního; podstata zůstává na tobě.</p>
+
+<!-- 6. Historický kontext -->
+<h2>6 — Historický kontext</h2>
+
+<ul>
+  <li><strong>Brooks, The Mythical Man-Month (1975).</strong> Program vs. programový systémový produkt, pravidlo 9×. Nejstarší a nejpřesnější vyčíslení, proč „hotový software" stojí řádově víc než „běží to". Pro tuto lekci klíčové.</li>
+  <li><strong>Better Scientific Software (BSSw.io).</strong> Celá komunita a znalostní báze věnovaná právě tomu, jak dělat vědecký software lépe, aniž by z něj člověk dělal zbytečně produkční. Primární praktický zdroj.</li>
+  <li><strong>Technický dluh (Ward Cunningham, 1992).</strong> Metafora pro odloženou inženýrskou práci. Prototyp, co se stal páteří, je technický dluh s vysokým úrokem — a úrok platíš, až když nejmíň můžeš.</li>
+  <li><strong>RSE profese.</strong> Research Software Engineering vzniklo přesně na téhle hranici — lidé, kteří umí vědecký i produkční svět a překládají mezi nimi. To je Radkova a Nordic-RSE identita: ne vědec, ne čistý softwarový inženýr, ale most.</li>
+</ul>
+
+<p>Pointa pro publikum: rozdíl vědecký/produkční není nový a AI ho neruší. RSE profese existuje, protože ten rozdíl je reálný a někdo ho musí umět uřídit. AI je nástroj té profese, ne její náhrada.</p>
+
+<!-- 7. Tři příklady -->
+<h2>7 — Tři příklady</h2>
+
+<div class="examples">
+  <div class="example-card">
+    <div class="example-label">Vědec-kodér</div>
+    <p>Napíše explorativní skript pro jednu analýzu — správné rozhodnutí je nedělat z něj produkt. Ale nechá agenta doplnit levné minimum: připnuté prostředí, README, jeden regenerující příkaz (C2). Když se za půl roku ukáže, že skript používají tři lidé, <em>vědomě</em> ho povýší — přidá testy invariantů a licenci. Nespadne do nebezpečné zóny, protože přechod pojmenoval, místo aby se stal potají.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">RSE vývojář</div>
+    <p>Jeho řemeslo je přesně tahle hranice. Umí říct vědci „tohle je prototyp, netestuj to na 100 %" i „tohle už je páteř, tady bez testů a CI ne". Používá AI na zvednutou podlahu — levné plumbing pro obojí — ale úsudek, který kód co zaslouží, si nechává. Ví, že Brooksových 9× nezmizelo; jen se u akcidentální části zlevnilo.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">Manažer / PI</div>
+    <p>Vidí, že klíčový nástroj skupiny napsal student, co za rok odchází — a nikdo jiný ho neumí spustit. To je nezaplacený technický dluh na produkčním kódu, který všichni brali jako prototyp. PI se musí ptát ne „máme software?", ale „který náš software je ve skutečnosti páteř a chováme se k němu tak?". AI teď dělá povýšení prototypu na produkt levným — takže výmluva „nebyl čas" už neobstojí.</p>
+  </div>
+</div>
+
+<!-- 8. Propojení -->
+<h2>8 — Propojení na ostatní lekce</h2>
+
+<ul>
+  <li><strong>A3 — No Silver Bullet:</strong> Přímé pokračování. Esenciální komplexita vědeckého softwaru je věda; akcidentální je plumbing. AI seká akcidentální (zvedá podlahu), esenciální nechává na tobě. To je celá dynamika této lekce.</li>
+  <li><strong>C1 — FAIR4RS a C2 — Reprodukovatelnost:</strong> Definují to nepodkročitelné minimum, které i čistě vědecký prototyp zaslouží — ne plnou produkční tvrdost, ale LICENSE, metadata, reprodukovatelnost. Uzavírají blok C tím, co platí vždy.</li>
+  <li><strong>A2 — Refactoring:</strong> Povýšení prototypu na produkt je řízený refaktoring přechodu. Pravidlo tří platí i tady: když prototyp použiješ potřetí, je čas ho vědomě zpevnit.</li>
+  <li><strong>A5 — Agile:</strong> Vyvíjející se požadavky vědeckého softwaru jsou důvod, proč se na něj nehodí waterfall předběžná architektura — a proč je iterativní přístup přirozený. Věda je inherentně agilní.</li>
+</ul>
+
+<!-- 9. Nejčastější nepochopení -->
+<h2>9 — Nejčastější nepochopení</h2>
+
+<div class="callout amber">
+  <div class="callout-label">Nepochopení 1</div>
+  <p>„Vědecký kód je prostě nekvalitní produkční kód — vědci to jen neumí dělat pořádně."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>Ne — je to jiný druh s jinými cíli, ne horší verze téhož. Vědecký kód optimalizuje na rychlost objevu a vědeckou validitu, ne na dostupnost a udržovatelnost. Aplikovat produkční standardy na explorativní skript je stejná chyba jako opačně. Kvalita se měří vůči účelu, ne vůči jedné univerzální šabloně.</p>
+</div>
+
+<div class="callout amber">
+  <div class="callout-label">Nepochopení 2</div>
+  <p>„Teď když AI zlevnila inženýrství, měl by být všechen vědecký kód produkčně tvrdý."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>Podlaha se zvedla, ale strop se nezměnil. Skript, který jednou běží a umře, pořád nepotřebuje mikroslužby — levné inženýrství neznamená povinné inženýrství. AI zlevnila přechod, ne zrušila rozdíl. Přehnané inženýrství vědy je pořád chyba, teď jen lákavější, protože je levnější. Úsudek „kolik zaslouží" zůstává.</p>
+</div>
+
+<div class="callout amber">
+  <div class="callout-label">Nepochopení 3</div>
+  <p>„Rozhodnu na začátku, jestli je to prototyp nebo produkt, a hotovo."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>Rozhodnutí není jednorázové — je to průběžná ostražitost. Nejnebezpečnější je právě <em>tichý</em> přechod prototypu v páteř, který nikdo neoznačil. Musíš se periodicky ptát „je tohle pořád prototyp?" a když ne, vědomě povýšit. Bomba nevybuchne z prvního rozhodnutí, ale z toho, že se nikdy nepřehodnotilo.</p>
+</div>
+
+<!-- 10. Spicy teze -->
+<h2>10 — Spicy teze</h2>
+
+<div class="spicy">
+  <p>Nejnebezpečnější software na světě je „prototyp", na kterém běží produkce. Každá laborka jeden takový má — skript, co měl žít týden, drží tři granty a umí ho spustit jediný člověk, který zrovna odchází. Není to selhání kompetence; je to selhání pojmenování. Nikdo nikdy neřekl nahlas „tohle je teď páteř". A AI ten problém zhoršuje dřív, než ho vyřeší: chrlí prototypy tak levně, že nebezpečná zóna se zaplňuje rychleji, než se stačí vyklízet. Levné psaní kódu není totéž co levné vlastnictví kódu.</p>
+</div>
+
+<!-- 11. Primární zdroje -->
+<h2>11 — Primární zdroje</h2>
+
+<ul class="resource-list">
+  <li>
+    <a href="https://bssw.io/" target="_blank">Better Scientific Software (BSSw.io)</a>
+    <span class="why">Proč: Primární praktický zdroj. Komunitní báze o tom, jak dělat vědecký software lépe bez zbytečné produkční tvrdosti. Projdi „What Is BSSw" a pár článků o testování a udržitelnosti vědeckého kódu.</span>
+  </li>
+  <li>
+    <a href="https://en.wikipedia.org/wiki/The_Mythical_Man-Month" target="_blank">The Mythical Man-Month — Fred Brooks (1975)</a>
+    <span class="why">Proč: Historická kotva. Pravidlo 9× (program → systémový produkt) přesně vyčísluje cenu přechodu prototyp → produkt. Přečti první kapitolu; diagram program/produkt/systém je jádro této lekce.</span>
+  </li>
+  <li>
+    <a href="https://martinfowler.com/bliki/TechnicalDebt.html" target="_blank">Technical Debt — Martin Fowler (přehled Cunninghamovy metafory)</a>
+    <span class="why">Proč: Rámuje, proč je „prototyp, co se stal páteří" nebezpečný — je to dluh s úrokem, který platíš, až když nejmíň můžeš. Krátké, zásadní pro pochopení nebezpečné zóny.</span>
+  </li>
+</ul>
+
+<!-- 12. Feynmanovo cvičení -->
+<h2>12 — Feynmanovo cvičení</h2>
+
+<div class="quiz" id="quiz-main">
+  <div class="quiz-header">Feynmanův test — Vědecký vs. produkční software</div>
+
+  <!-- Q1 -->
+  <div class="quiz-question" id="q1">
+    <div class="quiz-q">1. Kolega prohlásí: „Vědecký kód je jen nekvalitní produkční kód — vědci to neumí." Kde je jeho úvaha špatně?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q1" value="a"> Nikde — vědecký kód by opravdu měl splňovat všechny produkční standardy</label></li>
+      <li><label><input type="radio" name="q1" value="b"> Je to jiný druh s jinými cíli, ne horší verze téhož: vědecký kód optimalizuje na vědeckou validitu a rychlost objevu, ne na dostupnost a udržovatelnost</label></li>
+      <li><label><input type="radio" name="q1" value="c"> Má pravdu, ale je to netaktní to říkat nahlas</label></li>
+      <li><label><input type="radio" name="q1" value="d"> Špatně je, že vědecký kód je vždy kvalitnější než produkční</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q1','b','Přesně. Není to horší verze téhož — je to jiné řemeslo s jinými optimalizačními cíli. Vědecký kód míří na vědeckou validitu a rychlost objevu při vyvíjejících se požadavcích; produkční na spolehlivost a udržovatelnost při známých požadavcích. Aplikovat standardy jednoho na druhý je chyba oběma směry.','Ne. Vědecký kód není nekvalitní produkční kód — je to jiný druh s jinými cíli. Optimalizuje na validitu a rychlost objevu, ne na dostupnost. Kvalita se měří vůči účelu, ne vůči jedné univerzální produkční šabloně.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q1-fb"></div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="quiz-question" id="q2">
+    <div class="quiz-q">2. Jaká je „nebezpečná zóna", o které lekce mluví?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q2" value="a"> Psaní produkčního softwaru bez zkušeností</label></li>
+      <li><label><input type="radio" name="q2" value="b"> Tichý přechod, kdy prototyp postupně a nepojmenovaně převezme roli produkční páteře — pořád bez testů, dokumentace a s jediným člověkem, co ho umí spustit</label></li>
+      <li><label><input type="radio" name="q2" value="c"> Období, kdy se učíš nový programovací jazyk</label></li>
+      <li><label><input type="radio" name="q2" value="d"> Chvíle, kdy AI napíše kód rychleji než ho stačíš přečíst</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q2','b','Správně. Nebezpečná zóna je nepojmenovaný přechod věda → produkce: prototyp, co měl žít týden, se stane páteří laborky, aniž kdo řekl „tohle je teď produkt". Zůstává na úrovni jednorázového skriptu, přestože na něm stojí granty — technický dluh s vysokým úrokem, který nikdo vědomě nevzal.','Ne. Nebezpečná zóna není o jazyce ani rychlosti psaní. Je to tichý, nepojmenovaný přechod prototypu v produkční páteř — kód zůstane na úrovni skriptu, i když na něm začne stát kritická práce. Riziko je, že přechod nikdo neoznačil.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q2-fb"></div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="quiz-question" id="q3">
+    <div class="quiz-q">3. AI zlevnila inženýrské plumbing. Znamená to, že všechen vědecký kód má být teď produkčně tvrdý?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q3" value="a"> Ano — když je inženýrství levné, měl by ho mít každý kód po maximu</label></li>
+      <li><label><input type="radio" name="q3" value="b"> Ne — podlaha se zvedla, ale strop ne; skript, co jednou běží a umře, pořád nepotřebuje mikroslužby. Levné inženýrství ≠ povinné inženýrství</label></li>
+      <li><label><input type="radio" name="q3" value="c"> Ano — AI odstranila rozdíl mezi vědeckým a produkčním kódem</label></li>
+      <li><label><input type="radio" name="q3" value="d"> Ne — protože AI kódu se nemá věřit vůbec</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q3','b','Přesně. AI zlevnila přechod, ale nezrušila rozdíl. Podlaha (levné minimum — LICENSE, README, reprodukovatelnost) se zvedla, ale strop se nezměnil: jednorázový skript pořád nepotřebuje produkční tvrdost. Přehnané inženýrství vědy zůstává chybou, jen je teď lákavější, protože levnější. Úsudek „kolik zaslouží" nemizí.','Ne. Levné inženýrství neznamená povinné. AI zvedla podlahu (minimum je levné), ale strop je pořád dán účelem — skript, co jednou běží, nepotřebuje mikroslužby. Rozdíl mezi světy trvá; jen se zlevnil pohyb mezi nimi.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q3-fb"></div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="quiz-question" id="q4">
+    <div class="quiz-q">4. Co znamená Brooksovo pravidlo 9× pro vědce, který čeká, že jeho fungující skript „jen zpřístupní ostatním"?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q4" value="a"> Že to zvládne za desetinu času, protože skript už funguje</label></li>
+      <li><label><input type="radio" name="q4" value="b"> Že produkt použitelný ostatními stojí řádově víc než program, co běží jen jemu (~9×) — testy, dokumentace, obecnost, rozhraní; kdo počítá s 1×, dostane 9× účet</label></li>
+      <li><label><input type="radio" name="q4" value="c"> Že 9× se týká jen komerčního softwaru, ne vědeckého</label></li>
+      <li><label><input type="radio" name="q4" value="d"> Že má skript rovnou zahodit a napsat od nuly</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q4','b','Výborně. Brooks: „běží to mně" je 1×; použitelný produkt pro ostatní je ~9× (obecnost + testy + dokumentace + rozhraní + integrace). Vědec, co řekne „jen to zpřístupním", typicky počítá s 1× a narazí na 9× účet. AI ten účet u akcidentální části zlevnila, ale nesmazala — a je dobré vědět, že tam je, než se do přechodu pustíš.','Ne. Pravidlo 9× platí i pro vědecký software: udělat z fungujícího skriptu produkt použitelný ostatními stojí řádově víc (obecnost, testy, dokumentace, rozhraní). „Jen to zpřístupním" podceňuje účet devítinásobně. AI ho zlevnila, ale nezrušila.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q4-fb"></div>
+  </div>
+
+  <div class="quiz-score" id="quiz-score"></div>
+</div>
+
+<!-- 13. Co dál -->
+<h2>13 — Co dál</h2>
+
+<p><strong>Co musíš znát před touto lekcí:</strong></p>
+<ul>
+  <li><a href="0001-no-silver-bullet.html">A3 — No Silver Bullet</a> — esenciální vs. akcidentální komplexita je rám, kterým čteš, co AI seká a co ne.</li>
+  <li><a href="0013-fair4rs.html">C1 — FAIR4RS</a> a <a href="0012-reprodukovatelnost.html">C2 — Reprodukovatelnost</a> — nepodkročitelné minimum, které i prototyp zaslouží.</li>
+</ul>
+
+<p><strong>Praktický úkol (25 minut):</strong> Udělej inventuru svého kódu: rozděl projekty do dvou sloupců — <em>prototyp</em> a <em>páteř</em> (používá to někdo kromě mě? stojí na tom výsledek?). Pak najdi ten jeden, co je ve špatném sloupci — „prototyp", který se tiše stal páteří. Nech agenta doplnit levné minimum (testy invariantů, README, reprodukovatelnost) a vědomě ho povyš. Právě jsi vyklidil kus nebezpečné zóny.</p>
+
+<p><strong>Blok C je hotový.</strong> Máš kompletní rámec vědecké kvality softwaru: reprodukovatelnost (C2), FAIR (C1), rozdíl vědecký/produkční (C5), a lidský protipól — deskilling (C3), trust gap (C4). Umíš říct, co dělá vědecký software důvěryhodným, použitelným a přiměřeně inženýrovaným — a kde všude AI pomáhá i škodí.</p>
+
+<p><strong>Kam dál — dokončení bloku A:</strong></p>
+<ul>
+  <li><em>A2 — Refactoring</em> — bezpečná změna kódu; povýšení prototypu na produkt je řízený refaktoring.</li>
+  <li><em>A4 — Domain-Driven Design</em> — ubiquitous language a bounded contexts; propojení s CLAUDE.md a interoperabilitou.</li>
+  <li><em>A5 — Agile Manifesto</em> — kde agentní vývoj navazuje na agilní hodnoty a kde je inovuje.</li>
+</ul>
+
+<!-- Footer -->
+<div class="lesson-nav">
+  <div>
+    <span class="nav-label">Předchozí lekce</span>
+    <a href="0013-fair4rs.html">← C1 — FAIR4RS</a>
+  </div>
+  <div>
+    <span class="nav-label">Příští lekce</span>
+    <a href="#">A2 — Refactoring →</a>
+  </div>
+</div>
+
+<p style="margin-top:2rem; font-size:0.8rem; color: var(--muted); font-family: var(--font-sans);">
+  Máš otázku? Vrať se do Claude Code a napiš ji — agent je tvůj učitel a může rozvinout libovolný bod z této lekce.
+</p>
+
+</div>
+</div>
+
+<script>
+const scores = {};
+function check(qid, correct, okMsg, failMsg) {
+  const selected = document.querySelector(`input[name="${qid}"]:checked`);
+  const fb = document.getElementById(`${qid}-fb`);
+  if (!selected) {
+    fb.textContent = 'Vyber jednu odpověď.';
+    fb.className = 'quiz-feedback incorrect';
+    fb.style.display = 'block';
+    return;
+  }
+  const isCorrect = selected.value === correct;
+  fb.textContent = isCorrect ? '✓ ' + okMsg : '✗ ' + failMsg;
+  fb.className = 'quiz-feedback ' + (isCorrect ? 'correct' : 'incorrect');
+  fb.style.display = 'block';
+  scores[qid] = isCorrect;
+  document.querySelectorAll(`input[name="${qid}"]`).forEach(r => r.disabled = true);
+  document.querySelector(`#${qid} .quiz-check`).disabled = true;
+  if (Object.keys(scores).length === 4) {
+    const n = Object.values(scores).filter(Boolean).length;
+    const el = document.getElementById('quiz-score');
+    el.style.display = 'block';
+    if (n === 4) {
+      el.innerHTML = '<strong>✓ 4/4 — Výborně.</strong> Blok C hotový. Praktický úkol: rozděl svůj kód na prototyp/páteř, najdi ten „prototyp", co se tiše stal páteří, a vědomě ho povyš levným minimem. Vyklidil jsi kus nebezpečné zóny.';
+    } else if (n >= 3) {
+      el.innerHTML = `<strong>${n}/4 — Téměř.</strong> Přečti znovu sekci 3 (past oběma směry) a sekci 4 (nebezpečná zóna + Brooks 9×). Klíč: vědět, který druh píšeš, a přehodnocovat to — tichý přechod prototypu v páteř je ta bomba.`;
+    } else {
+      el.innerHTML = `<strong>${n}/4 — Vrať se.</strong> Přečti znovu sekci 1 a 2 — dva druhy s různými cíli, ne dvě úrovně kvality. Pak sekci 4 — nebezpečná zóna. Výsledek: kvalita se měří vůči účelu; nejhorší je nepojmenovaný přechod věda → produkce.`;
+    }
+  }
+}
+</script>
+</body>
+</html>
