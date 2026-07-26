@@ -43,8 +43,107 @@
   <p>Každé publikum přichází s implicitní nadějí: "<em>AI za mě vyřeší těžkou práci.</em>" Brooks ti dává jazyk, jak tuto naději kalibrovat bez cynismu. Není to "AI je špatná" — je to "přesněji popišme, co AI umí a co neumí."</p>
 </div>
 
-<!-- 2. Historický kontext -->
-<h2>2 — Historický kontext</h2>
+<!-- 2. Intuice na obyčejných věcech -->
+<h2>2 — Intuice: od kávy ke gulášovi (a zpět k fyzice)</h2>
+
+<p>Rozdíl esenciální / akcidentální je nejstarší filozofický nástroj, jak se ptát: <em>„Co je na věci nutné, a co je jen náhoda okolností?"</em> Brooks ho jen aplikoval na software. Než ho použiješ na kód, zakotvi si ho na věcech, které zná každý — tohle je zároveň materiál, kterým to vysvětlíš netechnickému publiku.</p>
+
+<div class="callout">
+  <div class="callout-label">Test, který to vždy rozsekne</div>
+  <p>U každé vlastnosti se zeptej: <strong>„Můžu to změnit, aniž by věc přestala být sama sebou?"</strong><br>
+  Ano → <strong>akcidentální</strong> (dá se to změnit, odstranit, zautomatizovat).<br>
+  Ne → <strong>esenciální</strong> (bez toho už to není ta věc).</p>
+</div>
+
+<h3>Analogie 1 — Káva</h3>
+<div class="two-col">
+  <div class="col-box col-red">
+    <div class="col-label">Esenciální (bez toho to není káva)</div>
+    <ul>
+      <li>Je z pražených kávových zrn</li>
+      <li>Obsahuje kofein</li>
+    </ul>
+  </div>
+  <div class="col-box col-green">
+    <div class="col-label">Akcidentální (mohlo být jinak)</div>
+    <ul>
+      <li>Modrý hrnek</li>
+      <li>Teplota, cena</li>
+      <li>Že ji piješ zrovna teď</li>
+    </ul>
+  </div>
+</div>
+<p>Přelij kávu do jiného hrnku a pořád je to káva. Odeber kofein a zrna — a přestane to být káva. To je celý ten rozdíl v jedné větě.</p>
+
+<h3>Analogie 2 — Guláš (tvůj opening pro přednášku)</h3>
+<div class="two-col">
+  <div class="col-box col-red">
+    <div class="col-label">Esenciální — jádro vaření</div>
+    <ul>
+      <li>Cibuli pořádně zpěnit, než přijde maso — na tom stojí celá chuť</li>
+      <li>Poznat, kdy je maso měkké (podle vidličky, ne podle hodin)</li>
+      <li>Ochutnat a vyvážit — chce to sůl? špetku octa?</li>
+    </ul>
+  </div>
+  <div class="col-box col-green">
+    <div class="col-label">Akcidentální — jen tření</div>
+    <ul>
+      <li>Krájení cibule (pláčeš u toho)</li>
+      <li>Hledání, kde máš papriku</li>
+      <li>Hlídání času, mytí nádobí</li>
+    </ul>
+  </div>
+</div>
+
+<p>Teď si představ <strong>kuchyňského robota, který umí všechno akcidentální</strong> — nakrájí, odměří, míchá, hlídá čas. To je AI. Ušetří ti hromadu práce. Ale kdo pořád ochutnává a rozhodne „chce to ještě sůl"? Ty. A tady je past: robot ti dá guláš, který <em>vypadá hotově</em> — voní, má barvu, je horký. Pokušení je neochutnat a rovnou naservírovat. Jenže jestli cibule jen zavadila místo zpěnila, chuť je tiše mdlá — a zjistíš to, až když to hosté snědí bez nadšení.</p>
+
+<div class="callout green">
+  <div class="callout-label">Jádro</div>
+  <p>Robot udělal všechnu ruční práci. Ale rozhodnutí „je to dobré?" pořád stojí na tom, že to umíš ochutnat. A abys to ochutnal, musíš vědět, jak má správný guláš chutnat — stejně, jako kdybys ho vařil celý sám.</p>
+</div>
+
+<div class="callout amber">
+  <div class="callout-label">Poznámka pro přednášejícího — guláš je dobrý opening</div>
+  <p>Začni přednášku gulášem, ne kódem. Je neohrožující, každý se zasměje a chytneš i netechnické publikum (manažeři, PI). Pak jen řekneš: <em>„A teď stejná věc — jenom místo guláše je to váš simulační kód."</em> a překlopíš do technického příkladu níž. Most k publiku máš postavený.</p>
+</div>
+
+<h3>Zpět k fyzice — N-body simulace na clusteru</h3>
+<p>Stejná dvouvrstvá struktura, jen v tvém oboru. Úkol: paralelizovat výpočet gravitačních sil mezi N tělesy přes MPI na 128 uzlech.</p>
+
+<div class="two-col">
+  <div class="col-box col-red">
+    <div class="col-label">Esenciální — vlastní problému</div>
+    <ul>
+      <li><strong>Numerika:</strong> je algoritmus stabilní? Když zkrátíš časový krok, konverguje, nebo exploduje?</li>
+      <li><strong>Dekompozice domény:</strong> jak rozdělit částice, aby 127 uzlů nečekalo na jeden? U shluků (galaxie) netriviální.</li>
+      <li><strong>Přesnost vs. rychlost:</strong> Barnes-Hut O(N log N) vs. přímý výpočet O(N²) — kdy je aproximace ještě fyzikálně obhajitelná?</li>
+    </ul>
+  </div>
+  <div class="col-box col-green">
+    <div class="col-label">Akcidentální — tření nástrojů</div>
+    <ul>
+      <li>MPI boilerplate: <code>MPI_Init</code>, správné datové typy v <code>Allreduce</code></li>
+      <li>Syntaxe mpi4py, alokace NumPy bufferů</li>
+      <li>Slurm skript, <code>#SBATCH</code> direktivy, načtení modulů</li>
+      <li>Překlad Fortran → Python, 1-based → 0-based indexy</li>
+    </ul>
+  </div>
+</div>
+
+<div class="callout red">
+  <div class="callout-label">Past</div>
+  <p>Claude ti vygeneruje MPI kód, který se zkompiluje a poběží — dostaneš čísla, vypadá to hotově. Ale dekompozici domény zvolil tak, jak je typická v jeho trénovacích datech — což pro tvoje shluknuté rozložení může být špatně. Load imbalance ti sežere 90 % škálování a nepoznáš to, dokud si nezměříš, proč to na 128 uzlech běží stejně rychle jako na 16. <strong>Akcidentální bariéra (napsat MPI) zmizela. Esenciální otázka (jak rozdělit tenhle problém) zůstala — jen se schovala, protože kód „funguje".</strong></p>
+</div>
+
+<div class="callout">
+  <div class="callout-label">Verifikační test na každý řádek, co ti AI napíše</div>
+  <p><em>„Kdyby tohle rozhodnutí bylo špatně — poznal bych to z toho, že kód spadne, nebo jen z toho, že výsledek je fyzikálně nesmysl?"</em><br>
+  Spadne kompilace / běh → <strong>akcidentální</strong>, nech to klidně na AI.<br>
+  Proběhne, ale výsledek je tiše špatně → <strong>esenciální</strong>, tady musíš rozumět ty.</p>
+</div>
+
+<!-- 3. Historický kontext -->
+<h2>3 — Historický kontext</h2>
 
 <p>Rok 1986. Fred Brooks, autor <em>The Mythical Man-Month</em> (1975), publikuje esej v IEEE Computer. Kontext: průmysl zažívá vlnu optimismu kolem objektově orientovaného programování. Každý slibuje revoluci.</p>
 
@@ -75,8 +174,8 @@
 
 <p>Každá vlna přinesla zlepšení — ale žádná nedala 10×. A každá vlna přišla s hype, který sliboval víc.</p>
 
-<!-- 3. Jak to funguje dnes s AI -->
-<h2>3 — Jak to funguje dnes s AI</h2>
+<!-- 4. Jak to funguje dnes s AI -->
+<h2>4 — Jak to funguje dnes s AI</h2>
 
 <p>AI kódovací asistenti (Claude Code, GitHub Copilot, Cursor) jsou historicky nejsilnějším útočníkem na <em>akcidentální</em> komplexitu, jaký jsme kdy viděli. Konkrétně:</p>
 
@@ -92,8 +191,8 @@
 
 <p>Data z New Relic (2026): AI kód má <strong>1,7× více issues</strong> než kód psaný bez AI. Příčina: vývojáři přestávají rozumět kódu, který AI vygeneruje — esenciální komplexita se neztratila, jen se přesunula do slepého místa.</p>
 
-<!-- 4. Tři příklady -->
-<h2>4 — Tři příklady</h2>
+<!-- 5. Tři příklady -->
+<h2>5 — Tři příklady</h2>
 
 <div class="examples">
   <div class="example-card">
@@ -110,8 +209,8 @@
   </div>
 </div>
 
-<!-- 5. Propojení — rámec pěti otázek -->
-<h2>5 — Propojení na rámec pěti otázek</h2>
+<!-- 6. Propojení — rámec pěti otázek -->
+<h2>6 — Propojení na rámec pěti otázek</h2>
 
 <p>Brooks dává <em>why</em>. Rámec pěti otázek (lekce <a href="0004-ramec-peti-otazek.html">B2</a>) dává <em>how</em>. Konkrétně:</p>
 
@@ -123,8 +222,8 @@
   <li><strong>Subagents:</strong> Paralelizace akcidentální práce. Esenciální rozhodnutí stále probíhá na úrovni orchestrátoru.</li>
 </ul>
 
-<!-- 6. Nejčastější nepochopení -->
-<h2>6 — Nejčastější nepochopení</h2>
+<!-- 7. Nejčastější nepochopení -->
+<h2>7 — Nejčastější nepochopení</h2>
 
 <div class="callout amber">
   <div class="callout-label">Co si lidé myslí</div>
@@ -138,15 +237,40 @@
 
 <p>Druhé nepochopení: "No Silver Bullet říká, že AI nepomáhá." Nepravda. Brooks říká, že pomáhá — ale ne exponenciálně. <strong>To je silná teze, ne slabá.</strong></p>
 
-<!-- 7. Spicy teze -->
-<h2>7 — Spicy teze</h2>
+<div class="callout amber">
+  <div class="callout-label">Třetí nepochopení — „Ale AI dnes zná fyziku, zná doménu!"</div>
+  <p>„AI dneska umí fyziku líp než většina lidí — tak proč by nezvládla i esenciální komplexitu?" Tohle ti někdo z publika položí. Je to nejsilnější námitka a musíš na ni umět odpovědět bez dogmatu.</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Odpověď</div>
+  <p><strong>Ano, AI zná fyziku — ale „znát fyziku" není esenciální komplexita.</strong> Rozliš dvě věci:</p>
+  <ul>
+    <li><strong>Znalost oboru obecně</strong> (deklarativní): „gravitační zákon je F = G·m₁·m₂/r²." Tady AI opravdu exceluje.</li>
+    <li><strong>Esenciální komplexita tvého problému:</strong> „Co se ptám <em>já</em> v <em>téhle</em> studii, za jakých předpokladů, které nikde nejsou napsané?" Brooks mluví o tomhle — ne o učebnicové fyzice.</li>
+  </ul>
+  <p>Tři důvody, proč to ani skvělá znalost oboru nevyřeší:</p>
+  <ul>
+    <li><strong>Tvůj problém je specifický, ne průměrný.</strong> AI umí <em>průměr</em> oboru z paperů. Ty jako RSE typicky řešíš věc, která tam ještě není — nový model, nezvyklou okrajovou podmínku. Na tu ti dá plausibilně znějící odpověď z nejbližšího známého případu, což může být tiše špatně.</li>
+    <li><strong>Chybí jí tvůj tacit kontext.</strong> „Tenhle detektor má známý artefakt", „tohle je jen exploratory run, chci rychlost", „minule nám tahle aproximace rozbila výsledek" — nikdy to neřekneš nahlas a často si ani neuvědomuješ, že to víš.</li>
+    <li><strong>Umí navrhnout, ale neručí za výsledek.</strong> AI ti může i s esenciální věcí <em>napovědět</em> — to Brooks nepopírá. Ale rozhodnutí, že to je správně, zůstává tvoje, protože ty ručíš za studii. A abys to rozhodl, musíš rozumět stejně, jako kdybys to řešil sám.</li>
+  </ul>
+  <p>Hranice se posunula: AI dnes esenciální rozhodnutí <em>navrhne</em>. Ale posunula esenciální práci z <strong>generování</strong> na <strong>verifikaci</strong> — a verifikace vyžaduje stejné pochopení jako psaní. Past je tím ostřejší: AI zní kompetentně, takže je <em>lákavější</em> kontrolu přeskočit.</p>
+</div>
+
+<div class="spicy">
+  <p><strong>Teze na slide:</strong> AI nezná <em>tvůj</em> problém — zná průměr oboru. Umí ti s esenciální komplexitou napovědět, ale nemůže za tebe převzít odpovědnost, že je odpověď správná. A abys to ověřil, musíš rozumět stejně hluboko, jako kdyby AI nebyla. AI přesunula esenciální práci z psaní na kontrolu — nezrušila ji.</p>
+</div>
+
+<!-- 8. Spicy teze -->
+<h2>8 — Spicy teze</h2>
 
 <div class="spicy">
   <p>Pokud váš tým s AI kóduje rychleji, ale hůř rozumí tomu, co kód dělá — AI právě přesunula esenciální komplexitu z viditelného místa na neviditelné. Zrychlení bez porozumění není produktivita. Je to dluh.</p>
 </div>
 
-<!-- 8. Primární zdroje -->
-<h2>8 — Primární zdroje</h2>
+<!-- 9. Primární zdroje -->
+<h2>9 — Primární zdroje</h2>
 
 <ul class="resource-list">
   <li>
@@ -163,8 +287,8 @@
   </li>
 </ul>
 
-<!-- 9. Feynmanovo cvičení -->
-<h2>9 — Feynmanovo cvičení</h2>
+<!-- 10. Feynmanovo cvičení -->
+<h2>10 — Feynmanovo cvičení</h2>
 
 <p>Než se posunout, ověř si, že to skutečně chápeš. Odpověz na všechny otázky — dostaneš okamžitou zpětnou vazbu.</p>
 
@@ -226,8 +350,8 @@
   <div class="quiz-score" id="quiz-score"></div>
 </div>
 
-<!-- 10. Propojení na ostatní lekce -->
-<h2>10 — Co dál</h2>
+<!-- 11. Propojení na ostatní lekce -->
+<h2>11 — Co dál</h2>
 
 <p><strong>Co musíš znát před touto lekcí:</strong> Nic specifického — A3 je záměrně první, protože poskytuje jazyk (esenciální/akcidentální) pro všechno ostatní.</p>
 
@@ -298,10 +422,10 @@ function check(qid, correct, okMsg, failMsg) {
       scoreEl.innerHTML = `<strong>✓ ${correct_count}/${total} — Skvěle.</strong> Chápeš Brooksův argument dostatečně na to, abys ho přednášel. Jdi na B1.`;
     } else if (correct_count >= 3) {
       scoreEl.innerHTML = `<strong>${correct_count}/${total} — Téměř.</strong> Přečti si znovu sekci ${
-        !scores['q1'] ? '1 (esenciální vs. akcidentální)' : !scores['q2'] ? '3 (co AI dělá)' : !scores['q3'] ? '1 (Brooksova teze)' : '4 (příklad týmu)'
+        !scores['q1'] ? '1 (esenciální vs. akcidentální)' : !scores['q2'] ? '4 (co AI dělá)' : !scores['q3'] ? '1 (Brooksova teze)' : '5 (příklad týmu)'
       } a zkus znovu.`;
     } else {
-      scoreEl.innerHTML = `<strong>${correct_count}/${total} — Vrať se.</strong> Mezera je v základním konceptu. Přečti znovu sekce 1–3, pak přečti Brookse (10 stran, 30 minut). Tato lekce nestačí jako jediný zdroj.`;
+      scoreEl.innerHTML = `<strong>${correct_count}/${total} — Vrať se.</strong> Mezera je v základním konceptu. Přečti znovu sekce 1–4, pak přečti Brookse (10 stran, 30 minut). Tato lekce nestačí jako jediný zdroj.`;
     }
   }
 }
