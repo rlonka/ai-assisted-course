@@ -174,6 +174,57 @@
 
 <p>Každá vlna přinesla zlepšení — ale žádná nedala 10×. A každá vlna přišla s hype, který sliboval víc.</p>
 
+<h3>Co ten seznam vůbec je</h3>
+
+<div class="callout">
+  <div class="callout-label">Než položky rozebereš</div>
+  <p>Tohle <strong>není</strong> seznam „malých vylepšení". Naopak — jsou to <strong>největší skoky v historii softwaru</strong> a každý z nich byl ve své době oslavován jako revoluce. Brooksova pointa je přesně tahle: i ty nejlepší skoky, jaké známe, daly řádově 2× nebo 3× — ne 10×. Protože všechny útočily na <strong>akcidentální</strong> komplexitu (tření nástrojů) a esenciální (samotný problém) nechaly netknutou. „10×" ber jako zkratku pro <em>řád magnitudy</em> — desetinásobek. To je Brooksova laťka pro „silver bullet".</p>
+</div>
+
+<h3>Kus po kuse</h3>
+
+<p><strong>High-level jazyky (60. léta)</strong> — Fortran, COBOL, C<br>
+<em>Předtím:</em> psalo se v assembleru — ruční registry, adresy paměti, instrukce procesoru.<br>
+<em>Co to sundalo:</em> celou vrstvu „mluvení s procesorem". Napíšeš <code>x = a + b</code> místo deseti řádků přesunů registrů.<br>
+<em>Proč ne 10×:</em> Brooks to sám označuje za <strong>největší jednotlivý skok v historii</strong> — možná 5×. Ale odstranilo to jen <em>překlad myšlenky do stroje</em>. Samotná myšlenka — co má program dělat — zůstala celá na tobě. Jakmile jazyk zmizí z cesty, stojíš tváří v tvář problému, a ten je pořád stejně těžký.</p>
+
+<p><strong>Time-sharing / Unix (70. léta)</strong><br>
+<em>Předtím:</em> odevzdal jsi štos děrných štítků a na výsledek čekal hodiny až den (batch processing).<br>
+<em>Co to sundalo:</em> zpětnovazební smyčku. Seděl jsi u terminálu a viděl výsledek za vteřiny.<br>
+<em>Proč ne 10×:</em> rychlejší iterace = víc pokusů za den. Ale rychlejší dělání chyb neznamená, že tvůj <em>návrh</em> je lepší. Zrychlí to cestu, ne cíl.</p>
+
+<p><strong>OOP, IDE (80. léta)</strong><br>
+<em>Předtím:</em> kód jako jedna velká hromada; editor bez našeptávače.<br>
+<em>Co to sundalo:</em> OOP dalo způsob, jak kód <em>organizovat</em> (zapouzdření, znovupoužití). IDE ubralo mechanickou práci (dokončování, skok na definici, debugger).<br>
+<em>Proč ne 10×:</em> tohle je Brooksův <strong>oblíbený terč</strong> — OOP bylo v roce 1986 přesně ten hype, proti kterému psal. Pomohlo, ale rozhodnout <em>jaké objekty vůbec mají existovat a jak se dělí zodpovědnost</em> je esenciální design. OOP ti dá lepší nádobí, ne recept.</p>
+
+<p><strong>Internet, open source (90. léta)</strong><br>
+<em>Předtím:</em> každý si psal všechno od nuly, znovu a znovu.<br>
+<em>Co to sundalo:</em> nemusíš psát parser JSONu — stáhneš knihovnu, kterou napsal někdo jiný. Obří úspora <em>duplicitní</em> práce.<br>
+<em>Proč ne 10×:</em> nejsilnější položka seznamu — reálně to ušetřilo hory práce. Ale znovupoužití řeší <em>už vyřešené</em> problémy. Ten tvůj, nový problém — proč přesně tvoje simulace dává divný výsledek — na to knihovna neexistuje. Esenciální práce je z definice ta, kterou ještě nikdo neudělal.</p>
+
+<p><strong>Cloud, kontejnery (2010. léta)</strong> — AWS, Docker, Kubernetes<br>
+<em>Předtím:</em> koupit server, zapojit, konfigurovat OS, řešit „u mě to funguje".<br>
+<em>Co to sundalo:</em> infrastrukturní tření. Škálování, nasazení, reprodukovatelné prostředí na kliknutí.<br>
+<em>Proč ne 10×:</em> přesunulo to práci z „provozovat servery" na „psát software" — ale <em>co</em> ten software má dělat, se nezměnilo. Navíc to přineslo <strong>vlastní novou akcidentální komplexitu</strong> (kdo někdy ladil Kubernetes, ví). Klasický Brooksův motiv: každý nástroj sundá jedno tření a přinese kus nového.</p>
+
+<p><strong>AI asistenti (2020. léta)</strong> — Claude Code, Copilot, Cursor<br>
+<em>Předtím:</em> boilerplate, syntax lookup, ruční překlad, generování testů — vše ručně.<br>
+<em>Co to sundává:</em> historicky <strong>nejsilnější útok na akcidentální komplexitu</strong>, jaký jsme viděli. Zvládne toho víc než cokoli před tím.<br>
+<em>Proč ne 10×:</em> a přesně tady je celá pointa lekce — je to <em>jen další položka na tomtéž seznamu</em>. Největší zatím, ale ze stejného druhu: útočí na akcidentální komplexitu. Esenciální (rozumět problému, poznat správný výsledek) zůstává u tebe. A navíc ji umí i <strong>schovat</strong>, což je nový druh nebezpečí.</p>
+
+<h3>Dvě věci, které musíš na slidu ubránit</h3>
+
+<div class="callout green">
+  <div class="callout-label">1 — „Ale ne 10×" neznamená „nepomohlo"</div>
+  <p>Naopak — každá vlna byla obrovská. Brooks je optimista v tom, že uznává reálný přínos; je jen <em>přesný</em> v tom, kde má ten přínos strop. Když ti někdo řekne „tohle je pesimistický seznam", odpověď zní: <em>„Ne — je to seznam nejúspěšnějších technologií v dějinách. Jen žádná z nich nebyla zázrak."</em></p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">2 — Všimni si vzoru napříč všemi řádky</div>
+  <p>Každá vlna: (a) zaútočila na <em>akcidentální</em> komplexitu, nikdy na esenciální; (b) byla ve své době ohlašována jako revoluce; (c) pomohla reálně, ale lineárně, ne exponenciálně; (d) často <em>přinesla vlastní novou akcidentální komplexitu</em> (cloud → Kubernetes). Když tenhle vzor publiku ukážeš na pěti historických příkladech, <strong>šestý (AI) si domyslí sami.</strong> Nenech je věřit tobě — nech je vidět vzor. To je nejsilnější způsob, jak tu lekci přednést.</p>
+</div>
+
 <!-- 4. Jak to funguje dnes s AI -->
 <h2>4 — Jak to funguje dnes s AI</h2>
 
