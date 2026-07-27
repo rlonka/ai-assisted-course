@@ -524,6 +524,83 @@ code {
 .col-box.col-green { border-color: #9ae6b4; background: var(--green-light); }
 .col-box.col-red { border-color: #feb2b2; background: var(--red-light); }
 
+/* ── Retenční vrstva: páteř / Q&A banka / kartičky ── */
+
+/* Páteř — jedna věta + 3 číselné kotvy, co musíš umět nastudeno */
+.spine {
+  border: 2px solid var(--accent);
+  background: var(--accent-light);
+  border-radius: 6px;
+  padding: 1.2rem 1.4rem;
+  margin: 1.5rem 0;
+}
+.spine .spine-sentence {
+  font-size: 1.12rem;
+  line-height: 1.5;
+  font-weight: 600;
+  margin: 0 0 1rem;
+}
+.spine-anchors {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.8rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-sans);
+}
+.spine-anchors li {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.6rem 0.7rem;
+  font-size: 0.82rem;
+  color: var(--muted);
+  line-height: 1.35;
+}
+.spine-anchors .num {
+  display: block;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 0.15rem;
+}
+
+/* Q&A banka — otázky z publika, které trénuješ nahlas */
+.qa-item {
+  border-left: 4px solid var(--amber);
+  background: var(--amber-light);
+  border-radius: 0 4px 4px 0;
+  padding: 0.85rem 1.1rem;
+  margin: 0.7rem 0;
+}
+.qa-item .qa-q {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  margin: 0 0 0.4rem;
+  color: var(--text);
+}
+.qa-item .qa-a { margin: 0; font-size: 0.95rem; }
+.qa-item .qa-a::before { content: "→ "; color: var(--amber); font-weight: 700; }
+
+/* Kartičky — fakta ve formátu otázka ; odpověď, k vložení do Anki */
+pre.flashcards {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  line-height: 1.7;
+  background: #f7f6f2;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1rem 1.2rem;
+  overflow-x: auto;
+  white-space: pre;
+  margin: 1rem 0;
+}
+
+@media (max-width: 640px) {
+  .spine-anchors { grid-template-columns: 1fr; }
+}
+
 /* ── Print ── */
 
 @media print {
@@ -531,7 +608,7 @@ code {
   .quiz-check, .quiz-check { display: none; }
   .lesson-nav { display: none; }
   h2 { break-after: avoid; }
-  .callout, .spicy, .example-card { break-inside: avoid; }
+  .callout, .spicy, .example-card, .spine, .qa-item { break-inside: avoid; }
 }
 
 /* ── Responsive ── */

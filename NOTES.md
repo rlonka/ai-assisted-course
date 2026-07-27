@@ -6,6 +6,14 @@
 - Každá lekce musí mít variantu pro 3 publika: vědec-kodér / RSE vývojář / manažer/PI
 - Feynmanovo cvičení je klíčová součást každé lekce — konkrétní, ne abstraktní
 
+## Retenční vrstva (vzor pro všechny lekce — přidáno 2026-07-27)
+Cíl: aby Radek uměl ustát živé Q&A, ne jen text přečíst. Tři nové sekce před Feynmanovým cvičením:
+- **🎯 Páteř** — 1 věta-oblouk (regeneruje odpovědi) + 3 číselné kotvy (co nesmí splést) + přenosný test. CSS: `.spine` / `.spine-anchors` / `.num`.
+- **🎤 Až se tě zeptají** — banka ostrých námitek z publika + krátká odpověď s „úderem" (tučná pointa). Trénink nahlas, ne test. CSS: `.qa-item` / `.qa-q` / `.qa-a`.
+- **🔁 Do kartiček** — 10–12 faktů ve formátu `otázka ; odpověď`, copy-paste do Anki (středník jako oddělovač). CSS: `pre.flashcards`. Uzavřít callout.green s rituálem (denně kartičky + týdně „odříkej naostro"; grilování na vyžádání).
+- Zdroj CSS: assets/style.css, sekce „Retenční vrstva". Číslování sekcí posunout, Feynman + Co dál na konec.
+- Pilotně nasazeno v 0001 (A3). TODO: doplnit do ostatních 21 lekcí (obsah přizpůsobit tématu).
+
 ## Curriculum state
 - Start: 2026-06-24
 - Doporučené pořadí pro 6 týdnů: viz MISSION args (curriculum dokument)
