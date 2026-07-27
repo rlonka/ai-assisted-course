@@ -184,6 +184,20 @@
 
 <h3>Kus po kuse</h3>
 
+<div class="callout">
+  <div class="callout-label">Scéna „před skokem" — jak vypadala éra 1GL (~1945–1955)</div>
+  <p>Aby dávalo smysl, <em>proč</em> byl skok na 3GL „faktor pět", musí publikum cítit, z čeho se skákalo. Ve strojovém kódu jsi:</p>
+  <ul>
+    <li><strong>Nepsal slova, ale čísla.</strong> Žádné <code>x = a + b</code> — jen sloupce instrukcí a adres paměti v binárce/osmičkové. „Sečti dvě čísla" byly tři řádky číselných opkódů.</li>
+    <li><strong>Počítal adresy ručně.</strong> Žádná návěští, žádné proměnné. Skok mířil na konkrétní <em>číslo</em>. Vložíš jednu instrukci doprostřed → všechno pod ní se posune a musíš <strong>ručně přepočítat každý skok</strong> v programu.</li>
+    <li><strong>Šetřil každý byte.</strong> Paměť ve stovkách slov, ne v gigabajtech — programy si běžně <em>přepisovaly vlastní instrukce za běhu</em> (self-modifying code), aby ušetřily místo.</li>
+    <li><strong>Program dostával do stroje fyzicky:</strong> přepínači na panelu (bit po bitu), nebo — u ENIACu (1945) — <strong>přepojováním stovek kabelů</strong>. Přeprogramovat ho na jinou úlohu trvalo <em>dny až týdny</em>.</li>
+    <li><strong>Ladil přes žárovky a osciloskop.</strong> Žádný debugger — krokoval jsi a četl řady světel jako binárku; „core dump" byl doslova výpis paměti v číslech, luštěný tužkou.</li>
+  </ul>
+  <p><strong>Anekdota, kterou publikum miluje:</strong> slovo „bug" zpopularizovala Grace Hopperová v roce 1947 — do relé počítače Harvard Mark II zalezl <strong>skutečný mol</strong>, tým ho vytáhl, nalepil do deníku a připsal <em>„first actual case of bug being found"</em>. Ten deník s molem existuje dodnes. (Tehdejší programátoři byli často ženy — šestice programátorek ENIACu; Kathleen Boothová kolem 1947 vymyslela assembler, aby z tohohle pekla utekla — to byl skok 1GL → 2GL.)</p>
+  <p><strong>Pointa:</strong> esenciální práce (jaké rovnice, jaká přesnost) byla pár řádků; <strong>akcidentální dřina (přemluvit stroj) sežrala 99 % úsilí.</strong> Proto byl skok na Fortran tak obrovský — smázl horu akcidentální práce naráz. Ale to zbývající 1 %, to <em>skutečně těžké</em>, zůstalo stejné. AI dnes maže těch 99 % rychleji než kdy dřív — a řeší <em>totéž</em> 1 %, které tam bylo před osmdesáti lety.</p>
+</div>
+
 <p><strong>High-level jazyky (60. léta)</strong> — Fortran, COBOL, C<br>
 <em>Předtím:</em> psalo se v assembleru — ruční registry, adresy paměti, instrukce procesoru.<br>
 <em>Co to sundalo:</em> celou vrstvu „mluvení s procesorem". Napíšeš <code>x = a + b</code> místo deseti řádků přesunů registrů.<br>
