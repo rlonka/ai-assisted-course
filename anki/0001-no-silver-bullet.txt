@@ -1,18 +1,42 @@
-#separator:semicolon
+#separator:tab
 #html:false
 #deck:AI-assisted RSE::A3 — No Silver Bullet
 #notetype:Basic
-Kdo a kdy napsal „No Silver Bullet"?;Fred Brooks, 1986, IEEE Computer (autor The Mythical Man-Month, 1975).
-Dva typy komplexity podle Brookse?;Esenciální (vlastní problému, nelze odstranit) a akcidentální (implementační tření, lze redukovat).
-Co dělá AI s komplexitou?;Snižuje akcidentální (boilerplate, syntax, lookup). Esenciální zůstává celá u člověka.
-Co je „silver bullet" / laťka pro zázrak?;Řád magnitudy = 10× zlepšení produktivity. Nic takového neexistuje ani nepřijde.
-Brooksův „faktor pět"?;Jeho odhad největšího skoku v historii SW (2GL→3GL, assembler→Fortran) — jen ~5×, ne 10×.
-Číslo z New Relic 2026?;AI kód má 1,7× víc issues než kód psaný bez AI.
-Číslo z METR (RCT, 2025)?;Zkušení open-source vývojáři na známém kódu ~19 % pomalejší s AI — a cítili se ~20 % rychlejší.
-Čtyři vlastnosti softwaru podle Brookse?;Complexity, Conformity, Changeability, Invisibility.
-Do jaké generace patří Python?;3GL — stejná jako Fortran/C/Java. Pohodlnější, ne vyšší generace.
-Generace jazyků 1–5?;1GL strojový kód, 2GL assembler, 3GL Fortran/C/Python, 4GL SQL/MATLAB/R, 5GL Prolog/constraint solvery.
-Odkud se vzal termín „bug"?;Grace Hopperová popularizovala 1947 — skutečný mol zalezlý v relé počítače Harvard Mark II.
-Přenosný test esenciální vs. akcidentální?;„Můžu to změnit, aniž věc přestane být sama sebou?" Ano→akcidentální, Ne→esenciální.
-Odkud pochází pojmy esence/akcidenty?;Od Aristotela — Brooks je má v názvu eseje („Essence and Accidents"). Rozlišení podstatných a nepodstatných vlastností věci.
-Synonyma pro esenciální / akcidentální?;Esenciální = podstatná (jádro, „CO"). Akcidentální = vedlejší, okolnostní (tření, „JAK"). Pozor: akcidentální ≠ nehoda.
+#tags column:3
+Esenciální komplexita — co to je?	Komplexita vlastní samotné problémové doméně: pochopit problém, navrhnout správnou abstrakci, poznat, co je správný výsledek. Nelze ji odstranit žádným nástrojem — jen líp pojmenovat. Zůstává celá na člověku.	A3 jadro
+Akcidentální komplexita — co to je?	Komplexita, kterou přidává způsob řešení, ne problém sám: boilerplate, syntax, správa paměti, nástroje. Dá se redukovat, zautomatizovat, odstranit — přesně sem míří každý pokrok v historii (i AI).	A3 jadro
+Odkud pochází pojmy essence / accidents?	Od Aristotela; Brooks je má rovnou v názvu eseje „No Silver Bullet — Essence and Accidents of Software Engineering" (1986). Aristoteles: podstatné vlastnosti (bez nich věc přestane být sama sebou) vs. akcidentální (věc je má, ale mít nemusí).	A3 jadro
+Přenosný test esenciální vs. akcidentální?	„Můžu to změnit, aniž věc přestane být sama sebou?" Ano → akcidentální (klidně na AI). Ne → esenciální (musíš rozumět ty).	A3 jadro
+Chyták u slova „akcidentální"?	NEznamená „náhodná chyba / nehoda". V Aristotelově smyslu = nepodstatná vlastnost, opak podstatné. Na pódiu radši říkej české „vedlejší".	A3 jadro
+Hlavní teze eseje „No Silver Bullet"?	Žádná jednotlivá technologie nedá za desetiletí řád magnitudy (10×) zlepšení produktivity, protože všechny útočí jen na akcidentální komplexitu; esenciální zůstává. AI není výjimka.	A3 jadro
+Proč „silver bullet" (stříbrná kulka)?	Metafora z hororů: stříbrná kulka je jediná věc, co zabije vlkodlaka. Brooks: v softwaru žádná taková zázračná jednorázová věc není — pokrok je postupný, ne magický.	A3 jadro
+Synonyma pro esenciální / akcidentální?	Esenciální = podstatná (jádro, „CO", přemýšlení). Akcidentální = vedlejší, okolnostní (tření, „JAK", dřina).	A3 jadro
+Čtyři esenciální vlastnosti softwaru (Brooks)?	Complexity (škáluje nelineárně), Conformity (musí se přizpůsobit lidskému světu), Changeability (úspěšný SW se pořád mění), Invisibility (nelze přirozeně vizualizovat).	A3 vlastnosti
+Co znamená „Invisibility" u softwaru?	Software nemá přirozený geometrický tvar jako most či budova; nedá se nakreslit jediný názorný obrázek. Proto se o něm těžko uvažuje a komunikuje — část esenciální obtížnosti.	A3 vlastnosti
+Co znamená „Conformity" u softwaru?	Software se musí přizpůsobit spoustě libovolných pravidel lidského světa (rozhraní, zákony, formáty), která nejsou logicky nutná. Tuhle svévoli nejde zjednodušit žádnou elegantní teorií.	A3 vlastnosti
+Brooksův „faktor pět"?	Jeho odhad, že přechod na high-level jazyky (2GL→3GL, assembler→Fortran) dal max ~5× produktivity — a byl to podle něj největší jednotlivý skok v historii. Ani ten nejlepší tedy nebyl 10×.	A3 cisla
+Číslo z New Relic 2026?	AI-generovaný kód má ~1,7× více issues než kód psaný bez AI. Příčina: vývojáři přestávají rozumět kódu, který nenapsali — esenciální komplexita se přesune do slepého místa.	A3 cisla
+Číslo z METR (RCT 2025)?	Zkušení open-source vývojáři byli na známém kódu s AI ~19 % POMALEJŠÍ — a přitom čekali i cítili zrychlení ~20 %. Vnímané zrychlení ≠ měřené zrychlení.	A3 cisla
+Proč je METR studie tak silná?	Je to randomizovaný kontrolovaný experiment (RCT), ne dojmy z ankety. Ukazuje Brooksovu past změřenou v laboratoři: protože výsledek se cítí hotový, je pokušení přeskočit kontrolu největší.	A3 cisla
+Generace jazyků 1GL–5GL?	1GL strojový kód, 2GL assembler, 3GL Fortran/C/Java/Python (procedurální/OOP), 4GL SQL/MATLAB/R (deklarativní/doménové), 5GL Prolog/constraint solvery (řešení přes logiku). Počítá se odspoda, od hardwaru nahoru.	A3 generace
+Do jaké generace patří Python?	3GL — stejná jako Fortran (1957) nebo C. Python je pohodlnější 3GL, ne vyšší generace. Za 65 let jsme se v téhle ose neposunuli o generaci.	A3 generace
+Jsou děrné štítky generace jazyka?	Ne — jsou médium (fyzický nosič), ne generace. Punchoval se na ně i Fortran (3GL). Slavný „upuštěný balík štítků" byl skoro vždy Fortran, ne strojový kód. Staré médium ≠ nízká generace.	A3 generace
+Je bytecode 1GL?	Ne. 1GL = strojový kód procesoru. Bytecode (JVM, Python .pyc) je moderní mezikód pro virtuální stroj z 90. let, mimo tuhle škálu.	A3 generace
+Skok na high-level jazyky (60. léta) — co sundal?	Fortran/COBOL/C sundaly celou vrstvu „mluvení s procesorem" (registry, adresy paměti). Brooks: největší skok vůbec, ~5×. Ale samotná myšlenka — co má program dělat — zůstala celá na člověku.	A3 historie
+Time-sharing / Unix (70. léta) — co přinesl?	Interaktivní zpětnou vazbu: výsledek za vteřiny místo čekání den na dávku děrných štítků. Zrychlil iterace, ne kvalitu návrhu — a přínos je stropovaný (pod práh lidské pozornosti už další zrychlení nic nepřidá).	A3 historie
+Proč byl OOP Brooksův oblíbený terč?	V roce 1986 byl OOP zrovna ohlašován jako revoluce/silver bullet. Brooks ho jmenovitě odmítl — pomáhá kód organizovat, ale rozhodnout, jaké objekty mají existovat, je esenciální design. Historie mu dala za pravdu: dnes samozřejmost, ne zázrak.	A3 historie
+Co byl slib 4GL a jak dopadl?	„Konec programování — popíšeš co chceš a systém to udělá." Uspěl v úzké doméně (SQL je dodnes všude), obecný slib selhal. Esenciální komplexitu (vědět, co přesně chceš) lepší notace neodbyla.	A3 historie
+Japonský Fifth Generation Project (1982–92)?	Národní moonshot za stovky milionů $, měl logikou a „AI" (5GL) přeskočit Západ. Skončil tichým neúspěchem. Nejlepší historický předobraz dnešního AI hype: „popiš, co chceš, a stroj to naprogramuje" tu už jednou bylo.	A3 historie
+Co reálně ušetřil internet / open source (90. léta)?	Duplicitní práci — nemusíš psát parser JSONu, stáhneš cizí knihovnu. Nejsilnější položka seznamu. Ale řeší už vyřešené problémy; na tvůj nový problém knihovna není. A přinesl novou akcidentální komplexitu (supply chain: left-pad 2016, event-stream 2018).	A3 historie
+Cloud / kontejnery (2010s) — co sundaly a přinesly?	Sundaly infrastrukturní tření (škálování, nasazení, reprodukovatelné prostředí). Ale přinesly vlastní novou akcidentální komplexitu — vznikla profese „DevOps/K8s inženýr", mem „YAML engineer". Klasický Brooks: každý nástroj sundá jedno tření a přidá jiné.	A3 historie
+Co AI reálně dělá s komplexitou?	Historicky nejsilnější útok na akcidentální komplexitu: boilerplate, syntax, triviální debug, testy pro zřejmé případy, navigace v cizím kódu. Esenciální (rozumět problému, poznat správný výsledek) zůstává u člověka.	A3 ai-dnes
+V čem je AI nový druh nebezpečí oproti dřívějším nástrojům?	Umí esenciální komplexitu i schovat: dá výsledek, který vypadá hotově, ale je tiše špatně. Přesunula esenciální práci z generování na verifikaci — a verifikace vyžaduje stejné pochopení jako psaní.	A3 ai-dnes
+Námitka „AI dnes zná fyziku/doménu líp než lidi" — odpověď?	Zná průměr oboru z paperů, ne tvůj konkrétní problém s nenapsanými předpoklady. Umí napovědět, neručí za výsledek. Znalost oboru (deklarativní) ≠ esenciální komplexita tvé konkrétní studie.	A3 ai-dnes namitky
+Námitka „Brooks psal 1986, AI je jiná" — odpověď?	Přesně tuhle větu řekla každá generace (OOP, 4GL, agile, microservices). Pokaždé lepší, nikdy 10×. AI je největší skok za 40 let, ale na tomtéž seznamu — útočí na akcidentální komplexitu.	A3 ai-dnes namitky
+Spicy teze lekce?	Když tým s AI kóduje rychleji, ale hůř rozumí kódu, AI přesunula esenciální komplexitu z viditelného místa na neviditelné. Zrychlení bez porozumění není produktivita — je to dluh.	A3 ai-dnes
+Analogie guláš / robot — co ilustruje?	Kuchyňský robot zvládne akcidentální (nakrájet, míchat, hlídat čas) = AI. Ale ochutnat a rozhodnout „chce to sůl?" = esenciální, zůstává na tobě. A abys ochutnal, musíš vědět, jak má správný guláš chutnat — jako bys ho vařil sám.	A3 intuice
+Příklad 100 000 balíků / 128 řidičů — pointa?	Rozdělit mapu na 128 stejných čtverců vypadá spravedlivě, ale centrum má 1000 zastávek a venkov 5 → flotila je rychlá jako nejpomalejší řidič. AI umí rozvrh, který vypadá hotově, ale tiše plýtvá. (128 řidičů = 128 uzlů výpočetního clusteru.)	A3 intuice
+Verifikační test na „tiše špatně"?	Ptej se: „Kdyby to bylo špatně, poznám to z toho, že se to viditelně zastaví, nebo že výsledek je jen tiše špatně?" Zastaví se → akcidentální, nech na AI. Tiše špatně → esenciální, musíš rozumět ty.	A3 intuice
+Odkud se vzal termín „bug"?	Grace Hopperová ho popularizovala 1947 — do relé počítače Harvard Mark II zalezl skutečný mol, tým ho vytáhl, nalepil do deníku s poznámkou „first actual case of bug being found". Deník existuje dodnes.	A3 anekdoty
+Kdo vymyslel assembler a proč?	Kathleen Boothová (~1947), aby unikla peklu strojového kódu (ruční počítání adres, self-modifying code) — to byl skok 1GL→2GL. Raní programátoři byli často ženy (šestice programátorek ENIACu).	A3 anekdoty
+Čeho se bál John Backus u Fortranu (1957)?	Že nikdo nepřijme jazyk, jehož zkompilovaný kód nebude tak rychlý jako ručně psaný assembler. Proto jeho tým roky stavěl optimalizující překladač. Bariéra nebyla technická, ale důvěra — stejné jako dnes u AI.	A3 anekdoty

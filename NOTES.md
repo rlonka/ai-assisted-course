@@ -14,7 +14,7 @@ Cíl: aby Radek uměl ustát živé Q&A, ne jen text přečíst. Tři nové sekc
 - Zdroj CSS: assets/style.css, sekce „Retenční vrstva". Číslování sekcí posunout, Feynman + Co dál na konec.
 - Pilotně nasazeno v 0001 (A3). TODO: doplnit do ostatních 21 lekcí (obsah přizpůsobit tématu).
 - Slovníček pojmů: v A3 přidán do sekce 1 (Aristoteles, citace Brookse, synonyma esenciální=podstatná/akcidentální=vedlejší, chyták "akcidentální != nehoda") + kompaktní připomínka v Páteři.
-- Anki exporty: `anki/<lekce>.txt`, formát `otázka;odpověď` s hlavičkou (`#separator:semicolon`, `#deck:`, `#notetype:Basic`) pro import na jeden klik. Viz `anki/README.md`. A3 hotová (14 kartiček). TODO: export i pro ostatní lekce.
+- Anki exporty: `anki/<lekce>.txt`, TSV formát `otázka<TAB>odpověď<TAB>tagy` s hlavičkou (`#separator:tab`, `#deck:`, `#notetype:Basic`, `#tags column:3`) pro import na jeden klik. Viz `anki/README.md`. A3 hotová (**37 kartiček**, rozšířeno 2026-07-27 na Radkovu žádost — víc a informativnější; tagy: jadro/vlastnosti/cisla/generace/historie/ai-dnes/namitky/intuice/anekdoty). On-page blok v sekci 12 je jen startovní verze + odkaz na plný soubor. TODO: export i pro ostatní lekce. Generátor: scratchpad/gen_anki.py.
 
 ## Curriculum state
 - Start: 2026-06-24
