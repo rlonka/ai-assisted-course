@@ -107,32 +107,32 @@
   <p>Začni přednášku gulášem, ne kódem. Je neohrožující, každý se zasměje a chytneš i netechnické publikum (manažeři, PI). Pak jen řekneš: <em>„A teď stejná věc — jenom místo guláše je to práce, kterou máte rozdělit mezi lidi nebo mezi počítače."</em> a překlopíš do příkladu níž. Most k publiku máš postavený.</p>
 </div>
 
-<h3>A teď do praxe — oprava 100 000 testů se 128 asistenty</h3>
-<p>Stejná dvouvrstvá struktura, jen v úloze, kterou zná každý ze školy. Úkol: opravit hromadu 100 000 testů a rozdělit ji mezi 128 asistentů. (Těch 128 asistentů je metafora pro 128 uzlů výpočetního clusteru — armáda pracovníků, kterou musíš zaměstnat efektivně. Ať jsou to lidé nebo procesory, problém je stejný.)</p>
+<h3>A teď do praxe — rozvézt 100 000 balíků se 128 řidiči</h3>
+<p>Stejná dvouvrstvá struktura, jen v úloze, kterou si každý představí. Úkol: rozvézt 100 000 balíků po zemi a rozdělit práci mezi 128 řidičů. (Těch 128 řidičů je metafora pro 128 uzlů výpočetního clusteru — armáda pracovníků, kterou musíš zaměstnat efektivně. Ať jsou to lidé nebo procesory, problém je stejný.)</p>
 
 <div class="two-col">
   <div class="col-box col-red">
     <div class="col-label">Esenciální — vlastní problému (rozhoduje člověk)</div>
     <ul>
-      <li><strong>Co je správná odpověď:</strong> stanovit klíč — uznat i jinak formulovanou správnou odpověď? Kolik bodů za půlku? To je jádro, které za tebe nikdo nerozhodne.</li>
-      <li><strong>Jak rozdělit práci:</strong> aby žádný asistent netonul, zatímco jiní čekají. Esejové otázky trvají 10× dýl než zaškrtávací — stejný počet testů ≠ stejná zátěž.</li>
-      <li><strong>Kdy je to hotové správně:</strong> všimnout si, že dva asistenti bodují stejnou odpověď jinak.</li>
+      <li><strong>Jak rozdělit mapu na trasy:</strong> aby nikdo nestál, zatímco jiný nestíhá. Centrum města má na malé ploše 1000 zastávek, venkovský okrsek 5 — stejná plocha ≠ stejná zátěž.</li>
+      <li><strong>Co znamená „doručeno správně":</strong> nechat u dveří? vrátit na depo? dát sousedovi? Tohle pravidlo rozhodne člověk.</li>
+      <li><strong>Kdy trasa nedává smysl:</strong> všimnout si, že řidič zbytečně křižuje město sem a tam.</li>
     </ul>
   </div>
   <div class="col-box col-green">
     <div class="col-label">Akcidentální — jen tření (zvládne nástroj)</div>
     <ul>
-      <li>Rozdat a posbírat stohy papírů</li>
-      <li>Tabulka na sčítání bodů, přepis do systému</li>
-      <li>Sešívačka, rezervace místnosti, občerstvení</li>
-      <li>Sečíst body na jednom testu</li>
+      <li>Navigace a appka na skenování balíků</li>
+      <li>Natankovat a naložit dodávku</li>
+      <li>Vytisknout štítky a seznam zastávek</li>
+      <li>Seřadit pořadí zastávek na jedné hotové trase</li>
     </ul>
   </div>
 </div>
 
 <div class="callout red">
   <div class="callout-label">Past</div>
-  <p>Rozdělíš 100 000 testů na 128 stejně velkých stohů — vypadá to spravedlivě. Jenže jeden stoh je samá esej (10× pomalejší na opravu), jiný samé zaškrtávačky. 127 asistentů skončí do oběda a čeká, jeden dře do noci. <strong>Celá skupina je hotová až s tím nejpomalejším</strong> — 128 asistentů opraví testy stejně rychle jako 16. A protože testy nakonec opravené jsou („funguje to"), nikdo si nevšimne, že to šlo osmkrát rychleji — dokud to někdo nezměří. Přesně tohle udělá AI, když ji necháš rozdělit práci naivně: rozvrh, který <em>vypadá hotově</em>, ale tiše plýtvá. <strong>Akcidentální bariéra (zorganizovat rozdání) zmizela. Esenciální otázka (jak rozdělit chytře) zůstala — jen se schovala, protože „to funguje".</strong></p>
+  <p>Rozsekneš mapu na 128 stejně velkých čtverců — vypadá to spravedlivě. Jenže čtverec s centrem města má 1000 zastávek, venkovský čtverec 5. 127 řidičů dojede v poledne a nudí se, jeden maká do půlnoci. <strong>Flotila je rychlá jako ten nejpomalejší řidič</strong> — 128 řidičů rozveze balíky stejně rychle jako 16. A protože balíky se nakonec doručí („funguje to"), nikdo si nevšimne, že to šlo osmkrát rychleji — dokud to někdo nezměří. Přesně tohle udělá AI, když ji necháš rozdělit práci naivně: rozvrh, který <em>vypadá hotově</em>, ale tiše plýtvá. <strong>Akcidentální bariéra (naplánovat konkrétní trasy) zmizela. Esenciální otázka (jak rozdělit mapu chytře) zůstala — jen se schovala, protože „to funguje".</strong></p>
 </div>
 
 <div class="callout">
