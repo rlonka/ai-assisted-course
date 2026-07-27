@@ -1,0 +1,18 @@
+#separator:semicolon
+#html:false
+#deck:AI-assisted RSE::A3 — No Silver Bullet
+#notetype:Basic
+Kdo a kdy napsal „No Silver Bullet"?;Fred Brooks, 1986, IEEE Computer (autor The Mythical Man-Month, 1975).
+Dva typy komplexity podle Brookse?;Esenciální (vlastní problému, nelze odstranit) a akcidentální (implementační tření, lze redukovat).
+Co dělá AI s komplexitou?;Snižuje akcidentální (boilerplate, syntax, lookup). Esenciální zůstává celá u člověka.
+Co je „silver bullet" / laťka pro zázrak?;Řád magnitudy = 10× zlepšení produktivity. Nic takového neexistuje ani nepřijde.
+Brooksův „faktor pět"?;Jeho odhad největšího skoku v historii SW (2GL→3GL, assembler→Fortran) — jen ~5×, ne 10×.
+Číslo z New Relic 2026?;AI kód má 1,7× víc issues než kód psaný bez AI.
+Číslo z METR (RCT, 2025)?;Zkušení open-source vývojáři na známém kódu ~19 % pomalejší s AI — a cítili se ~20 % rychlejší.
+Čtyři vlastnosti softwaru podle Brookse?;Complexity, Conformity, Changeability, Invisibility.
+Do jaké generace patří Python?;3GL — stejná jako Fortran/C/Java. Pohodlnější, ne vyšší generace.
+Generace jazyků 1–5?;1GL strojový kód, 2GL assembler, 3GL Fortran/C/Python, 4GL SQL/MATLAB/R, 5GL Prolog/constraint solvery.
+Odkud se vzal termín „bug"?;Grace Hopperová popularizovala 1947 — skutečný mol zalezlý v relé počítače Harvard Mark II.
+Přenosný test esenciální vs. akcidentální?;„Můžu to změnit, aniž věc přestane být sama sebou?" Ano→akcidentální, Ne→esenciální.
+Odkud pochází pojmy esence/akcidenty?;Od Aristotela — Brooks je má v názvu eseje („Essence and Accidents"). Rozlišení podstatných a nepodstatných vlastností věci.
+Synonyma pro esenciální / akcidentální?;Esenciální = podstatná (jádro, „CO"). Akcidentální = vedlejší, okolnostní (tření, „JAK"). Pozor: akcidentální ≠ nehoda.

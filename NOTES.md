@@ -13,6 +13,8 @@ Cíl: aby Radek uměl ustát živé Q&A, ne jen text přečíst. Tři nové sekc
 - **🔁 Do kartiček** — 10–12 faktů ve formátu `otázka ; odpověď`, copy-paste do Anki (středník jako oddělovač). CSS: `pre.flashcards`. Uzavřít callout.green s rituálem (denně kartičky + týdně „odříkej naostro"; grilování na vyžádání).
 - Zdroj CSS: assets/style.css, sekce „Retenční vrstva". Číslování sekcí posunout, Feynman + Co dál na konec.
 - Pilotně nasazeno v 0001 (A3). TODO: doplnit do ostatních 21 lekcí (obsah přizpůsobit tématu).
+- Slovníček pojmů: v A3 přidán do sekce 1 (Aristoteles, citace Brookse, synonyma esenciální=podstatná/akcidentální=vedlejší, chyták "akcidentální != nehoda") + kompaktní připomínka v Páteři.
+- Anki exporty: `anki/<lekce>.txt`, formát `otázka;odpověď` s hlavičkou (`#separator:semicolon`, `#deck:`, `#notetype:Basic`) pro import na jeden klik. Viz `anki/README.md`. A3 hotová (14 kartiček). TODO: export i pro ostatní lekce.
 
 ## Curriculum state
 - Start: 2026-06-24
