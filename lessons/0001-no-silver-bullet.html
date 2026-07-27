@@ -44,7 +44,7 @@
 </div>
 
 <!-- 2. Intuice na obyčejných věcech -->
-<h2>2 — Intuice: od kávy ke gulášovi (a zpět k fyzice)</h2>
+<h2>2 — Intuice: od kávy ke gulášovi a rozdělené práci</h2>
 
 <p>Rozdíl esenciální / akcidentální je nejstarší filozofický nástroj, jak se ptát: <em>„Co je na věci nutné, a co je jen náhoda okolností?"</em> Brooks ho jen aplikoval na software. Než ho použiješ na kód, zakotvi si ho na věcech, které zná každý — tohle je zároveň materiál, kterým to vysvětlíš netechnickému publiku.</p>
 
@@ -104,41 +104,41 @@
 
 <div class="callout amber">
   <div class="callout-label">Poznámka pro přednášejícího — guláš je dobrý opening</div>
-  <p>Začni přednášku gulášem, ne kódem. Je neohrožující, každý se zasměje a chytneš i netechnické publikum (manažeři, PI). Pak jen řekneš: <em>„A teď stejná věc — jenom místo guláše je to váš simulační kód."</em> a překlopíš do technického příkladu níž. Most k publiku máš postavený.</p>
+  <p>Začni přednášku gulášem, ne kódem. Je neohrožující, každý se zasměje a chytneš i netechnické publikum (manažeři, PI). Pak jen řekneš: <em>„A teď stejná věc — jenom místo guláše je to práce, kterou máte rozdělit mezi lidi nebo mezi počítače."</em> a překlopíš do příkladu níž. Most k publiku máš postavený.</p>
 </div>
 
-<h3>Zpět k fyzice — N-body simulace na clusteru</h3>
-<p>Stejná dvouvrstvá struktura, jen v tvém oboru. Úkol: paralelizovat výpočet gravitačních sil mezi N tělesy přes MPI na 128 uzlech.</p>
+<h3>A teď do praxe — oprava 100 000 testů se 128 asistenty</h3>
+<p>Stejná dvouvrstvá struktura, jen v úloze, kterou zná každý ze školy. Úkol: opravit hromadu 100 000 testů a rozdělit ji mezi 128 asistentů. (Těch 128 asistentů je metafora pro 128 uzlů výpočetního clusteru — armáda pracovníků, kterou musíš zaměstnat efektivně. Ať jsou to lidé nebo procesory, problém je stejný.)</p>
 
 <div class="two-col">
   <div class="col-box col-red">
-    <div class="col-label">Esenciální — vlastní problému</div>
+    <div class="col-label">Esenciální — vlastní problému (rozhoduje člověk)</div>
     <ul>
-      <li><strong>Numerika:</strong> je algoritmus stabilní? Když zkrátíš časový krok, konverguje, nebo exploduje?</li>
-      <li><strong>Dekompozice domény:</strong> jak rozdělit částice, aby 127 uzlů nečekalo na jeden? U shluků (galaxie) netriviální.</li>
-      <li><strong>Přesnost vs. rychlost:</strong> Barnes-Hut O(N log N) vs. přímý výpočet O(N²) — kdy je aproximace ještě fyzikálně obhajitelná?</li>
+      <li><strong>Co je správná odpověď:</strong> stanovit klíč — uznat i jinak formulovanou správnou odpověď? Kolik bodů za půlku? To je jádro, které za tebe nikdo nerozhodne.</li>
+      <li><strong>Jak rozdělit práci:</strong> aby žádný asistent netonul, zatímco jiní čekají. Esejové otázky trvají 10× dýl než zaškrtávací — stejný počet testů ≠ stejná zátěž.</li>
+      <li><strong>Kdy je to hotové správně:</strong> všimnout si, že dva asistenti bodují stejnou odpověď jinak.</li>
     </ul>
   </div>
   <div class="col-box col-green">
-    <div class="col-label">Akcidentální — tření nástrojů</div>
+    <div class="col-label">Akcidentální — jen tření (zvládne nástroj)</div>
     <ul>
-      <li>MPI boilerplate: <code>MPI_Init</code>, správné datové typy v <code>Allreduce</code></li>
-      <li>Syntaxe mpi4py, alokace NumPy bufferů</li>
-      <li>Slurm skript, <code>#SBATCH</code> direktivy, načtení modulů</li>
-      <li>Překlad Fortran → Python, 1-based → 0-based indexy</li>
+      <li>Rozdat a posbírat stohy papírů</li>
+      <li>Tabulka na sčítání bodů, přepis do systému</li>
+      <li>Sešívačka, rezervace místnosti, občerstvení</li>
+      <li>Sečíst body na jednom testu</li>
     </ul>
   </div>
 </div>
 
 <div class="callout red">
   <div class="callout-label">Past</div>
-  <p>Claude ti vygeneruje MPI kód, který se zkompiluje a poběží — dostaneš čísla, vypadá to hotově. Ale dekompozici domény zvolil tak, jak je typická v jeho trénovacích datech — což pro tvoje shluknuté rozložení může být špatně. Load imbalance ti sežere 90 % škálování a nepoznáš to, dokud si nezměříš, proč to na 128 uzlech běží stejně rychle jako na 16. <strong>Akcidentální bariéra (napsat MPI) zmizela. Esenciální otázka (jak rozdělit tenhle problém) zůstala — jen se schovala, protože kód „funguje".</strong></p>
+  <p>Rozdělíš 100 000 testů na 128 stejně velkých stohů — vypadá to spravedlivě. Jenže jeden stoh je samá esej (10× pomalejší na opravu), jiný samé zaškrtávačky. 127 asistentů skončí do oběda a čeká, jeden dře do noci. <strong>Celá skupina je hotová až s tím nejpomalejším</strong> — 128 asistentů opraví testy stejně rychle jako 16. A protože testy nakonec opravené jsou („funguje to"), nikdo si nevšimne, že to šlo osmkrát rychleji — dokud to někdo nezměří. Přesně tohle udělá AI, když ji necháš rozdělit práci naivně: rozvrh, který <em>vypadá hotově</em>, ale tiše plýtvá. <strong>Akcidentální bariéra (zorganizovat rozdání) zmizela. Esenciální otázka (jak rozdělit chytře) zůstala — jen se schovala, protože „to funguje".</strong></p>
 </div>
 
 <div class="callout">
-  <div class="callout-label">Verifikační test na každý řádek, co ti AI napíše</div>
-  <p><em>„Kdyby tohle rozhodnutí bylo špatně — poznal bych to z toho, že kód spadne, nebo jen z toho, že výsledek je fyzikálně nesmysl?"</em><br>
-  Spadne kompilace / běh → <strong>akcidentální</strong>, nech to klidně na AI.<br>
+  <div class="callout-label">Verifikační test na každé rozhodnutí, co ti AI navrhne</div>
+  <p><em>„Kdyby tohle bylo špatně — poznal bych to z toho, že se to celé viditelně zastaví, nebo jen z toho, že výsledek je tiše špatně?"</em><br>
+  Zastaví se / rozbije viditelně → <strong>akcidentální</strong>, nech to klidně na AI.<br>
   Proběhne, ale výsledek je tiše špatně → <strong>esenciální</strong>, tady musíš rozumět ty.</p>
 </div>
 
