@@ -165,6 +165,7 @@
       <li>High-level jazyky (60. léta)</li>
       <li>Time-sharing / Unix (70. léta)</li>
       <li>OOP, IDE (80. léta)</li>
+      <li>4GL / 5GL (70.–80. léta)</li>
       <li>Internet, open source (90. léta)</li>
       <li>Cloud, kontejnery (2010. léta)</li>
       <li>AI asistenti (2020. léta)</li>
@@ -189,6 +190,19 @@
 <em>Proč ne 10×:</em> Brooks to sám označuje za <strong>největší jednotlivý skok v historii</strong> — možná 5×. Ale odstranilo to jen <em>překlad myšlenky do stroje</em>. Samotná myšlenka — co má program dělat — zůstala celá na tobě. Jakmile jazyk zmizí z cesty, stojíš tváří v tvář problému, a ten je pořád stejně těžký.<br>
 <em>Munice:</em> Brooks vyčísluje high-level jazyky na <strong>„nanejvýš faktor pět"</strong> produktivity — a to je podle něj ten <em>úplně největší</em> skok, jaký kdy nastal. Anekdota: John Backus, tvůrce Fortranu (1957), se bál, že nikdo nepřijme jazyk, jehož zkompilovaný kód nebude tak rychlý jako ručně psaný assembler — proto jeho tým strávil roky na optimalizujícím překladači. Bariéra nebyla technická, ale <em>důvěra</em>.</p>
 
+<div class="callout">
+  <div class="callout-label">Pozor na časté číslování — a proč je Python pořád 3GL jako Fortran</div>
+  <p>Jazyky z 60. let <strong>nejsou 1. generace</strong>. Generace se počítají odspoda, od hardwaru nahoru:</p>
+  <ul>
+    <li><strong>1GL</strong> — strojový kód (čisté binárky, přímo instrukce procesoru)</li>
+    <li><strong>2GL</strong> — assembler (<code>MOV</code>, <code>ADD</code> místo binárek)</li>
+    <li><strong>3GL</strong> — high-level, procedurální/OOP: <strong>Fortran, COBOL, C, Java — a ANO, i Python</strong></li>
+    <li><strong>4GL</strong> — deklarativní/doménové: SQL, MATLAB, R („řekni <em>co</em> chceš, ne jak")</li>
+    <li><strong>5GL</strong> — řešení přes logiku/omezení: Prolog, constraint solvery</li>
+  </ul>
+  <p>To, co Brooks počítá jako „faktor pět", je skok <strong>2GL → 3GL</strong> (assembler → Fortran). A tady je nečekaná pointa pro publikum: <strong>Python je pořád jen 3GL — stejná generace jako Fortran z roku 1957.</strong> Za 65 let jsme se v téhle ose neposunuli o generaci. Python je <em>pohodlnější</em> 3GL, ne <em>vyšší</em> generace. Přesně Brooks: pokrok uvnitř generace je reálný (líp se píše, míň syntaktických chyb = akcidentální), ale není to řádový skok v tom, jak těžké je vymyslet, <em>co</em> program má dělat (esenciální). (Neformální „very high-level language" pro Python/Ruby není samostatná generace — jen mluvený způsob, jak říct „hodně komfortní 3GL".)</p>
+</div>
+
 <p><strong>Time-sharing / Unix (70. léta)</strong><br>
 <em>Předtím:</em> odevzdal jsi štos děrných štítků a na výsledek čekal hodiny až den (batch processing).<br>
 <em>Co to sundalo:</em> zpětnovazební smyčku. Seděl jsi u terminálu a viděl výsledek za vteřiny.<br>
@@ -200,6 +214,11 @@
 <em>Co to sundalo:</em> OOP dalo způsob, jak kód <em>organizovat</em> (zapouzdření, znovupoužití). IDE ubralo mechanickou práci (dokončování, skok na definici, debugger).<br>
 <em>Proč ne 10×:</em> tohle je Brooksův <strong>oblíbený terč</strong> — OOP bylo v roce 1986 přesně ten hype, proti kterému psal. Pomohlo, ale rozhodnout <em>jaké objekty vůbec mají existovat a jak se dělí zodpovědnost</em> je esenciální design. OOP ti dá lepší nádobí, ne recept.<br>
 <em>Munice:</em> Brooks OOP <strong>jmenovitě</strong> odmítl jako silver bullet už v roce 1986, uprostřed největšího nadšení — a historie mu dala za pravdu: dnes je OOP samozřejmost, ne revoluce, přesně jak předpověděl. Anekdota: Smalltalk (Alan Kay, 1972) sliboval přeprogramovat celý průmysl; skončil jako jedno z mnoha paradigmat, ne jako zázrak. Silná pointa pro publikum: <em>„To, co dnes berete jako samozřejmost, bylo kdysi tímhle slibem revoluce."</em></p>
+
+<p><strong>4GL / 5GL (70.–80. léta)</strong> — SQL, MATLAB; Prolog, japonský Fifth Generation Project<br>
+<em>Předtím / slib:</em> „Konec programování. Popíšeš <em>co</em> chceš a systém to udělá — programátory už nebudeš potřebovat." Tohle byl doslovný marketing 4GL v 80. letech.<br>
+<em>Co to sundalo:</em> v úzké doméně reálně hodně — <strong>SQL (4GL) je dodnes všude</strong> a je to obří úspěch. Deklarativně řekneš „chci tyhle řádky" a nemusíš psát smyčky.<br>
+<em>Proč ne 10× (a proč je to důležité pro tebe):</em> <strong>obecný</strong> slib „konec programování" selhal. 4GL uspěl jen tam, kde byla doména úzká a dobře definovaná (dotazy nad daty); mimo ni se rozpadl. 5GL (logické programování) sliboval ještě víc — <strong>japonský Fifth Generation Project (1982–92)</strong> byl národní moonshot za stovky milionů dolarů, který měl logikou a „AI" přeskočit Západ. Skončil jako <em>tichý neúspěch</em>. <strong>Tohle je tvůj nejlepší historický předobraz AI hype:</strong> „popiš, co chceš, a stroj to naprogramuje" už tu jednou bylo — před 40 lety, se stejným slibem. Esenciální komplexita (vědět, co přesně chceš a proč) se nedala odbýt lepší notací tehdy a nedá se ani teď.</p>
 
 <p><strong>Internet, open source (90. léta)</strong><br>
 <em>Předtím:</em> každý si psal všechno od nuly, znovu a znovu.<br>
