@@ -186,32 +186,47 @@
 <p><strong>High-level jazyky (60. léta)</strong> — Fortran, COBOL, C<br>
 <em>Předtím:</em> psalo se v assembleru — ruční registry, adresy paměti, instrukce procesoru.<br>
 <em>Co to sundalo:</em> celou vrstvu „mluvení s procesorem". Napíšeš <code>x = a + b</code> místo deseti řádků přesunů registrů.<br>
-<em>Proč ne 10×:</em> Brooks to sám označuje za <strong>největší jednotlivý skok v historii</strong> — možná 5×. Ale odstranilo to jen <em>překlad myšlenky do stroje</em>. Samotná myšlenka — co má program dělat — zůstala celá na tobě. Jakmile jazyk zmizí z cesty, stojíš tváří v tvář problému, a ten je pořád stejně těžký.</p>
+<em>Proč ne 10×:</em> Brooks to sám označuje za <strong>největší jednotlivý skok v historii</strong> — možná 5×. Ale odstranilo to jen <em>překlad myšlenky do stroje</em>. Samotná myšlenka — co má program dělat — zůstala celá na tobě. Jakmile jazyk zmizí z cesty, stojíš tváří v tvář problému, a ten je pořád stejně těžký.<br>
+<em>Munice:</em> Brooks vyčísluje high-level jazyky na <strong>„nanejvýš faktor pět"</strong> produktivity — a to je podle něj ten <em>úplně největší</em> skok, jaký kdy nastal. Anekdota: John Backus, tvůrce Fortranu (1957), se bál, že nikdo nepřijme jazyk, jehož zkompilovaný kód nebude tak rychlý jako ručně psaný assembler — proto jeho tým strávil roky na optimalizujícím překladači. Bariéra nebyla technická, ale <em>důvěra</em>.</p>
 
 <p><strong>Time-sharing / Unix (70. léta)</strong><br>
 <em>Předtím:</em> odevzdal jsi štos děrných štítků a na výsledek čekal hodiny až den (batch processing).<br>
 <em>Co to sundalo:</em> zpětnovazební smyčku. Seděl jsi u terminálu a viděl výsledek za vteřiny.<br>
-<em>Proč ne 10×:</em> rychlejší iterace = víc pokusů za den. Ale rychlejší dělání chyb neznamená, že tvůj <em>návrh</em> je lepší. Zrychlí to cestu, ne cíl.</p>
+<em>Proč ne 10×:</em> rychlejší iterace = víc pokusů za den. Ale rychlejší dělání chyb neznamená, že tvůj <em>návrh</em> je lepší. Zrychlí to cestu, ne cíl.<br>
+<em>Munice:</em> Brooks argumentuje, že přínos je <strong>stropovaný</strong> — jakmile odezva klesne pod práh lidské pozornosti (řádově zlomek vteřiny), další zrychlení už nic nepřidá. Anekdota: v éře děrných štítků znamenal jeden překlep čekání do druhého dne — <em>celý den kvůli chybějící čárce</em>. Interaktivní terminál tohle utrpení smazal, ale zrychlost přemýšlení nezvedl.</p>
 
 <p><strong>OOP, IDE (80. léta)</strong><br>
 <em>Předtím:</em> kód jako jedna velká hromada; editor bez našeptávače.<br>
 <em>Co to sundalo:</em> OOP dalo způsob, jak kód <em>organizovat</em> (zapouzdření, znovupoužití). IDE ubralo mechanickou práci (dokončování, skok na definici, debugger).<br>
-<em>Proč ne 10×:</em> tohle je Brooksův <strong>oblíbený terč</strong> — OOP bylo v roce 1986 přesně ten hype, proti kterému psal. Pomohlo, ale rozhodnout <em>jaké objekty vůbec mají existovat a jak se dělí zodpovědnost</em> je esenciální design. OOP ti dá lepší nádobí, ne recept.</p>
+<em>Proč ne 10×:</em> tohle je Brooksův <strong>oblíbený terč</strong> — OOP bylo v roce 1986 přesně ten hype, proti kterému psal. Pomohlo, ale rozhodnout <em>jaké objekty vůbec mají existovat a jak se dělí zodpovědnost</em> je esenciální design. OOP ti dá lepší nádobí, ne recept.<br>
+<em>Munice:</em> Brooks OOP <strong>jmenovitě</strong> odmítl jako silver bullet už v roce 1986, uprostřed největšího nadšení — a historie mu dala za pravdu: dnes je OOP samozřejmost, ne revoluce, přesně jak předpověděl. Anekdota: Smalltalk (Alan Kay, 1972) sliboval přeprogramovat celý průmysl; skončil jako jedno z mnoha paradigmat, ne jako zázrak. Silná pointa pro publikum: <em>„To, co dnes berete jako samozřejmost, bylo kdysi tímhle slibem revoluce."</em></p>
 
 <p><strong>Internet, open source (90. léta)</strong><br>
 <em>Předtím:</em> každý si psal všechno od nuly, znovu a znovu.<br>
 <em>Co to sundalo:</em> nemusíš psát parser JSONu — stáhneš knihovnu, kterou napsal někdo jiný. Obří úspora <em>duplicitní</em> práce.<br>
-<em>Proč ne 10×:</em> nejsilnější položka seznamu — reálně to ušetřilo hory práce. Ale znovupoužití řeší <em>už vyřešené</em> problémy. Ten tvůj, nový problém — proč přesně tvoje simulace dává divný výsledek — na to knihovna neexistuje. Esenciální práce je z definice ta, kterou ještě nikdo neudělal.</p>
+<em>Proč ne 10×:</em> nejsilnější položka seznamu — reálně to ušetřilo hory práce. Ale znovupoužití řeší <em>už vyřešené</em> problémy. Ten tvůj, nový problém — proč přesně tvoje simulace dává divný výsledek — na to knihovna neexistuje. Esenciální práce je z definice ta, kterou ještě nikdo neudělal.<br>
+<em>Munice:</em> dnešní aplikace je z velké části <strong>cizí kód</strong> — typický Node.js projekt táhne tisíce tranzitivních závislostí a vlastního kódu je zlomek. Reálná úspora je obří. Ale je to úspora na <em>vyřešených</em> problémech; podíl esenciální práce (to nové) se tím nezmenšil — jen víc vynikl. Anekdota naruby: čím víc cizího kódu taháš, tím míň mu rozumíš — supply-chain incidenty (npm <code>left-pad</code>, 2016; <code>event-stream</code>, 2018) jsou ukázka nové akcidentální komplexity, kterou znovupoužití přineslo.</p>
 
 <p><strong>Cloud, kontejnery (2010. léta)</strong> — AWS, Docker, Kubernetes<br>
 <em>Předtím:</em> koupit server, zapojit, konfigurovat OS, řešit „u mě to funguje".<br>
 <em>Co to sundalo:</em> infrastrukturní tření. Škálování, nasazení, reprodukovatelné prostředí na kliknutí.<br>
-<em>Proč ne 10×:</em> přesunulo to práci z „provozovat servery" na „psát software" — ale <em>co</em> ten software má dělat, se nezměnilo. Navíc to přineslo <strong>vlastní novou akcidentální komplexitu</strong> (kdo někdy ladil Kubernetes, ví). Klasický Brooksův motiv: každý nástroj sundá jedno tření a přinese kus nového.</p>
+<em>Proč ne 10×:</em> přesunulo to práci z „provozovat servery" na „psát software" — ale <em>co</em> ten software má dělat, se nezměnilo. Navíc to přineslo <strong>vlastní novou akcidentální komplexitu</strong> (kdo někdy ladil Kubernetes, ví). Klasický Brooksův motiv: každý nástroj sundá jedno tření a přinese kus nového.<br>
+<em>Munice:</em> ironie na dlaň — vznikla <strong>celá nová profese</strong> „DevOps / Kubernetes inženýr", která před patnácti lety neexistovala. Sundali jsme tření „provozovat server" a vyrobili tření „provozovat orchestrátor". Anekdota: mem <em>„YAML engineer"</em> není vtip zadarmo — konfigurace se stala prací na plný úvazek. Kubernetes má stovky typů objektů; nasadit „hello world" umí být na desítky řádků YAMLu.</p>
 
 <p><strong>AI asistenti (2020. léta)</strong> — Claude Code, Copilot, Cursor<br>
 <em>Předtím:</em> boilerplate, syntax lookup, ruční překlad, generování testů — vše ručně.<br>
 <em>Co to sundává:</em> historicky <strong>nejsilnější útok na akcidentální komplexitu</strong>, jaký jsme viděli. Zvládne toho víc než cokoli před tím.<br>
-<em>Proč ne 10×:</em> a přesně tady je celá pointa lekce — je to <em>jen další položka na tomtéž seznamu</em>. Největší zatím, ale ze stejného druhu: útočí na akcidentální komplexitu. Esenciální (rozumět problému, poznat správný výsledek) zůstává u tebe. A navíc ji umí i <strong>schovat</strong>, což je nový druh nebezpečí.</p>
+<em>Proč ne 10×:</em> a přesně tady je celá pointa lekce — je to <em>jen další položka na tomtéž seznamu</em>. Největší zatím, ale ze stejného druhu: útočí na akcidentální komplexitu. Esenciální (rozumět problému, poznat správný výsledek) zůstává u tebe. A navíc ji umí i <strong>schovat</strong>, což je nový druh nebezpečí.<br>
+<em>Munice — dvě tvrdá čísla:</em> (1) <strong>New Relic (2026):</strong> AI kód má <strong>1,7× víc issues</strong> než kód psaný bez AI. (2) <strong>METR (RCT, 2025):</strong> zkušení open-source vývojáři byli s AI nástroji na známém kódu <strong>~19 % pomalejší</strong> — a přitom čekali zrychlení a <em>cítili se</em> asi o 20 % rychlejší. To je Brooksova past změřená v laboratoři: vnímané zrychlení ≠ měřené zrychlení. Právě proto, že se výsledek <em>cítí</em> hotový, je pokušení přeskočit kontrolu největší.</p>
+
+<div class="callout amber">
+  <div class="callout-label">Kalibrace — kde je tvrdé číslo a kde ilustrace (ať tě nechytí za overclaim)</div>
+  <ul>
+    <li><strong>Tvrdá data (můžeš citovat jako fakt):</strong> Brooksův „faktor pět" u jazyků (jeho vlastní odhad v eseji); New Relic 2026 „1,7× víc issues"; METR 2025 „~19 % pomalejší". Tyhle tři si dohledej a měj u ruky zdroj.</li>
+    <li><strong>Ilustrace / meme (funguje na pódiu, ale neprodávej jako statistiku):</strong> „YAML engineer", supply-chain historky (<code>left-pad</code>, <code>event-stream</code>), „tisíce závislostí". Jsou pravdivé v duchu, ale konkrétní čísla se liší projekt od projektu — používej je jako obraz, ne jako měření.</li>
+    <li><strong>Historická anekdota (barva, ne důkaz):</strong> Backusova obava o rychlost Fortranu, Smalltalkův slib. Skvělé pro vyprávění, špatné jako argument sám o sobě.</li>
+  </ul>
+</div>
 
 <h3>Dvě věci, které musíš na slidu ubránit</h3>
 
