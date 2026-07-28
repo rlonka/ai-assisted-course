@@ -36,8 +36,13 @@ Cíl: aby Radek uměl ustát živé Q&A, ne jen text přečíst. Tři nové sekc
 - Opraven mrtvý odkaz href="#" na C3 v sekci 1 → 0010-deskilling.html.
 - FLAG k ověření: sekce 6 tvrdí „AI-generated testy mají 1,7× vyšší false-positive rate (New Relic 2026)" — vypadá jako přenesení New Relic „1,7× víc issues" na testy. Možná overclaim; do Anki kartiček jsem to NEDÁVAL. Zvážit doložení/změkčení.
 
+## A2 (0015) — Refactoring: retenční balík (přidáno 2026-07-28)
+- A2 je zralejší lekce (už má "Refactoring vs. přepis" + "dva klobouky"), takže vlastní slovníček NEPŘIDÁN (byl by nadbytečný) — jen retenční vrstva. Sekce 12 Páteř / 13 Q&A / 14 kartičky, Feynman→15, Co dál→16. Anki: 26 kartiček.
+- A1 New Relic oprava: sekce 6 už netvrdí "1,7× false-positive rate testů"; přeformulováno na "AI kód obecně nese víc issues (1,7×)" s odkazem na A3.
+
 ## Retenční balík — stav pokrytí (lekce s Páteř+Q&A+kartičky+Anki)
-- Hotovo: A3 (37), B1 (27), B8 (26), B9 (25), A1 (24). Zbývá ~19 lekcí.
+- Hotovo: A3 (37), A1 (24), A2 (26), B1 (27), B8 (26), B9 (25). Zbývá ~18 lekcí.
+- Pozn.: A2 má retenční vrstvu bez slovníčku (lekce už měla dostatečnou terminologii). Slovníček přidávat jen tam, kde jsou cizí/abstraktní pojmy.
 
 ## Curriculum state
 - Start: 2026-06-24

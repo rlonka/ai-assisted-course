@@ -1,0 +1,31 @@
+#separator:tab
+#html:false
+#deck:AI-assisted RSE::A2 — Refactoring
+#notetype:Basic
+#tags column:3
+Co je refactoring?	Změna vnitřní struktury kódu BEZE změny vnějšího chování, v malých ověřitelných krocích. Cíl: srozumitelnější kód, aby další změna byla levná — ne přidat funkci ani opravit chybu.	A2 jadro
+Dvě slova, co nesou celou definici refactoringu?	„Beze změny chování" (jinak je to funkce/oprava) a „malé kroky" (jinak je to sázka). Refactoring je úzký pruh: měníš tvar, garantuješ stejný výstup.	A2 jadro
+Jedno pravidlo refactoringu?	Refactoring bez ověření zachovaného chování není refactoring — je to přepis s nadějí. Bezpečnost je v testu, ne v tom, že „to vypadá ekvivalentně".	A2 jadro
+Přenosný test: je to refactoring?	„Změnil se pozorovatelný výstup?" Ano → není (druhý klobouk: funkce/oprava). Ne, a dokázal to zelený test → refactoring.	A2 jadro
+Refactoring vs. přepis — rozdíl v riziku?	Refactoring: malé ověřitelné kroky, znalost zůstává, vždy zpět o krok, nízké riziko. Přepis: velký skok, zahazuje kód i nezapsané edge cases, ověří se až na konci, vysoké riziko.	A2 prepis
+Co přepis zahodí a co refactoring zachová?	Zapečené znalosti — ten podivný if, co ošetřuje reálný okrajový případ. Refactoring znalost jen přeskládá do lepšího tvaru, nepustí se jí.	A2 prepis
+Pravidlo dvou klobouků (Kent Beck)?	V každém okamžiku máš na hlavě právě jeden: buď přidáváš funkci (mění chování, testy přibývají), NEBO refaktoruješ (chování stejné, testy beze změny procházejí). Nikdy oba naráz.	A2 klobouky
+Proč nemíchat oba klobouky?	Když refaktoruješ a zároveň měníš chování a něco praskne, nevíš, která věc to způsobila. Oddělené klobouky = každý červený test je jednoznačný signál „vrať krok".	A2 klobouky
+Odkud pochází bezpečnost refactoringu?	Ze dvou věcí (obě musí platit): malé kroky (vejde se do hlavy, jde vrátit) + testy jako síť (po každém kroku zelené = pokračuj, červené = vrať).	A2 bezpecnost
+Nejběžnější pojmenované refaktoringy (Fowler)?	Extract Method (vytáhni blok do funkce), Rename (jméno říká záměr), Inline (rozpusť zbytečnou nepřímost), Move (přesuň, kam patří). Pojmenované a mechanické → AI/IDE je zvládají spolehlivě.	A2 bezpecnost
+Co je Extract Method?	Vytáhneš blok kódu do pojmenované funkce. Struktura se změní, výsledek zůstane identický — test na výsledek zůstává zelený (důkaz, že šlo o refactoring).	A2 bezpecnost
+Pravidlo tří u refactoringu?	Refaktoruj, když duplicitu vidíš potřetí. Poprvé napíšeš, podruhé zaskřípeš, potřetí vytáhneš. Dřív je to předčasná abstrakce.	A2 bezpecnost
+Kde je AI v refactoringu akcelerátor?	Mechanické transformace (extract/rename/move) rychle napříč soubory; charakterizační testy kolem legacy kódu; návrh, co vytáhnout; nudné rozsáhlé přejmenování bez únavy.	A2 s-ai
+Kde je AI v refactoringu past?	„Refaktoruje" a tiše změní chování (přepis vydávaný za refactoring); míchá oba klobouky v jednom diffu; velký diff vypadá ekvivalentně, ale není (trust gap C4); bez testů nepoznáš, že chování uteklo.	A2 s-ai
+Rozhodující pravidlo AI refactoringu?	Nejdřív síť, pak skok. Než necháš AI refaktorovat, musí existovat test držící aktuální chování. Nemáš? Nech AI napsat charakterizační testy, ověř je, PAK refaktoruj.	A2 s-ai
+Co jsou charakterizační testy?	Testy, které zafixují, co kód TEĎ dělá (i divné okraje), aniž bys předem znal „správné" chování. Umožní bezpečně refaktorovat legacy kód. Skvělé využití AI.	A2 s-ai
+Kdo napsal kanonický text o refactoringu?	Martin Fowler, Refactoring (1999, 2. vyd. 2018) — definice, katalog pojmenovaných transformací, disciplína malých kroků. Nutné minimum: úvod + kapitola 1.	A2 historie
+Kdo formalizoval refactoring akademicky?	William Opdyke, disertace 1992 — první formalizace behavior-preserving (chování zachovávajících) transformací.	A2 historie
+Jak souvisí refactoring s technickým dluhem?	Ward Cunningham (1992): refactoring je způsob, jak dluh splácet. Bez něj úrok (rostoucí cena změny) narůstá, až se kód stane nezměnitelným.	A2 historie
+Kde je refactoring v cyklu TDD?	Třetí krok red-green-refactor (Beck). Ne oddělená fáze, ale součást rytmu psaní kódu.	A2 historie
+Námitka „AI zrefaktorovala za víkend, super" — odpověď?	Správná otázka: existovaly testy dokazující zachované chování? Když ne, nebyl to refactoring, ale nezreviewovaný přepis kritického kódu. Rychlost bez sítě = nezměřené riziko.	A2 namitky
+Námitka „diff vypadá ekvivalentně, je to bezpečné" — odpověď?	„Vypadá ekvivalentně" != „je ekvivalentní" (past plynulosti, C4). Bezpečnost dokazuje test na zachované chování, ne vzhled diffu.	A2 namitky
+Námitka „refactoring uděláme, až bude čas" — odpověď?	„Potom" nepřijde, dluh roste. Fowler: refaktoruj průběžně (při funkci, opravě, review). S AI stojí malý refactoring zlomek — výmluva „není čas" slábne.	A2 namitky
+Spicy teze A2?	AI udělala z refactoringu nejnebezpečnější operaci — ne že by ho dělala špatně, ale přesvědčivě. Elegantní diff vypadá jako nevinné přeskládání, ale může nést neověřenou změnu chování. Bez testů je to hazard v obleku disciplíny.	A2 namitky
+Jak A2 souvisí s A1 (TDD)?	Testy z TDD jsou přesně ta záchranná síť, co dělá refactoring bezpečným. Refactoring je třetí krok red-green-refactor. Proto A1 předchází A2.	A2 propojeni
+Jak A2 souvisí s A3 a C4?	A3: mechanický refactoring = akcidentální (AI září), rozhodnutí jaká struktura je dobrá = esenciální (zůstává na tobě). C4: „vypadá ekvivalentně" je trust gap aplikovaný na diff.	A2 propojeni

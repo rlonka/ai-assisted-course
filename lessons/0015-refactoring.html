@@ -358,8 +358,90 @@
   </li>
 </ul>
 
-<!-- 12. Feynmanovo cvičení -->
-<h2>12 — Feynmanovo cvičení</h2>
+<!-- 12. Páteř -->
+<h2>12 — Páteř 🎯</h2>
+
+<p>Jádro nastudeno — jedna věta, ze které odvodíš skoro cokoli, a tři kotvy, co si držíš. Když zamrzneš, vrať se sem.</p>
+
+<div class="spine">
+  <p class="spine-sentence">Refactoring = změna struktury kódu <em>beze změny chování</em>, v malých ověřitelných krocích. Bezpečnost stojí na dvou věcech: malé kroky + testy jako síť. S AI: mechaniku (extract/rename) zvládne skvěle, ale umí tiše změnit chování — proto <strong>nejdřív síť, pak skok</strong>.</p>
+  <ul class="spine-anchors">
+    <li><span class="num">beze změny chování</span>To je definice. Změníš pozorovatelný výstup → není to refactoring, je to nová funkce/oprava (druhý klobouk).</li>
+    <li><span class="num">nejdřív síť, pak skok</span>Bez testu držícího chování není AI refactoring rychlý refactoring — je to rychlý hazard s hezčím diffem.</li>
+    <li><span class="num">2 klobouky</span>Buď měníš chování (funkce), NEBO refaktoruješ (chování stejné). Nikdy oba naráz — jinak když test praskne, nevíš proč.</li>
+  </ul>
+</div>
+
+<div class="callout">
+  <div class="callout-label">Přenosný test — je to refactoring?</div>
+  <p>„<strong>Změnil se pozorovatelný výstup?</strong>"<br>
+  Ano → <strong>není to refactoring</strong> (druhý klobouk: funkce nebo oprava).<br>
+  Ne — a dokázal to zelený test → <strong>refactoring</strong>.</p>
+</div>
+
+<!-- 13. Až se tě zeptají -->
+<h2>13 — Až se tě zeptají 🎤</h2>
+
+<p>Ostré dotazy z publika + krátká odpověď s pointou (tučně). Trénuj <em>nahlas</em>, ne čtením.</p>
+
+<div class="qa-item">
+  <p class="qa-q">Nadšení „za víkend": „AI nám za víkend zrefaktorovala celý pipeline — super, ne?"</p>
+  <p class="qa-a">Správná otázka: <em>existovaly testy dokazující zachované chování?</em> Když ne, nebyl to refactoring — byl to <strong>nezreviewovaný přepis kritického kódu</strong> a výsledky můžou být tiše jiné. Rychlost bez sítě není zisk, je to nezměřené riziko.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Námitka „vypadá to dobře": „Diff od AI vypadá ekvivalentně, tak je to bezpečný refactoring."</p>
+  <p class="qa-a">„Vypadá ekvivalentně" ≠ „je ekvivalentní" — past plynulosti (C4). <strong>Bezpečnost dokazuje test na zachované chování, ne vzhled diffu.</strong> Ekvivalentně vypadající diff může nést tichou změnu chování.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Přiznání „a při tom…": „Zrefaktoroval jsem to a při tom opravil pár chyb."</p>
+  <p class="qa-a">To nebyl refactoring — oprava mění chování (druhý klobouk). <strong>Míchání bere diagnostiku:</strong> když test zčervená, nevíš, jestli za to může oprava, nebo přeskládání. Odděl je, nejlíp do samostatných commitů.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Situace „nemám testy": „Kód je hrozný a testy nejsou — ať to AI zrefaktoruje."</p>
+  <p class="qa-a">Nejdřív nech AI napsat <strong>charakterizační testy</strong> — zafixovat, co kód TEĎ dělá (i divné okraje) — ověř je, a teprve pak refaktoruj. Refactoring bez sítě je hazard; psaní těch testů je naopak skvělé využití AI.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Odklad „až bude čas": „Refactoring uděláme, až doděláme funkčnost."</p>
+  <p class="qa-a">„Potom" nikdy nepřijde a dluh roste. Fowler: refaktoruj <em>průběžně</em> — při přidání funkce, opravě, review. <strong>S AI stojí malý refactoring zlomek</strong>, takže výmluva „není čas" slábne.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Návrh „radši přepsat": „Není lepší to rovnou přepsat? Bude to čistší."</p>
+  <p class="qa-a">Přepis zahodí roky zapečených znalostí — ten podivný <code>if</code>, co ošetřuje reálný edge case. Má místo, když je kód opravdu neudržitelný, ale <strong>spustit ho omylem místo refactoringu je drahá chyba</strong> — a AI to umí snadno.</p>
+</div>
+
+<!-- 14. Do kartiček -->
+<h2>14 — Do kartiček 🔁</h2>
+
+<p>Rychlá startovní sada. Zkopíruj blok níž a naimportuj do <a href="https://apps.ankiweb.net/" target="_blank">Anki</a> (oddělovač = středník). Pak pár minut denně.</p>
+
+<div class="callout green">
+  <div class="callout-label">Plná sada je připravená v repu</div>
+  <p>Blok níž je rychlá verze. V repu je <strong>plná sada ~26 kartiček</strong> s podrobnějšími odpověďmi a tématy (jádro, klobouky, bezpečnost, práce s AI, historie, námitky, propojení) — soubor <code>anki/0015-refactoring.txt</code>. Import do Anki na jeden klik, tagy pro procvičování po blocích (<code>tag:bezpecnost</code>, <code>tag:namitky</code>…). Návod: <code>anki/README.md</code>.</p>
+</div>
+
+<pre class="flashcards">Co je refactoring? ; Změna vnitřní struktury kódu BEZE změny vnějšího chování, v malých ověřitelných krocích. Cíl: srozumitelnější kód, ne přidat funkci ani opravit chybu.
+Jedno pravidlo refactoringu? ; Refactoring bez ověření zachovaného chování není refactoring — je to přepis s nadějí. Bezpečnost je v testu, ne v tom, že „to vypadá ekvivalentně".
+Refactoring vs. přepis — rozdíl v riziku? ; Refactoring: malé ověřitelné kroky, znalost zůstává, nízké riziko. Přepis: velký skok, zahazuje kód i nezapsané edge cases, vysoké riziko.
+Pravidlo dvou klobouků (Beck)? ; V každém okamžiku máš právě jeden: buď přidáváš funkci (mění chování), NEBO refaktoruješ (chování stejné). Nikdy oba naráz.
+Proč nemíchat oba klobouky? ; Když refaktoruješ a zároveň měníš chování a něco praskne, nevíš, která věc to způsobila. Oddělené klobouky = červený test je jednoznačný signál „vrať krok".
+Odkud pochází bezpečnost refactoringu? ; Ze dvou věcí (obě musí platit): malé kroky (jde vrátit) + testy jako síť (po každém kroku zelené = pokračuj, červené = vrať).
+Co je Extract Method? ; Vytáhneš blok kódu do pojmenované funkce. Struktura se změní, výsledek zůstane identický — test na výsledek zůstává zelený.
+Rozhodující pravidlo AI refactoringu? ; Nejdřív síť, pak skok. Než necháš AI refaktorovat, musí existovat test držící aktuální chování. Nemáš? Nech AI napsat charakterizační testy, ověř, PAK refaktoruj.
+Co jsou charakterizační testy? ; Testy, které zafixují, co kód TEĎ dělá (i divné okraje), aniž bys předem znal „správné" chování. Umožní bezpečně refaktorovat legacy. Skvělé využití AI.
+Jak A2 souvisí s A1 (TDD)? ; Testy z TDD jsou ta záchranná síť, co dělá refactoring bezpečným. Refactoring je třetí krok red-green-refactor. Proto A1 předchází A2.</pre>
+
+<div class="callout green">
+  <div class="callout-label">Rituál</div>
+  <p>Denně pár minut kartičky + jednou týdně lekci „odříkej naostro" prázdné židli, jako bys ji přednášel. A až budeš chtít ostrý test, řekni v Claude Code „vygriluj mě z A2".</p>
+</div>
+
+<!-- 15. Feynmanovo cvičení -->
+<h2>15 — Feynmanovo cvičení</h2>
 
 <div class="quiz" id="quiz-main">
   <div class="quiz-header">Feynmanův test — Refactoring</div>
@@ -419,8 +501,8 @@
   <div class="quiz-score" id="quiz-score"></div>
 </div>
 
-<!-- 13. Co dál -->
-<h2>13 — Co dál</h2>
+<!-- 16. Co dál -->
+<h2>16 — Co dál</h2>
 
 <p><strong>Co musíš znát před touto lekcí:</strong></p>
 <ul>
