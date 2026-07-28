@@ -32,6 +32,9 @@ Prostý text (TSV), jedna kartička na řádek: `otázka<TAB>odpověď<TAB>tagy`
 - `0015-refactoring.txt` — A2 (26 kartiček): refactoring (změna struktury beze změny chování),
   refactoring vs. přepis, dva klobouky (Beck), odkud pochází bezpečnost, Extract Method / pravidlo tří,
   AI akcelerátor i past (nejdřív síť, pak skok), charakterizační testy, Fowler/Opdyke/tech dluh, námitky.
+- `0016-domain-driven-design.txt` — A4 (26 kartiček): DDD (kód mluví jazykem domény), ubiquitous
+  language a bounded context, doména != byznys, entity vs. value object (jednotky), model = API pro
+  agenta (CLAUDE.md), Evans/modrá kniha, námitky, propojení na B3/A2/C4.
 - `0001-no-silver-bullet.txt` — A3 (37 kartiček): esenciální/akcidentální komplexita,
   Aristoteles, čtyři vlastnosti SW, tvrdá čísla (5×, 1,7×, −19 %), generace jazyků,
   historické vlny, AI dnes + námitky, analogie (guláš, 128 řidičů), anekdoty (bug, Backus).

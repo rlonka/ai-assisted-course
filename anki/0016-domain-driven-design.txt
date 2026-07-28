@@ -1,0 +1,31 @@
+#separator:tab
+#html:false
+#deck:AI-assisted RSE::A4 — Domain-Driven Design
+#notetype:Basic
+#tags column:3
+Co je Domain-Driven Design (DDD)?	Přístup, kde model domény (jak o problému mluví experti) řídí podobu kódu — ne naopak. Jména tříd, funkcí a proměnných jsou slova z domény, ne technické zkratky.	A4 jadro
+Základní myšlenka DDD (jednou větou)?	Software je v jádru překlad z jazyka experta do kódu. Čím větší rozdíl mezi jazyky, tím víc významu se po cestě ztratí. DDD ten rozdíl smrskne na nulu.	A4 jadro
+Jedno pravidlo DDD?	Když jméno v kódu neodpovídá slovu experta, máš skrytý překlad — místo, kde se ztrácí význam a vznikají chyby. DDD ho odstraní tím, že do kódu píše rovnou jazyk domény.	A4 jadro
+Přenosný test DDD?	„Poznal by doménový expert svou vědu ve jménech v kódu, nebo by viděl cizí žargon?" Poznal → DDD. Cizí žargon (data, arr, process) → skrytý překlad.	A4 jadro
+Co znamená „doména" v DDD?	Oblast problému, které někdo rozumí (fyzika, chemie, klimatologie) — NE „byznys". Vědecká doména má obzvlášť bohatý a přesný slovník (jednotky, meze, ostré pojmy).	A4 jadro
+Co je ubiquitous language?	Jeden sdílený slovník domény, který používají všichni: expert v rozhovoru, kód, testy, dokumentace, commity. Žádný „byznys termín" vs. „technický termín" s překladem mezi nimi.	A4 ubiquitous
+Proč platí „pokud slovo není v kódu, neexistuje pojem"?	Když experti rozlišují „ustálenou" a „přechodnou" trajektorii, ale kód zná jen arr, ten rozdíl se ztratil — a s ním možnost ho správně ošetřit. Ubiquitous language pojmy zviditelní.	A4 ubiquitous
+Kam patří ubiquitous language u AI?	Do CLAUDE.md a paměti (B3). Je to jazyk, kterým agentovi sdělíš doménu. Bez něj AI dosadí generický žargon (data, result, process) a zanese tichý překlad zpět.	A4 ubiquitous
+Co je bounded context?	Explicitní hranice, uvnitř které má model a jeho jazyk jeden konzistentní význam. Za hranicí může totéž slovo znamenat něco jiného.	A4 context
+Příklad bounded contextu (slovo „vzorek")?	V měření = fyzický kus materiálu, ve statistice = jedna hodnota z rozdělení, v pipeline = řádek tabulky. DDD: přiznej tři kontexty, neslévej je do jednoho modelu. Hranice je návrh, ne chyba.	A4 context
+Proč je jeden univerzální model anti-vzor?	Buď zbytní do nesrozumitelnosti, nebo tiše lže — stejné slovo znamená v různých částech různé věci. Bounded context říká: víc menších modelů, každý konzistentní uvnitř své hranice.	A4 context
+Bounded context jako scoping nástroj pro AI?	Zadáš agentovi práci uvnitř jednoho ohraničeného kontextu s jeho slovníkem → drží se konzistentně. Pustíš ho na „celý systém" bez hranic → začne pojmy míchat.	A4 context
+Stavební kameny DDD modelu?	Entity (identita v čase), Value Object (jen hodnota), Aggregate (skupina měněná jako celek), Repository (rozhraní pro uložení/získání), Domain Service (operace přes víc objektů).	A4 kameny
+Entity vs. Value Object?	Entity = věc s identitou, co trvá v čase (měření #4711, i když se data mění). Value Object = věc daná jen hodnotou, bez identity (teplota 300 K — dvě stejné jsou zaměnitelné).	A4 kameny
+Proč je pro vědu klíčový Value Object?	Je to místo pro jednotky a validaci. Teplota(300,"K") odmítne zápornou hodnotu; holé 300.0 nikdo neuhlídá. Přesune znalost domény z hlavy autora do typu a vymýtí záměnu jednotek.	A4 kameny
+Jak DDD dělá AI lepší?	Ubiquitous language v CLAUDE.md → AI píše doménovým jazykem. Bounded context ohraničí úkol → nemísí pojmy. Value objects → nezamění jednotky. Pojmenovaný model = agent má co číst.	A4 s-ai
+Kde AI doménový model rozmělní?	Bez slovníku dosadí data/result/process; slije pojmy z různých kontextů do jednoho; terminologický drift (vzorek/sample/item); vygeneruje věrohodně vypadající model, co nesedí na doménu (C4).	A4 s-ai
+Klíčový posun DDD v éře AI?	Doménový model se stal promptovacím kontextem. Ubiquitous language přestal být čitelnost pro lidi a stal se API pro agenta — jazyk, kterým mu sdělíš, o čem tvůj kód je.	A4 s-ai
+Kdo napsal kanonický text DDD?	Eric Evans, Domain-Driven Design (2003) — „modrá kniha". Zavedl ubiquitous language, bounded context, stavební kameny. Praktičtější je Vernon (2013, „červená kniha").	A4 historie
+Kde s DDD začít (nejkratší zdroj)?	Evans, DDD Reference (2015, zdarma) — destilát všech vzorů na ~50 stran. Ne rovnou 500stránková modrá kniha.	A4 historie
+Jak stará je disciplína DDD a o čem je?	~20 let (od 2003), zralá disciplína o komunikaci, ne o technologii. AI ji nevynalezla, ale dramaticky zvýšila její hodnotu.	A4 historie
+Námitka „DDD je enterprise framework s boilerplate" — odpověď?	Srdce DDD nejsou vrstvy ani Repository — je to ubiquitous language + bounded context. Můžeš dělat DDD v jednom skriptu bez jediné třídy. Boilerplate je implementace, ne podstata.	A4 namitky
+Námitka „jsme věda, ne byznys" — odpověď?	Doména = oblast problému, které někdo rozumí, ne byznys. Vědecká doména má bohatší a přesnější slovník než většina byznysů — má z DDD nejvíc co získat, ne nejmíň.	A4 namitky
+Spicy teze A4?	DDD bylo 20 let podceňované jako enterprise ceremonie — a přesně když kód začal psát agent, stalo se nejdůležitější disciplínou návrhu. AI umí syntax, ale doménu nezná; jediné, čím ji řídíš, je jazyk. Ubiquitous language = API pro agenta.	A4 namitky
+Jak A4 souvisí s B3 (CLAUDE.md)?	Ubiquitous language má domov přesně v CLAUDE.md — tam zapíšeš doménový slovník, aby ho agent četl. DDD dodává obsah, B3 dodává mechanismus.	A4 propojeni
+Jak A4 souvisí s A2 a C4?	A2: Rename (arr → trajektorie) je refactoring ve službě modelu. C4: AI vygeneruje věrohodně vypadající model, co nesedí na realitu — musí ho ověřit expert, ne plynulost diffu.	A4 propojeni

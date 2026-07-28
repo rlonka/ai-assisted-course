@@ -40,9 +40,13 @@ Cíl: aby Radek uměl ustát živé Q&A, ne jen text přečíst. Tři nové sekc
 - A2 je zralejší lekce (už má "Refactoring vs. přepis" + "dva klobouky"), takže vlastní slovníček NEPŘIDÁN (byl by nadbytečný) — jen retenční vrstva. Sekce 12 Páteř / 13 Q&A / 14 kartičky, Feynman→15, Co dál→16. Anki: 26 kartiček.
 - A1 New Relic oprava: sekce 6 už netvrdí "1,7× false-positive rate testů"; přeformulováno na "AI kód obecně nese víc issues (1,7×)" s odkazem na A3.
 
+## A4 (0016) — DDD: retenční balík (přidáno 2026-07-28)
+- Slovníček: anglické DDD pojmy česky (ubiquitous language = sdílený jazyk, bounded context = ohraničený kontext, entity/value object) + chyták „doména ≠ byznys". Retenční vrstva: 12 Páteř (překlad / model = API pro agenta / hranice je návrh), 13 Q&A (6 námitek), 14 kartičky; Feynman→15, Co dál→16. Anki: 26 kartiček.
+- Blok A KOMPLETNÍ v retenčním balíku: A1, A2, A3, A4 hotové; zbývá A5 Agile.
+
 ## Retenční balík — stav pokrytí (lekce s Páteř+Q&A+kartičky+Anki)
-- Hotovo: A3 (37), A1 (24), A2 (26), B1 (27), B8 (26), B9 (25). Zbývá ~18 lekcí.
-- Pozn.: A2 má retenční vrstvu bez slovníčku (lekce už měla dostatečnou terminologii). Slovníček přidávat jen tam, kde jsou cizí/abstraktní pojmy.
+- Hotovo: A3 (37), A1 (24), A2 (26), A4 (26), B1 (27), B8 (26), B9 (25). Zbývá ~17 lekcí.
+- Pozn.: slovníček přidávat jen tam, kde jsou cizí/abstraktní pojmy (A2 ho nemá, A4 ano). U zralejších lekcí retenční vrstvu vkládat před Feynmana a přečíslovat.
 
 ## Curriculum state
 - Start: 2026-06-24

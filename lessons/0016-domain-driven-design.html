@@ -148,6 +148,33 @@
   <p>Když jméno v kódu neodpovídá slovu, které by řekl doménový expert, máš v systému skrytý překlad — a každý překlad je místo, kde se ztrácí význam a vznikají chyby. DDD ten překlad odstraňuje tím, že do kódu píše rovnou jazyk domény.</p>
 </div>
 
+<h3>Slovníček — anglické pojmy DDD, česky a v jedné větě</h3>
+
+<p>DDD má pár zažitých anglických termínů. Než je použiješ na pódiu, měj u každého český glos a jednořádkové vysvětlení — ať je můžeš vyslovit a hned přeložit.</p>
+
+<div class="two-col">
+  <div class="col-box">
+    <div class="col-label">Dva pilíře — celé DDD stojí na nich</div>
+    <ul>
+      <li><strong>Ubiquitous language</strong> (všudypřítomný / sdílený jazyk) — jeden slovník domény pro experta, kód, testy i dokumentaci</li>
+      <li><strong>Bounded context</strong> (ohraničený kontext) — hranice, uvnitř které má pojem jeden konzistentní význam</li>
+    </ul>
+  </div>
+  <div class="col-box">
+    <div class="col-label">Stavební kameny — tvary modelu</div>
+    <ul>
+      <li><strong>Entity</strong> (entita) — věc s identitou, co trvá v čase (měření #4711)</li>
+      <li><strong>Value Object</strong> (hodnotový objekt) — věc daná jen hodnotou (Teplota 300 K)</li>
+      <li>+ Aggregate, Repository, Domain Service (viz sekce 4)</li>
+    </ul>
+  </div>
+</div>
+
+<div class="callout amber">
+  <div class="callout-label">⚠️ Chyták — „doména" ≠ „byznys"</div>
+  <p><strong>Doména</strong> znamená <em>oblast problému, které někdo rozumí</em> — fyzika, chemie, klimatologie. Ne „byznys". Právě proto DDD sedí na vědecký kód líp než na většinu enterprise aplikací: vaše doména má bohatší a přesnější slovník (jednotky, meze platnosti, ostré pojmy).</p>
+</div>
+
 <!-- 2. Ubiquitous language -->
 <h2>2 — Ubiquitous language: sdílený jazyk</h2>
 
@@ -355,8 +382,90 @@
   </li>
 </ul>
 
-<!-- 12. Feynmanovo cvičení -->
-<h2>12 — Feynmanovo cvičení</h2>
+<!-- 12. Páteř -->
+<h2>12 — Páteř 🎯</h2>
+
+<p>Jádro nastudeno — jedna věta, ze které odvodíš skoro cokoli, a tři kotvy, co si držíš. Když zamrzneš, vrať se sem.</p>
+
+<div class="spine">
+  <p class="spine-sentence">DDD = kód mluví jazykem <em>domény</em>, ne stroje. Software je překlad z jazyka experta do kódu — DDD ten překlad smrskne na nulu. Dva pilíře: <strong>ubiquitous language</strong> (jeden sdílený slovník) + <strong>bounded context</strong> (kde pojem platí). S AI: doménový model = promptovací kontext, jazyk, kterým agenta řídíš.</p>
+  <ul class="spine-anchors">
+    <li><span class="num">překlad</span>Software je překlad z jazyka experta do kódu; každý překlad ztrácí význam. DDD ho smrskne na nulu — kód a expert mluví stejně.</li>
+    <li><span class="num">model = API pro agenta</span>Ubiquitous language v CLAUDE.md je jazyk, kterým agentovi sdělíš doménu. Bez něj dosadí generické data/result/process.</li>
+    <li><span class="num">hranice je návrh</span>Jedno slovo = jeden význam jen uvnitř bounded contextu. Univerzální model pro celý systém tiše lže.</li>
+  </ul>
+</div>
+
+<div class="callout">
+  <div class="callout-label">Přenosný test — mluví kód doménou?</div>
+  <p>„<strong>Poznal by doménový expert svou vědu ve jménech v kódu, nebo by viděl cizí žargon?</strong>"<br>
+  Poznal by svou vědu → <strong>DDD</strong> (kód mluví doménou).<br>
+  Cizí žargon (<code>data</code>, <code>arr</code>, <code>process</code>) → <strong>skrytý překlad</strong>, který nikdo neudrží.</p>
+</div>
+
+<!-- 13. Až se tě zeptají -->
+<h2>13 — Až se tě zeptají 🎤</h2>
+
+<p>Ostré dotazy z publika + krátká odpověď s pointou (tučně). Trénuj <em>nahlas</em>, ne čtením.</p>
+
+<div class="qa-item">
+  <p class="qa-q">Námitka „enterprise": „DDD je enterprise framework s vrstvami a boilerplate, ne pro nás."</p>
+  <p class="qa-a">Srdce DDD nejsou vrstvy ani třídy „Repository" — je to <strong>ubiquitous language + bounded context</strong>. Můžeš dělat DDD v jednom skriptu bez jediné třídy, stačí, že jména odpovídají tomu, jak experti mluví. Boilerplate je implementace, ne podstata.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Námitka „nejsme byznys": „Jsme věda, ne byznys — DDD se nás netýká."</p>
+  <p class="qa-a">Doména neznamená byznys — je to <em>oblast problému, které někdo rozumí</em>. Vaše fyzika/chemie má bohatší a přesnější slovník než většina byznysů. <strong>Vědecký kód má z DDD nejvíc co získat</strong>, ne nejmíň.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Námitka „jeden model": „Máme jeden datový model pro celý systém, ať platí všude."</p>
+  <p class="qa-a">To je přesně anti-vzor, který řeší bounded context. Univerzální model buď zbytní do nesrozumitelnosti, nebo <strong>tiše lže</strong> — stejné slovo znamená v různých částech různé věci. Přiznej hranice: víc menších konzistentních modelů.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Otázka „proč teď": „Proč zrovna s AI na DDD záleží víc?"</p>
+  <p class="qa-a">Protože kód píše agent, který tvou doménu nezná. Ubiquitous language přestal být čitelnost pro lidi a <strong>stal se API pro agenta</strong> — jazyk, kterým mu vůbec sdělíš, co má stavět.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Nadšení „AI to zvládla": „AI mi vygenerovala pěkný doménový model — hotovo?"</p>
+  <p class="qa-a">Pozor na trust gap (C4): model <em>vypadá</em> doménově, ale nemusí sedět na to, jak experti skutečně mluví. <strong>Model musí ověřit doménový expert, ne plynulost diffu.</strong></p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Otázka „k čemu value object": „Proč <code>Teplota(300,'K')</code> místo holého <code>300.0</code>?"</p>
+  <p class="qa-a">Přesune jednotku, meze a validaci z hlavy autora do typu. <code>Teplota(300,"K")</code> odmítne nesmysl a nejde zavolat se špatnou jednotkou; holé <code>300.0</code> spoléhá na pozornost. <strong>Vymýtí záměnu jednotek — klasickou vědeckou chybu.</strong></p>
+</div>
+
+<!-- 14. Do kartiček -->
+<h2>14 — Do kartiček 🔁</h2>
+
+<p>Rychlá startovní sada. Zkopíruj blok níž a naimportuj do <a href="https://apps.ankiweb.net/" target="_blank">Anki</a> (oddělovač = středník). Pak pár minut denně.</p>
+
+<div class="callout green">
+  <div class="callout-label">Plná sada je připravená v repu</div>
+  <p>Blok níž je rychlá verze. V repu je <strong>plná sada ~26 kartiček</strong> s podrobnějšími odpověďmi a tématy (jádro, oba pilíře, stavební kameny, práce s AI, historie, námitky, propojení) — soubor <code>anki/0016-domain-driven-design.txt</code>. Import do Anki na jeden klik, tagy pro procvičování po blocích (<code>tag:ubiquitous</code>, <code>tag:namitky</code>…). Návod: <code>anki/README.md</code>.</p>
+</div>
+
+<pre class="flashcards">Co je Domain-Driven Design (DDD)? ; Přístup, kde model domény (jak o problému mluví experti) řídí podobu kódu — ne naopak. Jména v kódu jsou slova z domény, ne technické zkratky.
+Základní myšlenka DDD? ; Software je v jádru překlad z jazyka experta do kódu. Čím větší rozdíl mezi jazyky, tím víc významu se ztratí. DDD ten rozdíl smrskne na nulu.
+Co je ubiquitous language? ; Jeden sdílený slovník domény pro všechny: expert v rozhovoru, kód, testy, dokumentace, commity. Žádný „byznys termín" vs. „technický termín" s překladem mezi nimi.
+Co je bounded context? ; Explicitní hranice, uvnitř které má model a jeho jazyk jeden konzistentní význam. Za hranicí může totéž slovo znamenat něco jiného. Hranice je návrh, ne chyba.
+Co znamená „doména" v DDD? ; Oblast problému, které někdo rozumí (fyzika, chemie, klimatologie) — NE „byznys". Vědecká doména má obzvlášť bohatý a přesný slovník.
+Entity vs. Value Object? ; Entity = věc s identitou, co trvá v čase (měření #4711). Value Object = věc daná jen hodnotou, bez identity (Teplota 300 K — dvě stejné jsou zaměnitelné).
+Proč je pro vědu klíčový Value Object? ; Je to místo pro jednotky a validaci. Teplota(300,"K") odmítne zápornou hodnotu; holé 300.0 nikdo neuhlídá. Vymýtí záměnu jednotek — klasickou vědeckou chybu.
+Klíčový posun DDD v éře AI? ; Doménový model se stal promptovacím kontextem. Ubiquitous language přestal být čitelnost pro lidi a stal se API pro agenta — jazyk, kterým mu sdělíš, o čem kód je.
+Kam patří ubiquitous language u AI? ; Do CLAUDE.md a paměti (B3). Bez něj AI dosadí generický žargon (data, result, process) a zanese tichý překlad zpět.
+Kdo napsal kanonický text DDD? ; Eric Evans, Domain-Driven Design (2003) — „modrá kniha". Nejkratší start: Evans DDD Reference (2015, zdarma, ~50 stran).</pre>
+
+<div class="callout green">
+  <div class="callout-label">Rituál</div>
+  <p>Denně pár minut kartičky + jednou týdně lekci „odříkej naostro" prázdné židli, jako bys ji přednášel. A až budeš chtít ostrý test, řekni v Claude Code „vygriluj mě z A4".</p>
+</div>
+
+<!-- 15. Feynmanovo cvičení -->
+<h2>15 — Feynmanovo cvičení</h2>
 
 <div class="quiz" id="quiz-main">
   <div class="quiz-header">Feynmanův test — Domain-Driven Design</div>
@@ -416,8 +525,8 @@
   <div class="quiz-score" id="quiz-score"></div>
 </div>
 
-<!-- 13. Co dál -->
-<h2>13 — Co dál</h2>
+<!-- 16. Co dál -->
+<h2>16 — Co dál</h2>
 
 <p><strong>Co musíš znát před touto lekcí:</strong></p>
 <ul>
