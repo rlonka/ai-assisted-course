@@ -46,6 +46,7 @@ Prostý text (TSV), jedna kartička na řádek: `otázka<TAB>odpověď<TAB>tagy`
 - `0005-memory-a-claude-md.txt` — B3 (20 kartiček): CLAUDE.md (konfigurace projektu pro agenta), tři typy paměti (CLAUDE.md/memory/settings.json), hierarchie global/projekt/lokal, co patří dovnitř, technika psaní, námitky.
 - `0006-skills-a-slash-commands.txt` — B4 (20 kartiček): skill (opakovaný postup = /příkaz), skill vs. prompt/CLAUDE.md/hook, anatomie SKILL.md, description = rozhraní, progressive disclosure, pravidlo tří, DRY/Extract Method, námitky.
 - `0007-hooks.txt` — B5 (20 kartiček): hook (deterministický guardrail, shell skript mimo model), exit 2 = blokuj, hook vs. skill (kdo drží spoušť), eventy (PreToolUse...), determinismus vs. pravděpodobnost, CI/CD původ, auditovatelnost.
+- `0008-mcp.txt` — B6 (20 kartiček): MCP (protokol pro dosah k externím nástrojům/datům), M×N → M+N, tools/resources/prompts, klient-server (stdio/HTTP), dosah ne guardrail (páruj s hooky), LSP/USB analogie, námitky.
 - `0002-harness-vs-guardrails.txt` — B1 (27 kartiček): harness vs. guardrails (co umí / co nesmí),
   metafory (postroj, svodidla), architektura requestu, exit code 2, determinismus,
   komponenty (memory/skills/MCP/hooks/subagents), námitky, propojení na A3.

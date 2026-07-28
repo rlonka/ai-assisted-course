@@ -1,0 +1,25 @@
+#separator:tab
+#html:false
+#deck:AI-assisted RSE::B6 — MCP
+#notetype:Basic
+#tags column:3
+Co je MCP?	Model Context Protocol — standardizovaný protokol, jak dát agentovi dosah k externím nástrojům a datům. Připojíš MCP server, agent s ním umí pracovat bez vlastní integrace. Vrstva 4.	B6 jadro
+MCP jednou větou (jedno pravidlo)?	Není to nástroj, je to protokol — jazyk, kterým agent mluví s libovolným nástrojem. Nepiš N integrací pro N nástrojů; napiš/použij MCP server jednou a mluví s ním každý klient.	B6 jadro
+Memory/skill/hook/MCP — čím se liší role?	Memory je znalost, skill je postup, hook je hranice, MCP je dosah (přístup k externím zdrojům).	B6 jadro
+Přenosný test: MCP, nebo ne?	Opakovaný standardizovaný přístup k externímu systému → MCP. Jednorázové spuštění příkazu → Bash. Lokální postup → skill.	B6 jadro
+Jaký problém MCP řeší (M×N)?	Bez standardu: M klientů × N nástrojů = M×N vlastních integrací. S MCP: každý klient mluví MCP, každý nástroj má jeden server = M+N. Násobení → sčítání.	B6 mxn
+Co se stane, když přidáš nový nástroj (s MCP vs. bez)?	Bez protokolu: N nových adaptérů (jeden pro každého klienta). S MCP: jeden server, mluví s ním všichni klienti.	B6 mxn
+Co MCP server nabízí (tři druhy)?	Tools (akce s vedlejšími efekty — spusť dotaz, zařaď job), Resources (data ke čtení — obsah, řádek DB, stav jobu), Prompts (předpřipravené šablony). Nejčastěji tools + resources.	B6 nabidka
+Tools vs. Resources — a proč záleží?	Tools = akce (vedlejší efekty, rizikovější). Resources = data ke čtení (kontext, ne akce). Rozlišení má důsledek pro bezpečnost: tool co smaže řádek jistíš PreToolUse hookem.	B6 nabidka
+Architektura MCP?	Klient–server. Klient (Claude Code) se připojí k serveru přes transport: lokálně stdio (server jako proces na tvém stroji) nebo vzdáleně HTTP (sdílená služba).	B6 architektura
+Lokální vs. vzdálený server — rozdíl pro agenta?	Žádný. Oba mluví stejným protokolem; agent nemusí vědět, jestli je nástroj lokální nebo za sítí. To je smysl standardu.	B6 architektura
+Jak se MCP servery připojují?	V settings.json, sekce mcpServers: lokální přes command/args (proces), vzdálený přes url. Připojení = konfigurace, ne kód.	B6 architektura
+Kdy použít MCP?	Opakovaný přístup k externímu systému (DB, cluster, API), existuje hotový server, přístup chceš sdílet napříč klienty/týmem, integrace dlouhodobá, chceš standardizovaný auditovatelný způsob.	B6 kdy
+Kdy NEsahat po MCP?	Jednorázové spuštění příkazu → Bash. Lokální postup → skill. Server "pro jistotu" bez potřeby. Něco, co zvládne shell/soubor. Server by dal široký přístup, který neuhlídáš.	B6 kdy
+Nejbližší analogie MCP (historicky)?	LSP (Language Server Protocol, Microsoft 2016): před ním každý editor psal podporu pro každý jazyk (editorů × jazyků); LSP = jeden server na jazyk. MCP je LSP pro AI nástroje. Také ODBC/JDBC, USB, device drivers.	B6 historie
+Proč se říká "USB-C pro AI"?	MCP je jeden standardní konektor místo desítek proprietárních integrací — jako USB nahradilo desítky konektorů. Nudná, ale zásadní standardizace.	B6 historie
+Námitka "MCP je zbytečná komplexita, stačí Bash" — odpověď?	Na jednorázové věci ano. MCP se vyplatí u opakovaného standardizovaného přístupu s víc klienty/lidmi. MCP nepřidává složitost — odstraňuje M×N. Komplexita je v tom M×N, ne v MCP.	B6 namitky
+Námitka "napojím DB přes MCP, tak je chráněná" — odpověď?	MCP je dosah, ne guardrail. Dává víc přístupu, ne míň; sám nic neblokuje. Bezpečnost přidáváš okolo: read-only server, omezená práva, PreToolUse hook na rizikové tools.	B6 namitky
+Námitka "musím napsat vlastní server pro každý nástroj" — odpověď?	Ne. Pro běžné systémy (filesystem, Postgres, Git, GitHub, Slack) existují hotové servery — připojíš konfigurací. Vlastní píšeš jen pro vlastní systém. Běžný nástroj = konfigurace, ne vývoj.	B6 namitky
+Spicy teze B6?	MCP je nejpřeceňovanější i nejpodceňovanější vrstva zároveň. Není zázrak ani móda — je to LSP pro agenty, nudná důležitá standardizace. A nudná standardizace vždy vyhraje nad chytrou vlastní integrací.	B6 namitky
+Jak B6 souvisí s B5 (hooks) a B1?	B1: MCP je harness (dosah, pozitivní), sám neomezuje. B5: MCP dává dosah, hook drží hranici — rizikový MCP tool (smaž řádek) jistí PreToolUse hook. MCP bez hooků je dosah bez brzdy.	B6 propojeni

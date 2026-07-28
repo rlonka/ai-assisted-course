@@ -368,7 +368,89 @@
 </ul>
 
 <!-- 12. Feynmanovo cvičení -->
-<h2>12 — Feynmanovo cvičení</h2>
+<h2>12 — Páteř 🎯</h2>
+
+<p>Jádro nastudeno — jedna věta, ze které odvodíš skoro cokoli, a tři kotvy, co si držíš. Když zamrzneš, vrať se sem.</p>
+
+<div class="spine">
+  <p class="spine-sentence">MCP = standardizovaný protokol, jak dát agentovi <em>dosah</em> k externím nástrojům a datům. Řeší M×N → M+N: nepiš N integrací, napiš/použij MCP server jednou a mluví s ním každý klient. Je to <strong>dosah (harness)</strong>, ne guardrail — páruj s hooky. Vrstva 4.</p>
+  <ul class="spine-anchors">
+    <li><span class="num">M×N → M+N</span>Standardizace rozhraní mění násobení na sčítání (jako USB / LSP / JDBC). Přidáš nástroj → jeden server, ne N adaptérů.</li>
+    <li><span class="num">dosah, ne guardrail</span>MCP dává přístup (víc, ne míň); sám nic neblokuje. Bezpečnost přidáváš: read-only server + PreToolUse hook na rizikové tools.</li>
+    <li><span class="num">tools / resources / prompts</span>Tools = akce (vedlejší efekty, rizikové). Resources = data ke čtení (kontext). Prompts = šablony. Nejčastěji tools + resources.</li>
+  </ul>
+</div>
+
+<div class="callout">
+  <div class="callout-label">Přenosný test — MCP, nebo ne?</div>
+  <p>„<strong>Je to opakovaný standardizovaný přístup k externímu systému?</strong>"<br>
+  Ano → <strong>MCP</strong>.<br>
+  Jednorázové spuštění příkazu → <strong>Bash</strong>. Lokální postup → <strong>skill</strong>.</p>
+</div>
+
+<!-- 13. Až se tě zeptají -->
+<h2>13 — Až se tě zeptají 🎤</h2>
+
+<p>Ostré dotazy z publika + krátká odpověď s pointou (tučně). Trénuj <em>nahlas</em>, ne čtením.</p>
+
+<div class="qa-item">
+  <p class="qa-q">Námitka „stačí Bash": „MCP je zbytečná komplexita — mně stačí, když agent spustí skript přes Bash."</p>
+  <p class="qa-a">Na jednorázové věci ano. MCP se vyplatí u <em>opakovaného standardizovaného</em> přístupu, co používá víc klientů/lidí. <strong>MCP nepřidává složitost — odstraňuje M×N.</strong> Komplexita je v tom M×N, ne v MCP.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Nepochopení „bezpečnost": „Napojím databázi přes MCP, tak je chráněná, ne?"</p>
+  <p class="qa-a">MCP je <em>dosah</em>, ne guardrail — dává víc přístupu, ne míň; sám nic neblokuje. <strong>Bezpečnost přidáváš okolo:</strong> read-only server, omezená oprávnění, PreToolUse hook na rizikové tools. MCP se zápisem a bez hooku je otevřená brána.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Obava „vlastní server": „Musím napsat vlastní MCP server pro každý nástroj?"</p>
+  <p class="qa-a">Ne. Pro běžné systémy (filesystem, Postgres, Git, GitHub, Slack) existují <strong>hotové servery</strong> — jen připojíš konfigurací. Vlastní píšeš jen pro <em>vlastní</em> systém (interní API, váš Slurm wrapper). Napojení běžného nástroje je konfigurace, ne vývoj.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Otázka „tools vs. resources": „Jaký je rozdíl mezi tools a resources?"</p>
+  <p class="qa-a"><strong>Tools</strong> = akce s vedlejším efektem (spusť dotaz, zařaď job) — rizikovější. <strong>Resources</strong> = data ke čtení (obsah, řádek DB, stav jobu) — kontext, ne akce. Rozdíl má důsledek pro bezpečnost: rizikový tool jistíš hookem.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Otázka „co to vlastně řeší": „Řekni MCP jednou větou — co řeší?"</p>
+  <p class="qa-a">Kombinatorickou explozi integrací: M klientů × N nástrojů → <strong>M+N</strong>. Standardní protokol místo N ad-hoc adaptérů. <strong>Je to LSP (nebo USB-C) pro agenty.</strong></p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Otázka „lokální vs. vzdálený": „Je rozdíl, jestli server běží lokálně, nebo na síti?"</p>
+  <p class="qa-a">Pro agenta žádný. Lokální (stdio, proces na tvém stroji) i vzdálený (HTTP, sdílená služba) mluví <strong>stejným protokolem</strong>. Agent nemusí vědět, jestli je nástroj lokální nebo za sítí — to je smysl standardu.</p>
+</div>
+
+<!-- 14. Do kartiček -->
+<h2>14 — Do kartiček 🔁</h2>
+
+<p>Rychlá startovní sada. Zkopíruj blok níž a naimportuj do <a href="https://apps.ankiweb.net/" target="_blank">Anki</a> (oddělovač = středník). Pak pár minut denně.</p>
+
+<div class="callout green">
+  <div class="callout-label">Plná sada je připravená v repu</div>
+  <p>Blok níž je rychlá verze. V repu je <strong>plná sada ~22 kartiček</strong> s podrobnějšími odpověďmi a tématy (jádro, M×N, co server nabízí, architektura, kdy použít, historie/LSP, námitky) — soubor <code>anki/0008-mcp.txt</code>. Import do Anki na jeden klik, tagy pro procvičování po blocích (<code>tag:mxn</code>, <code>tag:namitky</code>…). Návod: <code>anki/README.md</code>.</p>
+</div>
+
+<pre class="flashcards">Co je MCP? ; Model Context Protocol — standardizovaný protokol, jak dát agentovi dosah k externím nástrojům a datům. Připojíš MCP server, agent s ním umí pracovat bez vlastní integrace. Vrstva 4.
+MCP jednou větou (jedno pravidlo)? ; Není to nástroj, je to protokol — jazyk, kterým agent mluví s libovolným nástrojem. Nepiš N integrací pro N nástrojů; napiš/použij MCP server jednou.
+Jaký problém MCP řeší (M×N)? ; Bez standardu: M klientů × N nástrojů = M×N vlastních integrací. S MCP: každý klient mluví MCP, každý nástroj má jeden server = M+N. Násobení → sčítání.
+Co MCP server nabízí (tři druhy)? ; Tools (akce s vedlejšími efekty — spusť dotaz, zařaď job), Resources (data ke čtení — obsah, řádek DB, stav jobu), Prompts (předpřipravené šablony). Nejčastěji tools + resources.
+Tools vs. Resources — a proč záleží? ; Tools = akce (vedlejší efekty, rizikovější). Resources = data ke čtení (kontext, ne akce). Rozlišení má důsledek pro bezpečnost: tool co smaže řádek jistíš hookem.
+Architektura MCP? ; Klient–server. Klient (Claude Code) se připojí k serveru přes transport: lokálně stdio (server jako proces na tvém stroji) nebo vzdáleně HTTP (sdílená služba).
+Lokální vs. vzdálený server — rozdíl pro agenta? ; Žádný. Oba mluví stejným protokolem; agent nemusí vědět, jestli je nástroj lokální nebo za sítí. To je smysl standardu.
+Nejbližší analogie MCP (historicky)? ; LSP (Language Server Protocol, Microsoft 2016): před ním editor × jazyk integrace; LSP = jeden server na jazyk. MCP je LSP pro AI nástroje. Také ODBC/JDBC, USB, device drivers.
+Kdy NEsahat po MCP? ; Jednorázové spuštění příkazu → Bash. Lokální postup → skill. Server „pro jistotu" bez potřeby. Něco, co zvládne shell/soubor. Server by dal široký přístup, který neuhlídáš.
+Spicy teze B6? ; MCP je nejpřeceňovanější i nejpodceňovanější vrstva zároveň. Není zázrak ani móda — je to LSP pro agenty, nudná důležitá standardizace. A nudná standardizace vždy vyhraje nad chytrou vlastní integrací.</pre>
+
+<div class="callout green">
+  <div class="callout-label">Rituál</div>
+  <p>Denně pár minut kartičky + jednou týdně lekci „odříkej naostro" prázdné židli, jako bys ji přednášel. A až budeš chtít ostrý test, řekni v Claude Code „vygriluj mě z B6".</p>
+</div>
+
+<!-- 15. Feynmanovo cvičení -->
+<h2>15 — Feynmanovo cvičení</h2>
 
 <div class="quiz" id="quiz-main">
   <div class="quiz-header">Feynmanův test — MCP</div>
@@ -429,7 +511,7 @@
 </div>
 
 <!-- 13. Co dál -->
-<h2>13 — Co dál</h2>
+<h2>16 — Co dál</h2>
 
 <p><strong>Co musíš znát před touto lekcí:</strong></p>
 <ul>
