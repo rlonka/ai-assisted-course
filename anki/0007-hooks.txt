@@ -1,0 +1,25 @@
+#separator:tab
+#html:false
+#deck:AI-assisted RSE::B5 — Hooks
+#notetype:Basic
+#tags column:3
+Co je hook?	Shell skript, který harness spustí automaticky při určité události (než agent zavolá nástroj, po editaci, na konci session). Neprochází modelem; vrátí exit code, podle něj se akce povolí nebo zablokuje. Vrstva 3.	B5 jadro
+Jedno pravidlo hooku?	Když spolehlivost nesmí záviset na tom, co si model "myslí", je to hook. Hook nežádá agenta o správné chování — fyzicky mu nedovolí chovat se špatně.	B5 jadro
+Co znamená exit code 2 u hooku?	U PreToolUse: exit 2 = zablokuj akci (nespustí se). Cokoli jiného = povol. Text na stderr se ukáže agentovi jako důvod.	B5 jadro
+Přenosný test: CLAUDE.md, nebo hook?	"Co když model instrukci v jednom z tisíce běhů ignoruje?" Nic hrozného → CLAUDE.md. Smazaná data / rozbitý main / uniklý token → hook.	B5 jadro
+Hook vs. skill — v čem je rozdíl?	Kdo drží spoušť. Skill vyvoláš ty (dá se zapomenout, prochází modelem, jen navrhuje). Hook se spustí sám (nedá se obejít, mimo model, umí zablokovat exit 2).	B5 vs-skill
+Skill vs. hook — pozitivní vs. negativní architektura?	Skill je pozitivní (dáváš schopnost na povel, harness). Hook je negativní (definuješ hranici, kterou nelze překročit, guardrail). Skill rozšiřuje; hook omezuje.	B5 vs-skill
+Jak se hook konfiguruje?	V settings.json navážeš shell příkaz na událost. Hook dostane na stdin JSON s daty události (jaký nástroj, s jakými argumenty), rozhodne se a vrátí exit code.	B5 anatomie
+Nejdůležitější události hooku?	PreToolUse (než agent zavolá nástroj — umí blokovat exit 2), PostToolUse (po nástroji, např. formatter), UserPromptSubmit, Stop (agent končí — např. testy zelené), SessionStart/SessionEnd.	B5 anatomie
+Který event hooku umí zablokovat akci?	PreToolUse — spouští se před zavoláním nástroje, exit 2 akci zastaví. Ostatní eventy reagují až po akci nebo kolem ní.	B5 anatomie
+Kdy použít hook?	Kritický invariant (žádný commit do main), něco se musí stát automaticky (formátovat po editaci), bezpečnostní hranice (nemazat data/), ověření na konci (testy zelené), spolehlivost nesmí záviset na paměti ani modelu.	B5 kdy
+Kdy NEdělat hook?	Postup na povel → skill. Znalost projektu → CLAUDE.md. Preference, kde odchylka nevadí → CLAUDE.md. Něco pomalého, co brzdí každou akci. Pravidlo, se kterým experimentuješ / často se mění.	B5 kdy
+Deterministický vs. probabilistický — jádro hooků?	CLAUDE.md/skill/prompt prochází modelem (pravděpodobnost ~95 %). Hook neprochází — je to kód (jistota). Pro kritických 5 % (data, bezpečnost, nevratné) není 95 % dost.	B5 determinismus
+Mentální model pro rozhodnutí hook vs. CLAUDE.md?	"Co se stane, když model instrukci v jednom z tisíce běhů ignoruje?" Nic hrozného → CLAUDE.md. Nepřijatelné (smazaná data, uniklý token) → hook. Determinismus kupuješ tam, kde je selhání nepřijatelné.	B5 determinismus
+Odkud hooks pocházejí (klasicky)?	Git hooks (pre-commit/pre-push), CI/CD pipelines (deterministická brána: testy neprošly → merge se nestane), lintery/pre-commit frameworky, assertions / design by contract. Claude Code hook = git hook pro akce agenta.	B5 historie
+Námitka "silná instrukce v CLAUDE.md je stejně spolehlivá jako hook" — odpověď?	Velká písmena a vykřičníky mění pravděpodobnost, ne jistotu. Instrukce prochází modelem, hook ne (kód s exit code). Pro kritické věci "skoro vždy" nestačí.	B5 namitky
+Námitka "přidám radši spoustu hooků, ať jsem v bezpečí" — odpověď?	Každý hook běží při své události; pomalý nebo chybný brzdí či blokuje veškerou práci. Špatný hook je horší než žádný (tiše rozbije workflow). Měj málo hooků na to, co se opravdu nesmí stát.	B5 namitky
+Spicy teze B5 (auditovatelnost)?	Hook je auditovatelný artefakt — skript v repu, který jde ukázat auditorovi nebo security. Instrukce v promptu se auditovat nedá; shell skript s exit code ano.	B5 namitky
+Jak B5 souvisí s B1 a B4?	B1: hook JE guardrail (negativní architektura), konkrétní implementace teorie. B4: tentýž postup jako skill vyvoláš ty (dá se zapomenout), jako hook se spustí sám (nedá se obejít).	B5 propojeni
+Jak B5 souvisí s B3 a A1?	B3: CLAUDE.md instrukci model interpretuje, hook vynutí; kritické invarianty patří do hooku, ne CLAUDE.md. A1: "testy zelené, než skončíš" je Stop hook — red-green vynucená harnessem.	B5 propojeni
+Co je pointa příkladu guard-main.sh?	PreToolUse hook čte příkaz z JSON, a když je to git commit na větvi main, vypíše důvod na stderr a vrátí exit 2 → commit se nestane. Žádná interpretace, vždy deterministicky.	B5 anatomie

@@ -384,7 +384,89 @@ exit 0     <span class="cm-comment"># cokoliv jiného = povol</span>
 </ul>
 
 <!-- 12. Feynmanovo cvičení -->
-<h2>12 — Feynmanovo cvičení</h2>
+<h2>12 — Páteř 🎯</h2>
+
+<p>Jádro nastudeno — jedna věta, ze které odvodíš skoro cokoli, a tři kotvy, co si držíš. Když zamrzneš, vrať se sem.</p>
+
+<div class="spine">
+  <p class="spine-sentence">Hook = shell skript, který harness spustí <em>automaticky</em> při události, <strong>mimo model</strong>. Exit 2 = zablokuj akci. Když spolehlivost nesmí záviset na tom, co si model „myslí" (data, bezpečnost, nevratné akce), je to hook — deterministický guardrail, ne instrukce. Skill vyvoláš ty; hook se spustí sám a nedá se obejít.</p>
+  <ul class="spine-anchors">
+    <li><span class="num">mimo model = jistota</span>CLAUDE.md/skill/prompt prochází modelem (~95 %). Hook je kód (jistota). Kritických 5 % (data, secrets, nevratné) potřebuje hook.</li>
+    <li><span class="num">exit 2 = blokuj</span>Hook dostane JSON na stdin, vrátí exit code. PreToolUse + exit 2 zastaví akci; stderr = důvod pro agenta.</li>
+    <li><span class="num">kdo drží spoušť</span>Skill vyvoláš ty (dá se zapomenout). Hook se spustí sám (nedá se obejít). Stejný postup, jiná spoušť.</li>
+  </ul>
+</div>
+
+<div class="callout">
+  <div class="callout-label">Přenosný test (mentální model) — CLAUDE.md, nebo hook?</div>
+  <p>„<strong>Co se stane, když model tuhle instrukci v jednom z tisíce běhů ignoruje?</strong>"<br>
+  Nic hrozného → <strong>CLAUDE.md</strong> stačí.<br>
+  Smazaná data / rozbitý main / uniklý token → <strong>hook</strong> (determinismus kupuješ tam, kde je selhání nepřijatelné).</p>
+</div>
+
+<!-- 13. Až se tě zeptají -->
+<h2>13 — Až se tě zeptají 🎤</h2>
+
+<p>Ostré dotazy z publika + krátká odpověď s pointou (tučně). Trénuj <em>nahlas</em>, ne čtením.</p>
+
+<div class="qa-item">
+  <p class="qa-q">Námitka „stačí velká písmena": „Silnou instrukci v CLAUDE.md („NIKDY nedělej X!!!") agent poslechne stejně spolehlivě jako hook."</p>
+  <p class="qa-a">Velká písmena a vykřičníky mění <em>pravděpodobnost</em>, ne jistotu. Instrukce pořád prochází modelem; hook ne (kód s exit code). <strong>Pro kritické věci není „skoro vždy" dost.</strong></p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Námitka „víc = bezpečněji": „Přidám radši spoustu hooků, ať jsem v bezpečí."</p>
+  <p class="qa-a">Každý hook běží při své události; pomalý nebo chybný brzdí či blokuje veškerou práci. <strong>Špatný hook je horší než žádný</strong> — tiše rozbije workflow. Měj málo hooků na to, co se opravdu nesmí stát.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Otázka „hook vs. skill": „Jaký je vlastně rozdíl mezi hookem a skillem?"</p>
+  <p class="qa-a">Kdo drží spoušť. <strong>Skill vyvoláš ty</strong> (dá se zapomenout, prochází modelem, jen navrhuje). <strong>Hook se spustí sám</strong> (nedá se obejít, mimo model, umí zablokovat exit 2).</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Otázka „kdy povýšit": „Kdy mám instrukci z CLAUDE.md povýšit na hook?"</p>
+  <p class="qa-a">Když ji agent ignoruje, nebo když je selhání nepřijatelné (data / bezpečnost / nevratné akce). <strong>Text model interpretuje; hook vynutí.</strong> Ignorovaná instrukce z CLAUDE.md je signál povýšit ji na hook.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Security otázka: „Jak zaručíte, že agent nepushne tokeny do repa?"</p>
+  <p class="qa-a">Ne „řekli jsme mu to". <code>PreToolUse</code> hook skenuje diff na secrets a zablokuje commit. <strong>Hook je auditovatelný artefakt</strong> — skript v repu, který jde ukázat auditorovi. Instrukce v promptu se auditovat nedá.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Otázka „exit 2": „K čemu přesně je exit code 2?"</p>
+  <p class="qa-a">U <code>PreToolUse</code>: exit 2 = <strong>zablokuj akci</strong> (nespustí se). Cokoli jiného = povol. Text na <code>stderr</code> se ukáže agentovi jako důvod. Deterministicky, vždy — žádná interpretace.</p>
+</div>
+
+<!-- 14. Do kartiček -->
+<h2>14 — Do kartiček 🔁</h2>
+
+<p>Rychlá startovní sada. Zkopíruj blok níž a naimportuj do <a href="https://apps.ankiweb.net/" target="_blank">Anki</a> (oddělovač = středník). Pak pár minut denně.</p>
+
+<div class="callout green">
+  <div class="callout-label">Plná sada je připravená v repu</div>
+  <p>Blok níž je rychlá verze. V repu je <strong>plná sada ~22 kartiček</strong> s podrobnějšími odpověďmi a tématy (jádro, hook vs. skill, anatomie/eventy, kdy použít, determinismus, historie, námitky) — soubor <code>anki/0007-hooks.txt</code>. Import do Anki na jeden klik, tagy pro procvičování po blocích (<code>tag:determinismus</code>, <code>tag:namitky</code>…). Návod: <code>anki/README.md</code>.</p>
+</div>
+
+<pre class="flashcards">Co je hook? ; Shell skript, který harness spustí automaticky při události (před nástrojem, po editaci, na konci session). Neprochází modelem; vrátí exit code, podle něj se akce povolí/zablokuje. Vrstva 3.
+Jedno pravidlo hooku? ; Když spolehlivost nesmí záviset na tom, co si model „myslí", je to hook. Hook nežádá agenta o správné chování — fyzicky mu nedovolí chovat se špatně.
+Co znamená exit code 2 u hooku? ; U PreToolUse: exit 2 = zablokuj akci (nespustí se). Cokoli jiného = povol. Text na stderr se ukáže agentovi jako důvod.
+Hook vs. skill — v čem je rozdíl? ; Kdo drží spoušť. Skill vyvoláš ty (dá se zapomenout, prochází modelem, navrhuje). Hook se spustí sám (nedá se obejít, mimo model, umí zablokovat exit 2).
+Nejdůležitější události hooku? ; PreToolUse (než agent zavolá nástroj — umí blokovat), PostToolUse (po nástroji, např. formatter), UserPromptSubmit, Stop (agent končí — např. testy zelené), SessionStart/SessionEnd.
+Jak se hook konfiguruje? ; V settings.json navážeš shell příkaz na událost. Hook dostane na stdin JSON s daty události (jaký nástroj, argumenty), rozhodne se a vrátí exit code.
+Deterministický vs. probabilistický — jádro hooků? ; CLAUDE.md/skill/prompt prochází modelem (~95 % pravděpodobnost). Hook neprochází — je to kód (jistota). Pro kritických 5 % (data, bezpečnost, nevratné) není 95 % dost.
+Mentální model hook vs. CLAUDE.md? ; „Co když model instrukci v jednom z tisíce běhů ignoruje?" Nic hrozného → CLAUDE.md. Nepřijatelné (smazaná data, uniklý token) → hook.
+Odkud hooks pocházejí (klasicky)? ; Git hooks (pre-commit/pre-push), CI/CD (testy neprošly → merge se nestane), lintery/pre-commit, assertions / design by contract. Claude Code hook = git hook pro akce agenta.
+Spicy teze B5 (auditovatelnost)? ; Hook je auditovatelný artefakt — skript v repu, který jde ukázat auditorovi/security. Instrukce v promptu se auditovat nedá; shell skript s exit code ano.</pre>
+
+<div class="callout green">
+  <div class="callout-label">Rituál</div>
+  <p>Denně pár minut kartičky + jednou týdně lekci „odříkej naostro" prázdné židli, jako bys ji přednášel. A až budeš chtít ostrý test, řekni v Claude Code „vygriluj mě z B5".</p>
+</div>
+
+<!-- 15. Feynmanovo cvičení -->
+<h2>15 — Feynmanovo cvičení</h2>
 
 <div class="quiz" id="quiz-main">
   <div class="quiz-header">Feynmanův test — Hooks</div>
@@ -445,7 +527,7 @@ exit 0     <span class="cm-comment"># cokoliv jiného = povol</span>
 </div>
 
 <!-- 13. Co dál -->
-<h2>13 — Co dál</h2>
+<h2>16 — Co dál</h2>
 
 <p><strong>Co musíš znát před touto lekcí:</strong></p>
 <ul>
