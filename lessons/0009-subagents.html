@@ -425,7 +425,89 @@ ne konverzaci.
 </ul>
 
 <!-- 12. Feynmanovo cvičení -->
-<h2>12 — Feynmanovo cvičení</h2>
+<h2>12 — Páteř 🎯</h2>
+
+<p>Jádro nastudeno — jedna věta, ze které odvodíš skoro cokoli, a tři kotvy, co si držíš. Když zamrzneš, vrať se sem.</p>
+
+<div class="spine">
+  <p class="spine-sentence">Subagent = oddělený agent s <em>vlastním</em> kontextem, rolí a nástroji, kterého hlavní agent spustí, deleguje mu kus práce a zpátky dostane jen <strong>závěr</strong>. Není to chytřejší agent — hodnota je v izolaci a specializaci. Spouštěj ho pro jeden ze tří důvodů: izolace kontextu / paralelismus / specializace. Vrstva 5 (vrchol rámce).</p>
+  <ul class="spine-anchors">
+    <li><span class="num">3 důvody</span>Izolace kontextu (vrátí jen závěr, hlavní kontext čistý) · paralelismus (nezávislé kusy současně) · specializace (úzká role + jen potřebné nástroje).</li>
+    <li><span class="num">vlastní kontext, jen závěr</span>Subagent = jiný agent, vlastní okno, může běžet paralelně, vrací strukturovaný závěr (návratová hodnota), ne konverzaci. Skill = tentýž agent, sdílený kontext, sériově.</li>
+    <li><span class="num">úzké nástroje = guardrail</span>Subagent s omezenou sadou nástrojů (reviewer bez Write) nemůže nic pokazit. Delegace má limit: špatně rozdělená práce je horší než žádné dělení.</li>
+  </ul>
+</div>
+
+<div class="callout">
+  <div class="callout-label">Přenosný test — subagent, nebo ne?</div>
+  <p>„<strong>Platí aspoň jeden ze tří důvodů — izolace kontextu, paralelismus, specializace?</strong>"<br>
+  Ano → <strong>subagent</strong>.<br>
+  Malý sekvenční úkol v jednom kontextu → <strong>skill / prompt</strong> (subagent by jen přidal režii).</p>
+</div>
+
+<!-- 13. Až se tě zeptají -->
+<h2>13 — Až se tě zeptají 🎤</h2>
+
+<p>Ostré dotazy z publika + krátká odpověď s pointou (tučně). Trénuj <em>nahlas</em>, ne čtením.</p>
+
+<div class="qa-item">
+  <p class="qa-q">Nepochopení „chytřejší": „Subagent je mocnější / chytřejší agent, ne?"</p>
+  <p class="qa-a">Ne. Je to <em>oddělený kontext</em>, kterému deleguješ a dostaneš jen závěr. <strong>Hodnota je v izolaci a specializaci, ne ve větším výpočtu.</strong> Stejný model, jen jiné okno a role.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Námitka „víc = rychleji": „Spustím radši spoustu subagentů, bude to rychlejší."</p>
+  <p class="qa-a">Každý subagent je celý agent — režie startu, vlastní kontext, vlastní běh. Na malý sekvenční úkol je to <strong>jako svolat schůzi kvůli jednomu e-mailu</strong>. Vyplatí se, jen když je co paralelizovat nebo izolovat.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Otázka „vs. skill": „Jaký je rozdíl mezi subagentem a skillem?"</p>
+  <p class="qa-a">Skill je postup pro <em>tentýž</em> agent (sdílený kontext, sériově, vše zůstane v kontextu). Subagent je <em>jiný</em> agent (vlastní kontext, může paralelně, vrací jen závěr). <strong>Když nechceš, aby se mezipráce vlila do hlavního kontextu → subagent.</strong></p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Otázka „jak chrání kontext": „Jak subagent udrží hlavní kontext čistý?"</p>
+  <p class="qa-a">Udělá kontextově náročnou věc (pročte tisíc řádků, velké hledání) ve <em>svém</em> okně a vrátí jen relevantní závěr. <strong>Hlavní agent ten tisíc řádků nikdy neviděl — jen výsledek.</strong></p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Otázka „proč tři reviewery": „Proč tři reviewery místo jednoho?"</p>
+  <p class="qa-a">Specializace: bezpečnost, správnost a výkon jsou tři různé pohledy. Jeden agent je rozmělní; tři úzké role dají ostřejší nález. <strong>A běží paralelně — wall-clock je nejpomalejší z nich, ne jejich součet.</strong></p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Chyták „jen delší prompt": „Není subagent jen delší prompt?"</p>
+  <p class="qa-a">Ne. Delší prompt = tentýž agent, sdílený rostoucí kontext, sériově, vše v kontextu. Subagent = jiný agent, vlastní kontext, paralelně, vrací jen závěr. <strong>Rozdíl je izolace kontextu.</strong></p>
+</div>
+
+<!-- 14. Do kartiček -->
+<h2>14 — Do kartiček 🔁</h2>
+
+<p>Rychlá startovní sada. Zkopíruj blok níž a naimportuj do <a href="https://apps.ankiweb.net/" target="_blank">Anki</a> (oddělovač = středník). Pak pár minut denně.</p>
+
+<div class="callout green">
+  <div class="callout-label">Plná sada je připravená v repu</div>
+  <p>Blok níž je rychlá verze. V repu je <strong>plná sada ~22 kartiček</strong> s podrobnějšími odpověďmi a tématy (jádro, tři důvody, subagent vs. skill, anatomie, orchestrační vzory, historie, námitky) — soubor <code>anki/0009-subagents.txt</code>. Import do Anki na jeden klik, tagy pro procvičování po blocích (<code>tag:duvody</code>, <code>tag:vzory</code>…). Návod: <code>anki/README.md</code>.</p>
+</div>
+
+<pre class="flashcards">Co je subagent? ; Oddělený agent, kterého hlavní agent spustí jako podřízeného — s vlastním kontextovým oknem, vlastní rolí a vlastní sadou nástrojů. Hlavní úkol rozloží, deleguje a výsledky složí. Vrstva 5.
+Jedno pravidlo subagentu? ; Subagent není chytřejší agent — je to oddělený kontext, kterému deleguješ kus práce a zpátky dostaneš jen závěr. Hodnota je v izolaci a specializaci, ne ve větším výpočtu.
+Tři důvody pro subagenta? ; 1. Izolace kontextu (udělá velké hledání, vrátí jen závěr; hlavní kontext čistý), 2. Paralelismus (nezávislé kusy současně), 3. Specializace (úzká role + jen potřebné nástroje).
+Subagent vs. skill? ; Skill je postup pro tentýž agent (sdílený kontext, sériově, vše zůstane v kontextu). Subagent je jiný agent (vlastní kontext, může paralelně, vrací jen závěr).
+Subagent vs. delší prompt? ; Delší prompt: tentýž agent, sdílený rostoucí kontext, sériově, vše v kontextu. Subagent: jiný agent, vlastní kontext, paralelně, vrací jen finální závěr.
+Jak se definuje subagent? ; Soubor v .claude/agents/: frontmatter (name, description, povolené tools, model) a systémový prompt určující roli. Hlavní agent ho vyvolá jménem a předá úkol.
+Proč dát subagentovi úzkou sadu nástrojů? ; Je to guardrail přes omezení schopností — reviewer bez Write nemůže nic pokazit. Dáš jen to, co role potřebuje.
+Tři orchestrační vzory? ; Fan-out (rozděl a paralelizuj nezávislé kusy), specializované role (různé pohledy + nástroje), izolace kontextu (náročný podúkol vrátí jen závěr).
+Odkud subagents pocházejí (klasicky)? ; Distribuované systémy / map-reduce (mapa = subagenty, reduce = hlavní), fork/join a divide-and-conquer, separation of concerns, delegace v týmu. Subagent = delegace aplikovaná na agenty.
+Spicy teze B7? ; Subagent je delegace se všemi výhodami — i s tím, že špatně rozdělená práce je horší než žádné dělení. Orchestrace má cenu jen tam, kde je co orchestrovat.</pre>
+
+<div class="callout green">
+  <div class="callout-label">Rituál</div>
+  <p>Denně pár minut kartičky + jednou týdně lekci „odříkej naostro" prázdné židli, jako bys ji přednášel. A až budeš chtít ostrý test, řekni v Claude Code „vygriluj mě z B7 (Subagenti)".</p>
+</div>
+
+<!-- 15. Feynmanovo cvičení -->
+<h2>15 — Feynmanovo cvičení</h2>
 
 <div class="quiz" id="quiz-main">
   <div class="quiz-header">Feynmanův test — Subagents</div>
@@ -486,7 +568,7 @@ ne konverzaci.
 </div>
 
 <!-- 13. Co dál -->
-<h2>13 — Co dál</h2>
+<h2>16 — Co dál</h2>
 
 <p><strong>Co musíš znát před touto lekcí:</strong></p>
 <ul>

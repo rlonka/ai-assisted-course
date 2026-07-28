@@ -51,7 +51,7 @@ Cíl: aby Radek uměl ustát živé Q&A, ne jen text přečíst. Tři nové sekc
 
 ## Blok B doplnění (probíhá 2026-07-28)
 - B2 (0004): retenční vrstva bez slovníčku (5 vrstev už vizualizované). Sekce 10 Páteř / 11 Q&A / 12 kartičky, Feynman→13, Co dál→14. Anki: 20 kartiček.
-- TODO blok B: B3 (0005), B4 (0006), B5 (0007), B6 (0008), B7 (0009). Ty mají 13 sekcí → retenční vrstva 12/13/14, Feynman→15, Co dál→16.
+- BLOK B KOMPLETNÍ v retenčním balíku (2026-07-28): B1(27), B2(20), B3(20), B4(20), B5(20), B6(20), B7(22). Všechny mají Páteř/Q&A/kartičky/Anki. Slovníček jen B1 (harness/guardrails); ostatní B už měly dost terminologie.
 
 ## Retenční balík — stav pokrytí (lekce s Páteř+Q&A+kartičky+Anki)
 - Hotovo: A1 (24), A2 (26), A3 (37), A4 (26), A5 (26) = celý blok A; B1 (27), B8 (26), B9 (25). Zbývá ~15 lekcí (blok C 5, blok D 5, B2–B7 6).

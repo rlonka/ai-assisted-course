@@ -1,0 +1,27 @@
+#separator:tab
+#html:false
+#deck:AI-assisted RSE::B7 — Subagenti
+#notetype:Basic
+#tags column:3
+Co je subagent?	Oddělený agent, kterého hlavní agent spustí jako podřízeného — s vlastním kontextovým oknem, vlastní rolí a vlastní sadou nástrojů. Hlavní úkol rozloží, deleguje a výsledky složí. Vrstva 5.	B7 jadro
+Jedno pravidlo subagentu?	Subagent není chytřejší agent — je to oddělený kontext, kterému deleguješ kus práce a zpátky dostaneš jen závěr. Hodnota je v izolaci a specializaci, ne ve větším výpočtu.	B7 jadro
+Co je vrstva 5 rámce pěti otázek?	"Jak je práce orchestrovaná?" Memory/Skills/Hooks/MCP vybavují jednoho agenta; Subagents je skládají do postupu s víc agenty. Nejvyšší vrstva.	B7 jadro
+Přenosný test: subagent, nebo ne?	Platí aspoň jeden ze tří důvodů (izolace kontextu / paralelismus / specializace)? Ano → subagent. Malý sekvenční úkol v jednom kontextu → skill/prompt (subagent jen přidá režii).	B7 jadro
+Tři důvody pro subagenta?	1. Izolace kontextu (udělá velké hledání, vrátí jen závěr; hlavní kontext čistý), 2. Paralelismus (nezávislé kusy současně), 3. Specializace (úzká role + jen potřebné nástroje).	B7 duvody
+Co je izolace kontextu u subagentu?	Subagent spálí kontext na obrovské prohledávání kódu a vrátí jen relevantní závěr (tři soubory). Hlavní agent ten tisíc přečtených řádků nikdy neviděl — jen výsledek.	B7 duvody
+Co znamená paralelismus u subagentů?	Nezávislé kusy práce běží současně, každý ve svém agentovi. Wall-clock je nejpomalejší kus, ne jejich součet (tři revize místo tří po sobě).	B7 duvody
+Subagent vs. skill?	Skill je postup pro tentýž agent (sdílený kontext, sériově, vše zůstane v kontextu). Subagent je jiný agent (vlastní kontext, může paralelně, vrací jen závěr).	B7 vs-skill
+Subagent vs. delší prompt?	Delší prompt: tentýž agent, sdílený rostoucí kontext, sériově, vše v kontextu. Subagent: jiný agent, vlastní kontext, paralelně, vrací jen finální závěr.	B7 vs-skill
+Jak se definuje subagent?	Soubor v .claude/agents/: frontmatter (name, description, povolené tools, model) a systémový prompt určující roli. Hlavní agent ho vyvolá jménem a předá úkol.	B7 anatomie
+Proč dát subagentovi úzkou sadu nástrojů?	Je to guardrail přes omezení schopností — reviewer bez Write nemůže nic pokazit. Dáš jen to, co role potřebuje.	B7 anatomie
+Co znamená "finální zpráva je návratová hodnota"?	Subagent nevrací uživateli konverzaci — vrací hlavnímu agentovi strukturovaný závěr (data), který ten dál zpracuje.	B7 anatomie
+Tři orchestrační vzory?	Fan-out (rozděl a paralelizuj nezávislé kusy), specializované role (různé pohledy + nástroje), izolace kontextu (náročný podúkol vrátí jen závěr).	B7 vzory
+Co je fan-out?	Nezávislé kusy práce běží současně, každý ve svém agentovi; hlavní pak složí závěry. Klasika: revize velkého diffu z několika pohledů zároveň. Map-reduce nad agenty.	B7 vzory
+Odkud subagents pocházejí (klasicky)?	Distribuované systémy / map-reduce (mapa = subagenty, reduce = hlavní), fork/join a divide-and-conquer, separation of concerns, delegace v týmu. Subagent = delegace aplikovaná na agenty.	B7 historie
+Jaký limit delegace subagents dědí?	Příliš delegace = režie koordinace přebije přínos. Špatně rozdělená práce je horší než žádné dělení — stejně jako v týmu.	B7 historie
+Námitka "subagent je chytřejší/mocnější agent" — odpověď?	Ne. Je to oddělený kontext, kterému deleguješ a dostaneš jen závěr. Hodnota je v izolaci a specializaci, ne ve větším výpočtu. Stejný model, jen jiné okno a role.	B7 namitky
+Námitka "spustím radši spoustu subagentů, bude to rychlejší" — odpověď?	Každý subagent je celý agent (režie startu, vlastní kontext, běh). Na malý sekvenční úkol je to jako svolat schůzi kvůli jednomu e-mailu. Vyplatí se, jen když je co paralelizovat/izolovat.	B7 namitky
+Kdy NEspouštět subagenty?	Malý úkol (režie převáží), těsně provázané kroky se sdíleným kontextem, potřebuješ vidět celé mezirozvažování, sériový postup pro tentýž kontext (→skill), spouštíš je "pro efekt".	B7 namitky
+Spicy teze B7?	Subagent je delegace se všemi jejími výhodami — i s tím, že špatně rozdělená práce je horší než žádné dělení. Orchestrace má cenu jen tam, kde je co orchestrovat.	B7 namitky
+Jak B7 souvisí s B5 (hooks) a B6 (MCP)?	B5: subagent s úzkou sadou nástrojů je sám o sobě guardrail (reviewer bez Write). B6: subagenty mohou mít různý MCP přístup — jeden vidí databázi, druhý ne.	B7 propojeni
+Jak B7 uzavírá rámec pěti otázek?	Je vrstva 5 (vrchol). Memory (co ví) → Skills (postupy) → Hooks (hranice) → MCP (dosah) → Subagents (orchestrace). Předchozí čtyři vybavují jednoho agenta, pátá jich skládá víc.	B7 propojeni
