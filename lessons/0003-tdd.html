@@ -140,7 +140,35 @@
 
 <div class="callout">
   <div class="callout-label">Proč to musíš umět přednášet</div>
-  <p>TDD je obrana proti deskillingu (<a href="#">C3</a>). Pokud test píše AI — nevíš, jestli testuje správnou věc. Pokud test píšeš ty — musíš domeně rozumět dřív, než AI cokoli napíše. Test je doklad porozumění.</p>
+  <p>TDD je obrana proti deskillingu (<a href="0010-deskilling.html">C3</a>). Pokud test píše AI — nevíš, jestli testuje správnou věc. Pokud test píšeš ty — musíš domeně rozumět dřív, než AI cokoli napíše. Test je doklad porozumění.</p>
+</div>
+
+<h3>Slovníček — jedno rozlišení, na kterém celé TDD stojí</h3>
+
+<p>Klíč není v tom, <em>že</em> testy píšeš — je v tom, <em>kdy</em> je píšeš. To rozhoduje, jestli test něco <strong>vyžaduje</strong>, nebo jen <strong>potvrzuje</strong>.</p>
+
+<div class="two-col">
+  <div class="col-box col-green">
+    <div class="col-label">test-first = specifikace (TDD)</div>
+    <ul>
+      <li>Test píšeš <strong>PŘED</strong> kódem</li>
+      <li>Říká, co kód <em>má</em> dělat — tvůj záměr a invarianty</li>
+      <li>AI dostane verifikovatelný cíl, ne otevřenou výzvu</li>
+    </ul>
+  </div>
+  <div class="col-box col-red">
+    <div class="col-label">test-after = potvrzení (není to TDD)</div>
+    <ul>
+      <li>Test píšeš <strong>PO</strong> kódu</li>
+      <li>Popisuje, co kód <em>dělá</em> — i s chybami, které tam jsou</li>
+      <li>Když píše obojí AI: „test-confirmed development" — jen odkýváš, co AI udělala</li>
+    </ul>
+  </div>
+</div>
+
+<div class="callout">
+  <div class="callout-label">Rychlé glosy k žargonu</div>
+  <p><strong>Regrese</strong> = když nová změna rozbije dřív fungující chování. <strong>Coverage (pokrytí)</strong> = jak velkou část kódu testy prověří. <strong>Edge case (okrajový případ)</strong> = hraniční vstup (nula, prázdno, maximum), kde se chyby nejčastěji schovávají. <strong>Red / Green / Refactor</strong> = tři kroky cyklu (viz diagram výše).</p>
 </div>
 
 <!-- 2. Historický kontext -->
@@ -272,8 +300,90 @@
   </li>
 </ul>
 
-<!-- 9. Feynmanovo cvičení -->
-<h2>9 — Feynmanovo cvičení</h2>
+<!-- 9. Páteř -->
+<h2>9 — Páteř 🎯</h2>
+
+<p>Jádro nastudeno — jedna věta, ze které odvodíš skoro cokoli, a tři kotvy, co si držíš. Když zamrzneš, vrať se sem.</p>
+
+<div class="spine">
+  <p class="spine-sentence">TDD = píšeš test <em>dřív</em> než kód. Test je <strong>specifikace</strong> (co má kód dělat), ne dokumentace toho, co udělal. Cyklus Red → Green → Refactor. S AI: člověk píše test (RED = esenciální), AI implementuje (GREEN = akcidentální), člověk reviewuje.</p>
+  <ul class="spine-anchors">
+    <li><span class="num">R→G→R</span>Red (test selže, kód není) → Green (minimální kód projde) → Refactor (vyčisti, testy zelené) → další Red.</li>
+    <li><span class="num">test-first</span>Test PŘED kódem = specifikace záměru. Test PO kódu = jen potvrzení, co AI udělala („test-confirmed development").</li>
+    <li><span class="num">kdo píše RED</span>Selhávající test píše <em>člověk</em> — je to artikulace domény a záměru. Delegovat na AI = ztratit esenciální znalost.</li>
+  </ul>
+</div>
+
+<div class="callout">
+  <div class="callout-label">Přenosný test — je to TDD, nebo jen testy?</div>
+  <p>„<strong>Napsal jsem test dřív, než existoval kód, který ho splní?</strong>"<br>
+  Ano → <strong>TDD</strong> (test vyžaduje, je to specifikace).<br>
+  Ne (test až po kódu) → <strong>jen potvrzení</strong> (test dokumentuje, co kód dělá — i s chybami).</p>
+</div>
+
+<!-- 10. Až se tě zeptají -->
+<h2>10 — Až se tě zeptají 🎤</h2>
+
+<p>Ostré dotazy z publika + krátká odpověď s pointou (tučně). Trénuj <em>nahlas</em>, ne čtením.</p>
+
+<div class="qa-item">
+  <p class="qa-q">Námitka „proč já": „AI napíše testy i kód — tak proč bych psal testy já?"</p>
+  <p class="qa-a">Když AI napíše test i implementaci naráz, <strong>test testuje implementaci, ne tvůj záměr</strong> — je to jen dokumentace, co AI udělala. Selhávající test napsaný předem je specifikace toho, co CHCEŠ.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Námitka „je to pomalé": „TDD zdržuje — psát testy napřed je overhead."</p>
+  <p class="qa-a">To platilo, když člověk psal obojí. S AI píšeš jen RED, GREEN dělá AI. <strong>Celkový čas i debugging klesají</strong> — regrese se chytí v sekundách, ne v code review za týden.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Námitka „stačí potom": „Nestačí napsat testy až po kódu?"</p>
+  <p class="qa-a">Ne. Test <em>potom</em> = dokumentace toho, co kód dělá (i s chybami). Test <em>předem</em> = specifikace, co má dělat. <strong>Rozdíl mezi „potvrzuji" a „vyžaduji".</strong></p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Námitka „AI zná doménu": „AI přece doménu zná, ať napíše test za mě."</p>
+  <p class="qa-a">Test artikuluje tvůj záměr a doménové invarianty — často nenapsané. Když ho deleguješ, <strong>ztratíš přehled nad esenciální komplexitou</strong> a nevíš, co vlastně specifikuješ.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Nepříjemná otázka: „Co když test napsat neumím?"</p>
+  <p class="qa-a">Pak doméně nerozumíš dost na to, abys ji kódoval. <strong>To není vada AI — je to signál, kde je tvoje mezera.</strong> Napsání testu je zkouška porozumění.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Otázka „k čemu RED": „Proč psát test, o kterém vím, že selže?"</p>
+  <p class="qa-a">RED dokazuje, že test skutečně testuje <em>chybějící</em> chování. <strong>Test, který projde i bez implementace, netestuje nic</strong> — je to pojistka proti falešně zeleným testům.</p>
+</div>
+
+<!-- 11. Do kartiček -->
+<h2>11 — Do kartiček 🔁</h2>
+
+<p>Rychlá startovní sada. Zkopíruj blok níž a naimportuj do <a href="https://apps.ankiweb.net/" target="_blank">Anki</a> (oddělovač = středník). Pak pár minut denně.</p>
+
+<div class="callout green">
+  <div class="callout-label">Plná sada je připravená v repu</div>
+  <p>Blok níž je rychlá verze. V repu je <strong>plná sada ~24 kartiček</strong> s podrobnějšími odpověďmi a tématy (jádro, cyklus, práce s AI, historie, námitky, propojení) — soubor <code>anki/0003-tdd.txt</code>. Import do Anki na jeden klik, tagy pro procvičování po blocích (<code>tag:cyklus</code>, <code>tag:namitky</code>…). Návod: <code>anki/README.md</code>.</p>
+</div>
+
+<pre class="flashcards">Co je TDD? ; Disciplína: píšeš test dřív než implementaci. Test definuje, co kód musí dělat (ne jak). Cyklus Red-Green-Refactor.
+Cyklus red-green-refactor? ; Red: napiš test, který selže. Green: minimální kód, test projde. Refactor: vyčisti, testy zůstanou zelené. Pak další Red.
+Proč je RED krok záměrný? ; Test existuje, kód ne → selže. Dokazuje, že test testuje chybějící chování. Test, co projde bez kódu, netestuje nic.
+Test je specifikace, nebo dokumentace? ; Test PŘED kódem = specifikace (co chceš). Test PO kódu = dokumentace/potvrzení (co kód dělá, i s chybami).
+Kdo píše RED (selhávající test) a proč? ; Člověk. Test artikuluje záměr a doménové invarianty. Když ho napíše AI, testuje implementaci, ne tvůj záměr.
+Jak se v AI-assisted TDD dělí práce? ; Člověk: RED (specifikace, esenciální). AI: GREEN (implementace, akcidentální). Oba: Refactor. Edge cases primárně člověk.
+Proč je selhávající test „harness" pro agenta? ; Dá AI verifikovatelný cíl („projdi tímto testem") místo otevřené výzvy („napiš funkci nějak"). Snižuje ambiguitu.
+Co je „test-confirmed development"? ; Když AI napíše test i kód naráz — jen potvrzuješ, co udělala. Není to TDD; chybí specifikace záměru předem.
+Kdo a kdy formalizoval TDD? ; Kent Beck v 90. letech jako součást Extreme Programming (XP). Kniha TDD by Example (2002).
+Jak TDD souvisí s Brooksem (A3)? ; Test artikuluje esenciální komplexitu (co má kód dělat, invarianty). AI řeší akcidentální (implementaci). Bez testu dáš AI esenciální problém k hádání.</pre>
+
+<div class="callout green">
+  <div class="callout-label">Rituál</div>
+  <p>Denně pár minut kartičky + jednou týdně lekci „odříkej naostro" prázdné židli, jako bys ji přednášel. A až budeš chtít ostrý test, řekni v Claude Code „vygriluj mě z A1".</p>
+</div>
+
+<!-- 12. Feynmanovo cvičení -->
+<h2>12 — Feynmanovo cvičení</h2>
 
 <div class="quiz" id="quiz-main">
   <div class="quiz-header">Feynmanův test — TDD</div>
@@ -333,8 +443,8 @@
   <div class="quiz-score" id="quiz-score"></div>
 </div>
 
-<!-- 10. Propojení -->
-<h2>10 — Co dál</h2>
+<!-- 13. Propojení -->
+<h2>13 — Co dál</h2>
 
 <p><strong>Co musíš znát před touto lekcí:</strong></p>
 <ul>

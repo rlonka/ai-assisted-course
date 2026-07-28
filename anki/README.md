@@ -26,6 +26,9 @@ Prostý text (TSV), jedna kartička na řádek: `otázka<TAB>odpověď<TAB>tagy`
 
 ## Soubory
 
+- `0003-tdd.txt` — A1 (24 kartiček): TDD (test-first = specifikace vs. test-after = potvrzení),
+  cyklus Red-Green-Refactor, rozdělení práce s AI (člověk RED / AI GREEN), Beck/XP/design by contract,
+  námitky, propojení na A2/C3/B1.
 - `0001-no-silver-bullet.txt` — A3 (37 kartiček): esenciální/akcidentální komplexita,
   Aristoteles, čtyři vlastnosti SW, tvrdá čísla (5×, 1,7×, −19 %), generace jazyků,
   historické vlny, AI dnes + námitky, analogie (guláš, 128 řidičů), anekdoty (bug, Backus).

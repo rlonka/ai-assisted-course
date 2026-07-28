@@ -1,0 +1,29 @@
+#separator:tab
+#html:false
+#deck:AI-assisted RSE::A1 — TDD
+#notetype:Basic
+#tags column:3
+Co je TDD?	Disciplína (ne nástroj): píšeš test dřív než implementaci. Test definuje, co kód musí dělat — ne jak. Cyklus Red-Green-Refactor.	A1 jadro
+Test je specifikace, nebo dokumentace?	Test PŘED kódem = specifikace (co chceš, tvůj záměr a invarianty). Test PO kódu = dokumentace/potvrzení (co kód dělá, i s chybami). To je jádro TDD.	A1 jadro
+Co je „test-confirmed development"?	Když AI napíše test i kód naráz — jen potvrzuješ, co AI udělala. Není to TDD; chybí specifikace záměru předem.	A1 jadro
+Přenosný test: je to TDD, nebo jen testy?	„Napsal jsem test dřív, než existoval kód, který ho splní?" Ano → TDD (test vyžaduje). Ne (test až po kódu) → jen potvrzení (test dokumentuje).	A1 jadro
+Cyklus red-green-refactor?	Red: napiš test, který selže (kód neexistuje). Green: minimální implementace, test projde. Refactor: vyčisti kód, testy zůstanou zelené. Pak další Red.	A1 cyklus
+Co je RED krok a proč je záměrný?	Test existuje, implementace ne → test selže. Dokazuje, že test skutečně testuje chybějící chování. Test, co projde bez kódu, netestuje nic.	A1 cyklus
+Co je GREEN krok?	Napiš minimální implementaci, aby test prošel — ne víc. Test ohraničuje, co je potřeba; AI nemůže „přestřelit" víc, než test dovolí.	A1 cyklus
+Co je REFACTOR krok a proč je bezpečný?	Vyčisti strukturu kódu; testy zůstanou zelené. Bezpečné právě proto, že testy hlídají chování — regrese se okamžitě projeví.	A1 cyklus
+Jak se v AI-assisted TDD dělí práce?	Člověk: RED (specifikace, esenciální). AI: GREEN (implementace, akcidentální). Oba: Refactor. Edge cases primárně člověk.	A1 s-ai
+Kdo má psát RED (selhávající test) a proč?	Člověk. Test artikuluje záměr a doménové invarianty. Když ho napíše AI, testuje implementaci, ne tvůj záměr — ztratíš přehled nad esenciální komplexitou.	A1 s-ai
+Proč je selhávající test „harness" pro agenta?	Dá AI verifikovatelný cíl („projdi tímto testem") místo otevřené výzvy („napiš funkci nějak"). Snižuje ambiguitu — přesně místo, kde AI halucinuje.	A1 s-ai
+Proč TDD pomáhá s AI víc než bez AI?	Selhávající test = jasný, automaticky ověřitelný cíl pro AI. A rozdělení práce (člověk RED, AI GREEN) je efektivnější než člověk píšící obojí.	A1 s-ai
+Kam patří testovací konvence v Claude Code?	Do CLAUDE.md (framework, kde žijí testy, konvence pojmenování). /tdd skill formalizuje cyklus. Hook může blokovat commit pod prahem coverage.	A1 s-ai
+Kdo a kdy formalizoval TDD?	Kent Beck v 90. letech jako součást Extreme Programming (XP). Kniha TDD by Example (2002), kde přístup demonstroval živým kódováním.	A1 historie
+Existovalo „test napřed" před Beckem?	Ano — NASA psala ověřovací testy pro software kosmické lodi před implementací už v 70. letech. Beck to systematizoval a dal tomu disciplínu.	A1 historie
+Na co TDD navazuje?	Na design by contract (Bertrand Meyer, 1986) — specifikace chování jako součást kódu. Test = executable contract (spustitelná smlouva).	A1 historie
+Námitka „AI píše testy i kód, tak proč TDD" — odpověď?	Když AI napíše obojí naráz, test testuje implementaci, ne tvůj záměr — je to jen dokumentace. Selhávající test předem je specifikace, co chceš.	A1 namitky
+Námitka „TDD je pomalé" — odpověď?	To platilo, když člověk psal obojí. S AI píšeš jen RED, GREEN dělá AI. Celkový čas i debugging klesají — regrese se chytí v sekundách, ne v review za týden.	A1 namitky
+Námitka „stačí testy potom" — odpověď?	Ne. Test potom = dokumentace (co kód dělá, i s chybami). Test předem = specifikace (co má dělat). Rozdíl mezi „potvrzuji" a „vyžaduji".	A1 namitky
+Námitka „ať test napíše AI, zná doménu" — odpověď?	Test artikuluje záměr a často nenapsané doménové invarianty. Když ho deleguješ, ztratíš přehled nad esenciální komplexitou a nevíš, co specifikuješ.	A1 namitky
+Spicy teze A1?	Nechat AI psát testy i kód není TDD, je to test-confirmed development. Vědecké invarianty musíš specifikovat ty. Když to neumíš, problém není AI — nerozumíš doméně dost, abys ji kódoval.	A1 namitky
+Jak TDD souvisí s refactoringem (A2)?	REFACTOR krok je bezpečný právě díky testům. Bez testů je refactoring hazard — nevíš, jestli jsi změnou nerozbil chování (Fowler).	A1 propojeni
+Jak je TDD obrana proti deskillingu (C3)?	Musíš rozumět doméně dost, abys napsal test. Když na psaní testu trváš, AI ti tuhle esenciální práci nesebere — držíš si porozumění.	A1 propojeni
+Jak TDD využívá harness/guardrails (B1)?	Selhávající test = harness pro agenta (verifikovatelný cíl). Hook na coverage (blokuj commit pod prahem) = guardrail. Deterministická ochrana, nelze pushnout kód bez testů.	A1 propojeni

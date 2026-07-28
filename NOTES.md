@@ -31,6 +31,14 @@ Cíl: aby Radek uměl ustát živé Q&A, ne jen text přečíst. Tři nové sekc
 - Klíčový model: agent = model v cyklu; sekvence zadání→kontext(harness)→inference→guardrails→nástroj→výsledek zpět→znovu; řídící tok rozhoduje model za běhu; ReAct (Yao 2022). Kurz má teď **24 lekcí**.
 - POZOR NA EFEMÉRNÍ KONTEJNER: 2026-07-28 se pracovní adresář jednou vrátil na 1f18fce (B8 práce byla jen na originu). Řešení: git fetch + ff-merge origin. Vždy po pushnutí ověř, že origin i lokál sedí.
 
+## A1 (0003) — TDD: retenční balík (přidáno 2026-07-28)
+- Slovníček: test-first (specifikace, green) vs. test-after (potvrzení, red) + glosy (regrese/coverage/edge case). Retenční vrstva: 9 Páteř (kotvy R→G→R, test-first, kdo píše RED), 10 Q&A (6 námitek), 11 kartičky; Feynman→12, Co dál→13. Anki: 24 kartiček.
+- Opraven mrtvý odkaz href="#" na C3 v sekci 1 → 0010-deskilling.html.
+- FLAG k ověření: sekce 6 tvrdí „AI-generated testy mají 1,7× vyšší false-positive rate (New Relic 2026)" — vypadá jako přenesení New Relic „1,7× víc issues" na testy. Možná overclaim; do Anki kartiček jsem to NEDÁVAL. Zvážit doložení/změkčení.
+
+## Retenční balík — stav pokrytí (lekce s Páteř+Q&A+kartičky+Anki)
+- Hotovo: A3 (37), B1 (27), B8 (26), B9 (25), A1 (24). Zbývá ~19 lekcí.
+
 ## Curriculum state
 - Start: 2026-06-24
 - Doporučené pořadí pro 6 týdnů: viz MISSION args (curriculum dokument)
