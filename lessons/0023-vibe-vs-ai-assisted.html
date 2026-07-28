@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>B8 — Vibe coding vs. AI-assisted | AI-assisted RSE</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    /* Lesson-specific: spektrum zón */
+    .spectrum { margin: 1.5rem 0; font-family: var(--font-sans); }
+    .spectrum-bar { display: flex; border-radius: 6px; overflow: hidden; border: 1px solid var(--border); }
+    .spectrum-zone { flex: 1; padding: 0.7rem 0.6rem; font-size: 0.78rem; line-height: 1.3; text-align: center; }
+    .spectrum-zone .sz-name { font-weight: 700; display: block; margin-bottom: 0.2rem; }
+    .spectrum-zone.z-manual { background: #edf2f7; color: #4a5568; }
+    .spectrum-zone.z-assist { background: var(--green-light); color: var(--green); }
+    .spectrum-zone.z-vibe   { background: var(--amber-light); color: var(--amber); }
+    .spectrum-zone.z-yolo   { background: var(--red-light); color: var(--red); }
+    .spectrum-axis { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--muted); margin-top: 0.35rem; padding: 0 0.2rem; }
+    .dial-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin: 1rem 0 1.5rem; }
+    .dial-table th { font-family: var(--font-sans); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.5rem 0.75rem; text-align: left; border-bottom: 2px solid var(--text); }
+    .dial-table td { padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .dial-table tr:last-child td { border-bottom: none; }
+  </style>
+</head>
+<body>
+<div class="page">
+<div class="content">
+
+<!-- Header -->
+<header class="lesson-header">
+  <div class="lesson-meta">
+    <span class="tag">B8</span>
+    <span class="tag">Týden 3</span>
+    Blok B: Agentní paradigma
+  </div>
+  <h1>Vibe coding vs. AI-assisted coding</h1>
+  <p class="lesson-subtitle">Kolik kontroly předat agentovi — a kde je čára, za kterou je to nebezpečné</p>
+</header>
+
+<!-- Progress (JS přepíše) -->
+<div class="progress-bar" title="Curriculum progress">
+  <div class="progress-dot"></div>
+</div>
+
+<!-- 1. Jádro -->
+<h2>1 — Jádro</h2>
+
+<p>Vibe coding a AI-assisted coding nejsou dva nástroje — jsou to dva <strong>režimy</strong>, jak s AI pracovat, a liší se jedinou věcí: <strong>jestli výslednému kódu rozumíš a ověřuješ ho</strong>. <em>Vibe coding</em> = promptneš, vezmeš, co vypadne, spustíš, pošleš dál — diff nečteš. <em>AI-assisted coding</em> = AI zrychluje, ale ty zůstáváš autorem: čteš, chápeš, ověřuješ, ručíš. Správná zóna není pevný bod — <strong>posouvá se podle sázky</strong>: čím dráž a nevratněji tě omyl stojí, tím blíž musíš být k „ověřuji". U výzkumných výsledků je správná zóna pevně AI-assisted, protože chybný výsledek je <em>tiše špatně</em>.</p>
+
+<div class="callout">
+  <div class="callout-label">Proč to musíš umět přednášet</div>
+  <p>Publikum tenhle pojem zná z médií a Twitteru — často jako buzzword, buď jako zázrak, nebo jako sprosté slovo. Potřebují od tebe <em>kalibraci</em>: kdy je vibe legitimní zkratka a kdy je to hazard s vědeckým výsledkem. Bez téhle čáry se debata zvrhne na „AI je super" vs. „AI je nebezpečná" — a obojí je mimo.</p>
+</div>
+
+<h3>Slovníček — odkud ta slova jsou a kde je přesná hranice</h3>
+
+<div class="callout">
+  <div class="callout-label">„Vibe coding" — Andrej Karpathy, únor 2025</div>
+  <p>Termín razí Andrej Karpathy: <em>„Je tu nový druh programování, kterému říkám vibe coding — kdy se úplně poddáš vibům, přijmeš exponenciály a zapomeneš, že kód vůbec existuje."</em> Popsal to jako: <em>„jen koukám, něco řeknu, něco spustím, něco zkopíruju — a většinou to funguje."</em> Klíčové: sám to rámoval pro <strong>víkendové odpad-projekty</strong> („not too bad for throwaway weekend projects"), ne pro produkci a rozhodně ne pro výzkumný výsledek.</p>
+</div>
+
+<div class="callout">
+  <div class="callout-label">Ostrá hranice — Simon Willison, 2025</div>
+  <p>Kritické upřesnění: <em>„Když LLM napsal každý řádek tvého kódu, ale ty jsi ho přečetl, otestoval a pochopil — to podle mě NENÍ vibe coding. To je jen použití LLM jako psacího asistenta."</em> Vibe coding je specificky <strong>ta část, kdy nečteš a neověřuješ</strong>. Rozdíl mezi vibe a AI-assisted není nástroj ani model — je to <strong>porozumění</strong>.</p>
+</div>
+
+<div class="two-col">
+  <div class="col-box col-red">
+    <div class="col-label">vibe coding — bereš naslepo</div>
+    <ul>
+      <li>Promptneš → vezmeš → spustíš → pošleš dál</li>
+      <li><strong>Diff nečteš</strong>, kódu nerozumíš</li>
+      <li>Akceptuješ, „protože to běží"</li>
+      <li>Autorství i odpovědnost mlčky předáváš AI</li>
+    </ul>
+  </div>
+  <div class="col-box col-green">
+    <div class="col-label">AI-assisted — vlastníš a ověřuješ</div>
+    <ul>
+      <li>AI píše, ty <strong>čteš, chápeš, ověřuješ</strong></li>
+      <li>Rozumíš každé změně, kterou pouštíš dál</li>
+      <li>Akceptuješ, „protože vím, proč je to správně"</li>
+      <li>Autorství (a odpovědnost) zůstává tvoje</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 2. Historický kontext -->
+<h2>2 — Historický kontext</h2>
+
+<p><strong>Únor 2025:</strong> Karpathy razí „vibe coding" jedním tweetem. Během měsíců se z toho stane mainstreamové slovo (slovníky ho v roce 2025 sledují jako jeden z výrazů roku). Ale sám jev není nový — je to jen nejsilnější podoba starého vzorce.</p>
+
+<p><strong>„Osa autonomie" tu byla vždycky.</strong> Vždy jsi mohl vzít cizí kód, kterému nerozumíš:</p>
+<ul>
+  <li><strong>Copy-paste ze Stack Overflow</strong> — bereš útržek, který „vypadá, že dělá, co chci", a nalepíš ho.</li>
+  <li><strong>Knihovny a frameworky</strong> — voláš cizí kód jako černou skříňku.</li>
+  <li><strong>No-code / low-code platformy</strong> — klikáš aplikaci, kód nevidíš vůbec.</li>
+</ul>
+
+<p><strong>Co je nové:</strong> dřív jsi ten cizí kód musel aspoň <em>slepit a rozběhat</em> — a tím jsi ho tak trochu pochopil. Rozběhat nefungující Stack Overflow útržek tě donutilo zjistit, co dělá. Teď ho slepí a rozběhá AI za tebe. <strong>Bariéra „aspoň tomu musím rozumět, aby to vůbec fungovalo" zmizela — a s ní i přirozená pojistka porozumění.</strong></p>
+
+<div class="callout">
+  <div class="callout-label">Přímo Brooks (A3)</div>
+  <p>Tohle je učebnicová ukázka z <a href="0001-no-silver-bullet.html">A3</a>: akcidentální bariéra (rozběhat kód) zmizela, esenciální práce (rozumět, jestli je to <em>správně</em>) zůstala celá — jen se schovala. Vibe coding je jméno pro stav, kdy tu schovanou esenciální práci přeskočíš úplně.</p>
+</div>
+
+<!-- 3. Zónový model -->
+<h2>3 — Kde je správná zóna</h2>
+
+<p>Představ si jeden „ciferník autonomie" — kolik odevzdáváš AI. Zleva držíš všechno ty, zprava řídí agent:</p>
+
+<div class="spectrum">
+  <div class="spectrum-bar">
+    <div class="spectrum-zone z-manual">
+      <span class="sz-name">Ruční</span>
+      Píšeš vše sám, bez AI. Bezpečné, ale pomalé.
+    </div>
+    <div class="spectrum-zone z-assist">
+      <span class="sz-name">AI-assisted ✓</span>
+      AI píše, ty čteš, chápeš, ověřuješ. Vlastníš výsledek.
+    </div>
+    <div class="spectrum-zone z-vibe">
+      <span class="sz-name">Vibe</span>
+      Bereš a spouštíš, nečteš. OK jen když je omyl levný.
+    </div>
+    <div class="spectrum-zone z-yolo">
+      <span class="sz-name">YOLO</span>
+      Plná autonomie, žádné guardrails. Agent běží naslepo.
+    </div>
+  </div>
+  <div class="spectrum-axis">
+    <span>◀ ty řídíš</span>
+    <span>agent řídí ▶</span>
+  </div>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Správná zóna se posouvá podle sázky</div>
+  <p>Ta zelená zóna není pevná — <strong>roztahuje se a smršťuje podle toho, jak drahý a nevratný je omyl</strong>. Nízká sázka (prototyp, učení, jednorázový skript) → klidně sklouzni doprava do vibe, ušetříš čas. Vysoká sázka (publikovaný výsledek, produkce, cokoli pod co se podepíšeš) → drž se pevně v AI-assisted a ověřuj.</p>
+</div>
+
+<div class="callout">
+  <div class="callout-label">Rozhodovací pravidlo v jedné větě</div>
+  <p><em>„Kdyby tenhle kód byl špatně — kolik by mě to stálo a šlo by to vzít zpět?"</em><br>
+  Levné a vratné → <strong>vibe je v pořádku</strong>.<br>
+  Drahé, nevratné, nebo publikované → <strong>AI-assisted, ověřuj</strong>.</p>
+</div>
+
+<h3>Dva ciferníky, které se pletou dohromady</h3>
+
+<p>Vibe a YOLO nejsou totéž — jsou to <strong>dva různé ciferníky</strong>, a nebezpečí je, když jsou oba vytočené naplno zároveň:</p>
+
+<table class="dial-table">
+  <tr>
+    <th>Ciferník</th>
+    <th>Ptá se</th>
+    <th>Extrém</th>
+  </tr>
+  <tr>
+    <td><strong>Porozumění</strong><br>(vibe ↔ ověřeno)</td>
+    <td>Rozumím tomu, co AI vyrobila?</td>
+    <td><strong>Vibe</strong> = nerozumím, ale posílám dál</td>
+  </tr>
+  <tr>
+    <td><strong>Autonomie</strong><br>(YOLO ↔ OH NO)</td>
+    <td>Jak volně smí agent konat bez mého schválení?</td>
+    <td><strong>YOLO</strong> = koná cokoli, žádné guardrails (viz <a href="0002-harness-vs-guardrails.html">B1</a>)</td>
+  </tr>
+</table>
+
+<div class="callout red">
+  <div class="callout-label">Nebezpečná zóna</div>
+  <p><strong>Nerozumím + agent koná volně + vysoká sázka.</strong> Guardrails (B1) tě drží mimo YOLO — ale <em>nedrží</em> tě mimo vibe. Můžeš mít dokonalé guardrails (agent nic nesmaže) a přesto vibe-codovat tiše špatný výsledek. <strong>Vibe je o porozumění, ne o povoleních</strong> — to jsou dvě různé obrany.</p>
+</div>
+
+<!-- 4. Tři příklady -->
+<h2>4 — Tři příklady</h2>
+
+<div class="examples">
+  <div class="example-card">
+    <div class="example-label">Vědec-kodér</div>
+    <p>Vibe-coduješ analýzu dat. Graf vypadá krásně — ale AI tiše zvolila špatnou normalizaci. Publikuješ číslo, které je špatně, a nikdo to nepozná, protože <em>vypadá</em> hodnověrně. <strong>Správná zóna: AI-assisted</strong> — přečti, co kód dělá s daty, než tomu uvěříš.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">RSE vývojář</div>
+    <p>Prototyp helperu na parsování logů, jednorázově, na vyhození → <strong>vibe je OK</strong>, ušetří ti hodinu. Ale jakmile ten skript začne používat celý tým a stojí na něm pipeline → <strong>přesun do AI-assisted</strong>. Sázka se změnila: teď na tom stojí ostatní.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">Manažer / PI</div>
+    <p>Tým „vibe coduje" rychle, velocity svítí. Za 3 měsíce: nikdo nerozumí klíčovému kódu, bug v produkci, který nikdo neumí opravit. Rychlost byla iluze — hromadil se dluh (<a href="0010-deskilling.html">deskilling C3</a>, <a href="0011-trust-gap.html">trust gap C4</a>).</p>
+  </div>
+</div>
+
+<!-- 5. Propojení -->
+<h2>5 — Propojení na zbytek kurzu</h2>
+
+<ul>
+  <li><strong><a href="0001-no-silver-bullet.html">A3 — No Silver Bullet</a>:</strong> vibe = necháš AI převzít <em>esenciální</em> komplexitu (rozhodnout, co je správně). To je přesně to, co podle Brookse převzít nejde.</li>
+  <li><strong><a href="0002-harness-vs-guardrails.html">B1 — Harness vs. Guardrails</a>:</strong> YOLO (žádné guardrails) je autonomní dvojče vibe. Guardrails tě drží mimo YOLO — ale ne mimo vibe.</li>
+  <li><strong><a href="0011-trust-gap.html">C4 — Trust gap</a>:</strong> vibe stojí na tichém předpokladu <em>plynulost = správnost</em>. Přesně ten předpoklad je mylný.</li>
+  <li><strong><a href="0010-deskilling.html">C3 — Deskilling</a>:</strong> chronický vibe = přestaneš si budovat úsudek, který k ověřování potřebuješ. Časem už nedokážeš rozpoznat, kdy je to špatně.</li>
+  <li><strong><a href="0019-verifikace-code-review.html">D2 — Verifikace a code review</a>:</strong> disciplína, která tě drží v AI-assisted zóně. Review je opak vibe.</li>
+</ul>
+
+<div class="callout green">
+  <div class="callout-label">Pravidlo palce</div>
+  <p>Neumíš vysvětlit, co kód dělá a proč je správně? Jsi ve <strong>vibe</strong>. Když na výsledku záleží, zpomal a přesuň se do AI-assisted — přečti diff, ověř, teprve pak pošli dál.</p>
+</div>
+
+<!-- 6. Nejčastější nepochopení -->
+<h2>6 — Nejčastější nepochopení</h2>
+
+<div class="callout amber">
+  <div class="callout-label">Co si lidé myslí</div>
+  <p>„Vibe coding = používání AI na kód."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Co to skutečně je</div>
+  <p>Vibe coding je specificky ta část, kdy <strong>nečteš a neověřuješ</strong>. Když AI napíše kód a ty ho přečteš, otestuješ a rozumíš mu, je to AI-assisted, ne vibe. Rozdíl je porozumění, ne nástroj. (Přesně Willisonovo upřesnění z výše.)</p>
+</div>
+
+<div class="callout amber">
+  <div class="callout-label">Druhé nepochopení</div>
+  <p>„Vibe coding je vždycky špatně."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>Na nízké sázce (prototyp, učení, throwaway skript) je vibe legitimní a rychlý — dokonce to tak Karpathy zamýšlel. Špatně je jen tam, kde <em>na výsledku záleží</em>: publikace, produkce, sdílený kód. Zakázat vibe úplně je stejná chyba jako vibe-codovat výzkumný výsledek.</p>
+</div>
+
+<div class="callout amber">
+  <div class="callout-label">Třetí nepochopení — „Ale mně to funguje!"</div>
+  <p>„Funguje" ≠ „je správně". U výzkumu je nejnebezpečnější přesně ten kód, který <em>běží</em> a dá <em>věrohodné</em> číslo — protože past nezakřičí. Kód, co spadne, tě upozorní; kód, co je tiše špatně, tě nechá publikovat chybu.</p>
+</div>
+
+<!-- 7. Spicy teze -->
+<h2>7 — Spicy teze</h2>
+
+<div class="spicy">
+  <p>Vibe coding není nová dovednost — je to nejstarší zkratka (vzít cizí kód, kterému nerozumím), jen zrychlená na maximum. Otázka pro tvůj tým není „umíte vibe codovat". Umí to každý. Otázka je: <strong>poznáte, kdy si to nemůžete dovolit?</strong></p>
+</div>
+
+<!-- 8. Primární zdroje -->
+<h2>8 — Primární zdroje</h2>
+
+<ul class="resource-list">
+  <li>
+    <a href="https://twitter.com/karpathy/status/1886192184808149383" target="_blank">Andrej Karpathy — původní „vibe coding" tweet (únor 2025)</a>
+    <span class="why">Proč: originální definice, 3 věty. Všimni si rámování „throwaway weekend projects" — Karpathy sám vibe nikdy neprodával na produkci.</span>
+  </li>
+  <li>
+    <a href="https://simonwillison.net/2025/Mar/19/vibe-coding/" target="_blank">Simon Willison — Not all AI-assisted programming is vibe coding (2025)</a>
+    <span class="why">Proč: nejostřejší vymezení hranice. „Když to čteš a rozumíš tomu, není to vibe coding." Nutné pro přesnou definici.</span>
+  </li>
+  <li>
+    <a href="https://newrelic.com/resources/report/state-of-ai-coding" target="_blank">New Relic — State of AI Coding 2026</a>
+    <span class="why">Proč: 1,7× více issues v AI kódu = měřitelný důsledek přeskočené verifikace. Váže na C4.</span>
+  </li>
+</ul>
+
+<!-- 9. Páteř -->
+<h2>9 — Páteř 🎯</h2>
+
+<p>Jádro nastudeno — jedna věta, ze které odvodíš skoro cokoli, a tři kotvy, co si držíš. Když zamrzneš, vrať se sem.</p>
+
+<div class="spine">
+  <p class="spine-sentence">Vibe a AI-assisted se liší jedinou věcí — jestli kódu <em>rozumíš</em> a <em>ověřuješ</em> ho. Vibe = bereš naslepo (OK jen když je omyl levný a vratný). AI-assisted = vlastníš a ověřuješ (nutné, kdykoli na výsledku záleží).</p>
+  <ul class="spine-anchors">
+    <li><span class="num">čteš?</span>Willisonova čára: čteš a rozumíš diffu → AI-assisted. Nečteš → vibe. Rozdíl je porozumění, ne nástroj.</li>
+    <li><span class="num">sázka</span>Správná zóna se posouvá: nízká/vratná → vibe OK; vysoká/nevratná/publikovaná → ověřuj.</li>
+    <li><span class="num">tiše špatně</span>U výzkumu je vibe past: kód běží, číslo vypadá věrohodně, ale je tiše špatně.</li>
+  </ul>
+</div>
+
+<div class="callout">
+  <div class="callout-label">Přenosný test — smím vibe-codovat?</div>
+  <p>„<strong>Kdyby tohle bylo špatně, kolik by mě to stálo a šlo by to vzít zpět?</strong>"<br>
+  Levné a vratné → <strong>vibe je v pořádku</strong>.<br>
+  Drahé, nevratné, nebo publikované → <strong>AI-assisted, ověřuj</strong>.</p>
+</div>
+
+<!-- 10. Až se tě zeptají -->
+<h2>10 — Až se tě zeptají 🎤</h2>
+
+<p>Ostré dotazy z publika + krátká odpověď s pointou (tučně). Trénuj <em>nahlas</em>, ne čtením.</p>
+
+<div class="qa-item">
+  <p class="qa-q">Námitka „definice": „Vibe coding je přece jen používání AI na kód, ne?"</p>
+  <p class="qa-a">Ne. Ostrá čára (Willison): když čteš, testuješ a rozumíš, je to AI-assisted — jen „psací asistent". Vibe je ta část, kdy <em>nečteš</em>. <strong>Rozdíl je porozumění, ne nástroj.</strong></p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Námitka „autorita": „Karpathy to vymyslel, tak to musí být dobrá praxe."</p>
+  <p class="qa-a">Karpathy to rámoval pro <em>víkendové throwaway projekty</em> a sám dodal „většinou to funguje". <strong>Nikdy to nebyl recept na produkci ani na výzkumný výsledek.</strong></p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Námitka „ale funguje": „Mně vibe kód funguje, tak kde je problém?"</p>
+  <p class="qa-a">„Funguje" ≠ „správně". U výzkumu je nejnebezpečnější kód, který <em>běží</em> a dá <em>věrohodné</em> číslo — <strong>past nezakřičí</strong>. Kód, co spadne, tě aspoň varuje.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Námitka „strach z pokroku": „Není zákaz vibe codingu jen konzervatismus?"</p>
+  <p class="qa-a">Ne — je to o sázce. Na prototypu je vibe skvělý a rychlý. <strong>Zákaz platí jen tam, kde je omyl drahý nebo nevratný</strong> — publikace, produkce, sdílený kód.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Námitka „guardrails": „Guardrails mě přece ochrání, ne?"</p>
+  <p class="qa-a">Guardrails (B1) tě drží mimo YOLO — brání nebezpečné <em>akci</em>. Ale nebrání tomu, abys nerozuměl tiše špatnému <em>výsledku</em>. <strong>Vibe je o porozumění, ne o povoleních — jsou to dvě různé obrany.</strong></p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Otázka „jak to poznám": „Jak zjistím, že jsem sklouzl do vibe?"</p>
+  <p class="qa-a">Zeptej se: <em>umím vysvětlit, co ten kód dělá a proč je správně?</em> Když ne — a záleží na tom — <strong>jsi ve vibe a měl bys zpomalit.</strong></p>
+</div>
+
+<!-- 11. Do kartiček -->
+<h2>11 — Do kartiček 🔁</h2>
+
+<p>Rychlá startovní sada. Zkopíruj blok níž a naimportuj do <a href="https://apps.ankiweb.net/" target="_blank">Anki</a> (oddělovač = středník). Pak pár minut denně.</p>
+
+<div class="callout green">
+  <div class="callout-label">Plná sada je připravená v repu</div>
+  <p>Blok níž je rychlá verze. V repu je <strong>plná sada ~26 kartiček</strong> s podrobnějšími odpověďmi a tématy (jádro, slovník, zóny, dva ciferníky, námitky, propojení) — soubor <code>anki/0023-vibe-vs-ai-assisted.txt</code>. Import do Anki na jeden klik, tagy pro procvičování po blocích (<code>tag:zony</code>, <code>tag:namitky</code>…). Návod: <code>anki/README.md</code>.</p>
+</div>
+
+<pre class="flashcards">Co je vibe coding? ; Režim, kdy promptneš, vezmeš a spustíš kód, ale nečteš ho a nerozumíš mu. Termín Andrej Karpathy, únor 2025.
+Co je AI-assisted coding? ; AI píše, ale ty čteš, chápeš, ověřuješ a ručíš. Autorství zůstává tvoje.
+Co odlišuje vibe od AI-assisted? ; Jestli kódu rozumíš a ověřuješ ho (čteš diff). Rozdíl je porozumění, ne nástroj ani model.
+Willisonova ostrá hranice? ; Když LLM napsal kód, ale ty ho přečteš, otestuješ a pochopíš — to NENÍ vibe coding, to je AI jako psací asistent.
+Kdy je vibe coding OK? ; Na nízké sázce — prototyp, učení, jednorázový throwaway skript. Kde je omyl levný a vratný.
+Kdy je vibe coding nebezpečný? ; Když na výsledku záleží — publikace, produkce, sdílený kód. Drahé nebo nevratné omyly.
+Rozhodovací pravidlo (smím vibe-codovat)? ; „Kdyby to bylo špatně, kolik by mě to stálo a šlo by to vzít zpět?" Levné+vratné → vibe. Drahé/nevratné → ověřuj.
+Proč je vibe u výzkumu past? ; Kód běží a dá věrohodné číslo, ale je tiše špatně — past nezakřičí. „Funguje" ≠ „správně".
+Vibe vs. YOLO — jaký je rozdíl? ; Vibe = ciferník porozumění (nerozumím výsledku). YOLO = ciferník autonomie (agent koná bez guardrails). Dvě různé věci.
+Ochrání guardrails před vibe codingem? ; Ne. Guardrails brání nebezpečné akci (mimo YOLO), ne nepochopení tiše špatného výsledku. Vibe je o porozumění.</pre>
+
+<div class="callout green">
+  <div class="callout-label">Rituál</div>
+  <p>Denně pár minut kartičky + jednou týdně lekci „odříkej naostro" prázdné židli, jako bys ji přednášel. A až budeš chtít ostrý test, řekni v Claude Code „vygriluj mě z B8".</p>
+</div>
+
+<!-- 12. Feynmanovo cvičení -->
+<h2>12 — Feynmanovo cvičení</h2>
+
+<div class="quiz" id="quiz-main">
+  <div class="quiz-header">Feynmanův test — Vibe vs. AI-assisted</div>
+
+  <div class="quiz-question" id="q1">
+    <div class="quiz-q">1. Co přesně odlišuje vibe coding od AI-assisted codingu?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q1" value="a"> Vibe používá jiný, slabší AI model</label></li>
+      <li><label><input type="radio" name="q1" value="b"> Jestli kódu rozumíš a ověřuješ ho (čteš diff)</label></li>
+      <li><label><input type="radio" name="q1" value="c"> Vibe je zdarma, AI-assisted je placené</label></li>
+      <li><label><input type="radio" name="q1" value="d"> Vibe technicky funguje jen na malé projekty</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q1','b','Přesně. Rozdíl je porozumění, ne nástroj. Když čteš a rozumíš, je to AI-assisted — i kdyby AI napsala každý řádek.','Ne. Je to tentýž nástroj i model. Rozdíl je jediný: jestli výsledek čteš, chápeš a ověřuješ.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q1-fb"></div>
+  </div>
+
+  <div class="quiz-question" id="q2">
+    <div class="quiz-q">2. Kdy je vibe coding legitimní volba?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q2" value="a"> Nikdy — vždy je to hazard</label></li>
+      <li><label><input type="radio" name="q2" value="b"> Vždy, když AI kód funguje</label></li>
+      <li><label><input type="radio" name="q2" value="c"> Na nízké sázce — prototyp, učení, throwaway skript</label></li>
+      <li><label><input type="radio" name="q2" value="d"> Jen když máš nastavené guardrails</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q2','c','Správně. Nízká sázka = levný a vratný omyl. Tam je vibe rychlý a legitimní — přesně jak to Karpathy zamýšlel.','Ne. Vibe není ani vždy špatně, ani vždy OK. Rozhoduje sázka: levné a vratné → vibe; drahé/nevratné → ověřuj.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q2-fb"></div>
+  </div>
+
+  <div class="quiz-question" id="q3">
+    <div class="quiz-q">3. Vědec vibe-coduje analýzu, graf vypadá skvěle, ale výsledek je špatně. Proč je to nejnebezpečnější případ?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q3" value="a"> Protože AI modely neumí matematiku</label></li>
+      <li><label><input type="radio" name="q3" value="b"> Protože kód spadl a nešel spustit</label></li>
+      <li><label><input type="radio" name="q3" value="c"> Protože kód běží a dá věrohodné číslo — past nezakřičí</label></li>
+      <li><label><input type="radio" name="q3" value="d"> Protože chyběly guardrails, které by to zastavily</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q3','c','Výborně. Tiše špatně je horší než spadlé — spadlý kód varuje, věrohodně vypadající chyba tě nechá publikovat. „Funguje≠správně.','Ne. Nebezpečí není v pádu ani v guardrails. Je v tom, že výsledek vypadá hodnověrně, takže past nezakřičí a chyba projde dál.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q3-fb"></div>
+  </div>
+
+  <div class="quiz-question" id="q4">
+    <div class="quiz-q">4. Ochrání tě guardrails (permissions, hooks) před vibe codingem?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q4" value="a"> Ano — guardrails blokují nesprávný kód</label></li>
+      <li><label><input type="radio" name="q4" value="b"> Ne — guardrails brání nebezpečné akci, ne nepochopení tiše špatného výsledku</label></li>
+      <li><label><input type="radio" name="q4" value="c"> Ano, pokud jich máš dost</label></li>
+      <li><label><input type="radio" name="q4" value="d"> Guardrails a vibe coding spolu nesouvisí</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q4','b','Přesně. Guardrails tě drží mimo YOLO (nebezpečná akce), ne mimo vibe (nepochopení). Jsou to dva různé ciferníky a dvě různé obrany.','Ne. Guardrails neposuzují správnost výsledku — jen blokují akce. Před tiše špatným kódem, kterému nerozumíš, tě neochrání.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q4-fb"></div>
+  </div>
+
+  <div class="quiz-score" id="quiz-score"></div>
+</div>
+
+<!-- 13. Co dál -->
+<h2>13 — Co dál</h2>
+
+<p><strong>Co musíš znát před touto lekcí:</strong> <a href="0002-harness-vs-guardrails.html">B1 — Harness vs. Guardrails</a> (YOLO/OH NO ciferník autonomie) a <a href="0001-no-silver-bullet.html">A3 — No Silver Bullet</a> (esenciální „tiše špatně").</p>
+
+<p><strong>Kam pokračovat:</strong></p>
+<ul>
+  <li><a href="0011-trust-gap.html">C4 — Trust gap</a> — proč plynulost ≠ správnost; teoretický základ pod „funguje ≠ správně".</li>
+  <li><a href="0010-deskilling.html">C3 — Deskilling</a> — co s tvým úsudkem udělá chronický vibe.</li>
+  <li><a href="0019-verifikace-code-review.html">D2 — Verifikace a code review</a> — disciplína, která tě drží v AI-assisted zóně.</li>
+</ul>
+
+<!-- Footer (JS přepíše) -->
+<div class="lesson-nav">
+  <div>
+    <span class="nav-label">Předchozí lekce</span>
+    <a href="0009-subagents.html">← Subagenti</a>
+  </div>
+  <div>
+    <span class="nav-label">Další lekce</span>
+    <a href="0013-fair4rs.html">C1 — FAIR4RS →</a>
+  </div>
+</div>
+
+<p style="margin-top:2rem; font-size:0.8rem; color: var(--muted); font-family: var(--font-sans);">
+  Máš otázku? Vrať se do Claude Code a napiš ji — agent je tvůj učitel a může rozvinout libovolný bod z této lekce.
+</p>
+
+</div>
+</div>
+
+<script>
+const scores = {};
+function check(qid, correct, okMsg, failMsg) {
+  const selected = document.querySelector(`input[name="${qid}"]:checked`);
+  const fb = document.getElementById(`${qid}-fb`);
+  if (!selected) {
+    fb.textContent = 'Vyber jednu odpověď.';
+    fb.className = 'quiz-feedback incorrect';
+    fb.style.display = 'block';
+    return;
+  }
+  const isCorrect = selected.value === correct;
+  fb.textContent = isCorrect ? '✓ ' + okMsg : '✗ ' + failMsg;
+  fb.className = 'quiz-feedback ' + (isCorrect ? 'correct' : 'incorrect');
+  fb.style.display = 'block';
+  scores[qid] = isCorrect;
+  document.querySelectorAll(`input[name="${qid}"]`).forEach(r => r.disabled = true);
+  document.querySelector(`#${qid} .quiz-check`).disabled = true;
+  if (Object.keys(scores).length === 4) {
+    const n = Object.values(scores).filter(Boolean).length;
+    const el = document.getElementById('quiz-score');
+    el.style.display = 'block';
+    if (n === 4) {
+      el.innerHTML = '<strong>✓ 4/4 — Skvěle.</strong> Máš čáru jasnou. Umíš říct, kdy je vibe legitimní zkratka a kdy hazard. Jdi na C4 (trust gap).';
+    } else if (n >= 3) {
+      el.innerHTML = `<strong>${n}/4 — Téměř.</strong> Vrať se k sekci 3 (zóny) — klíč je, že správná zóna se posouvá podle sázky.`;
+    } else {
+      el.innerHTML = `<strong>${n}/4 — Vrať se.</strong> Přečti znovu sekce 1 a 3. Jádro: rozdíl je porozumění (čteš/ověřuješ?), a hranice se hýbe podle sázky.`;
+    }
+  }
+}
+</script>
+<script src="../assets/course.js"></script>
+</body>
+</html>

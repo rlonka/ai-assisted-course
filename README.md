@@ -4,7 +4,7 @@ Samostudijní kurz o vývoji výzkumného softwaru s pomocí AI, připravovaný 
 
 > 📖 **Kurz jako web:** [rlonka.github.io/ai-assisted-course](https://rlonka.github.io/ai-assisted-course/)
 
-**22 lekcí ve 4 blocích.** Cíl není naučit AI nástroje pro sebe, ale umět je vysvětlit, obhájit a předat dál.
+**23 lekcí ve 4 blocích.** Cíl není naučit AI nástroje pro sebe, ale umět je vysvětlit, obhájit a předat dál.
 
 ---
 
@@ -31,6 +31,7 @@ Samostudijní kurz o vývoji výzkumného softwaru s pomocí AI, připravovaný 
 | B5 | [Hooks](lessons/0007-hooks.html) | Mechanické guardraily |
 | B6 | [MCP](lessons/0008-mcp.html) | Napojení na vnější systémy |
 | — | [Subagenti](lessons/0009-subagents.html) | Pátá vrstva: delegace |
+| B8 | [Vibe vs. AI-assisted](lessons/0023-vibe-vs-ai-assisted.html) | Kolik kontroly předat — a kde je čára |
 
 ## Blok C — Věda, reprodukovatelnost a důvěra
 *Kde leží hranice jistoty ve vědeckém kontextu.*
@@ -59,7 +60,7 @@ Samostudijní kurz o vývoji výzkumného softwaru s pomocí AI, připravovaný 
 ## Struktura repozitáře
 
 ```
-lessons/            22 lekcí (HTML, samostatné stránky)
+lessons/            23 lekcí (HTML, samostatné stránky)
 assets/style.css    sdílený stylesheet (Tufte-inspired, print-friendly)
 learning-records/   záznamy o vzniku a rozhodnutích
 MISSION.md          proč kurz existuje a jak vypadá úspěch

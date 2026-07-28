@@ -1,0 +1,31 @@
+#separator:tab
+#html:false
+#deck:AI-assisted RSE::B8 — Vibe vs. AI-assisted
+#notetype:Basic
+#tags column:3
+Co je vibe coding?	Režim práce s AI, kdy promptneš, vezmeš a spustíš kód, ale nečteš ho a nerozumíš mu — „poddáš se vibům". Termín razil Andrej Karpathy v únoru 2025.	B8 jadro
+Co je AI-assisted coding?	AI píše kód, ale ty zůstáváš autorem: čteš, chápeš, ověřuješ a ručíš za každou změnu. Autorství i odpovědnost zůstávají tvoje.	B8 jadro
+Co přesně odlišuje vibe od AI-assisted?	Jestli výslednému kódu rozumíš a ověřuješ ho (čteš diff). Rozdíl je porozumění — ne nástroj, ne model, ne cena.	B8 jadro
+Pravidlo palce: jsem ve vibe?	Neumíš vysvětlit, co kód dělá a proč je správně? Jsi ve vibe. Když na výsledku záleží, zpomal a přesuň se do AI-assisted.	B8 jadro
+Kdo a kdy razil termín „vibe coding"?	Andrej Karpathy, tweet z února 2025: „poddáš se vibům, přijmeš exponenciály a zapomeneš, že kód vůbec existuje". Rámoval to pro víkendové throwaway projekty.	B8 slovnik
+Willisonova ostrá hranice vibe codingu?	Simon Willison (2025): když LLM napsal každý řádek, ale ty ho přečteš, otestuješ a pochopíš — to NENÍ vibe coding, to je AI jako psací asistent. Vibe = ta část, kdy nečteš.	B8 slovnik
+Jak Karpathy vibe coding zamýšlel?	Jako rychlou zkratku pro víkendové odpad-projekty („mostly works"), ne jako recept na produkci ani na výzkumný výsledek.	B8 slovnik
+Je vibe coding úplně nový jev?	Ne — je to nejsilnější podoba starého vzorce (vzít cizí kód, kterému nerozumíš): copy-paste ze Stack Overflow, knihovny jako černé skříňky, no-code platformy.	B8 slovnik
+Co je na vibe codingu oproti minulosti nové?	Dřív jsi cizí kód musel aspoň slepit a rozběhat — a tím ho trochu pochopil. Teď to udělá AI. Bariéra „musím tomu rozumět, aby to fungovalo" zmizela, a s ní přirozená pojistka.	B8 slovnik
+Kde je správná zóna na ose autonomie?	Není pevná — posouvá se podle sázky. Nízká/vratná sázka → vibe je OK. Vysoká/nevratná/publikovaná → AI-assisted, ověřuj.	B8 zony
+Rozhodovací pravidlo „smím vibe-codovat?"	„Kdyby tohle bylo špatně, kolik by mě to stálo a šlo by to vzít zpět?" Levné a vratné → vibe. Drahé, nevratné nebo publikované → AI-assisted.	B8 zony
+Kdy je vibe coding legitimní?	Na nízké sázce: prototyp, učení, jednorázový throwaway skript. Kde je omyl levný a snadno vratný.	B8 zony
+Kdy je vibe coding nebezpečný?	Když na výsledku záleží: publikace, produkce, sdílený kód. Kde je omyl drahý nebo nevratný.	B8 zony
+Čtyři zóny na ciferníku autonomie?	Ruční (píšeš vše sám) → AI-assisted (píše AI, ověřuješ ty) → Vibe (bereš, nečteš) → YOLO (plná autonomie, žádné guardrails).	B8 zony
+Jaký je rozdíl mezi vibe a YOLO?	Dva různé ciferníky. Vibe = ciferník porozumění (nerozumím výsledku). YOLO = ciferník autonomie (agent koná bez guardrails). Můžeš být v jednom, ne v druhém.	B8 ciferniky
+Ochrání tě guardrails před vibe codingem?	Ne. Guardrails (B1) brání nebezpečné akci — drží tě mimo YOLO. Ale nebrání tomu, abys nerozuměl tiše špatnému výsledku. Vibe je o porozumění, ne o povoleních.	B8 ciferniky
+Co je nejnebezpečnější zóna?	Nerozumím + agent koná volně + vysoká sázka. Oba ciferníky vytočené naplno tam, kde na výsledku záleží.	B8 ciferniky
+Proč je vibe coding u výzkumu obzvlášť past?	Kód běží a dá věrohodně vypadající číslo, ale je tiše špatně — past nezakřičí. „Funguje" ≠ „správně". Kód, co spadne, aspoň varuje; tiše špatný tě nechá publikovat chybu.	B8 vyzkum
+Proč je „tiše špatně" horší než spadlý kód?	Spadlý kód tě upozorní a zastaví. Tiše špatný kód vypadá hotově, projde dál a chyba se dostane do výsledku nebo produkce, aniž si toho někdo všimne.	B8 vyzkum
+Námitka „vibe je jen používání AI" — odpověď?	Ne. Když čteš, testuješ a rozumíš, je to AI-assisted (psací asistent). Vibe je specificky ta část, kdy nečteš. Rozdíl je porozumění, ne nástroj.	B8 namitky
+Námitka „mně vibe kód funguje" — odpověď?	„Funguje" ≠ „správně". U výzkumu je nejnebezpečnější kód, který běží a dá věrohodné číslo — past nezakřičí.	B8 namitky
+Námitka „zákaz vibe je strach z pokroku" — odpověď?	Ne, je to o sázce. Na prototypu je vibe skvělý a rychlý. Zákaz platí jen tam, kde je omyl drahý nebo nevratný.	B8 namitky
+Spicy teze B8?	Vibe coding není nová dovednost — je to nejstarší zkratka (vzít cizí kód bez porozumění), jen zrychlená na maximum. Otázka není „umíš vibe codovat", ale „poznáš, kdy si to nemůžeš dovolit".	B8 namitky
+Jak B8 navazuje na A3 (No Silver Bullet)?	Vibe = necháš AI převzít esenciální komplexitu (rozhodnout, co je správně) — přesně to, co podle Brookse převzít nejde. Akcidentální bariéra zmizela, esenciální se jen schovala.	B8 propojeni
+Jak B8 navazuje na C4 (Trust gap)?	Vibe stojí na tichém předpokladu „plynulost = správnost". C4 ukazuje, že ten předpoklad je mylný: sebejistota modelu je konstantní, ne signál správnosti.	B8 propojeni
+Jak B8 navazuje na C3 (Deskilling) a D2 (Verifikace)?	C3: chronický vibe = ztratíš úsudek potřebný k ověřování. D2: code review a verifikace jsou disciplína, která tě drží v AI-assisted zóně — opak vibe.	B8 propojeni

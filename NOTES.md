@@ -14,6 +14,13 @@ Cíl: aby Radek uměl ustát živé Q&A, ne jen text přečíst. Tři nové sekc
 - Zdroj CSS: assets/style.css, sekce „Retenční vrstva". Číslování sekcí posunout, Feynman + Co dál na konec.
 - Nasazeno v 0001 (A3) a 0002 (B1). TODO: doplnit do ostatních 20 lekcí (obsah přizpůsobit tématu).
 - B1 (0002): slovníček harness=postroj/guardrails=svodidla (green/red two-col) + retenční vrstva (sekce 9 Páteř, 10 Q&A, 11 kartičky), Feynman→12, Co dál→13. Anki: 27 kartiček. Páteř používá textové kotvy místo čísel (umí/nesmí, exit 2, palec) — .num zvládá i text.
+
+## Nová lekce B8 (0023) — Vibe vs. AI-assisted (přidáno 2026-07-28)
+- Zacelena reálná mezera: B8 byla plánovaná ("YOLO vs. OH NO") ale nikdy nevznikla; mrtvý odkaz href="#" v B1 opraven na 0023.
+- Soubor: lessons/0023-vibe-vs-ai-assisted.html, kód B8, plná struktura (13 sekcí) + retenční vrstva + slovníček + Anki (26 kartiček).
+- Zapojení: course.js COURSE array (B8 po B7 Subagenti, před C1), index.html (karta v bloku B + počet 22→23), README (řádek + počty), RESOURCES.md (gap note přeškrtnuta).
+- Klíčový model: rozdíl vibe/AI-assisted = porozumění (Willisonova čára); správná zóna se posouvá podle sázky; dva ciferníky (vibe=porozumění vs. YOLO=autonomie). Zdroje: Karpathy únor 2025, Simon Willison 2025.
+- POZOR: kurz má teď 23 lekcí (bylo 22). Progress bar má 23 teček (JS generuje z COURSE).
 - Slovníček pojmů: v A3 přidán do sekce 1 (Aristoteles, citace Brookse, synonyma esenciální=podstatná/akcidentální=vedlejší, chyták "akcidentální != nehoda") + kompaktní připomínka v Páteři.
 - Anki exporty: `anki/<lekce>.txt`, TSV formát `otázka<TAB>odpověď<TAB>tagy` s hlavičkou (`#separator:tab`, `#deck:`, `#notetype:Basic`, `#tags column:3`) pro import na jeden klik. Viz `anki/README.md`. A3 hotová (**37 kartiček**, rozšířeno 2026-07-27 na Radkovu žádost — víc a informativnější; tagy: jadro/vlastnosti/cisla/generace/historie/ai-dnes/namitky/intuice/anekdoty). On-page blok v sekci 12 je jen startovní verze + odkaz na plný soubor. TODO: export i pro ostatní lekce. Generátor: scratchpad/gen_anki.py.
 
