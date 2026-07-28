@@ -35,3 +35,6 @@ Prostý text (TSV), jedna kartička na řádek: `otázka<TAB>odpověď<TAB>tagy`
 - `0023-vibe-vs-ai-assisted.txt` — B8 (26 kartiček): vibe vs. AI-assisted (rozdíl = porozumění),
   Karpathy/Willison, zóny a rozhodovací pravidlo (sázka), dva ciferníky (vibe vs. YOLO),
   past „tiše špatně" u výzkumu, námitky, propojení na A3/B1/C3/C4/D2.
+- `0024-agentni-smycka.txt` — B9 (25 kartiček): agentní smyčka (model→nástroj→výsledek→model),
+  agent vs. chatbot, řídící tok rozhoduje model za běhu, sekvence kroků 1–6, ReAct (Yao 2022),
+  kdy smyčka končí, guardrails v kroku 4, námitky, propojení na B1/B7/B8.

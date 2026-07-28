@@ -24,6 +24,13 @@ Cíl: aby Radek uměl ustát živé Q&A, ne jen text přečíst. Tři nové sekc
 - Slovníček pojmů: v A3 přidán do sekce 1 (Aristoteles, citace Brookse, synonyma esenciální=podstatná/akcidentální=vedlejší, chyták "akcidentální != nehoda") + kompaktní připomínka v Páteři.
 - Anki exporty: `anki/<lekce>.txt`, TSV formát `otázka<TAB>odpověď<TAB>tagy` s hlavičkou (`#separator:tab`, `#deck:`, `#notetype:Basic`, `#tags column:3`) pro import na jeden klik. Viz `anki/README.md`. A3 hotová (**37 kartiček**, rozšířeno 2026-07-27 na Radkovu žádost — víc a informativnější; tagy: jadro/vlastnosti/cisla/generace/historie/ai-dnes/namitky/intuice/anekdoty). On-page blok v sekci 12 je jen startovní verze + odkaz na plný soubor. TODO: export i pro ostatní lekce. Generátor: scratchpad/gen_anki.py.
 
+## Nová lekce B9 (0024) — Agentní smyčka (přidáno 2026-07-28)
+- Zacelena druhá mezera (RESOURCES gap "agentic smyčka B9"): jak agent běží v čase.
+- Soubor: lessons/0024-agentni-smycka.html, kód B9, plná struktura + retenční vrstva + slovníček + Anki (25 kartiček). Vlastní CSS diagram smyčky (.loop / .loop-step / .loop-back / .loop-exit), 6 kroků + loop-back + exit.
+- Zapojení: course.js (B9 po B8, před C1), index.html (karta + počet 23→24), README (řádek + počty), RESOURCES.md (gap přeškrtnuta).
+- Klíčový model: agent = model v cyklu; sekvence zadání→kontext(harness)→inference→guardrails→nástroj→výsledek zpět→znovu; řídící tok rozhoduje model za běhu; ReAct (Yao 2022). Kurz má teď **24 lekcí**.
+- POZOR NA EFEMÉRNÍ KONTEJNER: 2026-07-28 se pracovní adresář jednou vrátil na 1f18fce (B8 práce byla jen na originu). Řešení: git fetch + ff-merge origin. Vždy po pushnutí ověř, že origin i lokál sedí.
+
 ## Curriculum state
 - Start: 2026-06-24
 - Doporučené pořadí pro 6 týdnů: viz MISSION args (curriculum dokument)

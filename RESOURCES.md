@@ -61,4 +61,4 @@
 
 - ~~Neexistuje dobrý primární zdroj pro "YOLO vs. OH NO" framing (B8)~~ — B8 vytvořena (0023-vibe-vs-ai-assisted.html) jako "Vibe coding vs. AI-assisted"; primární zdroje: Karpathy (únor 2025) a Simon Willison (2025). Matt Pocock materiály jako doplněk.
 - HPC-specifické AI workflow (D1) — málo primárních zdrojů, hlavně praxe z klastru
-- Karpathy materiály pro agentic smyčku (B9) — dohledat konkrétní zdroj
+- ~~Karpathy materiály pro agentic smyčku (B9)~~ — B9 vytvořena (0024-agentni-smycka.html) jako "Agentní smyčka"; primární zdroje: ReAct (Yao et al., 2022) a Anthropic "Building Effective Agents" (2024).

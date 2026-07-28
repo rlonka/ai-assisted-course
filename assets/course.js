@@ -21,6 +21,7 @@
     { code: "B6", file: "0008-mcp.html",                         title: "MCP" },
     { code: "B7", file: "0009-subagents.html",                   title: "Subagenti" },
     { code: "B8", file: "0023-vibe-vs-ai-assisted.html",         title: "Vibe vs. AI-assisted" },
+    { code: "B9", file: "0024-agentni-smycka.html",              title: "Agentní smyčka" },
     { code: "C1", file: "0013-fair4rs.html",                     title: "FAIR4RS" },
     { code: "C2", file: "0012-reprodukovatelnost.html",          title: "Reprodukovatelnost" },
     { code: "C3", file: "0010-deskilling.html",                  title: "Deskilling" },

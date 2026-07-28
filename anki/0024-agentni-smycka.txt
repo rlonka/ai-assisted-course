@@ -1,0 +1,30 @@
+#separator:tab
+#html:false
+#deck:AI-assisted RSE::B9 — Agentní smyčka
+#notetype:Basic
+#tags column:3
+Co je agentní smyčka?	Cyklus model → nástroj → výsledek → model, který běží, dokud model neusoudí, že je úkol hotový. „Agentní práce" = tento cyklus, ne jednorázová odpověď.	B9 jadro
+Čím se agent liší od chatbota?	Chatbot dá text a končí (jeden průchod). Agent koná (volá nástroje) a iteruje (čte výsledky, plánuje další krok). Rozdíl je smyčka, ne inteligence modelu.	B9 jadro
+Kdo určuje pořadí kroků agenta?	Model za běhu, podle výsledků předchozích kroků — ne programátor předem. Řídící tok se přestěhoval z kódu do modelu. Proto je agent nepředvídatelnější než klasický program.	B9 jadro
+Přenosný test: agent, nebo program?	„Kdo rozhodl, který krok přijde teď — programátor předem, nebo model za běhu?" Programátor → klasický program. Model podle výsledků → agentní smyčka.	B9 jadro
+Co je tool call a tool result?	Tool call = model požádá „spusť nástroj X s argumenty Y" (čti soubor, spusť bash, edituj). Tool result = co nástroj vrátil (stdout/obsah/chyba), přidá se do kontextu.	B9 slovnik
+Co je jeden „krok / iterace" smyčky?	Jeden průchod cyklem: model rozhodne akci → nástroj se vykoná → výsledek se vrátí do kontextu → model rozhodne dál.	B9 slovnik
+Co je kontextové okno?	Vše, co model „vidí" v daném kroku: system prompt, CLAUDE.md, historie konverzace, definice nástrojů, výstupy z minulých kroků. Skládá se znovu každou iteraci.	B9 slovnik
+Co je řídící tok (control flow) u agenta?	Pořadí, v jakém se kroky provádějí. U klasického programu ho píše programátor (if/for). U agenta ho rozhoduje model za běhu.	B9 slovnik
+Sekvence agentní smyčky (kroky)?	1) Zadání → 2) Sestavení kontextu (harness) → 3) Inference modelu → 4) Guardrails/permissions → 5) Vykonání nástroje → 6) Výsledek zpět do kontextu → zpět na 3.	B9 smycka
+Co model vygeneruje v kroku inference?	Buď (a) finální text uživateli → smyčka končí, nebo (b) tool call → pokračuje přes guardrails a vykonání nástroje.	B9 smycka
+Kde ve smyčce běží guardrails?	V kroku 4 — mezi rozhodnutím modelu a spuštěním nástroje. Kontrolují akci před vykonáním, mimo model (exit 2 = blokace).	B9 smycka
+Kde se nástroj vykoná — v modelu, nebo mimo?	Mimo model (bash proces, čtení disku, HTTP na MCP server). Model jen požádá; vykonání je deterministické, mimo LLM.	B9 smycka
+Kdy se do smyčky skládá CLAUDE.md a nástroje?	V kroku 2 (sestavení kontextu), a to každou iteraci znovu — ne jen na začátku. Proto CLAUDE.md ovlivňuje každý krok smyčky.	B9 smycka
+Kdy agentní smyčka skončí?	Když model vrátí finální text bez tool callu (hotovo), nebo narazí na limit kroků/tokenů, nebo ji přerušíš ty.	B9 smycka
+Co je ReAct?	Vzor Reason + Act (Yao et al., 2022): prokládání uvažování a akcí — Thought → Action → Observation, opakovaně. Akademický základ agentní smyčky.	B9 historie
+Jak se liší klasický program, chatbot a agent?	Program: pořadí kroků píše člověk (deterministické). Chatbot: jeden průchod prompt→odpověď, žádné akce. Agent: smyčka s nástroji, pořadí rozhoduje model za běhu.	B9 historie
+Co ukázaly rané autonomní agenty (AutoGPT, 2023)?	První populární agent loops se často zacyklovaly nebo ztratily cíl — ukázaly, že smyčka bez mantinelů (limity, guardrails) je křehká.	B9 historie
+Co je na agentní smyčce oproti minulosti nové?	Po desetiletí sekvenci kroků psal člověk dopředu. Agent ji rozhoduje za běhu podle výsledků. Řídící tok se přesunul z kódu do modelu.	B9 historie
+Námitka „agent je jen chytřejší chatbot" — odpověď?	Rozdíl není inteligence, ale smyčka: agent koná (volá nástroje) a iteruje. Tentýž model může být pasivní chatbot i aktivní agent.	B9 namitky
+Námitka „agent běží podle napsaného skriptu" — odpověď?	Ne. Řídící tok rozhoduje model za běhu podle výsledků. Programátor dodal jen nástroje (harness) a mantinely (guardrails), ne sekvenci kroků.	B9 namitky
+Námitka „nezacyklí se to donekonečna?" — odpověď?	Může — proto existují limity kroků/tokenů a guardrails. Rané agenty se zacyklovaly běžně; produkční smyčky mají stopky a kontrolní body.	B9 namitky
+Proč je agent rizikovější než chatbot?	Koná (mění soubory, spouští příkazy) a opakovaně, bez schválení každého kroku. Víc síly → víc potřeba guardrails (B1) a verifikace (D2).	B9 namitky
+Spicy teze B9?	Klasický software dělá přesně to, co jsi napsal. Agent dělá to, co se v každém kroku sám rozhodne. Řídící tok se přestěhoval z kódu do modelu — celá revoluce i celé riziko v jedné větě.	B9 namitky
+Jak B9 propojuje harness a guardrails (B1)?	Harness = krok 2 (sestavení kontextu). Guardrails = krok 4 (brána před akcí). B9 ukazuje jejich načasování ve smyčce.	B9 propojeni
+Jak B9 souvisí s vibe codingem (B8) a subagenty (B7)?	B8: vibe = kolik iterací smyčky pustíš bez čtení výsledků. B7: subagent = smyčka uvnitř smyčky (orchestrátor v jednom kroku spustí podagenta s vlastní smyčkou).	B9 propojeni

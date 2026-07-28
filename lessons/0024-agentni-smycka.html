@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>B9 — Agentní smyčka | AI-assisted RSE</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    /* Lesson-specific: diagram smyčky */
+    .loop { margin: 1.5rem 0; font-family: var(--font-sans); }
+    .loop-step { display: flex; align-items: flex-start; gap: 0.75rem; border: 1px solid var(--border); border-radius: 4px; padding: 0.6rem 0.9rem; margin-bottom: 0.4rem; }
+    .loop-step .ls-num { flex-shrink: 0; width: 1.6rem; height: 1.6rem; border-radius: 50%; background: var(--accent); color: #fff; font-weight: 700; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; }
+    .loop-step .ls-name { font-weight: 700; font-size: 0.85rem; display: block; }
+    .loop-step .ls-desc { color: var(--muted); font-size: 0.78rem; }
+    .loop-step.s-user    { border-color: #a0aec0; background: #f7fafc; }
+    .loop-step.s-user .ls-num { background: #718096; }
+    .loop-step.s-harness { border-color: #63b3ed; background: #ebf8ff; }
+    .loop-step.s-harness .ls-num { background: #3182ce; }
+    .loop-step.s-model   { border-color: var(--text); background: #f6f6f4; }
+    .loop-step.s-model .ls-num { background: var(--text); }
+    .loop-step.s-guard   { border-color: #fc8181; background: var(--red-light); }
+    .loop-step.s-guard .ls-num { background: var(--red); }
+    .loop-step.s-tool    { border-color: #68d391; background: var(--green-light); }
+    .loop-step.s-tool .ls-num { background: var(--green); }
+    .loop-arrow { text-align: center; color: var(--muted); font-size: 0.9rem; margin: 0.05rem 0; }
+    .loop-back { border: 1px dashed var(--accent); border-radius: 4px; padding: 0.5rem 0.9rem; margin: 0.5rem 0 0.4rem; font-size: 0.8rem; color: var(--accent); background: var(--accent-light); font-weight: 600; text-align: center; }
+    .loop-exit { border: 1px solid #68d391; background: var(--green-light); border-radius: 4px; padding: 0.5rem 0.9rem; font-size: 0.8rem; color: var(--green); font-weight: 600; text-align: center; }
+  </style>
+</head>
+<body>
+<div class="page">
+<div class="content">
+
+<!-- Header -->
+<header class="lesson-header">
+  <div class="lesson-meta">
+    <span class="tag">B9</span>
+    <span class="tag">Týden 3</span>
+    Blok B: Agentní paradigma
+  </div>
+  <h1>Agentní smyčka</h1>
+  <p class="lesson-subtitle">Jak agent běží v čase — od zadání po hotovo, krok po kroku</p>
+</header>
+
+<!-- Progress (JS přepíše) -->
+<div class="progress-bar" title="Curriculum progress">
+  <div class="progress-dot"></div>
+</div>
+
+<!-- 1. Jádro -->
+<h2>1 — Jádro</h2>
+
+<p>Agentní práce není jednorázová odpověď — je to <strong>cyklus</strong>. Chatbot dostane prompt a vrátí text; tím končí. Agent naproti tomu běží ve <strong>smyčce</strong>: model dostane kontext, rozhodne <em>jednu</em> akci (spustit nástroj), ta se vykoná mimo model, její výsledek se vrátí zpět do kontextu — a model se ptá znovu, co dál. Smyčka běží, dokud model neusoudí, že je hotovo. Zásadní posun: <strong>řídící tok neurčuje programátor předem, ale model za běhu</strong>. To je celá síla i celé riziko agentního paradigmatu.</p>
+
+<div class="callout">
+  <div class="callout-label">Proč to musíš umět přednášet</div>
+  <p>Publikum často slyší „AI agent" a představí si chytřejší chatbot. Rozdíl ale není inteligence — je to <em>smyčka</em>: agent <strong>koná</strong> a <strong>iteruje</strong>. Bez téhle mentální mapy nedává smysl, proč jsou guardrails (B1) a verifikace (D2) najednou tak důležité. Kdo pochopí smyčku, pochopí celý blok B.</p>
+</div>
+
+<h3>Slovníček — pár slov, bez kterých smyčka nedává smysl</h3>
+
+<div class="two-col">
+  <div class="col-box col-green">
+    <div class="col-label">co agent dělá</div>
+    <ul>
+      <li><strong>Tool call</strong> — model požádá „spusť nástroj X s argumenty Y" (přečti soubor, spusť bash, edituj řádek)</li>
+      <li><strong>Tool result</strong> — co nástroj vrátil (stdout, obsah, chyba); přidá se do kontextu</li>
+      <li><strong>Krok / iterace</strong> — jeden průchod smyčkou: model → nástroj → výsledek</li>
+    </ul>
+  </div>
+  <div class="col-box col-red">
+    <div class="col-label">co si nesplést</div>
+    <ul>
+      <li><strong>Agent ≠ chatbot</strong> — chatbot jen odpoví textem; agent koná a iteruje</li>
+      <li><strong>Kontextové okno</strong> — vše, co model „vidí" v daném kroku; skládá se znovu každou iteraci</li>
+      <li><strong>Řídící tok</strong> — pořadí kroků; u agenta ho určuje model za běhu, ne napsaný kód</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 2. Historický kontext -->
+<h2>2 — Historický kontext</h2>
+
+<p>Rozdíl mezi „program" a „agent" je v tom, <em>kdo určuje pořadí kroků</em>:</p>
+
+<ul>
+  <li><strong>Klasický program</strong> — řídící tok napíše programátor (<code>if</code>, <code>for</code>, volání funkcí). Pořadí je pevné a deterministické. Stroj dělá přesně to, co je napsáno.</li>
+  <li><strong>Chatbot (2022, ChatGPT)</strong> — jeden průchod: prompt → odpověď. Žádné akce, žádná iterace. Mocné, ale pasivní.</li>
+  <li><strong>Tool use / function calling (2023)</strong> — model umí požádat o zavolání funkce. Když kolem toho postavíš smyčku, vznikne agent.</li>
+  <li><strong>Autonomní agenti (2023: AutoGPT, BabyAGI)</strong> — první populární „agent loops". Často se zacyklily nebo ztratily cíl — ukázaly, že smyčka bez mantinelů je křehká.</li>
+  <li><strong>Claude Code (2025)</strong> — vyladěná smyčka pro práci s kódem: nástroje na soubory/bash, guardrails, kontext z CLAUDE.md.</li>
+</ul>
+
+<div class="callout">
+  <div class="callout-label">Akademická kotva — ReAct (Yao et al., 2022)</div>
+  <p>Vzor <strong>ReAct</strong> (Reason + Act) formalizoval, co dnes dělá každý agent: prokládat <em>uvažování</em> a <em>akce</em> — <strong>Thought → Action → Observation → Thought → …</strong> Model si „nahlas" rozmyslí krok, provede ho, přečte výsledek, a podle něj plánuje dál. Agentní smyčka je ReAct v praxi.</p>
+</div>
+
+<p><strong>Co je nové:</strong> po desetiletí platilo, že sekvenci kroků napíše člověk dopředu. Agent tuhle sekvenci <em>rozhoduje za běhu</em> — podle toho, co viděl v předchozím kroku. Přesně proto je nepředvídatelnější než program (a proto potřebuje guardrails).</p>
+
+<!-- 3. Smyčka krok po kroku -->
+<h2>3 — Smyčka krok po kroku</h2>
+
+<p>Co se stane od chvíle, kdy odešleš zadání, po „hotovo":</p>
+
+<div class="loop">
+  <div class="loop-step s-user">
+    <span class="ls-num">1</span>
+    <span><span class="ls-name">Zadání</span><span class="ls-desc">Uživatel napíše prompt / příkaz — nebo to spustí trigger (hook, naplánovaná úloha).</span></span>
+  </div>
+  <div class="loop-arrow">↓</div>
+  <div class="loop-step s-harness">
+    <span class="ls-num">2</span>
+    <span><span class="ls-name">Sestavení kontextu (harness)</span><span class="ls-desc">Systém složí kontextové okno: system prompt + CLAUDE.md + historie konverzace + <strong>definice dostupných nástrojů</strong> + výstupy z minulých kroků.</span></span>
+  </div>
+  <div class="loop-arrow">↓</div>
+  <div class="loop-step s-model">
+    <span class="ls-num">3</span>
+    <span><span class="ls-name">Inference modelu</span><span class="ls-desc">Model dostane celé okno a vygeneruje <em>jednu</em> věc: buď <strong>(a) finální text</strong> uživateli → smyčka končí, nebo <strong>(b) tool call</strong> → pokračuje krokem 4.</span></span>
+  </div>
+  <div class="loop-arrow">↓ &nbsp;<em style="font-size:0.75rem; color:var(--muted);">(tool call)</em></div>
+  <div class="loop-step s-guard">
+    <span class="ls-num">4</span>
+    <span><span class="ls-name">Guardrails / permissions</span><span class="ls-desc">Než se nástroj spustí, projde kontrolou (permission systém, hooks). Buď <strong>povolí</strong>, <strong>zeptá se tebe</strong>, nebo <strong>zablokuje</strong> (exit 2). Běží mimo model.</span></span>
+  </div>
+  <div class="loop-arrow">↓</div>
+  <div class="loop-step s-tool">
+    <span class="ls-num">5</span>
+    <span><span class="ls-name">Vykonání nástroje</span><span class="ls-desc">Nástroj se spustí <strong>mimo model</strong> (bash proces, čtení disku, HTTP na MCP server) a vrátí výsledek: stdout, obsah souboru, nebo chybu.</span></span>
+  </div>
+  <div class="loop-arrow">↓</div>
+  <div class="loop-step s-harness">
+    <span class="ls-num">6</span>
+    <span><span class="ls-name">Výsledek zpět do kontextu</span><span class="ls-desc">Výstup nástroje se přidá do kontextového okna jako nová zpráva („tool result").</span></span>
+  </div>
+  <div class="loop-back">↑ zpět na krok 3 — model dostane rozšířené okno a rozhodne další krok. <strong>Smyčka běží dál.</strong></div>
+  <div class="loop-exit">✓ Když model v kroku 3 vrátí finální text (bez tool callu) → <strong>HOTOVO</strong></div>
+</div>
+
+<div class="callout">
+  <div class="callout-label">Kde smyčka skončí</div>
+  <p>Cyklus 3 → 6 běží dokola, dokud nenastane <strong>jedno</strong> ze tří:</p>
+  <ul>
+    <li><strong>Model řekne „hotovo"</strong> — v kroku 3 vrátí finální text bez tool callu.</li>
+    <li><strong>Strop</strong> — narazí na limit (počet kroků, tokenů). Pojistka proti zacyklení.</li>
+    <li><strong>Přerušení</strong> — zastavíš to ty.</li>
+  </ul>
+</div>
+
+<div class="callout amber">
+  <div class="callout-label">Klíčový detail, který publikum přehlédne</div>
+  <p>Kontext se v kroku 2 skládá <strong>znovu při každé iteraci</strong> — ne jen jednou na začátku. Proto CLAUDE.md a nastavené nástroje ovlivňují <em>každý</em> krok smyčky, ne jen ten první. A proto s délkou smyčky roste kontextové okno (a tím i náklady i riziko, že se v něm ztratí to podstatné — viz D1 context engineering).</p>
+</div>
+
+<!-- 4. Tři příklady -->
+<h2>4 — Tři příklady</h2>
+
+<div class="examples">
+  <div class="example-card">
+    <div class="example-label">Vědec-kodér</div>
+    <p>„Oprav bug v solveru." Smyčka: přečte soubor <em>(nástroj)</em> → spustí test <em>(nástroj, selže)</em> → přečte traceback <em>(výsledek)</em> → edituje řádek <em>(nástroj)</em> → spustí test znovu <em>(projde)</em> → finální text „hotovo". <strong>Čtyři iterace, každá s vlastním rozhodnutím</strong> — žádnou z nich jsi nenapsal dopředu.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">RSE vývojář</div>
+    <p>Agent na HPC: přečte SLURM konfiguraci <em>(MCP nástroj)</em> → navrhne skript → chce spustit <code>sbatch</code> → <strong>guardrail v kroku 4</strong> povolí jen <code>--test-only</code> (dry-run) → přečte výstup → opraví. Smyčka běží, ale mantinel drží ostré spuštění za schválením.</p>
+  </div>
+  <div class="example-card">
+    <div class="example-label">Manažer / PI</div>
+    <p>Proč „agent" ≠ „chatbot": chatbot ti dá text, který zkopíruješ. Agent sám sáhne do repa, spustí testy, upraví soubory, commitne. <strong>Víc síly = víc potřeba guardrails a verifikace.</strong> Autonomie roste s délkou smyčky — a s ní odpovědnost za dohled.</p>
+  </div>
+</div>
+
+<!-- 5. Propojení -->
+<h2>5 — Propojení na zbytek kurzu</h2>
+
+<ul>
+  <li><strong><a href="0002-harness-vs-guardrails.html">B1 — Harness vs. Guardrails</a>:</strong> harness = krok 2 (sestavení kontextu), guardrails = krok 4 (brána před akcí). B9 ukazuje, <em>kdy</em> ve smyčce každý z nich zasáhne.</li>
+  <li><strong><a href="0023-vibe-vs-ai-assisted.html">B8 — Vibe vs. AI-assisted</a>:</strong> vibe = kolik iterací smyčky pustíš bez čtení výsledků. Čím delší nekontrolovaná smyčka, tím hlouběji ve vibe.</li>
+  <li><strong><a href="0009-subagents.html">B7 — Subagenti</a>:</strong> smyčka uvnitř smyčky — orchestrátor v jednom kroku spustí podagenta, který má vlastní kompletní smyčku.</li>
+  <li><strong><a href="0011-trust-gap.html">C4 — Trust gap</a>:</strong> každá iterace může zanést tiše špatný výsledek. Delší smyčka = víc míst, kde se chyba schová.</li>
+  <li><strong><a href="0018-context-engineering.html">D1 — Context engineering</a>:</strong> kontext se skládá v kroku 2 každou iteraci — kurátorství toho okna je proto zásadní dovednost.</li>
+</ul>
+
+<div class="callout green">
+  <div class="callout-label">Pravidlo palce</div>
+  <p>Chceš vědět, jestli něco je „agent"? Zeptej se: <strong>koná to a opakuje se to</strong> (volá nástroje, čte výsledky, plánuje další krok)? Pak je to agentní smyčka. Když to jen jednou odpoví textem, je to chatbot.</p>
+</div>
+
+<!-- 6. Nejčastější nepochopení -->
+<h2>6 — Nejčastější nepochopení</h2>
+
+<div class="callout amber">
+  <div class="callout-label">Co si lidé myslí</div>
+  <p>„Agent je jen chytřejší chatbot."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Co to skutečně je</div>
+  <p>Rozdíl není inteligence modelu — je to <strong>smyčka</strong>. Agent <em>koná</em> (volá nástroje) a <em>iteruje</em> (čte výsledky, plánuje další krok). Tentýž model může fungovat jako pasivní chatbot i jako aktivní agent — liší se, jestli kolem něj běží smyčka s nástroji.</p>
+</div>
+
+<div class="callout amber">
+  <div class="callout-label">Druhé nepochopení</div>
+  <p>„Agent běží podle skriptu, který někdo napsal."</p>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">Skutečnost</div>
+  <p>Řídící tok — pořadí kroků — <strong>rozhoduje model za běhu</strong>, podle výsledků. Programátor dodal jen nástroje (harness) a mantinely (guardrails), ne sekvenci. Přesně proto je agent nepředvídatelnější než klasický program a přesně proto potřebuje guardrails.</p>
+</div>
+
+<div class="callout amber">
+  <div class="callout-label">Třetí nepochopení — „Když agent pracuje sám, můžu odejít"</div>
+  <p>Čím delší smyčka běží bez tvého pohledu, tím víc prostoru pro tiše špatný výsledek, který se řetězí do dalších kroků. Autonomie agenta <strong>není absence tvé odpovědnosti</strong> — je to důvod, proč nastavit mantinely a kontrolní body dřív, než ho pustíš.</p>
+</div>
+
+<!-- 7. Spicy teze -->
+<h2>7 — Spicy teze</h2>
+
+<div class="spicy">
+  <p>Klasický software dělá přesně to, co jsi napsal. Agent dělá to, co se v každém kroku sám rozhodne. Řídící tok se přestěhoval z tvého kódu do modelu — a to je celá revoluce i celé riziko v jedné větě. Kdo to nepochopí, buď agentovi slepě věří, nebo se ho zbytečně bojí.</p>
+</div>
+
+<!-- 8. Primární zdroje -->
+<h2>8 — Primární zdroje</h2>
+
+<ul class="resource-list">
+  <li>
+    <a href="https://arxiv.org/abs/2210.03629" target="_blank">ReAct: Synergizing Reasoning and Acting in Language Models — Yao et al. (2022)</a>
+    <span class="why">Proč: akademický základ agentní smyčky. Thought → Action → Observation. Čti úvod a obrázek 1 — zbytek je detail.</span>
+  </li>
+  <li>
+    <a href="https://www.anthropic.com/research/building-effective-agents" target="_blank">Building Effective Agents — Anthropic (2024)</a>
+    <span class="why">Proč: praktické vzory agentních smyček (workflow vs. agent, kdy co použít). Nejlepší jeden zdroj pro tuhle lekci.</span>
+  </li>
+  <li>
+    <a href="https://docs.anthropic.com/en/docs/claude-code" target="_blank">Claude Code Documentation</a>
+    <span class="why">Proč: jak smyčka vypadá konkrétně — nástroje, permission systém, hooks. Váže na B1.</span>
+  </li>
+</ul>
+
+<!-- 9. Páteř -->
+<h2>9 — Páteř 🎯</h2>
+
+<p>Jádro nastudeno — jedna věta, ze které odvodíš skoro cokoli, a tři kotvy, co si držíš. Když zamrzneš, vrať se sem.</p>
+
+<div class="spine">
+  <p class="spine-sentence">Agent = model v <em>cyklu</em>, který sám volí a řetězí kroky. Sekvence: sestav kontext → inference → <em>(tool call → guardrail → nástroj → výsledek zpět)</em> → znovu, dokud není hotovo. Řídící tok neurčuje programátor předem, ale model za běhu.</p>
+  <ul class="spine-anchors">
+    <li><span class="num">cyklus</span>Chatbot = 1 průchod (prompt→odpověď). Agent = smyčka model→nástroj→výsledek→model, dokud není hotovo.</li>
+    <li><span class="num">ReAct</span>Vzor Reason+Act: Thought → Action → Observation, opakovaně (Yao et al., 2022).</li>
+    <li><span class="num">kdo řídí</span>Pořadí kroků rozhoduje model za běhu, ne napsaný kód → nepředvídatelné → proto guardrails.</li>
+  </ul>
+</div>
+
+<div class="callout">
+  <div class="callout-label">Přenosný test — je to agent, nebo program?</div>
+  <p>„<strong>Kdo rozhodl, který krok přijde teď — programátor předem, nebo model za běhu?</strong>"<br>
+  Programátor předem → <strong>klasický program</strong> (pevný řídící tok).<br>
+  Model za běhu, podle výsledků → <strong>agentní smyčka</strong>.</p>
+</div>
+
+<!-- 10. Až se tě zeptají -->
+<h2>10 — Až se tě zeptají 🎤</h2>
+
+<p>Ostré dotazy z publika + krátká odpověď s pointou (tučně). Trénuj <em>nahlas</em>, ne čtením.</p>
+
+<div class="qa-item">
+  <p class="qa-q">Otázka „v čem je rozdíl": „Čím se agent liší od ChatGPT?"</p>
+  <p class="qa-a">Chatbot dá text a končí. Agent v cyklu volá nástroje, čte výsledky a plánuje další krok, dokud není úkol hotový. <strong>Rozdíl je konání a iterace, ne inteligence.</strong></p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Otázka „kdo to napsal": „Kdo naprogramoval, co agent v jakém pořadí udělá?"</p>
+  <p class="qa-a">Nikdo předem. <strong>Řídící tok rozhoduje model za běhu</strong> podle výsledků. Programátor dodal jen nástroje (harness) a mantinely (guardrails), ne sekvenci kroků.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Otázka „kde to skončí": „Jak agent pozná, že má přestat?"</p>
+  <p class="qa-a">Když v kroku inference vrátí finální text bez tool callu (usoudí, že hotovo). Nebo narazí na <strong>limit</strong> kroků/tokenů, nebo ho <strong>přerušíš ty</strong>.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Námitka „nezacyklí se to": „Nemůže se agent točit donekonečna?"</p>
+  <p class="qa-a">Může — proto existují limity kroků a guardrails. Rané agenty (AutoGPT, 2023) se zacyklovaly běžně. <strong>Produkční smyčky mají stopky</strong> a kontrolní body.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Otázka „proč nebezpečnější": „Proč je agent rizikovější než chatbot?"</p>
+  <p class="qa-a">Protože <em>koná</em> (mění soubory, spouští příkazy) a dělá to opakovaně bez schválení každého kroku. <strong>Víc síly → víc potřeba guardrails (B1) a verifikace (D2).</strong></p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Otázka „kam patří CLAUDE.md": „Kde do smyčky vstupuje CLAUDE.md a nástroje?"</p>
+  <p class="qa-a">V kroku 2 (sestavení kontextu) — a to se děje <strong>každou iteraci znovu</strong>, ne jen na začátku. Proto CLAUDE.md ovlivňuje každý krok smyčky.</p>
+</div>
+
+<!-- 11. Do kartiček -->
+<h2>11 — Do kartiček 🔁</h2>
+
+<p>Rychlá startovní sada. Zkopíruj blok níž a naimportuj do <a href="https://apps.ankiweb.net/" target="_blank">Anki</a> (oddělovač = středník). Pak pár minut denně.</p>
+
+<div class="callout green">
+  <div class="callout-label">Plná sada je připravená v repu</div>
+  <p>Blok níž je rychlá verze. V repu je <strong>plná sada ~26 kartiček</strong> s podrobnějšími odpověďmi a tématy (jádro, slovník, smyčka, historie, námitky, propojení) — soubor <code>anki/0024-agentni-smycka.txt</code>. Import do Anki na jeden klik, tagy pro procvičování po blocích (<code>tag:smycka</code>, <code>tag:namitky</code>…). Návod: <code>anki/README.md</code>.</p>
+</div>
+
+<pre class="flashcards">Co je agentní smyčka? ; Cyklus model → nástroj → výsledek → model, který běží, dokud model neusoudí, že je úkol hotový.
+Čím se agent liší od chatbota? ; Chatbot dá text a končí (1 průchod). Agent koná (volá nástroje) a iteruje (čte výsledky, plánuje další krok).
+Sekvence smyčky? ; Zadání → sestavení kontextu (harness) → inference → tool call? → guardrails → vykonání nástroje → výsledek zpět → znovu inference.
+Kdo určuje pořadí kroků agenta? ; Model za běhu, podle výsledků. Ne programátor předem. Proto je agent nepředvídatelnější než klasický program.
+Co je tool call a tool result? ; Tool call = model požádá „spusť nástroj X". Tool result = co nástroj vrátil (stdout/obsah/chyba), přidá se do kontextu.
+Co je ReAct? ; Vzor Reason+Act (Yao et al., 2022): Thought → Action → Observation, opakovaně. Akademický základ agentní smyčky.
+Kdy smyčka skončí? ; Model vrátí finální text bez tool callu (hotovo), nebo narazí na limit kroků/tokenů, nebo ji přerušíš ty.
+Kde běží guardrails ve smyčce? ; V kroku 4 — mezi rozhodnutím modelu a spuštěním nástroje. Kontrolují akci před vykonáním, mimo model.
+Kdy se do smyčky skládá kontext (CLAUDE.md, nástroje)? ; V kroku 2, a to každou iteraci znovu — ne jen na začátku. Proto CLAUDE.md ovlivňuje každý krok.
+Proč je agent rizikovější než chatbot? ; Koná (mění soubory, spouští příkazy) a opakovaně, bez schválení každého kroku. Víc síly → víc potřeba guardrails a verifikace.</pre>
+
+<div class="callout green">
+  <div class="callout-label">Rituál</div>
+  <p>Denně pár minut kartičky + jednou týdně lekci „odříkej naostro" prázdné židli, jako bys ji přednášel. A až budeš chtít ostrý test, řekni v Claude Code „vygriluj mě z B9".</p>
+</div>
+
+<!-- 12. Feynmanovo cvičení -->
+<h2>12 — Feynmanovo cvičení</h2>
+
+<div class="quiz" id="quiz-main">
+  <div class="quiz-header">Feynmanův test — Agentní smyčka</div>
+
+  <div class="quiz-question" id="q1">
+    <div class="quiz-q">1. Čím se agentní smyčka liší od chatbota?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q1" value="a"> Agent používá výkonnější model</label></li>
+      <li><label><input type="radio" name="q1" value="b"> Agent v cyklu volá nástroje, čte výsledky a plánuje další krok</label></li>
+      <li><label><input type="radio" name="q1" value="c"> Agent běží lokálně, chatbot v cloudu</label></li>
+      <li><label><input type="radio" name="q1" value="d"> Agent neumí generovat text, jen akce</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q1','b','Přesně. Rozdíl je smyčka: agent koná a iteruje. Tentýž model může být pasivní chatbot i aktivní agent.','Ne. Nejde o model ani o to, kde běží. Rozdíl je, že agent koná (volá nástroje) a opakuje se, dokud není hotovo.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q1-fb"></div>
+  </div>
+
+  <div class="quiz-question" id="q2">
+    <div class="quiz-q">2. Kdo určuje, jaký krok agent udělá jako další?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q2" value="a"> Programátor to napsal předem jako pevnou sekvenci</label></li>
+      <li><label><input type="radio" name="q2" value="b"> Uživatel musí každý krok schválit</label></li>
+      <li><label><input type="radio" name="q2" value="c"> Model rozhoduje za běhu podle výsledků předchozích kroků</label></li>
+      <li><label><input type="radio" name="q2" value="d"> Náhodný generátor</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q2','c','Správně. Řídící tok se přestěhoval z kódu do modelu — rozhoduje za běhu. Proto je agent nepředvídatelnější a proto potřebuje guardrails.','Ne. Právě tohle je jádro agentního paradigmatu: pořadí kroků není napsané předem, rozhoduje ho model podle výsledků.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q2-fb"></div>
+  </div>
+
+  <div class="quiz-question" id="q3">
+    <div class="quiz-q">3. Kdy agentní smyčka skončí?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q3" value="a"> Po přesně 10 krocích, vždy</label></li>
+      <li><label><input type="radio" name="q3" value="b"> Když model vrátí finální text bez tool callu, nebo narazí na limit / přerušení</label></li>
+      <li><label><input type="radio" name="q3" value="c"> Když se poprvé spustí nějaký nástroj</label></li>
+      <li><label><input type="radio" name="q3" value="d"> Nikdy — běží pořád dokola</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q3','b','Výborně. Tři konce: model řekne hotovo (text bez nástroje), strop kroků/tokenů, nebo přerušení uživatelem.','Ne. Smyčka nekončí prvním nástrojem ani pevným počtem. Končí, když model usoudí hotovo, narazí na limit, nebo ji přerušíš.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q3-fb"></div>
+  </div>
+
+  <div class="quiz-question" id="q4">
+    <div class="quiz-q">4. Kam ve smyčce patří CLAUDE.md a definice nástrojů?</div>
+    <ul class="quiz-options">
+      <li><label><input type="radio" name="q4" value="a"> Spustí se jen jednou na začátku a pak už ne</label></li>
+      <li><label><input type="radio" name="q4" value="b"> Do sestavení kontextu (harness) — skládá se do okna v každé iteraci</label></li>
+      <li><label><input type="radio" name="q4" value="c"> Jsou to guardrails, běží až po modelu</label></li>
+      <li><label><input type="radio" name="q4" value="d"> CLAUDE.md se ve smyčce vůbec nepoužívá</label></li>
+    </ul>
+    <button class="quiz-check" onclick="check('q4','b','Přesně. Kontext se skládá v kroku 2 každou iteraci znovu — proto CLAUDE.md ovlivňuje každý krok smyčky, ne jen první.','Ne. Kontext (včetně CLAUDE.md a nástrojů) se skládá znovu při každé iteraci v kroku 2 — ne jednou a ne jako guardrail.')">Zkontrolovat</button>
+    <div class="quiz-feedback" id="q4-fb"></div>
+  </div>
+
+  <div class="quiz-score" id="quiz-score"></div>
+</div>
+
+<!-- 13. Co dál -->
+<h2>13 — Co dál</h2>
+
+<p><strong>Co musíš znát před touto lekcí:</strong> <a href="0002-harness-vs-guardrails.html">B1 — Harness vs. Guardrails</a> — harness a guardrails jsou dvě zastávky ve smyčce (krok 2 a 4). B9 ukazuje jejich načasování.</p>
+
+<p><strong>Kam pokračovat:</strong></p>
+<ul>
+  <li><a href="0023-vibe-vs-ai-assisted.html">B8 — Vibe vs. AI-assisted</a> — kolik iterací smyčky pustíš bez čtení.</li>
+  <li><a href="0009-subagents.html">B7 — Subagenti</a> — smyčka uvnitř smyčky.</li>
+  <li><a href="0018-context-engineering.html">D1 — Context engineering</a> — kurátorství okna, které se skládá každý krok.</li>
+</ul>
+
+<!-- Footer (JS přepíše) -->
+<div class="lesson-nav">
+  <div>
+    <span class="nav-label">Předchozí lekce</span>
+    <a href="0023-vibe-vs-ai-assisted.html">← B8 — Vibe vs. AI-assisted</a>
+  </div>
+  <div>
+    <span class="nav-label">Další lekce</span>
+    <a href="0013-fair4rs.html">C1 — FAIR4RS →</a>
+  </div>
+</div>
+
+<p style="margin-top:2rem; font-size:0.8rem; color: var(--muted); font-family: var(--font-sans);">
+  Máš otázku? Vrať se do Claude Code a napiš ji — agent je tvůj učitel a může rozvinout libovolný bod z této lekce.
+</p>
+
+</div>
+</div>
+
+<script>
+const scores = {};
+function check(qid, correct, okMsg, failMsg) {
+  const selected = document.querySelector(`input[name="${qid}"]:checked`);
+  const fb = document.getElementById(`${qid}-fb`);
+  if (!selected) {
+    fb.textContent = 'Vyber jednu odpověď.';
+    fb.className = 'quiz-feedback incorrect';
+    fb.style.display = 'block';
+    return;
+  }
+  const isCorrect = selected.value === correct;
+  fb.textContent = isCorrect ? '✓ ' + okMsg : '✗ ' + failMsg;
+  fb.className = 'quiz-feedback ' + (isCorrect ? 'correct' : 'incorrect');
+  fb.style.display = 'block';
+  scores[qid] = isCorrect;
+  document.querySelectorAll(`input[name="${qid}"]`).forEach(r => r.disabled = true);
+  document.querySelector(`#${qid} .quiz-check`).disabled = true;
+  if (Object.keys(scores).length === 4) {
+    const n = Object.values(scores).filter(Boolean).length;
+    const el = document.getElementById('quiz-score');
+    el.style.display = 'block';
+    if (n === 4) {
+      el.innerHTML = '<strong>✓ 4/4 — Skvěle.</strong> Máš smyčku v ruce. Umíš vysvětlit, co je agentní práce a proč potřebuje mantinely. Jdi na B8 nebo D1.';
+    } else if (n >= 3) {
+      el.innerHTML = `<strong>${n}/4 — Téměř.</strong> Vrať se k sekci 3 (smyčka krok po kroku) — klíč je, že řídící tok rozhoduje model za běhu.`;
+    } else {
+      el.innerHTML = `<strong>${n}/4 — Vrať se.</strong> Přečti znovu sekce 1 a 3. Jádro: agent = cyklus model→nástroj→výsledek, a pořadí kroků rozhoduje model, ne napsaný kód.`;
+    }
+  }
+}
+</script>
+<script src="../assets/course.js"></script>
+</body>
+</html>
