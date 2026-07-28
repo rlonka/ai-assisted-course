@@ -41,6 +41,8 @@ Prostý text (TSV), jedna kartička na řádek: `otázka<TAB>odpověď<TAB>tagy`
 - `0001-no-silver-bullet.txt` — A3 (37 kartiček): esenciální/akcidentální komplexita,
   Aristoteles, čtyři vlastnosti SW, tvrdá čísla (5×, 1,7×, −19 %), generace jazyků,
   historické vlny, AI dnes + námitky, analogie (guláš, 128 řidičů), anekdoty (bug, Backus).
+- `0004-ramec-peti-otazek.txt` — B2 (20 kartiček): rámec pěti otázek (Memory/Skills/Hooks/MCP/Subagents),
+  co každá vrstva řeší, závislé pořadí, mapování na klasické disciplíny, námitky, propojení na B1/A1/A4.
 - `0002-harness-vs-guardrails.txt` — B1 (27 kartiček): harness vs. guardrails (co umí / co nesmí),
   metafory (postroj, svodidla), architektura requestu, exit code 2, determinismus,
   komponenty (memory/skills/MCP/hooks/subagents), námitky, propojení na A3.

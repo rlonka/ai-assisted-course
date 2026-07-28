@@ -1,0 +1,25 @@
+#separator:tab
+#html:false
+#deck:AI-assisted RSE::B2 — Rámec pěti otázek
+#notetype:Basic
+#tags column:3
+Co je rámec pěti otázek?	Checklist před každým netriviálním úkolem: pět otázek, každá ověřuje jednu vrstvu kontextu agenta a řeší jiný typ selhání. Systematický způsob, jak budovat kontext — ne ad hoc.	B2 jadro
+Pět vrstev (otázek) rámce?	1. Memory (co agent ví natrvalo), 2. Skills (zabalené workflows), 3. Hooks (deterministické guardrails), 4. MCP (přístup k externím nástrojům), 5. Subagents (rozbití práce na víc agentů).	B2 jadro
+Proč rámec pěti otázek existuje?	Agent je dobrý přesně tak, jak dobrý je kontext, který dostane. Rámec je systematický (ne ad hoc) způsob, jak ten kontext budovat — disciplína před každým úkolem.	B2 jadro
+Přenosný test: která vrstva mi chybí?	Podle symptomu: nekonzistence napříč sezeními → Memory; opakovaný dlouhý prompt → Skill; přeskočený test/lint → Hook; hádání stavu systému → MCP; přetížený jeden agent → Subagents.	B2 jadro
+Memory — co řeší a čím?	Co agent ví o projektu natrvalo (konvence, doména, invarianty). Bez ní: navrhuje jiný styl, opakuješ konvence v každém promptu, každá session začíná od nuly. Mechanismus: CLAUDE.md, .claude/memory/.	B2 vrstvy
+Skills — co řeší a čím?	Zabalené opakované workflows. Bez nich: opakuješ tentýž dlouhý prompt, výsledky kolísají podle formulace. Mechanismus: /skill-name v .claude/.	B2 vrstvy
+Hooks — co řeší a čím?	Co se spouští deterministicky bez ohledu na agenta. Bez nich: agent commituje bez lintingu, "zapomene" testy, guardrails jsou volitelné. Mechanismus: settings.json → hooks.	B2 vrstvy
+MCP — co řeší a čím?	Přístup agenta k externím nástrojům v reálném čase. Bez něj: agent hádá stav systému nebo prosí o copy-paste, výsledky nejdou ověřit. Mechanismus: MCP servery v konfiguraci.	B2 vrstvy
+Subagents — co řeší a čím?	Rozbití práce na víc agentů. Bez nich: jeden agent drží moc velký kontext a ztrácí přehled; sekvenční práce tam, kde jde paralelizovat. Mechanismus: Task/Agent, workflow.	B2 vrstvy
+Proč je pořadí vrstev závislé?	Bez Memory jsou Skills nepředvídatelné (nevíš, jaký kontext agent má); bez Hooks jsou guardrails volitelné; bez MCP nemají Subagents přístup k datům. Pořadí je architektura, ne konvence.	B2 poradi
+Musíš mít všech pět vrstev najednou?	Ne. Začni Memory (minimum), přidávej vrstvu, když narazíš na opakující se problém. Rámec je checklist, ne povinná výbava.	B2 poradi
+Odkud pochází Memory a Skills (klasicky)?	Memory ← Ubiquitous Language (Evans, DDD 2003) — tým mluví stejným jazykem; CLAUDE.md je glossary projektu. Skills ← XP collective ownership + refactoring — opakovaný pattern je kandidát na abstrakci.	B2 historie
+Odkud pochází Hooks, MCP, Subagents (klasicky)?	Hooks ← CI/CD (deterministická gate na commit). MCP ← Unix filozofie ("do one thing well", specializovaný nástroj s jasným API). Subagents ← distributed systems (izolace stavu, message passing, specializace).	B2 historie
+Námitka "stačí dobrý prompt, CLAUDE.md je overhead" — odpověď?	Dobrý prompt řeší 1 session, CLAUDE.md všechny. Prompt platíš pokaždé; Memory je investice s návratností od druhé session. Co se opakuje, patří do stálé vrstvy.	B2 namitky
+Námitka "MCP je zbytečná komplexita" — odpověď?	Bez MCP agent hádá stav systému nebo dostává copy-paste bez kontextu. MCP je standardizovaná náhrada za chaotický copy-paste. Otázka není "je nutné", ale "kolik copy-paste toleruješ".	B2 namitky
+Námitka "tým dostává různé výsledky ze stejného promptu" — odpověď?	Chybí Memory. Žádný sdílený CLAUDE.md → každý agent má jiný implicitní kontext → nereprodukovatelné. CLAUDE.md je shared specification pro tým, ne jen pro jednoho.	B2 namitky
+Spicy teze B2?	Prompt bez rámce pěti otázek je jako test bez specifikace — výsledek závisí na tom, co AI odhadne. Rámec je tvoje specifikace pro agenta. Kdo ji nepíše, agenta neprogramuje — jen doufá.	B2 namitky
+Jak rámec souvisí s B1 (harness/guardrails)?	Hooks jsou guardrails, Skills jsou harness. Rámec pojmenovává, kam každý z nich patří v celkovém inventáři vrstev.	B2 propojeni
+Jak rámec souvisí s A1 (TDD) a A4 (DDD)?	A1: Memory drží testovací konvence, Skill/Hook drží TDD workflow (hook blokuje commit bez testů). A4: ubiquitous language z DDD jde přímo do Memory (CLAUDE.md).	B2 propojeni
+Co je Memory vrstva pro tým (ne jen agenta)?	CLAUDE.md není jen pro agenta — je to shared specification pro celý tým. Sdílený kontext dělá výstupy reprodukovatelné a porovnatelné napříč lidmi.	B2 jadro

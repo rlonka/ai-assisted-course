@@ -315,8 +315,89 @@
   </li>
 </ul>
 
-<!-- 10. Feynmanovo cvičení -->
-<h2>10 — Feynmanovo cvičení</h2>
+<!-- 10. Páteř -->
+<h2>10 — Páteř 🎯</h2>
+
+<p>Jádro nastudeno — jedna věta, ze které odvodíš skoro cokoli, a tři kotvy, co si držíš. Když zamrzneš, vrať se sem.</p>
+
+<div class="spine">
+  <p class="spine-sentence">Před každým netriviálním úkolem projdi <em>pět otázek</em> — každá je jedna vrstva kontextu agenta a řeší jiný typ selhání: <strong>Memory</strong> (co ví natrvalo) → <strong>Skills</strong> (zabalené workflows) → <strong>Hooks</strong> (deterministické guardrails) → <strong>MCP</strong> (přístup k nástrojům) → <strong>Subagents</strong> (rozbití práce). Vrstvy jsou závislé; přeskočíš-li vrstvu, agent to nezahlásí.</p>
+  <ul class="spine-anchors">
+    <li><span class="num">5 vrstev</span>Memory · Skills · Hooks · MCP · Subagents. Každá řeší jiný typ selhání agentního workflow.</li>
+    <li><span class="num">závislé pořadí</span>Začni Memory (základ), přidávej vrstvy podle opakujícího se problému. Bez Memory jsou Skills nepředvídatelné.</li>
+    <li><span class="num">specifikace, ne prompt</span>Rámec je tvoje specifikace pro agenta. Prompt řeší 1 session, Memory všechny.</li>
+  </ul>
+</div>
+
+<div class="callout">
+  <div class="callout-label">Přenosný test — která vrstva mi chybí?</div>
+  <p>Podle symptomu:<br>
+  Nekonzistence napříč sezeními → <strong>Memory</strong>. Opakovaný dlouhý prompt → <strong>Skill</strong>. Přeskočený test/lint → <strong>Hook</strong>. Agent hádá stav systému → <strong>MCP</strong>. Jeden agent přetížený kontextem → <strong>Subagents</strong>.</p>
+</div>
+
+<!-- 11. Až se tě zeptají -->
+<h2>11 — Až se tě zeptají 🎤</h2>
+
+<p>Ostré dotazy z publika + krátká odpověď s pointou (tučně). Trénuj <em>nahlas</em>, ne čtením.</p>
+
+<div class="qa-item">
+  <p class="qa-q">Námitka „stačí prompt": „Stačí dobrý prompt — CLAUDE.md je overhead."</p>
+  <p class="qa-a">Dobrý prompt řeší <em>jednu</em> session, CLAUDE.md <em>všechny</em>. Náklad na prompt platíš pokaždé; Memory je investice s návratností od druhé session. <strong>Co se opakuje, patří do stálé vrstvy, ne do jednorázového promptu.</strong></p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Námitka „MCP je moc": „MCP je zbytečná komplexita pro můj projekt."</p>
+  <p class="qa-a">Bez MCP agent buď hádá stav externího systému, nebo ho dostává přes copy-paste (bez kontextu). MCP je standardizovaná náhrada za chaotický copy-paste. <strong>Otázka není „je MCP nutné", ale „kolik copy-paste toleruješ".</strong></p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Otázka „všech pět?": „Musím mít všech pět vrstev, abych začal?"</p>
+  <p class="qa-a">Ne. Začni <strong>Memory</strong> (minimum), přidávej vrstvu, když narazíš na opakující se problém. Rámec je checklist, ne povinná výbava — nemusíš mít všech pět najednou.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Otázka „proč pořadí": „Proč zrovna Memory → Skills → Hooks → MCP → Subagents?"</p>
+  <p class="qa-a">Vrstvy jsou <em>závislé</em>. Bez Memory jsou Skills nepředvídatelné (nevíš, jaký kontext agent má); bez Hooks jsou guardrails volitelné; bez MCP nemají Subagents přístup k datům. <strong>Pořadí je architektura, ne konvence.</strong></p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Situace „různé výsledky": „Tým dostává různé výsledky ze stejného promptu — proč?"</p>
+  <p class="qa-a">Chybí <strong>Memory</strong>. Žádný sdílený CLAUDE.md → každý agent má jiný implicitní kontext → nereprodukovatelné. <strong>CLAUDE.md je shared specification pro celý tým</strong>, ne jen pro jednoho.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Otázka „jak poznám mezeru": „Jak zjistím, která vrstva mi chybí?"</p>
+  <p class="qa-a">Podle symptomu (viz přenosný test): nekonzistence → Memory, opakovaný prompt → Skill, přeskočený test → Hook, hádání stavu → MCP, přetížený agent → Subagents. <strong>Každé selhání ukazuje na konkrétní vrstvu.</strong></p>
+</div>
+
+<!-- 12. Do kartiček -->
+<h2>12 — Do kartiček 🔁</h2>
+
+<p>Rychlá startovní sada. Zkopíruj blok níž a naimportuj do <a href="https://apps.ankiweb.net/" target="_blank">Anki</a> (oddělovač = středník). Pak pár minut denně.</p>
+
+<div class="callout green">
+  <div class="callout-label">Plná sada je připravená v repu</div>
+  <p>Blok níž je rychlá verze. V repu je <strong>plná sada ~22 kartiček</strong> s podrobnějšími odpověďmi a tématy (jádro, pět vrstev, pořadí, historie, námitky, propojení) — soubor <code>anki/0004-ramec-peti-otazek.txt</code>. Import do Anki na jeden klik, tagy pro procvičování po blocích (<code>tag:vrstvy</code>, <code>tag:namitky</code>…). Návod: <code>anki/README.md</code>.</p>
+</div>
+
+<pre class="flashcards">Co je rámec pěti otázek? ; Checklist před každým netriviálním úkolem: pět otázek, každá ověřuje jednu vrstvu kontextu agenta a řeší jiný typ selhání.
+Pět vrstev (otázek) rámce? ; 1. Memory (co agent ví natrvalo), 2. Skills (zabalené workflows), 3. Hooks (deterministické guardrails), 4. MCP (přístup k nástrojům), 5. Subagents (rozbití práce).
+Memory — co řeší a čím? ; Co agent ví o projektu natrvalo. Bez ní: navrhuje jiný styl, opakuješ konvence v každém promptu. Mechanismus: CLAUDE.md, .claude/memory/.
+Skills — co řeší a čím? ; Zabalené opakované workflows. Bez nich: opakuješ tentýž dlouhý prompt, výsledky kolísají. Mechanismus: /skill-name v .claude/.
+Hooks — co řeší a čím? ; Co se spouští deterministicky bez ohledu na agenta. Bez nich: agent commituje bez lintingu, „zapomene" testy. Mechanismus: settings.json → hooks.
+MCP — co řeší a čím? ; Přístup agenta k externím nástrojům v reálném čase. Bez něj: agent hádá stav systému nebo prosí o copy-paste. Mechanismus: MCP servery.
+Subagents — co řeší a čím? ; Rozbití práce na víc agentů. Bez nich: jeden agent drží moc velký kontext, ztrácí přehled; sekvenční tam, kde jde paralelizovat.
+Proč je pořadí vrstev závislé? ; Bez Memory jsou Skills nepředvídatelné; bez Hooks jsou guardrails volitelné; bez MCP nemají Subagents přístup k datům. Pořadí je architektura, ne konvence.
+Musíš mít všech pět vrstev? ; Ne. Začni Memory (minimum), přidávej vrstvu, když narazíš na opakující se problém. Rámec je checklist, ne povinná výbava.
+Spicy teze B2? ; Prompt bez rámce je jako test bez specifikace — výsledek závisí na tom, co AI odhadne. Rámec je tvoje specifikace pro agenta. Kdo ji nepíše, agenta neprogramuje — jen doufá.</pre>
+
+<div class="callout green">
+  <div class="callout-label">Rituál</div>
+  <p>Denně pár minut kartičky + jednou týdně lekci „odříkej naostro" prázdné židli, jako bys ji přednášel. A až budeš chtít ostrý test, řekni v Claude Code „vygriluj mě z B2".</p>
+</div>
+
+<!-- 13. Feynmanovo cvičení -->
+<h2>13 — Feynmanovo cvičení</h2>
 
 <div class="quiz" id="quiz-main">
   <div class="quiz-header">Feynmanův test — Rámec pěti otázek</div>
@@ -376,8 +457,8 @@
   <div class="quiz-score" id="quiz-score"></div>
 </div>
 
-<!-- 11. Co dál -->
-<h2>11 — Co dál</h2>
+<!-- 14. Co dál -->
+<h2>14 — Co dál</h2>
 
 <p><strong>Co musíš znát před touto lekcí:</strong></p>
 <ul>
