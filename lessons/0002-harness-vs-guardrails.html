@@ -106,6 +106,35 @@
   <p>Většina lidí si myslí, že AI nástroj je jen "model + API". Harness/guardrails ti dá jazyk pro rozhovor o tom, <em>jak se AI integruje do vědeckého workflow</em> — co tým musí nakonfigurovat, kde jsou rizika, kde je odpovědnost.</p>
 </div>
 
+<h3>Slovníček — dvě anglická slova, která musíš přeložit publiku</h3>
+
+<p>„Harness" a „guardrails" jsou v Claude Code zažité anglické termíny, ale české vědecké publikum potřebuje obraz. Obojí jsou věci, které <em>ty</em> stavíš kolem modelu — ne něco, co je uvnitř něj.</p>
+
+<div class="two-col">
+  <div class="col-box col-green">
+    <div class="col-label">harness = postroj / rám (co agent UMÍ)</div>
+    <ul>
+      <li>Vše, co modelu přidáš, aby uměl <em>tvou</em> konkrétní práci: kontext (CLAUDE.md), nástroje, skills, MCP, paměť</li>
+      <li>Pozitivní architektura — <strong>přidáváš</strong> schopnosti</li>
+      <li>Obraz: <strong>koňský postroj</strong> — teprve s ním kůň utáhne tvůj vůz. Sám model je jen ten kůň.</li>
+    </ul>
+  </div>
+  <div class="col-box col-red">
+    <div class="col-label">guardrails = svodidla / mantinely (co agent NESMÍ)</div>
+    <ul>
+      <li>Deterministické zábrany mimo model, které ho nepustí do nebezpečné akce: hooks (exit 2), permission system</li>
+      <li>Negativní architektura — <strong>zakazuješ</strong> akce</li>
+      <li>Obraz: <strong>svodidla na silnici</strong> — nezrychlí tě, ale nepustí tě ze srázu.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="callout amber">
+  <div class="callout-label">⚠️ Dva chytáky</div>
+  <p>(1) <strong>Harness ≠ prompt.</strong> Prompt je jednorázová věta; harness je celé <em>trvalé prostředí</em> kolem modelu (paměť, nástroje, konfigurace), které platí napříč sezeními.<br>
+  (2) <strong>Guardrails nejsou „to, co nastavil Anthropic".</strong> Lokální guardrails píšeš <em>ty</em> jako shell skripty v <code>settings.json</code> — jsou pod tvou kontrolou. (Víc v sekci 6.)</p>
+</div>
+
 <!-- 2. Historický kontext -->
 <h2>2 — Historický kontext</h2>
 
@@ -270,8 +299,90 @@
   </li>
 </ul>
 
-<!-- 9. Feynmanovo cvičení -->
-<h2>9 — Feynmanovo cvičení</h2>
+<!-- 9. Páteř -->
+<h2>9 — Páteř 🎯</h2>
+
+<p>Jádro nastudeno — jedna věta, ze které odvodíš skoro cokoli, a tři kotvy, co si držíš. Když zamrzneš, vrať se sem.</p>
+
+<div class="spine">
+  <p class="spine-sentence">Model sám neumí nic konkrétního. <em>Harness</em> je všechno, co mu dáš, aby uměl tvou práci (co UMÍ); <em>guardrails</em> jsou deterministické zábrany mimo model, co ho nepustí do průšvihu (co NESMÍ).</p>
+  <ul class="spine-anchors">
+    <li><span class="num">umí / nesmí</span>Harness = co agent umí (přidáváš kontext a nástroje). Guardrails = co nesmí (zakazuješ akce).</li>
+    <li><span class="num">exit 2</span>Hook s exit code 2 tvrdě zablokuje akci — deterministicky, mimo model, spolehlivě i když halucinuje.</li>
+    <li><span class="num">palec</span>Pravidlo palce: dělá špatné věci → oprav guardrails; dělá generické věci → oprav harness.</li>
+  </ul>
+</div>
+
+<div class="callout">
+  <div class="callout-label">Přenosný test — kam co patří</div>
+  <p>U každé věci se zeptej: „<strong>Přidává to agentovi schopnost, nebo mu něco zakazuje?</strong>"<br>
+  Přidává schopnost → <strong>harness</strong> (CLAUDE.md, skills, MCP, memory).<br>
+  Zakazuje akci → <strong>guardrail</strong> (hook, permission).</p>
+</div>
+
+<!-- 10. Až se tě zeptají -->
+<h2>10 — Až se tě zeptají 🎤</h2>
+
+<p>Ostré dotazy z publika + krátká odpověď s pointou (tučně). Trénuj <em>nahlas</em>, ne čtením.</p>
+
+<div class="qa-item">
+  <p class="qa-q">Námitka „guardrails": „Guardrails si přece nastavuje Anthropic, do toho já nevidím."</p>
+  <p class="qa-a">V Claude Code jsou guardrails <em>tvoje</em> — píšeš je jako shell skripty v <code>settings.json</code> (hooks, permissions). Anthropic má vlastní policy vrstvu (model odmítne), to je něco jiného. <strong>Lokální guardrails jsou deterministické a pod tvou kontrolou.</strong></p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Námitka „víc = líp": „Čím víc guardrails, tím bezpečnější agent, ne?"</p>
+  <p class="qa-a">Ne. Přehnaně omezený agent nic nezkazí, ale taky nic neudělá (extrém „OH NO"). <strong>Cíl je rovnováha: silný harness (agent ví, co dělat) + cílené guardrails (nemůže způsobit katastrofu).</strong></p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Chyták „prompt": „Není harness jen fajnové slovo pro prompt?"</p>
+  <p class="qa-a">Prompt je jen část. Harness je celé <em>trvalé prostředí</em>: CLAUDE.md (paměť), skills, MCP nástroje, konfigurace — <strong>platí napříč sezeními, není to jednorázová věta.</strong></p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Námitka „model si odmítne sám": „Proč guardrails, když model umí nebezpečnou věc odmítnout?"</p>
+  <p class="qa-a">Protože model je pravděpodobnostní — občas odmítne, občas ne, halucinuje. Hook běží v Bashi mimo model: buď projde, nebo ne. <strong>Na bezpečnost potřebuješ determinismus, ne dobrou vůli modelu.</strong></p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Námitka „je to k ničemu": „Nasadili jsme AI a nedělá nic užitečného pro náš projekt — je přeceňovaná."</p>
+  <p class="qa-a">Nejspíš máš <em>prázdný harness</em>. Agent nemá kontext domény, tak dává generický průměr. <strong>Chybí mu CLAUDE.md, nástroje, doménová paměť — není to vada modelu.</strong></p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Otázka „jak to poznám": „Jak zjistím, jestli je problém v harness, nebo v guardrails?"</p>
+  <p class="qa-a">Pravidlo palce: dělá nebezpečné/špatné věci → <strong>guardrails</strong>. Dělá bezpečné, ale generické/k ničemu věci → <strong>harness</strong>.</p>
+</div>
+
+<!-- 11. Do kartiček -->
+<h2>11 — Do kartiček 🔁</h2>
+
+<p>Rychlá startovní sada. Zkopíruj blok níž a naimportuj do <a href="https://apps.ankiweb.net/" target="_blank">Anki</a> (oddělovač = středník). Pak pár minut denně.</p>
+
+<div class="callout green">
+  <div class="callout-label">Plná sada je připravená v repu</div>
+  <p>Blok níž je rychlá verze. V repu je <strong>plná sada 27 kartiček</strong> s podrobnějšími odpověďmi a tématy (jádro, slovník, architektura, komponenty, námitky, propojení) — soubor <code>anki/0002-harness-vs-guardrails.txt</code>. Import do Anki na jeden klik, tagy pro procvičování po blocích (<code>tag:architektura</code>, <code>tag:namitky</code>…). Návod: <code>anki/README.md</code>.</p>
+</div>
+
+<pre class="flashcards">Co je harness? ; Vše kolem modelu, co mu dá schopnost dělat tvou konkrétní práci — kontext (CLAUDE.md), nástroje, skills, MCP, paměť. „Co agent umí."
+Co jsou guardrails? ; Deterministické zábrany mimo model, co drží agenta od nebezpečné akce — hooks (exit 2), permissions. „Co agent nesmí."
+Harness vs. guardrails v jedné větě? ; Harness = pozitivní architektura (přidáváš schopnosti). Guardrails = negativní (zakazuješ akce).
+Pravidlo palce? ; Dělá špatné/nebezpečné věci → oprav guardrails. Dělá generické věci → oprav harness.
+Proč guardrails fungují i při halucinaci? ; Běží mimo model (shell hook v Bashi), neprochází LLM inference. Buď projdou, nebo ne — model to neovlivní.
+Co znamená exit code 2 u hooku? ; Hook vrátí exit 2 → akce se nespustí. Tvrdá deterministická blokace.
+Harness — deterministický, nebo pravděpodobnostní? ; Probabilistický: model interpretuje kontext, může selhat tiše (generický výstup).
+Guardrails — deterministické, nebo pravděpodobnostní? ; Deterministické: rozhoduje kód, ne model. Hook s exit 2 neselže tiše.
+Kde žije harness a kde guardrails? ; Harness: CLAUDE.md a adresář .claude/. Guardrails: settings.json (hooks) + permission system.
+Metafory harness / guardrails? ; Harness = koňský postroj (kůň teprve utáhne vůz). Guardrails = svodidla (nepustí tě ze srázu).</pre>
+
+<div class="callout green">
+  <div class="callout-label">Rituál</div>
+  <p>Denně pár minut kartičky + jednou týdně lekci „odříkej naostro" prázdné židli, jako bys ji přednášel. A až budeš chtít ostrý test, řekni v Claude Code „vygriluj mě z B1".</p>
+</div>
+
+<!-- 12. Feynmanovo cvičení -->
+<h2>12 — Feynmanovo cvičení</h2>
 
 <div class="quiz" id="quiz-main">
   <div class="quiz-header">Feynmanův test — Harness vs. Guardrails</div>
@@ -331,8 +442,8 @@
   <div class="quiz-score" id="quiz-score"></div>
 </div>
 
-<!-- 10. Propojení -->
-<h2>10 — Co dál</h2>
+<!-- 13. Propojení -->
+<h2>13 — Co dál</h2>
 
 <p><strong>Co musíš znát před touto lekcí:</strong> <a href="0001-no-silver-bullet.html">A3 — No Silver Bullet</a> — esenciální vs. akcidentální komplexita. Harness útočí na akcidentální; guardrails chrání před tím, aby AI neprodukovala novou akcidentální komplexitu skrytě.</p>
 

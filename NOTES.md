@@ -12,7 +12,8 @@ Cíl: aby Radek uměl ustát živé Q&A, ne jen text přečíst. Tři nové sekc
 - **🎤 Až se tě zeptají** — banka ostrých námitek z publika + krátká odpověď s „úderem" (tučná pointa). Trénink nahlas, ne test. CSS: `.qa-item` / `.qa-q` / `.qa-a`.
 - **🔁 Do kartiček** — 10–12 faktů ve formátu `otázka ; odpověď`, copy-paste do Anki (středník jako oddělovač). CSS: `pre.flashcards`. Uzavřít callout.green s rituálem (denně kartičky + týdně „odříkej naostro"; grilování na vyžádání).
 - Zdroj CSS: assets/style.css, sekce „Retenční vrstva". Číslování sekcí posunout, Feynman + Co dál na konec.
-- Pilotně nasazeno v 0001 (A3). TODO: doplnit do ostatních 21 lekcí (obsah přizpůsobit tématu).
+- Nasazeno v 0001 (A3) a 0002 (B1). TODO: doplnit do ostatních 20 lekcí (obsah přizpůsobit tématu).
+- B1 (0002): slovníček harness=postroj/guardrails=svodidla (green/red two-col) + retenční vrstva (sekce 9 Páteř, 10 Q&A, 11 kartičky), Feynman→12, Co dál→13. Anki: 27 kartiček. Páteř používá textové kotvy místo čísel (umí/nesmí, exit 2, palec) — .num zvládá i text.
 - Slovníček pojmů: v A3 přidán do sekce 1 (Aristoteles, citace Brookse, synonyma esenciální=podstatná/akcidentální=vedlejší, chyták "akcidentální != nehoda") + kompaktní připomínka v Páteři.
 - Anki exporty: `anki/<lekce>.txt`, TSV formát `otázka<TAB>odpověď<TAB>tagy` s hlavičkou (`#separator:tab`, `#deck:`, `#notetype:Basic`, `#tags column:3`) pro import na jeden klik. Viz `anki/README.md`. A3 hotová (**37 kartiček**, rozšířeno 2026-07-27 na Radkovu žádost — víc a informativnější; tagy: jadro/vlastnosti/cisla/generace/historie/ai-dnes/namitky/intuice/anekdoty). On-page blok v sekci 12 je jen startovní verze + odkaz na plný soubor. TODO: export i pro ostatní lekce. Generátor: scratchpad/gen_anki.py.
 

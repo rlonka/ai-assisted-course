@@ -1,0 +1,32 @@
+#separator:tab
+#html:false
+#deck:AI-assisted RSE::B1 — Harness vs. Guardrails
+#notetype:Basic
+#tags column:3
+Co je harness?	Vše kolem modelu, co mu dá schopnost dělat tvou konkrétní práci: kontext (CLAUDE.md), nástroje, skills, MCP, paměť, konfigurace. Pozitivní architektura — „co agent umí". Model sám o sobě neumí nic specifického.	B1 jadro
+Co jsou guardrails?	Deterministické zábrany, které drží agenta od nebezpečné akce a běží mimo model. Negativní architektura — „co agent nesmí". V Claude Code: hooks (exit code 2) a permission system.	B1 jadro
+Harness vs. guardrails v jedné větě?	Harness = co agent umí (přidáváš schopnosti). Guardrails = co nesmí (zakazuješ akce). Pozitivní vs. negativní architektura.	B1 jadro
+Pravidlo palce pro diagnostiku?	Agent dělá špatné/nebezpečné věci → problém je v guardrails. Agent dělá generické/k ničemu věci → problém je v harness.	B1 jadro
+Přenosný test „kam co patří"?	Ptej se: přidává to agentovi schopnost, nebo mu něco zakazuje? Přidává schopnost → harness (CLAUDE.md, skills, MCP, memory). Zakazuje akci → guardrail (hook, permission).	B1 jadro
+Proč jsou guardrails spolehlivé i když model halucinuje?	Běží mimo model — shell hook se spustí v Bashi, neprochází přes LLM inference. Buď projde, nebo ne; model to neovlivní.	B1 jadro
+Odkud je metafora „harness"?	Z koňského postroje (a „test harness" v SW). Postroj je to, co na koně navlékneš, aby utáhl tvůj vůz — sám model je jen ten kůň. Česky: postroj, rám, lešení kolem modelu.	B1 slovnik
+Odkud je metafora „guardrails"?	Svodidla / mantinely u silnice. Nezrychlí tě, ale nepustí tě ze srázu. Deterministická bariéra, ne rada.	B1 slovnik
+Chyták: je harness to samé co prompt?	Ne. Prompt je jednorázová věta; harness je celé trvalé prostředí kolem modelu (paměť, nástroje, konfigurace), které platí napříč sezeními.	B1 slovnik
+Jakou sekvencí projde každý request v Claude Code?	Uživatel → Harness (CLAUDE.md, skills, MCP, nástroje) → Model (reasonuje, generuje akce) → Guardrails (hooks, permissions kontrolují akci před spuštěním) → Akce (soubor upraven, příkaz spuštěn).	B1 architektura
+Kde běží guardrails vůči modelu?	Mimo model a až PO něm — kontrolují vygenerovanou akci před spuštěním. Proto jsou deterministické a spolehlivé i při halucinaci.	B1 architektura
+Harness — deterministický, nebo pravděpodobnostní?	Probabilistický: model interpretuje kontext, může selhat tiše (špatný harness = generické chování).	B1 architektura
+Guardrails — deterministické, nebo pravděpodobnostní?	Deterministické: rozhoduje kód, ne model. Hook s exit 2 agenta vždy zastaví, neselže tiše.	B1 architektura
+Co znamená „exit code 2" u hooku?	Tvrdá blokace — hook vrátí exit 2 a akce se nespustí. Deterministické zastavení mimo model.	B1 architektura
+Kde v konfiguraci žije harness a kde guardrails?	Harness: CLAUDE.md a adresář .claude/ (skills, MCP, memory). Guardrails: settings.json — sekce hooks + permission system (allowedTools/blockedTools).	B1 architektura
+Memory (CLAUDE.md) — harness, nebo guardrail?	Hlavní harness komponent. Dává modelu esenciální znalost projektu — doménu, konvence, kde jsou data.	B1 komponenty
+Skills — harness, nebo guardrail?	Hybrid: definuje, JAK má agent přistoupit k úkolu (harness), a tím zároveň omezuje, co neudělá (soft guardrail).	B1 komponenty
+MCP — harness, nebo guardrail?	Harness rozšíření: přidává agentovi nástroje (databáze, API, filesystem) bez nutnosti psát je do promptu.	B1 komponenty
+Hooks — harness, nebo guardrail?	Čistý guardrail: deterministické, mimo model, exit code 2 = tvrdá blokace.	B1 komponenty
+Subagents — harness, nebo guardrail?	Harness vzor: orchestrátor deleguje na specializované agenty, každý se svým harness kontextem.	B1 komponenty
+Námitka „guardrails nastavuje Anthropic, nevidím do nich" — odpověď?	V Claude Code jsou guardrails tvoje — píšeš je jako shell skripty v settings.json. Anthropic má vlastní policy vrstvu (model odmítne), to je jiná vrstva. Lokální guardrails jsou deterministické a pod tvou kontrolou.	B1 namitky
+Námitka „víc guardrails = bezpečněji" — odpověď?	Ne. Přehnaně omezený agent nic nezkazí, ale taky nic neudělá (extrém „OH NO"). Cíl je rovnováha: silný harness + cílené guardrails.	B1 namitky
+Námitka „nasadili jsme AI a je to k ničemu/generické" — odpověď?	Nejspíš prázdný harness: agent nemá kontext domény, dává generický průměr. Chybí CLAUDE.md, nástroje, doménová paměť — není to vada modelu.	B1 namitky
+Proč týmy investují do guardrails a ignorují harness?	Selhání guardrails jsou viditelná (agent něco rozbil), selhání harness je tiché (agent dělá průměrné věci a tým si myslí, že AI je přeceňovaná).	B1 namitky
+Spicy teze B1?	Většina týmů řeší guardrails (viditelná selhání) a ignoruje harness (tiché selhání). Výsledek: bezpečný, ale generický a zbytečný agent.	B1 namitky
+Jak B1 navazuje na A3 (No Silver Bullet)?	Harness útočí na akcidentální komplexitu (dává agentovi kontext a nástroje); guardrails brání tomu, aby AI skrytě neprodukovala novou akcidentální komplexitu. Esenciální (co je správně) zůstává na tobě.	B1 propojeni
+Analogie harness/guardrails napříč historií?	Unix shell (1969): shell = harness (I/O, pipes), file permissions = guardrails. Kubernetes (2014): pod = harness (CPU, volumes), RBAC/network policy = guardrails. Claude Code (2025): CLAUDE.md/MCP/skills = harness, hooks/permissions = guardrails.	B1 propojeni
