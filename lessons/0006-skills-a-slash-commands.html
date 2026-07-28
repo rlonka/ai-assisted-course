@@ -369,7 +369,88 @@
 </ul>
 
 <!-- 12. Feynmanovo cvičení -->
-<h2>12 — Feynmanovo cvičení</h2>
+<h2>12 — Páteř 🎯</h2>
+
+<p>Jádro nastudeno — jedna věta, ze které odvodíš skoro cokoli, a tři kotvy, co si držíš. Když zamrzneš, vrať se sem.</p>
+
+<div class="spine">
+  <p class="spine-sentence">Skill = opakovaný <em>postup</em> zabalený do pojmenovaného <code>/příkazu</code>. Není to nová schopnost — je to Extract Method aplikovaný na prompt. Postav ho, až prompt opakuješ potřetí (pravidlo tří). Klíč je <strong>description</strong> (podle něj se skill najde) + <strong>progressive disclosure</strong> (do kontextu jen jméno+popis, tělo až při vyvolání).</p>
+  <ul class="spine-anchors">
+    <li><span class="num">postup, ne znalost</span>CLAUDE.md = znalost („používáme pytest"). Skill = postup („spusť pytest, oprav selhání, opakuj"). Hook = guardrail (spustí se sám). Skill vyvoláš ty.</li>
+    <li><span class="num">pravidlo tří</span>Postav skill potřetí, ne dřív. Skill bez opakování je předčasná abstrakce — náklad na údržbu bez návratnosti.</li>
+    <li><span class="num">popis = rozhraní</span>Agent najde skill jen podle description; vágní popis = mrtvý skill. Progressive disclosure → náklad lineární v počtu skillů, ne velikosti.</li>
+  </ul>
+</div>
+
+<div class="callout">
+  <div class="callout-label">Přenosný test — kam to patří?</div>
+  <p>„<strong>Je to fakt o projektu, sekvence akcí na povel, nebo něco, co se musí stát vždy samo?</strong>"<br>
+  Fakt o projektu → <strong>CLAUDE.md</strong>. Sekvence akcí, kterou vyvolávám → <strong>skill</strong>. Musí se stát vždy automaticky → <strong>hook</strong>.</p>
+</div>
+
+<!-- 13. Až se tě zeptají -->
+<h2>13 — Až se tě zeptají 🎤</h2>
+
+<p>Ostré dotazy z publika + krátká odpověď s pointou (tučně). Trénuj <em>nahlas</em>, ne čtením.</p>
+
+<div class="qa-item">
+  <p class="qa-q">Námitka „víc skillů": „Čím víc skillů mám, tím lepší je můj AI setup, ne?"</p>
+  <p class="qa-a">Ne — počet skillů není metrika kvality. Skill vyvolaný jednou je náklad na údržbu bez návratnosti (zastará, matoucí popis znečistí kontext). <strong>Dobrý setup má málo skillů, které se používají často.</strong></p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Chyták „chytřejší": „Skill je chytřejší než prompt — dá agentovi schopnost navíc."</p>
+  <p class="qa-a">Ne. Skill nepřidává schopnost — je to <em>tentýž prompt</em>, jen pojmenovaný a znovupoužitelný. Když postup nefunguje jako prompt, nebude ani jako skill. <strong>Skill řeší opakování, ne schopnost.</strong></p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Námitka „všechno do skillu": „Všechno, co dělám opakovaně, patří do skillu."</p>
+  <p class="qa-a">Ne. Opakovaná <em>znalost</em> → CLAUDE.md, opakovaný <em>guardrail</em> → hook, opakovaný <em>postup na povel</em> → skill. <strong>Otázka není „opakuje se to?", ale „je to sekvence akcí, kterou chci spouštět na povel?"</strong></p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Obava „zahlcení": „Když budu mít dvacet skillů, nezahltím kontext?"</p>
+  <p class="qa-a">Ne. Do kontextu jde jen jméno + popis (řádek), tělo až při vyvolání — to je <strong>progressive disclosure</strong>. Náklad je lineární v <em>počtu</em> skillů, ne v jejich velikosti. Klidně měj knihovnu skillů.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Problém „nikdo ho nepoužívá": „Postavil jsem skill, ale agent ho nevyvolává — proč?"</p>
+  <p class="qa-a">Nejspíš vágní <code>description</code>. Agent se rozhoduje výhradně podle popisu. <strong>Popis piš tak, aby bylo jasné, KDY skill použít</strong>, ne jen co dělá. Špatný popis = mrtvý skill, který nikdo (ani agent) nenajde.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Otázka „kdy": „Kdy je správný čas skill postavit?"</p>
+  <p class="qa-a">Pravidlo tří: potřetí, co píšeš skoro tentýž mnohakrokový prompt. Postup má jasné opakovatelné kroky, chceš ho sdílet a konzistentní napříč lidmi. <strong>Dřív než potřetí = předčasná abstrakce.</strong></p>
+</div>
+
+<!-- 14. Do kartiček -->
+<h2>14 — Do kartiček 🔁</h2>
+
+<p>Rychlá startovní sada. Zkopíruj blok níž a naimportuj do <a href="https://apps.ankiweb.net/" target="_blank">Anki</a> (oddělovač = středník). Pak pár minut denně.</p>
+
+<div class="callout green">
+  <div class="callout-label">Plná sada je připravená v repu</div>
+  <p>Blok níž je rychlá verze. V repu je <strong>plná sada ~22 kartiček</strong> s podrobnějšími odpověďmi a tématy (jádro, rozlišení, anatomie, kdy stavět, progressive disclosure, historie, námitky) — soubor <code>anki/0006-skills-a-slash-commands.txt</code>. Import do Anki na jeden klik, tagy pro procvičování po blocích (<code>tag:kdy</code>, <code>tag:namitky</code>…). Návod: <code>anki/README.md</code>.</p>
+</div>
+
+<pre class="flashcards">Co je skill? ; Opakovaný workflow zabalený do pojmenované, znovupoužitelné jednotky, kterou vyvoláš jako /skill-name. Vrstva 2 rámce pěti otázek.
+Je skill nová schopnost agenta? ; Ne. Je to abstrakce postupu, který už umíš popsat — Extract Method aplikovaný na prompt. Nefunguje jako prompt → nebude ani jako skill.
+Kdy postavit skill (jedno pravidlo)? ; Až prompt opakuješ (pravidlo tří), ne dřív. Skill je refaktoring workflow; refaktoring bez duplicity je předčasná abstrakce.
+Skill vs. CLAUDE.md? ; CLAUDE.md je znalost („projekt používá pytest"), skill je postup („spusť pytest, oprav selhání, opakuj"). Znalost vs. sekvence akcí.
+Skill vs. hook? ; Skill vyvoláš ty (harness, na povel). Hook se spustí sám (guardrail, deterministicky). Stejný postup může být oboje — liší se, kdo drží spoušť.
+Z čeho se skládá skill? ; Adresář se souborem SKILL.md: frontmatter (name + description) a tělo s instrukcemi (postup). Volitelně skripty/reference.
+Proč je description u skillu klíčový? ; Podle popisu agent (i ty přes /) skill najde. Vágní popis = mrtvý skill. Popis říká KDY skill použít, ne jen co dělá.
+Co je progressive disclosure u skillů? ; Do kontextu se načte jen jméno + popis (řádek); tělo (postup, skripty) až při vyvolání. Proto můžeš mít desítky skillů bez zahlcení.
+Náklad skillů na kontext — v čem roste? ; Lineárně v počtu skillů (každý = řádek), ne v jejich velikosti. Velký skill nestojí nic, dokud ho nevyvoláš.
+Spicy teze / bus factor? ; Skills dělají tacit knowledge explicitní a přenositelnou — postup z hlavy seniora je teď SKILL.md v repu. Institucionální paměť týmu, pojistka proti bus factoru.</pre>
+
+<div class="callout green">
+  <div class="callout-label">Rituál</div>
+  <p>Denně pár minut kartičky + jednou týdně lekci „odříkej naostro" prázdné židli, jako bys ji přednášel. A až budeš chtít ostrý test, řekni v Claude Code „vygriluj mě z B4".</p>
+</div>
+
+<!-- 15. Feynmanovo cvičení -->
+<h2>15 — Feynmanovo cvičení</h2>
 
 <div class="quiz" id="quiz-main">
   <div class="quiz-header">Feynmanův test — Skills a slash commands</div>
@@ -430,7 +511,7 @@
 </div>
 
 <!-- 13. Co dál -->
-<h2>13 — Co dál</h2>
+<h2>16 — Co dál</h2>
 
 <p><strong>Co musíš znát před touto lekcí:</strong></p>
 <ul>

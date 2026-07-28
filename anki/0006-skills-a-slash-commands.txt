@@ -1,0 +1,25 @@
+#separator:tab
+#html:false
+#deck:AI-assisted RSE::B4 — Skills a slash commands
+#notetype:Basic
+#tags column:3
+Co je skill?	Opakovaný workflow zabalený do pojmenované, znovupoužitelné jednotky, kterou vyvoláš jako /skill-name. Vrstva 2 rámce pěti otázek.	B4 jadro
+Je skill nová schopnost agenta?	Ne. Je to abstrakce postupu, který už umíš popsat — Extract Method aplikovaný na prompt. Když postup nefunguje jako prompt, nebude ani jako skill.	B4 jadro
+Kdy postavit skill (jedno pravidlo)?	Až prompt opakuješ (pravidlo tří), ne dřív. Skill je refaktoring workflow; refaktoring bez duplicity je předčasná abstrakce.	B4 jadro
+Přenosný test: kam co patří?	Fakt o projektu → CLAUDE.md. Sekvence akcí na povel → skill. Něco, co se musí stát vždy samo → hook.	B4 jadro
+Skill vs. CLAUDE.md?	CLAUDE.md je znalost ("projekt používá pytest"), skill je postup ("spusť pytest, přečti selhání, oprav, opakuj"). Znalost vs. sekvence akcí.	B4 rozliseni
+Skill vs. hook?	Skill vyvoláš ty (harness, na povel). Hook se spustí sám (guardrail, deterministicky). Stejný postup může být oboje — liší se, kdo drží spoušť.	B4 rozliseni
+Skill vs. prompt?	Prompt je jednorázový unikátní úkol. Skill je tentýž prompt pojmenovaný a znovupoužitelný pro opakovaný postup.	B4 rozliseni
+Z čeho se skládá skill?	Adresář se souborem SKILL.md: frontmatter (name + description) a tělo s instrukcemi (postup). Volitelně přibalí skripty nebo referenční soubory.	B4 anatomie
+Proč je description u skillu klíčový?	Podle popisu agent (i ty přes /) skill najde a rozhodne, jestli je relevantní. Vágní popis = mrtvý skill. Popis říká KDY skill použít, ne jen co dělá.	B4 anatomie
+Co je progressive disclosure u skillů?	Do kontextu se na začátku načte jen jméno + popis (řádek). Tělo skillu (postup, skripty, reference) se načte, až když ho vyvoláš. Proto můžeš mít desítky skillů bez zahlcení.	B4 progressive
+Náklad skillů na kontext — v čem roste?	Lineárně v počtu skillů (každý = řádek), ne v jejich velikosti. Velký skill nestojí v kontextu nic, dokud ho nevyvoláš.	B4 progressive
+Kdy postavit skill (checklist)?	Tentýž mnohakrokový prompt napsán 3×; postup má jasné opakovatelné kroky; chceš ho sdílet s týmem; záleží na pořadí; chceš konzistentní výsledek napříč lidmi a sezeními.	B4 kdy
+Kdy skill NEstavět?	Jednorázový úkol; postup je pokaždé jiný; je to jen znalost projektu (→CLAUDE.md); musí se stát vždy automaticky (→hook); skill by měl jen jeden řádek (→prompt).	B4 kdy
+Co je pravidlo tří?	Poprvé napíšeš prompt, podruhé zaskřípeš (ale neabstrahuj), potřetí víš, že tvar je stabilní → extrahuj skill. Dřív = předčasná abstrakce.	B4 kdy
+Odkud skills pocházejí (klasicky)?	DRY (Hunt & Thomas 1999), Extract Method (Fowler), collective ownership (XP), Unix philosophy. Skill = funkce pro workflow; /skill = obdoba shell aliasu nebo Makefile targetu.	B4 historie
+Námitka "čím víc skillů, tím líp" — odpověď?	Počet není metrika kvality. Skill vyvolaný jednou je náklad na údržbu bez návratnosti (zastará, matoucí popis znečistí kontext). Dobrý setup = málo skillů, používaných často.	B4 namitky
+Námitka "skill je chytřejší než prompt" — odpověď?	Ne. Skill nepřidává schopnost — je to tentýž prompt, jen pojmenovaný. Řeší opakování, ne schopnost. Nefunguje jako prompt → nebude ani jako skill.	B4 namitky
+Námitka "všechno opakované patří do skillu" — odpověď?	Ne. Opakovaná znalost → CLAUDE.md, opakovaný guardrail → hook, opakovaný postup na povel → skill. Otázka: je to sekvence akcí, kterou chci spouštět na povel?	B4 namitky
+Spicy teze B4 (bus factor)?	Skills dělají tacit knowledge explicitní a přenositelnou — postup z hlavy seniora je teď SKILL.md v repu. Institucionální paměť týmu, pojistka proti bus factoru.	B4 namitky
+Jak B4 souvisí s A2 (refactoring) a B2?	A2: pravidlo tří a Extract Method jsou přímo z refaktoringu — skill je refaktoring aplikovaný na prompt. B2: Skills jsou vrstva 2, stojí na Memory (vrstva 1).	B4 propojeni
