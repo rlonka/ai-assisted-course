@@ -43,6 +43,7 @@ Prostý text (TSV), jedna kartička na řádek: `otázka<TAB>odpověď<TAB>tagy`
   historické vlny, AI dnes + námitky, analogie (guláš, 128 řidičů), anekdoty (bug, Backus).
 - `0004-ramec-peti-otazek.txt` — B2 (20 kartiček): rámec pěti otázek (Memory/Skills/Hooks/MCP/Subagents),
   co každá vrstva řeší, závislé pořadí, mapování na klasické disciplíny, námitky, propojení na B1/A1/A4.
+- `0005-memory-a-claude-md.txt` — B3 (20 kartiček): CLAUDE.md (konfigurace projektu pro agenta), tři typy paměti (CLAUDE.md/memory/settings.json), hierarchie global/projekt/lokal, co patří dovnitř, technika psaní, námitky.
 - `0002-harness-vs-guardrails.txt` — B1 (27 kartiček): harness vs. guardrails (co umí / co nesmí),
   metafory (postroj, svodidla), architektura requestu, exit code 2, determinismus,
   komponenty (memory/skills/MCP/hooks/subagents), námitky, propojení na A3.

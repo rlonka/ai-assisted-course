@@ -368,7 +368,89 @@ proto jsme přešli na vektorizované operace. Kód by měl být čitelný.
 </ul>
 
 <!-- 12. Feynmanovo cvičení -->
-<h2>12 — Feynmanovo cvičení</h2>
+<h2>12 — Páteř 🎯</h2>
+
+<p>Jádro nastudeno — jedna věta, ze které odvodíš skoro cokoli, a tři kotvy, co si držíš. Když zamrzneš, vrať se sem.</p>
+
+<div class="spine">
+  <p class="spine-sentence">Agent nemá paměť mezi sezeními — CLAUDE.md mu ji dá. Je to <em>konfigurace projektu pro agenta</em> (ne prompt), načtená automaticky každou session. Pravidlo: co jsi napsal do promptu víc než jednou, nebo co agent potřebuje vědět o <strong>projektu</strong> (ne o úkolu), patří do CLAUDE.md — krátce, deklarativně, konkrétně.</p>
+  <ul class="spine-anchors">
+    <li><span class="num">kdo píše co</span>CLAUDE.md = ty (konvence projektu, čte se každou session). memory/ = agent (jeho zápisník). settings.json = konfigurace (nástroje/hooky, ne instrukce pro model).</li>
+    <li><span class="num">projekt, ne úkol</span>Dovnitř patří, jak projekt funguje (stack, doména, invarianty, konvence). Ne co chceš dnes (to je prompt), ne secrets, ne dočasný stav.</li>
+    <li><span class="num">krátce a konkrétně</span>Celý soubor se načítá do kontextu. Vágní („kód ať je čitelný") agent interpretuje; konkrétní („žádné pandas v src/") platí vždy.</li>
+  </ul>
+</div>
+
+<div class="callout">
+  <div class="callout-label">Přenosný test — patří to do CLAUDE.md?</div>
+  <p>„<strong>Zastarává ten záznam rychleji než jednou za měsíc? Je o úkolu, ne o projektu?</strong>"<br>
+  Ano (rychle zastarává / o úkolu) → <strong>nepatří</strong> (to je prompt nebo memory/).<br>
+  Ne (stabilní, o tom, jak projekt funguje) → <strong>patří do CLAUDE.md</strong>.</p>
+</div>
+
+<!-- 13. Až se tě zeptají -->
+<h2>13 — Až se tě zeptají 🎤</h2>
+
+<p>Ostré dotazy z publika + krátká odpověď s pointou (tučně). Trénuj <em>nahlas</em>, ne čtením.</p>
+
+<div class="qa-item">
+  <p class="qa-q">Námitka „napíšu jednou": „CLAUDE.md je jako README — napíšu ho jednou a hotovo."</p>
+  <p class="qa-a">Je to <em>živý</em> dokument. Přidáváš záznamy, když zjistíš, že opakuješ prompt; odstraňuješ, co zastaralo nebo co agent ignoruje. <strong>Po každých ~10 sezeních projdi a pročisti.</strong></p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Námitka „víc je líp": „Čím víc do CLAUDE.md napíšu, tím líp agent rozumí, ne?"</p>
+  <p class="qa-a">Ne. Celý soubor se načítá do kontextu — čím delší, tím víc šumu a agent se v tom ztrácí. <strong>Krátce a konkrétně; každý řádek se počítá.</strong></p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Námitka „nemám čas": „Radši rovnou dělám úkol, než abych psal CLAUDE.md."</p>
+  <p class="qa-a">Prompt řeší 1 session, CLAUDE.md všechny. <strong>Čas se vrátí od druhé session</strong> — co opakuješ, patří do stálé vrstvy, ne do jednorázového promptu.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Otázka „tři soubory": „Jaký je rozdíl mezi CLAUDE.md, memory/ a settings.json?"</p>
+  <p class="qa-a">CLAUDE.md píšeš <em>ty</em> (konvence projektu, každou session). memory/ píše <em>agent</em> (jeho zápisník, čte na žádost). settings.json je <strong>konfigurace harness</strong> (nástroje/povolení/hooky), ne paměť pro model.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Námitka „osobní preference": „CLAUDE.md je moje věc, nemusí do repa."</p>
+  <p class="qa-a">Projektový CLAUDE.md je <strong>sdílená technická infrastruktura</strong> (jako linter config) — verzuj a sdílej, jinak dostane každý ze stejného promptu jiný výsledek. Osobní preference dej do globálního <code>~/.claude/CLAUDE.md</code>.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Otázka „tvrdý zákaz": „Kam napsat, ať agent nikdy nedělá X bez potvrzení?"</p>
+  <p class="qa-a">Chování napříč projekty → globální CLAUDE.md. Ale <strong>tvrdý zákaz nespoléhej na text</strong> — deterministickou zábranu dělá hook (B5, guardrail), ne CLAUDE.md. Text model interpretuje; hook platí vždy.</p>
+</div>
+
+<!-- 14. Do kartiček -->
+<h2>14 — Do kartiček 🔁</h2>
+
+<p>Rychlá startovní sada. Zkopíruj blok níž a naimportuj do <a href="https://apps.ankiweb.net/" target="_blank">Anki</a> (oddělovač = středník). Pak pár minut denně.</p>
+
+<div class="callout green">
+  <div class="callout-label">Plná sada je připravená v repu</div>
+  <p>Blok níž je rychlá verze. V repu je <strong>plná sada ~22 kartiček</strong> s podrobnějšími odpověďmi a tématy (jádro, tři typy paměti, hierarchie, obsah, technika, námitky) — soubor <code>anki/0005-memory-a-claude-md.txt</code>. Import do Anki na jeden klik, tagy pro procvičování po blocích (<code>tag:obsah</code>, <code>tag:namitky</code>…). Návod: <code>anki/README.md</code>.</p>
+</div>
+
+<pre class="flashcards">Co je CLAUDE.md? ; Soubor, který Claude Code přečte automaticky na začátku každé session a přidá do kontextu. Konfigurace projektu pro agenta — ne prompt.
+Proč CLAUDE.md vůbec potřebuješ? ; Agent nemá paměť mezi sezeními; každá session začíná od nuly. CLAUDE.md dá agentovi trvalou znalost projektu bez opakovaného vysvětlování.
+Pravidlo, co patří do CLAUDE.md? ; Cokoli, co jsi napsal do promptu víc než jednou. Cokoli, co agent potřebuje vědět o projektu (ne o úkolu).
+Tři typy paměti v Claude Code? ; CLAUDE.md (ty píšeš, čte se každou session), .claude/memory/ (agent píše, jeho zápisník), .claude/settings.json (konfigurace: nástroje/povolení/hooky, ne instrukce pro model).
+Je settings.json paměť pro agenta? ; Ne. Je to konfigurace harness (nástroje, povolení, hooky) — ne instrukce pro model. Ty píšeš CLAUDE.md; agent memory/; systém čte settings.json.
+Hierarchie CLAUDE.md souborů? ; Globální (~/.claude/CLAUDE.md, všechny projekty) → projektový (./CLAUDE.md, v repu, sdílený) → lokální (./.claude/CLAUDE.md, přepsání). Sloučí se, specifičtější má přednost.
+Co patří do CLAUDE.md? ; Tech stack a verze, ubiquitous language domény, konvence pojmenování, testovací strategie, invarianty/omezení, struktura projektu, workflow pravidla.
+Co NEpatří do CLAUDE.md? ; Secrets/tokeny, dočasný stav, debug poznámky, instrukce pro konkrétní úkol (to je prompt), obsah co je v kódu, celý README (shrň, nevkopíruj).
+Jak psát záznamy v CLAUDE.md? ; Krátce (kratší než tweet), deklarativně, konkrétně, bez vysvětlování „proč". Vágní záznam agent interpretuje; konkrétní platí vždy.
+Spicy teze B3? ; Sdílený projektový CLAUDE.md není osobní preference — je to technická infrastruktura jako sdílený linter config. Bez něj je „stejný prompt" u každého jiný.</pre>
+
+<div class="callout green">
+  <div class="callout-label">Rituál</div>
+  <p>Denně pár minut kartičky + jednou týdně lekci „odříkej naostro" prázdné židli, jako bys ji přednášel. A až budeš chtít ostrý test, řekni v Claude Code „vygriluj mě z B3".</p>
+</div>
+
+<!-- 15. Feynmanovo cvičení -->
+<h2>15 — Feynmanovo cvičení</h2>
 
 <div class="quiz" id="quiz-main">
   <div class="quiz-header">Feynmanův test — Memory a CLAUDE.md</div>
@@ -429,7 +511,7 @@ proto jsme přešli na vektorizované operace. Kód by měl být čitelný.
 </div>
 
 <!-- 13. Co dál -->
-<h2>13 — Co dál</h2>
+<h2>16 — Co dál</h2>
 
 <p><strong>Co musíš znát před touto lekcí:</strong></p>
 <ul>

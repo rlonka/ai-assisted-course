@@ -1,0 +1,25 @@
+#separator:tab
+#html:false
+#deck:AI-assisted RSE::B3 — Memory a CLAUDE.md
+#notetype:Basic
+#tags column:3
+Co je CLAUDE.md?	Soubor, který Claude Code přečte automaticky na začátku každé session a přidá do kontextu. Konfigurace projektu pro agenta — ne prompt.	B3 jadro
+Proč CLAUDE.md vůbec potřebuješ?	Agent nemá paměť mezi sezeními; každá session začíná od nuly (prázdný kontext). CLAUDE.md dá agentovi trvalou znalost projektu bez opakovaného vysvětlování.	B3 jadro
+Pravidlo, co patří do CLAUDE.md?	Cokoli, co jsi napsal do promptu víc než jednou. Cokoli, co agent potřebuje vědět o projektu (ne o úkolu).	B3 jadro
+Přenosný test: patří to do CLAUDE.md?	Zastarává záznam rychleji než jednou za měsíc, nebo je o úkolu (ne o projektu)? → nepatří (prompt/memory). Stabilní a o tom, jak projekt funguje? → patří.	B3 jadro
+Tři typy paměti v Claude Code?	CLAUDE.md (ty píšeš, čte se každou session), .claude/memory/ (agent píše, jeho zápisník), .claude/settings.json (konfigurace: nástroje/povolení/hooky, ne instrukce pro model).	B3 tri-pameti
+Kdo píše a čte CLAUDE.md?	Píšeš ty (ručně). Čte se automaticky každou session. Obsah: konvence projektu, ubiquitous language, invarianty, tech stack.	B3 tri-pameti
+Co je .claude/memory/?	Zápisník agenta — soubory, které si agent sám píše napříč sezeními (co si má zapamatovat o tobě). Ne ty, ale agent.	B3 tri-pameti
+Je settings.json paměť pro agenta?	Ne. Je to konfigurace harness (nástroje, povolení, hooky) — ne instrukce pro model. Ty píšeš CLAUDE.md; agent memory/; systém čte settings.json.	B3 tri-pameti
+Hierarchie CLAUDE.md souborů?	Globální (~/.claude/CLAUDE.md, všechny projekty) → projektový (./CLAUDE.md, v repu, sdílený) → lokální (./.claude/CLAUDE.md, přepsání). Všechny se sloučí, specifičtější má přednost.	B3 hierarchie
+Co patří do globálního vs. projektového CLAUDE.md?	Globální: osobní preference napříč projekty (styl odpovědí, jazyk, co nikdy bez potvrzení). Projektový: znalost konkrétního projektu; verzuj a sdílej s týmem.	B3 hierarchie
+Co patří do CLAUDE.md?	Tech stack a verze, ubiquitous language domény, konvence pojmenování, testovací strategie, invarianty/omezení, struktura projektu, workflow pravidla.	B3 obsah
+Co NEpatří do CLAUDE.md?	Secrets/tokeny, dočasný stav ("teď dělám X"), debug poznámky, instrukce pro konkrétní úkol (to je prompt), obsah co je v kódu, celý README (shrň, nevkopíruj).	B3 obsah
+Jak psát záznamy v CLAUDE.md?	Krátce (kratší než tweet), deklarativně, konkrétně, bez vysvětlování "proč". Vágní záznam agent interpretuje; konkrétní platí vždy.	B3 technika
+Proč musí být záznamy v CLAUDE.md krátké?	Celý soubor se načítá do kontextu. Čím kratší a konkrétnější, tím spolehlivěji instrukce platí a tím míň šumu, ve kterém se agent ztrácí.	B3 technika
+Námitka "CLAUDE.md je jako README, napíšu jednou" — odpověď?	Je to živý dokument. Přidáváš, když opakuješ prompt; odstraňuješ, co zastaralo nebo co agent ignoruje. Po ~10 sezeních projít a pročistit.	B3 namitky
+Námitka "čím víc do CLAUDE.md, tím líp" — odpověď?	Ne. Celý soubor jde do kontextu; čím delší, tím víc šumu a agent se ztrácí. Krátce a konkrétně — každý řádek se počítá.	B3 namitky
+Námitka "CLAUDE.md je osobní preference, nemusí do repa" — odpověď?	Projektový CLAUDE.md je sdílená technická infrastruktura (jako linter config). Verzuj a sdílej, jinak dostane každý ze stejného promptu jiný výsledek. Osobní preference → globální.	B3 namitky
+Spicy teze B3?	Sdílený projektový CLAUDE.md není osobní preference — je to technická infrastruktura jako sdílený linter config. Bez něj je "stejný prompt" u každého jiný.	B3 namitky
+Jak B3 souvisí s A4 (DDD) a B2?	A4: ubiquitous language z DDD jde přímo do CLAUDE.md (glossary projektu). B2: Memory je vrstva 1, základ, na kterém stojí Skills/Hooks/MCP/Subagents.	B3 propojeni
+Jak B3 souvisí s B1 (harness/guardrails)?	CLAUDE.md je hlavní harness komponent (pozitivní: dáváš znalost). Hooks jsou guardrails (negativní: co nesmí). Tvrdý zákaz nedělej textem v CLAUDE.md, ale hookem.	B3 propojeni
