@@ -44,9 +44,14 @@ Cíl: aby Radek uměl ustát živé Q&A, ne jen text přečíst. Tři nové sekc
 - Slovníček: anglické DDD pojmy česky (ubiquitous language = sdílený jazyk, bounded context = ohraničený kontext, entity/value object) + chyták „doména ≠ byznys". Retenční vrstva: 12 Páteř (překlad / model = API pro agenta / hranice je návrh), 13 Q&A (6 námitek), 14 kartičky; Feynman→15, Co dál→16. Anki: 26 kartiček.
 - Blok A KOMPLETNÍ v retenčním balíku: A1, A2, A3, A4 hotové; zbývá A5 Agile.
 
+## A5 (0017) — Agile Manifesto: retenční balík (přidáno 2026-07-28)
+- Jako A2 bez slovníčku (4 hodnoty už vizualizované, terminologie česká). Retenční vrstva: 12 Páteř (hodnoty>ceremonie / fungující=ověřené / hrdlo psaní→ověřování), 13 Q&A (6 námitek), 14 kartičky; Feynman→15, Co dál→16. Anki: 26 kartiček.
+- BLOK A KOMPLETNÍ V RETENČNÍM BALÍKU: A1, A2, A3, A4, A5 hotové (všech 5/5).
+- Anki generátor tip: české uvozovky rozbíjejí Python string literály. Řešení: data v triple-quoted bloku s oddělovačem ' ||| ' (viz scratchpad/gen_anki_a5c.py) — ASCII " pak nevadí.
+
 ## Retenční balík — stav pokrytí (lekce s Páteř+Q&A+kartičky+Anki)
-- Hotovo: A3 (37), A1 (24), A2 (26), A4 (26), B1 (27), B8 (26), B9 (25). Zbývá ~17 lekcí.
-- Pozn.: slovníček přidávat jen tam, kde jsou cizí/abstraktní pojmy (A2 ho nemá, A4 ano). U zralejších lekcí retenční vrstvu vkládat před Feynmana a přečíslovat.
+- Hotovo: A1 (24), A2 (26), A3 (37), A4 (26), A5 (26) = celý blok A; B1 (27), B8 (26), B9 (25). Zbývá ~15 lekcí (blok C 5, blok D 5, B2–B7 6).
+- Pozn.: slovníček přidávat jen tam, kde jsou cizí/abstraktní pojmy (A2/A5 ne, A4 ano). U zralejších lekcí retenční vrstvu vkládat před Feynmana a přečíslovat.
 
 ## Curriculum state
 - Start: 2026-06-24

@@ -1,0 +1,31 @@
+#separator:tab
+#html:false
+#deck:AI-assisted RSE::A5 — Agile Manifesto
+#notetype:Basic
+#tags column:3
+Co je Agile Manifesto?	Čtyřvětý dokument (2001), který postavil hodnoty nad procesy. Vzpoura proti waterfallu (specifikace předem, dlouhé plány, dokumentace místo kódu). Ne metodika ani rituály — prohlášení o prioritách.	A5 jadro
+Čtyři hodnoty Agile manifestu?	(1) Jednotlivci a interakce před procesy a nástroji, (2) fungující software před vyčerpávající dokumentací, (3) spolupráce se zákazníkem před vyjednáváním o smlouvě, (4) reakce na změnu před plněním plánu.	A5 jadro
+Znamená "X před Y", že Y je špatné?	Ne. Pravá strana je hodnotná (plán i dokumentace mají místo). Jde o prioritu, když jsou v konfliktu: "ceníme si víc těch nalevo". "Před", ne "místo".	A5 jadro
+O čem agile ve skutečnosti je (jednou větou)?	Není o rychlosti výstupu, ale o krátkosti zpětné vazby — co nejrychleji zjistit, jestli jdeš správným směrem, a levně změnit kurz.	A5 jadro
+Přenosný test agilní smyčky?	"Naučil jsem se tímhle krokem něco, nebo jsem jen vyrobil kód?" Naučil (ověřená zpětná vazba) → agilní smyčka. Jen vyrobil → rychlá produkce, ne agile.	A5 jadro
+Agile hodnoty vs. ceremonie — v čem je rozdíl?	Sprinty, stand-upy, story pointy, Jira jsou praktiky odvozené frameworky (Scrum, XP), ne agile samo. Manifest o nich nemluví — mluví o hodnotách.	A5 ceremonie
+Co je "cargo cult agile"?	Když tým dělá všechny ceremonie (sprinty, demo, stand-upy), ale ignoruje hodnoty (krátká zpětná vazba, fungující software) — forma bez podstaty.	A5 ceremonie
+Musí vědecký tým zavést Scrum, aby byl agilní?	Ne. Výzkum je ze své podstaty iterativní (hypotéza → experiment → revize) — to JE agilní smyčka, jen se slovníkem vědy. Hodnoty sedí, korporátní ceremonie většinou nepatří.	A5 ceremonie
+Co je srdce agilního přístupu?	Krátká smyčka zpětné vazby: malý krok → fungující výsledek → zpětná vazba → uprav směr → opakuj. Čím kratší smyčka, tím levnější omyl (odhalíš ho dřív).	A5 smycka
+Proč je klíčové slovo "fungující"?	Smyčka se uzavře jen tehdy, když každý krok skončí něčím prokazatelně funkčním (prošlo testem), ne "vypadá hotově". Bez ověření nemáš zpětnou vazbu, jen iluzi pokroku.	A5 smycka
+Kde jsi agilní smyčku viděl v bloku A?	V TDD (red-green-refactor) i v refactoringu (malé bezpečné kroky). Agile je ten princip povýšený na hodnotu celého vývoje.	A5 smycka
+Jak AI zesiluje agilní hodnoty?	Zkracuje smyčku nápad→fungující kód na minuty (víc iterací, dřív poznáš omyl); "reakce na změnu" zlevní (přepsat směr je levné); prototyp k hypotéze vznikne hned.	A5 s-ai
+Jak AI rozbíjí "fungující"?	Rychlá produkce netestovaného kódu (iluze pokroku); "vypadá hotově" nahradí "prokazatelně funguje" (C4); objem místo směru; "reakce na změnu" se zvrhne v bezcílné bloudění.	A5 s-ai
+Klíčový posun agile v éře AI?	AI přesouvá úzké hrdlo z psaní na ověřování. Kód je levný, vzácné je vědět, jestli je správný a jestli řešíš správný problém. Proto "fungující" váží víc a agilní disciplína je s AI důležitější, ne míň.	A5 s-ai
+"Jednotlivci a interakce před nástroji" — porušuje to AI?	Ne samo o sobě. Hodnota chrání lidský úsudek a komunikaci. AI ji podpírá, když zesiluje jednotlivce; porušuje, až když nahradí úsudek nebo interakci s expertem. Nástroj ve službě člověka = agilní.	A5 s-ai
+Kdy a kde vznikl Agile manifest?	Snowbird, únor 2001. 17 lidí (Kent Beck, Ward Cunningham, Martin Fowler, Robert Martin a další) sepsalo 4 hodnoty a 12 principů. Reakce na waterfall.	A5 historie
+Co byli předchůdci manifestu?	XP (Kent Beck, 90. léta) — TDD, párové programování, continuous integration. Scrum — sprinty a role. Manifest je destiloval na společné hodnoty.	A5 historie
+Jak agile nakonec dopadlo?	Vyhrálo tak, že se z něj stal průmysl certifikací a ceremonií ("Agile Industrial Complex") — přesně ta forma nad podstatou, proti níž hodnoty stály. Řada signatářů to kritizuje (Fowler).	A5 historie
+Co je 12 principů za manifestem?	Rozvádějí hodnoty do konkrétna: "dodávej fungující software často", "vítej změnu i pozdě", "udržitelné tempo", "jednoduchost". Krátké, stojí za přečtení celé.	A5 historie
+Námitka "agile = stand-upy a Jira" — odpověď?	To jsou ceremonie z frameworků, ne agile. Manifest mluví o hodnotách. Tým může dělat všechny rituály a být neagilní (cargo cult), nebo žít podle hodnot bez nich.	A5 namitky
+Námitka "agile = žádné plány ani dokumentace" — odpověď?	Manifest říká "před", ne "místo". Pravá strana je hodnotná. S AI dokumentace ožila — CLAUDE.md je spustitelný kontext pro agenta, ne mrtvý papír.	A5 namitky
+Námitka "s AI jsme agilní automaticky" — odpověď?	Rychlá produkce není agilní smyčka. Ta se uzavře jen ověřenou zpětnou vazbou. Chrlení nezvěřeného kódu = iteruješ naprázdno, produkuješ, ale neučíš se.	A5 namitky
+Past "velocity" — proč je anti-agilní?	Objem kódu (řádky/sprint) je anti-agilní metrika. Hodně kódu ≠ správný kód. Agilní otázka: "jak rychle poznáme, že jdeme špatně?", ne kolik jsme vyprodukovali.	A5 namitky
+Spicy teze A5?	Agile umíralo na obřady; AI nechtěně vrátila hodnoty do hry (fungující software a reakci na změnu zlevnila). Ale podstrčila i nejrafinovanější anti-agilní past: smyčku, co se točí rychleji, ale kolem produkce, ne učení. Rychlost bez ověření není agilita.	A5 namitky
+Jak A5 souvisí s A1 (TDD)?	Red-green-refactor je agilní smyčka v malém; test-first je "fungující software každý krok" v praxi. XP (odkud TDD pochází) je přímý předchůdce manifestu.	A5 propojeni
+Jak A5 souvisí s C4 (Trust gap)?	"Fungující software" naráží na past plynulosti: AI kód vypadá hotově. Agilní hodnota trvá na tom, že fungující = ověřené, ne že vypadá hotově.	A5 propojeni

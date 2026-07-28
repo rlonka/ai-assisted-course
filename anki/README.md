@@ -35,6 +35,9 @@ Prostý text (TSV), jedna kartička na řádek: `otázka<TAB>odpověď<TAB>tagy`
 - `0016-domain-driven-design.txt` — A4 (26 kartiček): DDD (kód mluví jazykem domény), ubiquitous
   language a bounded context, doména != byznys, entity vs. value object (jednotky), model = API pro
   agenta (CLAUDE.md), Evans/modrá kniha, námitky, propojení na B3/A2/C4.
+- `0017-agile-manifesto.txt` — A5 (26 kartiček): agile = hodnoty ne ceremonie, 4 hodnoty, cargo cult,
+  smyčka zpětné vazby (fungující = ověřené), AI přesouvá hrdlo na ověřování, Snowbird 2001/XP/Scrum,
+  námitky (velocity, Scrum na vědu), propojení na A1/C4.
 - `0001-no-silver-bullet.txt` — A3 (37 kartiček): esenciální/akcidentální komplexita,
   Aristoteles, čtyři vlastnosti SW, tvrdá čísla (5×, 1,7×, −19 %), generace jazyků,
   historické vlny, AI dnes + námitky, analogie (guláš, 128 řidičů), anekdoty (bug, Backus).
