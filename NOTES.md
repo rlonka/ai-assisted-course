@@ -53,7 +53,8 @@ Cíl: aby Radek uměl ustát živé Q&A, ne jen text přečíst. Tři nové sekc
 - C4 (0011) Trust gap: retenční vrstva (12 Páteř/13 Q&A/14 kartičky, Feynman→15, Co dál→16), Anki 23 kartiček (fakta: automation bias Parasuraman&Riley 1997, Lee&See 2004, 1,7×). Bez slovníčku.
 - C3 (0010) Deskilling: retenční vrstva (13 Páteř/14 Q&A/15 kartičky, Feynman→16, Co dál→17), Anki 21 kartiček (Bainbridge 1983, AF447, Braverman 1974, kolo vs. vozík). Bez slovníčku.
 - C2 (0012) Reprodukovatelnost: retenční vrstva (12 Páteř/13 Q&A/14 kartičky, Feynman→15, Co dál→16), Anki 25 kartiček (žebřík rung 0–4, skok 2→3, /reproduce = rung 4 skill B4 + Stop hook B5, Claerbout&Donoho 90. léta). Páteř: „proces, ne výsledek" / „binární test" / „/reproduce". Bez slovníčku.
-- Pořadí: C4 → C3 → C2 → C1 → C5. Hotovo C4/C3/C2, zbývá C1, C5. Struktura: C4/C2/C5 mají 13 sekcí (Feynman 12); C1/C3 mají 14 (Feynman 13 → retenční 13/14/15, Feynman→16, Co dál→17).
+- C1 (0013) FAIR4RS: retenční vrstva (13 Páteř/14 Q&A/15 kartičky, Feynman→16, Co dál→17), Anki 23 kartiček (F→A→I→R pořadí, FAIR≠Open, LICENSE=minimum, machine-actionable/B6, CITATION.cff, Wilkinson 2016/Chue Hong 2022). Páteř: „F→A→I→R" / „FAIR ≠ Open" / „strojová potrava". Bez slovníčku (lekce má vlastní myth/callout výklad FAIR≠Open).
+- Pořadí: C4 → C3 → C2 → C1 → C5. Hotovo C4/C3/C2/C1, zbývá C5. Struktura: C4/C2/C5 mají 13 sekcí (Feynman 12); C1/C3 mají 14 (Feynman 13 → retenční 13/14/15, Feynman→16, Co dál→17).
 
 ## Blok B doplnění (probíhá 2026-07-28)
 - B2 (0004): retenční vrstva bez slovníčku (5 vrstev už vizualizované). Sekce 10 Páteř / 11 Q&A / 12 kartičky, Feynman→13, Co dál→14. Anki: 20 kartiček.

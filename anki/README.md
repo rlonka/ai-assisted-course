@@ -51,6 +51,7 @@ Prostý text (TSV), jedna kartička na řádek: `otázka<TAB>odpověď<TAB>tagy`
 - `0011-trust-gap.txt` — C4 (23 kartiček): trust gap (důvěra vs. spolehlivost), 1,7× víc issues, fluency heuristic (plynulost≠správnost), kalibrovaná důvěra (kvadrant), kde věřit/ne, automation bias (Parasuraman&Riley 1997, Lee&See 2004), námitky.
 - `0010-deskilling.txt` — C3 (21 kartiček): deskilling (eroze dovednosti), automatizuj mechaniku ne úsudek, spirála, nosné dovednosti (čtení kódu/ladění/revize/doménový úsudek), kolo vs. vozík, Bainbridge 1983/AF447/Braverman, námitky.
 - `0012-reprodukovatelnost.txt` — C2 (25 kartiček): reprodukovatelnost (vlastnost procesu ne výsledku), repro vs. replikace, mechanický test PASS/FAIL, žebřík rung 0–4 a skok 2→3, /reproduce (rung 4, skill B4 + Stop hook B5), Claerbout&Donoho, AI pomáhá i škodí, námitky, propojení na C4/C3/C1/A1.
+- `0013-fair4rs.txt` — C1 (23 kartiček): FAIR4RS (Findable/Accessible/Interoperable/Reusable pro software), pořadí F→A→I→R, FAIR≠Open (Accessible = protokol i s autentizací), LICENSE = minimum, machine-actionable metadata pro agenty (B6/MCP), CITATION.cff, Wilkinson 2016/Chue Hong 2022, AI pomáhá i škodí, námitky, propojení na C2/B6/A4/C3.
 - `0002-harness-vs-guardrails.txt` — B1 (27 kartiček): harness vs. guardrails (co umí / co nesmí),
   metafory (postroj, svodidla), architektura requestu, exit code 2, determinismus,
   komponenty (memory/skills/MCP/hooks/subagents), námitky, propojení na A3.

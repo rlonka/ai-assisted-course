@@ -383,8 +383,90 @@
   </li>
 </ul>
 
-<!-- 13. Feynmanovo cvičení -->
-<h2>13 — Feynmanovo cvičení</h2>
+<!-- 13. Páteř -->
+<h2>13 — Páteř 🎯</h2>
+
+<p>Jádro nastudeno — jedna věta, ze které odvodíš skoro cokoli, a tři kotvy, co si držíš. Když zamrzneš, vrať se sem.</p>
+
+<div class="spine">
+  <p class="spine-sentence">FAIR4RS = aby tvůj software <strong>našel, získal, propojil a znovu použil</strong> kdokoli jiný — člověk i agent — <em>bez tebe jako prostředníka</em>. <strong>F</strong>indable → <strong>A</strong>ccessible → <strong>I</strong>nteroperable → <strong>R</strong>eusable, v tomhle pořadí. Klíčové: <strong>FAIR ≠ Open</strong> (dohledatelnost a přístup, ne cena). Nepodkročitelné minimum: <strong>LICENSE</strong> (bez ní je kód defaultně zapovězený).</p>
+  <ul class="spine-anchors">
+    <li><span class="num">F→A→I→R</span>Najdi (persistentní ID/metadata) → získej (protokol) → propoj (standardní formáty/API) → stav na tom (licence/provenience). Pořadí záměrné: přeskočit dřívější = pozdější k ničemu. Nejlepší kód je bezcenný, když ho nikdo nenajde.</li>
+    <li><span class="num">FAIR ≠ Open</span>Accessible = „získatelné definovaným protokolem" (i s autentizací), ne „zdarma a veřejně". Komerční SW může být plně FAIR; kód na GitHubu bez licence a metadat je open, ale ne FAIR. Minimum = LICENSE.</li>
+    <li><span class="num">strojová potrava</span>Metadata jsou machine-actionable → FAIR software = agentem (přes MCP, B6) použitelný software; ne-FAIR = pro agenta neviditelný. AI ti FAIR levně dodělá (CITATION.cff, licence), ale zároveň chrlí ne-FAIR balast rychleji než dřív.</li>
+  </ul>
+</div>
+
+<div class="callout">
+  <div class="callout-label">Přenosný test FAIR</div>
+  <p>„<strong>Najde a použije tvůj software někdo jiný — nebo agent — bez tebe jako prostředníka?</strong>"<br>
+  Ano (najde přes ID, získá protokolem, smí ho legálně použít, spustí ho) → <strong>FAIR</strong>.<br>
+  „Musel bych mu poslat mail / vysvětlit, jak ho spustit" → <strong>není</strong> (je to tvůj osobní skript, ne vědecký nástroj).</p>
+</div>
+
+<!-- 14. Až se tě zeptají -->
+<h2>14 — Až se tě zeptají 🎤</h2>
+
+<p>Ostré dotazy z publika + krátká odpověď s pointou (tučně). Trénuj <em>nahlas</em>, ne čtením.</p>
+
+<div class="qa-item">
+  <p class="qa-q">Sebeklam „je to na GitHubu": „Dal jsem kód na GitHub veřejně, takže je FAIR."</p>
+  <p class="qa-a">Zveřejnění je nutná, ne dostatečná podmínka. GitHub bez licence, metadat a persistentního ID je <em>open, ale ne FAIR</em>: nenajdeš ho (žádný DOI, chudá metadata), nesmíš ho legálně použít (bez licence default zapovězený), může zmizet (žádný archivovaný release). <strong>FAIR je o nalezitelnosti a použitelnosti, ne o tom, že je to „venku".</strong></p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Námitka „nemůžu to dát zadarmo": „Náš software je komerční / za autentizací — FAIR pro nás nejde."</p>
+  <p class="qa-a"><strong>FAIR ≠ open.</strong> Accessible znamená „získatelné definovaným protokolem", ne „zdarma a veřejně" — přístup smí zahrnovat autentizaci nebo licenci. Komerční či chráněný software je plně FAIR, pokud má persistentní identifikátor, popsaný způsob přístupu a trvalá metadata. Otevřenost je jiná osa než FAIR.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Odmítnutí „je to byrokracie": „Mám pár skriptů, FAIR je zbytečná administrativa."</p>
+  <p class="qa-a">Byrokracie je forma bez užitku; FAIR minimum je užitek bez formy. <strong>LICENSE + README + připnuté prostředí</strong> je pár hodin (s agentem míň) a rozhoduje, jestli tvůj „pár skriptů" přežije tvůj odchod. A FAIR4RS vznikl právě proto, že software je jiné zvíře než data — je to adaptace, ne odmítnutí.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Výmluva „nemám čas": „Na metadata, DOI a CITATION.cff fakt nemám kapacitu."</p>
+  <p class="qa-a">To je přesně ten nudný plumbing, co teď levně udělá agent — vygeneruje <code>CITATION.cff</code>, doplní licenci, sepíše metadata, standardizuje I/O. <strong>Ty hlídáš jen, že metadata jsou pravdivá, ne halucinovaná.</strong> Čas, který „nemáš", agent umaže; zbyde ti kontrola, ne psaní.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Otázka „už mám C2": „Reprodukovatelnost mám vyřešenou — to snad stačí?"</p>
+  <p class="qa-a">Reprodukovatelnost je jádro jen jednoho principu — <strong>R</strong>eusable. Reprodukovatelný, ale <em>nenalezitelný</em> software je pořád k ničemu pro ostatní: nikdo ho nenajde (F), nedostane se k němu (A), nepropojí (I). FAIR4RS zasazuje C2 do širšího rámce — repro je podmínka, ne celá odpověď.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Manažerská otázka: „Jaká je správná metrika, že to děláme dobře?"</p>
+  <p class="qa-a">Ne „máme open source", ale „<strong>najde a použije naše nástroje někdo — nebo agent — bez nás?</strong>" FAIR software se cituje (impact), přežije odchod studenta (kontinuita) a je připravený pro agentní nástroje (budoucnost). Grantové agentury FAIR software management plan čím dál častěji rovnou vyžadují.</p>
+</div>
+
+<!-- 15. Do kartiček -->
+<h2>15 — Do kartiček 🔁</h2>
+
+<p>Rychlá startovní sada. Zkopíruj blok níž a naimportuj do <a href="https://apps.ankiweb.net/" target="_blank">Anki</a> (oddělovač = středník). Pak pár minut denně.</p>
+
+<div class="callout green">
+  <div class="callout-label">Plná sada je připravená v repu</div>
+  <p>Blok níž je rychlá verze. V repu je <strong>plná sada ~23 kartiček</strong> s podrobnějšími odpověďmi a tématy (jádro, čtyři principy, FAIR≠Open, agenti/metadata, minimum, historie, námitky) — soubor <code>anki/0013-fair4rs.txt</code>. Import do Anki na jeden klik, tagy pro procvičování po blocích (<code>tag:principy</code>, <code>tag:open</code>…). Návod: <code>anki/README.md</code>.</p>
+</div>
+
+<pre class="flashcards">Co je FAIR4RS? ; FAIR principy (Findable, Accessible, Interoperable, Reusable) přizpůsobené výzkumnému SOFTWARU (RDA/ReSA/FORCE11, 2022). Aby software našel, získal, propojil a znovu použil kdokoli — i agent — bez tebe.
+Jedno pravidlo FAIR? ; Software, který umíš spustit jen ty, není vědecký nástroj — je to tvůj osobní skript. FAIR = najde a použije ho stroj i člověk bez tebe jako prostředníka.
+Co znamenají čtyři písmena FAIR? ; F najdi (persistentní ID + metadata), A získej (definovaný protokol), I propoj (standardní formáty/API), R stav na tom (licence, provenience, dokumentace, reprodukovatelnost).
+Proč je pořadí F→A→I→R záměrné? ; Nejdřív tě musí NAJÍT (F), pak ZÍSKAT (A), pak to musí ZAPADNOUT (I), teprve pak na tom STAVÍ (R). Přeskočit dřívější = pozdější je k ničemu. Nejlepší znovupoužitelný kód je bezcenný, když ho nikdo nenajde.
+FAIR = Open Source? ; NE. Accessible = „získatelné definovaným protokolem" (i s autentizací), ne „zdarma a veřejně". Komerční SW může být plně FAIR; kód na GitHubu bez licence/metadat je open, ale ne FAIR.
+Nepodkročitelné minimum FAIR? ; LICENSE. Kód bez licence není „volný" — je defaultně zapovězený (autorské právo). Nejčastější tichý blocker znovupoužití není chybějící DOI, ale chybějící řádek s licencí.
+Proč software potřebuje vlastní FAIR (FAIR4RS)? ; Software je jiné zvíře než data: je spustitelný, závislý na verzích/prostředí, vyvíjí se v čase. Proto navíc: verzování s ID, popis závislostí, citovatelnost vyvíjejícího se artefaktu, licence pro spuštění.
+Co znamená „machine-actionable" a proč teď? ; Metadata čitelná pro stroj, ne jen člověka. V éře agentů: FAIR software = agentem (přes MCP, B6) použitelný software; ne-FAIR je pro agenta neviditelný. Metadata jsou strojová potrava.
+Jak AI k FAIR pomáhá i škodí? ; Pomáhá: udělá nudný plumbing (CITATION.cff, licence, metadata, standardní I/O). Škodí: chrlí ne-FAIR software (skripty bez licence/ID) rychleji než dřív → FAIR se mění z ctnosti na nutnou hygienu.
+Jak FAIR4RS souvisí s C2? ; Reprodukovatelnost (C2) je jádro principu „Reusable" (R) — ale jen jednoho ze čtyř. Reprodukovatelný, ale nenalezitelný software je pořád k ničemu pro ostatní. FAIR zasazuje C2 do širšího rámce.</pre>
+
+<div class="callout green">
+  <div class="callout-label">Rituál</div>
+  <p>Denně pár minut kartičky + jednou týdně lekci „odříkej naostro" prázdné židli, jako bys ji přednášel. A až budeš chtít ostrý test, řekni v Claude Code „vygriluj mě z C1".</p>
+</div>
+
+<!-- 16. Feynmanovo cvičení -->
+<h2>16 — Feynmanovo cvičení</h2>
 
 <div class="quiz" id="quiz-main">
   <div class="quiz-header">Feynmanův test — FAIR4RS</div>
@@ -445,7 +527,7 @@
 </div>
 
 <!-- 14. Co dál -->
-<h2>14 — Co dál</h2>
+<h2>17 — Co dál</h2>
 
 <p><strong>Co musíš znát před touto lekcí:</strong></p>
 <ul>
