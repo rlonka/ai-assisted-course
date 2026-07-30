@@ -330,7 +330,89 @@
 </ul>
 
 <!-- 12. Feynmanovo cvičení -->
-<h2>12 — Feynmanovo cvičení</h2>
+<h2>12 — Páteř 🎯</h2>
+
+<p>Jádro nastudeno — jedna věta, ze které odvodíš skoro cokoli, a tři kotvy, co si držíš. Když zamrzneš, vrať se sem.</p>
+
+<div class="spine">
+  <p class="spine-sentence">Reprodukovatelnost = výsledek, který zregeneruješ <em>od nuly</em> ze stejného kódu a dat = ověřitelný fakt, ne otázka důvěry. Je to vlastnost <strong>procesu, ne výsledku</strong>. Přímý lék na trust gap: „jak bych poznal, že je to špatně?" → spustím <code>/reproduce</code> a vidím PASS/FAIL. Cíl: rung 3–4 (jeden příkaz / stroj ověří).</p>
+  <ul class="spine-anchors">
+    <li><span class="num">proces, ne výsledek</span>Uložený výsledek je fotka; repro je recept. Reprodukovatelný je POSTUP, jak jsi k číslu došel — nedá se dodělat potom.</li>
+    <li><span class="num">binární test</span>Ve svěžím prostředí, od nuly, jedním příkazem → tentýž výsledek? PASS/FAIL. Žebřík 0 historka → 3 jeden příkaz → 4 stroj ověří. Klíčový skok 2→3.</li>
+    <li><span class="num">/reproduce</span>Skill (B4) na Stop hooku (B5) = CI pro vědecký výsledek. Zavírá trust gap (C4): důvěra na zeleném testu, ne na „vypadá dobře".</li>
+  </ul>
+</div>
+
+<div class="callout">
+  <div class="callout-label">Přenosný test reprodukovatelnosti</div>
+  <p>„<strong>Zregeneruje tenhle výsledek někdo jiný — nebo ty za rok, na jiném stroji — jedním příkazem ze zdrojů?</strong>"<br>
+  Ano → <strong>reprodukovatelné</strong>.<br>
+  „Ještě musíš doinstalovat…" → <strong>není</strong> (uložené číslo je fotka, ne recept).</p>
+</div>
+
+<!-- 13. Až se tě zeptají -->
+<h2>13 — Až se tě zeptají 🎤</h2>
+
+<p>Ostré dotazy z publika + krátká odpověď s pointou (tučně). Trénuj <em>nahlas</em>, ne čtením.</p>
+
+<div class="qa-item">
+  <p class="qa-q">Sebeklam „mám to uložené": „Všechny výsledky i grafy mám v repu, tak je to reprodukovatelné."</p>
+  <p class="qa-a">Uložený výsledek je <em>artefakt</em>, ne proces. Reprodukovatelnost je vlastnost <em>postupu</em> — musí jít vytvořit znovu ze zdrojů, i na cizím stroji. <strong>Graf je fotka; potřebuješ recept.</strong> Test: zregeneruje to jiný jedním příkazem?</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Námitka „AI to napsala": „AI mi postavila pipeline, běží — tak repro mám vyřešenou."</p>
+  <p class="qa-a">„Běží u tebe teď" je rung 0–1, ne reprodukovatelnost. Otázka: běží ve <em>svěžím</em> prostředí, od nuly, bez ručních kroků — a <strong>rozumíš tomu</strong> (jinak to neopravíš, až selže)? AI umí repro postavit i tiše podkopat nepřipnutými závislostmi.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Odklad „až na konci": „Reprodukovatelnost dodělám na konci, až budou výsledky hotové."</p>
+  <p class="qa-a">Nedá se dodělat potom — je to vlastnost procesu. Když proces nezaznamenával, jak k číslu došel (seed, verze, kroky), <strong>ta informace je pryč</strong> a rekonstruuješ ji z paměti. Staví se průběžně → <code>/reproduce</code> v CI, ne v checklistu před deadlinem.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Otázka „dva pojmy": „Jaký je rozdíl mezi reprodukovatelností a replikovatelností?"</p>
+  <p class="qa-a"><strong>Repro</strong> = stejný kód + stejná data → stejný výsledek (mechanická, výpočetní). <strong>Replik</strong> = nový sběr dat / nezávislá implementace → konzistentní zjištění (silnější, vědecky náročnější). Replikovatelnost stojí na reprodukovatelnosti jako základu.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Otázka „na jakém jsem stupni": „Jak poznám, kde na žebříku stojím?"</p>
+  <p class="qa-a">0 „běželo na laptopu" (historka), 1 skripty + ruční kroky (křehké), 2 připnuté verze + README (slušné), 3 jeden příkaz zregeneruje vše (reprodukovatelné), 4 kontejner + kontrola invariantů (stroj ověří). <strong>Cíl pro vědecký software je 3–4.</strong></p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Manažerská otázka: „Jaká je správná metrika zralosti skupiny?"</p>
+  <p class="qa-a">Ne „kolik paperů", ale „<strong>kolik našich výsledků umí kdokoli jiný zregenerovat jedním příkazem?</strong>" Reprodukovatelnost je pojistka proti odchodu člověka i proti věrohodné chybě v pět let starém výsledku.</p>
+</div>
+
+<!-- 14. Do kartiček -->
+<h2>14 — Do kartiček 🔁</h2>
+
+<p>Rychlá startovní sada. Zkopíruj blok níž a naimportuj do <a href="https://apps.ankiweb.net/" target="_blank">Anki</a> (oddělovač = středník). Pak pár minut denně.</p>
+
+<div class="callout green">
+  <div class="callout-label">Plná sada je připravená v repu</div>
+  <p>Blok níž je rychlá verze. V repu je <strong>plná sada ~22 kartiček</strong> s podrobnějšími odpověďmi a tématy (jádro, co to je, mechanický test/žebřík, /reproduce, AI, historie, námitky) — soubor <code>anki/0012-reprodukovatelnost.txt</code>. Import do Anki na jeden klik, tagy pro procvičování po blocích (<code>tag:test</code>, <code>tag:historie</code>…). Návod: <code>anki/README.md</code>.</p>
+</div>
+
+<pre class="flashcards">Co je reprodukovatelnost? ; Výsledek, který dokážeš zregenerovat od nuly ze stejného kódu a dat — ověřitelný fakt, ne otázka důvěry. Přesouvá důvěru z dojmu na mechanický důkaz.
+Jedno pravidlo reprodukovatelnosti? ; Výsledek, který nedokážeš zregenerovat, není zjištění — je to historka. „Běželo to jednou na mém laptopu" ≠ „je to reprodukovatelné".
+Reprodukovatelnost je vlastnost čeho? ; Procesu, ne výsledku. Číslo v tabulce není repro ani ne-repro; reprodukovatelný je POSTUP, jak jsi k němu došel. Proto se nedá dodělat potom.
+Reprodukovatelnost vs. replikovatelnost? ; Repro = stejný kód + stejná data → stejný výsledek (mechanická). Replik = nový sběr dat / nezávislá implementace → konzistentní zjištění (silnější). Replik stojí na repro.
+Mechanický test reprodukovatelnosti? ; Ve svěžím prostředí, od nuly, jedním příkazem — vznikne tentýž výsledek? Binární: buď PASS, nebo FAIL. Žádné mezistupně v samotném testu.
+Žebřík reprodukovatelnosti (rung 0–4)? ; 0 historka, 1 křehké (skripty+ruční kroky), 2 slušné (připnuté verze+README), 3 reprodukovatelné (jeden příkaz zregeneruje vše), 4 mechanické (kontejner+kontrola invariantů, ověří stroj). Cíl 3–4.
+Který skok na žebříku je klíčový? ; Z 2 na 3: z „jde to, když víš jak" na „jde to jedním příkazem bez tebe". Hranice mezi repro jako dokumentací (nikdo nečte) a spustitelným artefaktem (stroj ověří).
+Co je /reproduce (rung 4)? ; Skill (B4), který od nuly ve svěžím prostředí zregeneruje výsledky a ověří je proti referenčním hodnotám. Vrátí PASS/FAIL, selže hlasitě, neopravuje potají.
+Jak AI reprodukovatelnosti pomáhá i škodí? ; Pomáhá: udělá nudné plumbing (připne verze, Dockerfile, /reproduce, kontejner). Škodí: vyrobí kód „běží u mě" co nikdo nezregeneruje; zavleče nedeterminismus; svádí produkovat víc, než stíháš ověřit.
+Claerbout & Donoho (90. léta) — hlavní myšlenka? ; „Publikovaný článek je jen reklama na vědu; skutečná věda je prostředí, kód a data, které výsledek vytvořily." Přímý předchůdce „proces, ne výsledek".</pre>
+
+<div class="callout green">
+  <div class="callout-label">Rituál</div>
+  <p>Denně pár minut kartičky + jednou týdně lekci „odříkej naostro" prázdné židli, jako bys ji přednášel. A až budeš chtít ostrý test, řekni v Claude Code „vygriluj mě z C2".</p>
+</div>
+
+<!-- 15. Feynmanovo cvičení -->
+<h2>15 — Feynmanovo cvičení</h2>
 
 <div class="quiz" id="quiz-main">
   <div class="quiz-header">Feynmanův test — Reprodukovatelnost</div>
@@ -391,7 +473,7 @@
 </div>
 
 <!-- 13. Co dál -->
-<h2>13 — Co dál</h2>
+<h2>16 — Co dál</h2>
 
 <p><strong>Co musíš znát před touto lekcí:</strong></p>
 <ul>
