@@ -1,0 +1,28 @@
+#separator:tab
+#html:false
+#deck:AI-assisted RSE::C4 — Trust gap
+#notetype:Basic
+#tags column:3
+Co je trust gap?	Propast mezi tvou důvěrou v AI výstup a jeho skutečnou spolehlivostí. Věříš víc, než je oprávněné, protože výstup je plynulý a sebejistý.	C4 jadro
+Jedno pravidlo trust gapu?	Důvěra má být úměrná ověření, ne plynulosti. Ne „zní přesvědčivě, tak věřím", ale „prověřil jsem úměrně sázce, tak věřím tak akorát".	C4 jadro
+Je trust gap jednosměrný?	Ne, obousměrný. Nadměrná důvěra (nasadíš neověřené) je nebezpečnější a častější, ale paušální nedůvěra (odmítneš užitečný nástroj) je taky špatná kalibrace.	C4 jadro
+Přenosný test důvěry?	„Jak bych poznal, že je to špatně?" Máš odpověď (test/kontrola/referenční hodnota) → důvěřuj po jejím provedení. Nemáš → tvá důvěra nemá o co se opřít (varování).	C4 jadro
+Číslo z New Relic 2026 (trust gap)?	AI-generovaný kód má ~1,7× víc issues než kód psaný člověkem — přesto mu vývojáři často věří víc. Propast mezi důvěrou a spolehlivostí je měřitelná.	C4 cisla
+Proč přeceňujeme AI (fluency heuristic)?	Mozek si plete snadnost zpracování (plynulost) s pravdivostí. Co se čte hladce, cítí se pravdivější. AI produkuje hladký text ke všemu (správnému i špatnému) a tím tu heuristiku systematicky obchází.	C4 plynulost
+Co u AI znamená plynulý, sebejistý text?	Nic o správnosti. Model se plete stejně sebejistě jako když má pravdu. Sebejistota AI = absence kalibrace, ne signál kompetence.	C4 plynulost
+Je fluency heuristic tvá osobní slabost?	Ne, je to kognitivní bias, který máme všichni — jen ho AI industrializovala tím, že produkuje dokonale hladký text i pro nesmysl.	C4 plynulost
+Co je kalibrovaná důvěra (cíl)?	Důvěřovat správně — tolik, kolik odpovídá ověřenosti a sázce. Ne míň, ne slepě. Řídí se dvěma osami: jak snadno ověřím × jak draho stojí pokažení.	C4 kalibrace
+Kvadrant kalibrace — čtyři rohy?	Snadné ověřit + nízká sázka → důvěřuj volně. Těžké ověřit + vysoká sázka → ověřuj nejvíc (plynulost klame nejvíc). Snadné + vysoká → důvěřuj po ověření. Těžké + nízká → pozor na tichý dluh.	C4 kalibrace
+Praktický nástroj kalibrace?	Než AI výstup přijmeš, zeptej se „jak bych poznal, že je to špatně?". Máš odpověď (test, kontrola, referenční hodnota) → důvěřuj po jejím provedení. Nemáš → varování.	C4 kalibrace
+Kde AI důvěřovat (po ověření)?	Prošlapané cesty (běžné knihovny, standardní vzory), věci s levným rychlým ověřením (test/typecheck/běh), nízká sázka a vratná akce, obor který sám ovládáš, mechanika kde znáš správný výstup.	C4 kde
+Kde AI nedůvěřovat bez důkazu?	Numerická/vědecká správnost co nejde snadno prověřit, fakta/citace/čísla (halucinace zní jistě), nevratné akce (migrace/mazání/produkce), obor který neznáš, cokoli kde tě přesvědčila jen plynulost.	C4 kde
+Nejnebezpečnější kombinace pro trust gap?	Neznám obor + nejde snadno ověřit + zní to skvěle. Plynulost tam supluje kompetenci, kterou nemáš ani ty, ani model — přesně situace vědce mimo svou expertízu.	C4 kde
+Odkud trust gap pochází (klasicky)?	Automation bias (Parasuraman & Riley, 1997): lidé nadměrně důvěřují automatizovaným systémům. Trust gap je automation bias aplikovaný na generativní AI.	C4 historie
+Co je kalibrovaná důvěra / appropriate reliance?	Rámec Lee & See (2004): důvěra má odpovídat skutečné spolehlivosti systému, ne jeho zdání. Přesně definuje cíl této lekce.	C4 historie
+Jaký má trust gap předobraz v letectví?	Automation complacency: piloti přestali sledovat přístroje, protože „autopilot to zvládá". Dekády zkušeností, jak nadměrná důvěra ke stroji zabíjí. AI to přináší do vědy.	C4 historie
+Námitka „řešení je AI nedůvěřovat a vše překontrolovat od nuly" — odpověď?	Paušální nedůvěra je stejně špatná kalibrace jako slepá důvěra. Zahodíš přínos a kontroluješ i to, co má levné ověření. Cíl je kalibrace: úměrně ověřenosti a sázce.	C4 namitky
+Námitka „detailní odborné zdůvodnění = spolehlivější" — odpověď?	Naopak — je to past plynulosti v čisté formě. Model zní fundovaně i pro nesmysl; přesvědčivost nekoreluje se správností. Sebejistota není signál kompetence.	C4 namitky
+Manažerská otázka: co se ptát místo „věříte AI?"	„JAK to ověřujete a co by chybu odhalilo?" Když odpověď je „vypadá to dobře", je to red flag — nekalibrovaná důvěra, tým hromadí tichý dluh.	C4 namitky
+Spicy teze C4?	Plynulost je vlastnost každého AI výstupu — správného i špatného. Kdo kalibruje důvěru podle plynulosti, kalibruje ji podle konstanty. Jediná pravdivá kotva: „jak bych poznal, že je to špatně?"	C4 namitky
+Jak C4 souvisí s C3 (deskilling)?	Dvě strany mince. Deskilling ničí schopnost ověřit; trust gap je to, co pak zaplní prázdno. Čím míň umíš prověřit, tím víc jsi odkázaný na plynulost → širší propast.	C4 propojeni
+Jak C4 souvisí s C2, B5, A1?	C2: mechanické ověření (reprodukovatelnost) je přímý lék — důvěra se opře o důkaz. B5: hook = zhmotněná kalibrovaná nedůvěra („trust but verify"). A1: červený test je externí kotva důvěry.	C4 propojeni

@@ -49,6 +49,10 @@ Cíl: aby Radek uměl ustát živé Q&A, ne jen text přečíst. Tři nové sekc
 - BLOK A KOMPLETNÍ V RETENČNÍM BALÍKU: A1, A2, A3, A4, A5 hotové (všech 5/5).
 - Anki generátor tip: české uvozovky rozbíjejí Python string literály. Řešení: data v triple-quoted bloku s oddělovačem ' ||| ' (viz scratchpad/gen_anki_a5c.py) — ASCII " pak nevadí.
 
+## Blok C doplnění (probíhá 2026-07-28) — pořadí podle pódia
+- C4 (0011) Trust gap: retenční vrstva (12 Páteř/13 Q&A/14 kartičky, Feynman→15, Co dál→16), Anki 23 kartiček (fakta: automation bias Parasuraman&Riley 1997, Lee&See 2004, 1,7×). Bez slovníčku.
+- Pořadí: C4 → C3 → C2 → C1 → C5. Struktura: C4/C2/C5 mají 13 sekcí (Feynman 12); C1/C3 mají 14 (Feynman 13 → retenční 13/14/15, Feynman→16, Co dál→17).
+
 ## Blok B doplnění (probíhá 2026-07-28)
 - B2 (0004): retenční vrstva bez slovníčku (5 vrstev už vizualizované). Sekce 10 Páteř / 11 Q&A / 12 kartičky, Feynman→13, Co dál→14. Anki: 20 kartiček.
 - BLOK B KOMPLETNÍ v retenčním balíku (2026-07-28): B1(27), B2(20), B3(20), B4(20), B5(20), B6(20), B7(22). Všechny mají Páteř/Q&A/kartičky/Anki. Slovníček jen B1 (harness/guardrails); ostatní B už měly dost terminologie.

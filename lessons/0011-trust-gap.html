@@ -363,7 +363,89 @@
 </ul>
 
 <!-- 12. Feynmanovo cvičení -->
-<h2>12 — Feynmanovo cvičení</h2>
+<h2>12 — Páteř 🎯</h2>
+
+<p>Jádro nastudeno — jedna věta, ze které odvodíš skoro cokoli, a tři kotvy, co si držíš. Když zamrzneš, vrať se sem.</p>
+
+<div class="spine">
+  <p class="spine-sentence">Trust gap = propast mezi tvou <em>důvěrou</em> v AI výstup a jeho skutečnou <em>spolehlivostí</em>. Vzniká z fluency heuristic — mozek si plete plynulost s pravdivostí, a AI zní sebejistě i pro nesmysl. Cíl NENÍ nedůvěřovat, ale <strong>kalibrovat</strong>: důvěřovat úměrně ověření a sázce, ne plynulosti.</p>
+  <ul class="spine-anchors">
+    <li><span class="num">1,7×</span>AI kód má ~1,7× víc issues (New Relic 2026), přesto mu věří víc. Propast mezi důvěrou a spolehlivostí je měřitelná.</li>
+    <li><span class="num">plynulost ≠ správnost</span>Model se plete stejně sebejistě jako když má pravdu. Sebejistota AI = absence kalibrace, ne signál kompetence.</li>
+    <li><span class="num">obousměrný</span>Nadměrná důvěra (nasadíš neověřené) i paušální nedůvěra (odmítneš užitečné) jsou obě špatná kalibrace.</li>
+  </ul>
+</div>
+
+<div class="callout">
+  <div class="callout-label">Přenosný test důvěry</div>
+  <p>Než AI výstup přijmeš, zeptej se: „<strong>Jak bych poznal, že je to špatně?</strong>"<br>
+  Máš odpověď (test, kontrola, referenční hodnota) → <strong>důvěřuj po jejím provedení</strong>.<br>
+  Nemáš odpověď → tvá důvěra nemá o co se opřít — <strong>to je varování, ne důvod ji dát zdarma</strong>.</p>
+</div>
+
+<!-- 13. Až se tě zeptají -->
+<h2>13 — Až se tě zeptají 🎤</h2>
+
+<p>Ostré dotazy z publika + krátká odpověď s pointou (tučně). Trénuj <em>nahlas</em>, ne čtením.</p>
+
+<div class="qa-item">
+  <p class="qa-q">Námitka „tak nevěřit vůbec": „Řešení trust gapu je AI nedůvěřovat a všechno po ní překontrolovat od nuly."</p>
+  <p class="qa-a">Paušální nedůvěra je stejně špatná kalibrace jako slepá důvěra — zahodíš přínos a kontroluješ i to, co má levné ověření. <strong>Cíl je kalibrace: důvěřuj úměrně ověřenosti a sázce.</strong> U boilerplate, co projde testy, je nedůvěra plýtvání; u nevratné migrace namístě.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Chyták „zní to fundovaně": „Když zdůvodnění zní detailně a odborně, je to spolehlivější, ne?"</p>
+  <p class="qa-a">Naopak — detailní, sebejisté zdůvodnění je <em>past plynulosti</em> v čisté formě. Model umí znít fundovaně i pro nesmysl. <strong>Přesvědčivost výstupu nekoreluje s jeho správností; sebejistota AI je absence kalibrace, ne kompetence.</strong></p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Otázka „proč to děláme": „Proč vůbec AI přeceňujeme?"</p>
+  <p class="qa-a"><em>Fluency heuristic</em>: mozek si plete snadnost zpracování s pravdivostí — co se čte hladce, cítí se pravdivější. AI produkuje hladký text ke všemu (správnému i špatnému) a tím tu heuristiku obchází. <strong>Není to tvá slabost — je to bias všech, jen ho AI industrializovala.</strong></p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Otázka „kde je to nejhorší": „Kde je trust gap nejnebezpečnější?"</p>
+  <p class="qa-a">Neznám obor + nejde snadno ověřit + zní to skvěle. <strong>Tam plynulost supluje kompetenci, kterou nemáš ani ty, ani model</strong> — přesně situace vědce, který AI pustí mimo svou expertízu.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Otázka „jak prakticky": „Jak mám důvěru kalibrovat v praxi?"</p>
+  <p class="qa-a">Dvě osy: <em>jak snadno to ověřím</em> × <em>jak draho stojí pokažení</em>. Snadné + nízká sázka → důvěřuj volně. Těžké ověřit + vysoká sázka → ověřuj nejvíc (tam plynulost klame nejvíc). <strong>A vždy: „jak bych poznal, že je to špatně?"</strong></p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Manažerská otázka: „Tým říká 'AI to zvládá, věříme jí'. Je to v pořádku?"</p>
+  <p class="qa-a">Špatná otázka je „věříte?". Správná: „<strong>JAK to ověřujete a co by chybu odhalilo?</strong>" Když odpověď je „vypadá to dobře", je to red flag — nekalibrovaná důvěra a tým hromadí tichý dluh věrohodných chyb.</p>
+</div>
+
+<!-- 14. Do kartiček -->
+<h2>14 — Do kartiček 🔁</h2>
+
+<p>Rychlá startovní sada. Zkopíruj blok níž a naimportuj do <a href="https://apps.ankiweb.net/" target="_blank">Anki</a> (oddělovač = středník). Pak pár minut denně.</p>
+
+<div class="callout green">
+  <div class="callout-label">Plná sada je připravená v repu</div>
+  <p>Blok níž je rychlá verze. V repu je <strong>plná sada ~22 kartiček</strong> s podrobnějšími odpověďmi a tématy (jádro, čísla, past plynulosti, kalibrace, kde věřit, historie, námitky) — soubor <code>anki/0011-trust-gap.txt</code>. Import do Anki na jeden klik, tagy pro procvičování po blocích (<code>tag:historie</code>, <code>tag:kalibrace</code>…). Návod: <code>anki/README.md</code>.</p>
+</div>
+
+<pre class="flashcards">Co je trust gap? ; Propast mezi tvou důvěrou v AI výstup a jeho skutečnou spolehlivostí. Věříš víc, než je oprávněné, protože výstup je plynulý a sebejistý.
+Jedno pravidlo trust gapu? ; Důvěra má být úměrná ověření, ne plynulosti. Ne „zní přesvědčivě, tak věřím", ale „prověřil jsem úměrně sázce, tak věřím tak akorát".
+Číslo z New Relic 2026 (trust gap)? ; AI-generovaný kód má ~1,7× víc issues než kód psaný člověkem — přesto mu vývojáři často věří víc. Propast je měřitelná.
+Proč přeceňujeme AI (fluency heuristic)? ; Mozek si plete snadnost zpracování (plynulost) s pravdivostí. Co se čte hladce, cítí se pravdivější. AI produkuje hladký text ke všemu — a tím tu heuristiku obchází.
+Co u AI znamená plynulý, sebejistý text? ; Nic o správnosti. Model se plete stejně sebejistě jako když má pravdu. Sebejistota AI = absence kalibrace, ne signál kompetence.
+Co je kalibrovaná důvěra (cíl)? ; Důvěřovat správně — tolik, kolik odpovídá ověřenosti a sázce. Ne míň, ne slepě. Dvě osy: jak snadno ověřím × jak draho stojí pokažení.
+Přenosný test důvěry? ; „Jak bych poznal, že je to špatně?" Máš odpověď (test/kontrola/referenční hodnota) → důvěřuj po jejím provedení. Nemáš → tvá důvěra nemá o co se opřít.
+Nejnebezpečnější kombinace pro trust gap? ; Neznám obor + nejde snadno ověřit + zní to skvěle. Plynulost supluje kompetenci, kterou nemáš ani ty, ani model.
+Odkud trust gap pochází (klasicky)? ; Automation bias (Parasuraman & Riley, 1997) — lidé nadměrně důvěřují automatizovaným systémům. Kalibrovaná důvěra: Lee & See (2004). Plus „trust but verify" a automation complacency v letectví.
+Spicy teze C4? ; Plynulost je vlastnost každého AI výstupu — správného i špatného. Kdo kalibruje důvěru podle plynulosti, kalibruje ji podle konstanty. Jediná kotva: „jak bych poznal, že je to špatně?"</pre>
+
+<div class="callout green">
+  <div class="callout-label">Rituál</div>
+  <p>Denně pár minut kartičky + jednou týdně lekci „odříkej naostro" prázdné židli, jako bys ji přednášel. A až budeš chtít ostrý test, řekni v Claude Code „vygriluj mě z C4".</p>
+</div>
+
+<!-- 15. Feynmanovo cvičení -->
+<h2>15 — Feynmanovo cvičení</h2>
 
 <div class="quiz" id="quiz-main">
   <div class="quiz-header">Feynmanův test — Trust gap</div>
@@ -424,7 +506,7 @@
 </div>
 
 <!-- 13. Co dál -->
-<h2>13 — Co dál</h2>
+<h2>16 — Co dál</h2>
 
 <p><strong>Co musíš znát před touto lekcí:</strong></p>
 <ul>
