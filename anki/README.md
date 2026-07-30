@@ -49,6 +49,7 @@ Prostý text (TSV), jedna kartička na řádek: `otázka<TAB>odpověď<TAB>tagy`
 - `0008-mcp.txt` — B6 (20 kartiček): MCP (protokol pro dosah k externím nástrojům/datům), M×N → M+N, tools/resources/prompts, klient-server (stdio/HTTP), dosah ne guardrail (páruj s hooky), LSP/USB analogie, námitky.
 - `0009-subagents.txt` — B7 (22 kartiček): subagent (oddělený agent, vlastní kontext/role/nástroje), tři důvody (izolace/paralelismus/specializace), subagent vs. skill/prompt, anatomie .claude/agents/, orchestrační vzory (fan-out), map-reduce/delegace, námitky.
 - `0011-trust-gap.txt` — C4 (23 kartiček): trust gap (důvěra vs. spolehlivost), 1,7× víc issues, fluency heuristic (plynulost≠správnost), kalibrovaná důvěra (kvadrant), kde věřit/ne, automation bias (Parasuraman&Riley 1997, Lee&See 2004), námitky.
+- `0010-deskilling.txt` — C3 (21 kartiček): deskilling (eroze dovednosti), automatizuj mechaniku ne úsudek, spirála, nosné dovednosti (čtení kódu/ladění/revize/doménový úsudek), kolo vs. vozík, Bainbridge 1983/AF447/Braverman, námitky.
 - `0002-harness-vs-guardrails.txt` — B1 (27 kartiček): harness vs. guardrails (co umí / co nesmí),
   metafory (postroj, svodidla), architektura requestu, exit code 2, determinismus,
   komponenty (memory/skills/MCP/hooks/subagents), námitky, propojení na A3.

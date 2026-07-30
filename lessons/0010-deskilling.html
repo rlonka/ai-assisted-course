@@ -345,7 +345,89 @@
 </ul>
 
 <!-- 13. Feynmanovo cvičení -->
-<h2>13 — Feynmanovo cvičení</h2>
+<h2>13 — Páteř 🎯</h2>
+
+<p>Jádro nastudeno — jedna věta, ze které odvodíš skoro cokoli, a tři kotvy, co si držíš. Když zamrzneš, vrať se sem.</p>
+
+<div class="spine">
+  <p class="spine-sentence">Deskilling = postupná ztráta dovednosti proto, že ji za tebe dělá nástroj. AI ho zrychlila a přesunula z okraje (rutina) do jádra (<em>úsudek</em>). Pravidlo: <strong>automatizuj mechaniku, ne úsudek.</strong> Nebezpečí je jemné — cítíš se produktivní, zatímco nosné dovednosti (čtení kódu, ladění, revize, doménový úsudek) tiše zakrňují.</p>
+  <ul class="spine-anchors">
+    <li><span class="num">mechanika ≠ úsudek</span>Deleguj mechaniku (čistý zisk); delegovat úsudek = půjčka na budoucí kompetenci. Test: „kdyby AI zmizela, uměl bych to sám?"</li>
+    <li><span class="num">spirála</span>AI funguje → přestaneš ověřovat → dovednost zakrňuje → věrohodná chyba projde a neumíš ji chytit. Odměna hned, náklad odložený → ošetři systémem, ne vůlí.</li>
+    <li><span class="num">kolo, ne vozík</span>AI má zrychlit, ale ať u toho pořád vykonáváš tu dovednost. Vozík tě odveze a svaly ochabnou.</li>
+  </ul>
+</div>
+
+<div class="callout">
+  <div class="callout-label">Přenosný test deskillingu</div>
+  <p>„<strong>Kdyby AI zmizela, uměl bych tenhle krok udělat sám?</strong>"<br>
+  Mechanika → „ano, jen pomaleji" → <strong>v pořádku</strong>.<br>
+  Úsudek → „už si nejsem jistý" → <strong>právě probíhá deskilling</strong> (to je hranice, kterou hlídáš).</p>
+</div>
+
+<!-- 14. Až se tě zeptají -->
+<h2>14 — Až se tě zeptají 🎤</h2>
+
+<p>Ostré dotazy z publika + krátká odpověď s pointou (tučně). Trénuj <em>nahlas</em>, ne čtením.</p>
+
+<div class="qa-item">
+  <p class="qa-q">Námitka „kalkulačka": „Kalkulačku používáme desítky let a nevadí — deskilling je panika."</p>
+  <p class="qa-a">Kalkulačka eroduje <em>ne-nosnou</em> dovednost (počty z hlavy). Nebezpečí AI je eroze <strong>nosných</strong>: čtení kódu, ladění, úsudek. Otázka není „ztrácíme dovednost?", ale <strong>„ztrácíme NOSNOU dovednost?"</strong> — rozlišení je celá pointa.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Námitka „jsem produktivnější": „Když jsem produktivnější, tak se přece nezhoršuju."</p>
+  <p class="qa-a">Produktivita a kompetence se můžou <em>rozejít</em>. Rychlost roste, dovednost pod ní tiše klesá — projeví se, až nástroj selže nebo vyrobí věrohodnou chybu. <strong>Pocit produktivity je právě ten signál, který deskilling maskuje.</strong></p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Námitka „tak AI nepoužívat": „Řešení je nepoužívat AI a dělat všechno ručně."</p>
+  <p class="qa-a">Abstinence je stejná chyba z druhé strany — jako odmítnout kolo ze strachu z lenosti. Řešení je <strong>vědomá delegace</strong>: automatizuj mechaniku, drž si úsudek, nech si prostor procvičovat nosné dovednosti. Metakognice, ne odmítání.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Otázka „co smím delegovat": „Jak poznám, co je bezpečné delegovat?"</p>
+  <p class="qa-a">Mechanika (boilerplate, syntax, formát, hledání v dokumentaci) = čistý zisk. Úsudek (je návrh správný? co testovat? rozumím tomu dost na nasazení?) = riziko. <strong>Test: „kdyby AI zmizela, uměl bych to sám?"</strong></p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Otázka „co chránit": „Které dovednosti si mám hlídat?"</p>
+  <p class="qa-a">Nosné: <strong>čtení cizího kódu</strong> (č. 1), ladění a hledání skutečné příčiny, kritická revize (rozpoznat věrohodný nesmysl), <strong>doménový úsudek</strong> (dává výsledek fyzikální/vědecký smysl?). Ne-nosné klidně pusť.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Manažerská otázka: „Tým dodává rychleji — co je na tom špatně?"</p>
+  <p class="qa-a">Rychlost je reálná, ale měř i to, jestli tým udrží dovednost <em>bez</em> nástroje. Když nikdo neumí odladit incident bez AI, je to organizační riziko. <strong>Deskilling je měřitelný: měř nejen output, ale i kompetenci bez nástroje.</strong></p>
+</div>
+
+<!-- 15. Do kartiček -->
+<h2>15 — Do kartiček 🔁</h2>
+
+<p>Rychlá startovní sada. Zkopíruj blok níž a naimportuj do <a href="https://apps.ankiweb.net/" target="_blank">Anki</a> (oddělovač = středník). Pak pár minut denně.</p>
+
+<div class="callout green">
+  <div class="callout-label">Plná sada je připravená v repu</div>
+  <p>Blok níž je rychlá verze. V repu je <strong>plná sada ~22 kartiček</strong> s podrobnějšími odpověďmi a tématy (jádro, čísla, mechanismus, mechanika vs. úsudek, nosné dovednosti, historie, námitky) — soubor <code>anki/0010-deskilling.txt</code>. Import do Anki na jeden klik, tagy pro procvičování po blocích (<code>tag:historie</code>, <code>tag:mechanismus</code>…). Návod: <code>anki/README.md</code>.</p>
+</div>
+
+<pre class="flashcards">Co je deskilling? ; Postupná ztráta dovednosti proto, že ji za tebe dělá nástroj. Není nový (kalkulačky, GPS, autopilot) — AI ho zrychlila a přesunula z okraje (rutina) do jádra (úsudek).
+Jedno pravidlo deskillingu? ; Automatizuj mechaniku, ne úsudek. Deleguješ psaní → ušetříš čas. Deleguješ porozumění → kupuješ rychlost dnes za neschopnost zítra.
+Přenosný test deskillingu? ; „Kdyby AI zmizela, uměl bych tenhle krok sám?" Mechanika → „ano, jen pomaleji" (OK). Úsudek → „už si nejsem jistý" (deskilling probíhá).
+Jak probíhá spirála deskillingu? ; 1) AI vyrobí věrohodný výstup rychle a většinou správně → 2) přestaneš ověřovat → 3) revizní/ladicí dovednost zakrňuje → 4) věrohodná chyba (1 z 10) projde a neumíš ji chytit.
+Proč se deskilling nedá ubránit vůlí? ; První otáčky spirály fungují: odměna (rychlost) je okamžitá, náklad (zakrnělá dovednost) odložený a neviditelný. Ošetři ho systémem, ne rozhodnutím v momentě.
+Co je bezpečné delegovat (mechanika)? ; Boilerplate, syntax, opakující se test podle vzoru, mechanické formátování/přejmenování, hledání v dokumentaci. Čistý zisk — pořád bys to uměl sám.
+Co je rizikové delegovat (úsudek)? ; Rozhodnout jestli je návrh správný; co se má vlastně testovat; jestli je architektura zdravá; jestli tomu rozumíš dost na nasazení. Půjčka na budoucí kompetenci.
+Které dovednosti jsou nosné (chránit)? ; Čtení cizího kódu (č. 1), ladění a hledání skutečné příčiny, kritická revize (rozpoznat věrohodný nesmysl), doménový úsudek (dává výsledek smysl?).
+Kolo vs. invalidní vozík — co ilustruje? ; AI má být kolo (zrychlí, ale pořád šlapeš a sílíš), ne vozík (odveze tě, svaly ochabnou). Rozdíl: jestli u toho pořád vykonáváš tu dovednost.
+Co je „ironie automatizace" (Bainbridge 1983)? ; Čím víc systém automatizuješ, tím kritičtější a zároveň méně procvičený je lidský operátor, když má zasáhnout. Předpověděla deskilling 40 let před AI.</pre>
+
+<div class="callout green">
+  <div class="callout-label">Rituál</div>
+  <p>Denně pár minut kartičky + jednou týdně lekci „odříkej naostro" prázdné židli, jako bys ji přednášel. A až budeš chtít ostrý test, řekni v Claude Code „vygriluj mě z C3".</p>
+</div>
+
+<!-- 16. Feynmanovo cvičení -->
+<h2>16 — Feynmanovo cvičení</h2>
 
 <div class="quiz" id="quiz-main">
   <div class="quiz-header">Feynmanův test — Deskilling</div>
@@ -406,7 +488,7 @@
 </div>
 
 <!-- 14. Co dál -->
-<h2>14 — Co dál</h2>
+<h2>17 — Co dál</h2>
 
 <p><strong>Co musíš znát před touto lekcí:</strong></p>
 <ul>

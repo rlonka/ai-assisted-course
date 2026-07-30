@@ -1,0 +1,26 @@
+#separator:tab
+#html:false
+#deck:AI-assisted RSE::C3 — Deskilling
+#notetype:Basic
+#tags column:3
+Co je deskilling?	Postupná ztráta dovednosti proto, že ji za tebe dělá nástroj. Není nový (kalkulačky, GPS, autopilot) — AI ho zrychlila a přesunula z okraje (rutina) do jádra (úsudek).	C3 jadro
+Jedno pravidlo deskillingu?	Automatizuj mechaniku, ne úsudek. Deleguješ psaní → ušetříš čas. Deleguješ porozumění → kupuješ rychlost dnes za neschopnost zítra.	C3 jadro
+V čem je nebezpečí deskillingu jemné?	Cítíš se produktivní, zatímco nosné dovednosti (čtení kódu, ladění, revize) tiše zakrňují. Zjistíš to až ve chvíli, kdy je potřebuješ a ony tam nejsou.	C3 jadro
+Přenosný test deskillingu?	„Kdyby AI zmizela, uměl bych tenhle krok udělat sám?" Mechanika → „ano, jen pomaleji" (OK). Úsudek → „už si nejsem jistý" (deskilling probíhá).	C3 jadro
+Jak souvisí 1,7× (New Relic) s deskillingem?	AI kód má 1,7× víc issues → revizní dovednost je kritičtější než dřív, přesně když ji AI eroduje. Dvě strany mince s trust gapem (C4): víc chyb + míň schopnosti je chytat.	C3 cisla
+Je deskilling měřitelný, nebo dojem?	Měřitelný. Anthropic i další měří dopad AI na dovednosti: krátkodobě roste rychlost, dlouhodobě u těch, kdo přestanou rozhodovat, klesá schopnost chybu odhalit.	C3 cisla
+Jak probíhá spirála deskillingu?	1) AI vyrobí věrohodný výstup rychle a většinou správně → 2) přestaneš ověřovat (revize se zdá zbytečná) → 3) revizní/ladicí dovednost zakrňuje → 4) věrohodná chyba (1 z 10) projde a ty ji už neumíš chytit.	C3 mechanismus
+Proč se deskilling nedá ubránit vůlí?	První otáčky spirály fungují: odměna (rychlost) je okamžitá, náklad (zakrnělá dovednost) odložený a neviditelný. Proto ho musíš ošetřit systémem, ne rozhodnutím v momentě.	C3 mechanismus
+Co je bezpečné delegovat (mechanika)?	Boilerplate, syntax, opakující se test podle vzoru, mechanické formátování/přejmenování, hledání v dokumentaci. Čistý zisk — pořád bys to uměl sám.	C3 mechanika-usudek
+Co je rizikové delegovat (úsudek)?	Rozhodnout, jestli je návrh správný; co se má vlastně testovat; jestli je architektura zdravá; jestli tomu rozumíš dost na nasazení. Půjčka na budoucí kompetenci.	C3 mechanika-usudek
+Které dovednosti jsou nosné (chránit)?	Čtení cizího kódu (č. 1), ladění a hledání skutečné příčiny, kritická revize (rozpoznat věrohodný nesmysl), doménový úsudek (dává výsledek fyzikální/vědecký smysl?).	C3 dovednosti
+Kolo vs. invalidní vozík — co ilustruje?	AI má být kolo (zrychlí, ale pořád šlapeš a sílíš), ne vozík (odveze tě, svaly ochabnou). Rozdíl: jestli u toho pořád vykonáváš tu dovednost, nebo ji předáváš.	C3 dovednosti
+Co je „ironie automatizace" (Bainbridge 1983)?	Čím víc systém automatizuješ, tím kritičtější a zároveň méně procvičený je lidský operátor, když má zasáhnout. Klasická studie, která předpověděla deskilling 40 let před AI.	C3 historie
+Air France 447 (2009) — co ukázalo?	Piloti zvyklí na autopilota nedokázali ručně ustát letadlo, když automatika vypadla. Tragický důkaz, že nosnou dovednost nelze „mít v záloze" bez procvičování.	C3 historie
+Braverman (1974) — deskilling jako co?	Oddělení „conception" (rozhodování) od „execution" (vykonávání). AI riskuje totéž u vývojáře: necháš si execution, ztratíš conception — nebo naopak, a v tom je celý rozdíl.	C3 historie
+Námitka „kalkulačka taky a nevadí" — odpověď?	Kalkulačka eroduje NE-nosnou dovednost (počty z hlavy). Nebezpečí AI je eroze NOSNÝCH (čtení kódu, ladění, úsudek). Otázka: ztrácíme NOSNOU dovednost? Rozlišení je celá pointa.	C3 namitky
+Námitka „když jsem produktivnější, nezhoršuju se" — odpověď?	Produktivita a kompetence se rozejdou. Rychlost roste, dovednost pod ní tiše klesá. Projeví se, až nástroj selže. Pocit produktivity deskilling maskuje.	C3 namitky
+Námitka „řešení je nepoužívat AI" — odpověď?	Abstinence je stejná chyba z druhé strany (jako odmítnout kolo ze strachu z lenosti). Řešení: vědomá delegace — automatizuj mechaniku, drž úsudek, procvičuj nosné dovednosti. Metakognice, ne odmítání.	C3 namitky
+Spicy teze C3?	Deskilling neudělá z vědce hlupáka — udělá z něj člověka, co se cítí kompetentní, dokud nezáleží. Nejnebezpečnější je ten, kdo AI umí tak dobře, že neví, co by uměl bez ní — a neví ani, že to neví.	C3 namitky
+Jak C3 souvisí s C4 (trust gap)?	Dvě strany mince. Deskilling ničí schopnost ověřit; trust gap je to, co pak zaplní prázdno (věříš, protože už neumíš prověřit). Víc chyb (1,7×) + míň schopnosti je chytat.	C3 propojeni
+Jak C3 souvisí s blokem B a A1?	Blok B dává sílu (memory/skills/hooks/MCP/subagenty); deskilling je cena za delegování úsudku místo mechaniky. A1: testy jsou externí kotva proti erozi úsudku (červený test drží pravdu mimo tvou hlavu).	C3 propojeni
