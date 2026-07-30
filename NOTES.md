@@ -54,14 +54,15 @@ Cíl: aby Radek uměl ustát živé Q&A, ne jen text přečíst. Tři nové sekc
 - C3 (0010) Deskilling: retenční vrstva (13 Páteř/14 Q&A/15 kartičky, Feynman→16, Co dál→17), Anki 21 kartiček (Bainbridge 1983, AF447, Braverman 1974, kolo vs. vozík). Bez slovníčku.
 - C2 (0012) Reprodukovatelnost: retenční vrstva (12 Páteř/13 Q&A/14 kartičky, Feynman→15, Co dál→16), Anki 25 kartiček (žebřík rung 0–4, skok 2→3, /reproduce = rung 4 skill B4 + Stop hook B5, Claerbout&Donoho 90. léta). Páteř: „proces, ne výsledek" / „binární test" / „/reproduce". Bez slovníčku.
 - C1 (0013) FAIR4RS: retenční vrstva (13 Páteř/14 Q&A/15 kartičky, Feynman→16, Co dál→17), Anki 23 kartiček (F→A→I→R pořadí, FAIR≠Open, LICENSE=minimum, machine-actionable/B6, CITATION.cff, Wilkinson 2016/Chue Hong 2022). Páteř: „F→A→I→R" / „FAIR ≠ Open" / „strojová potrava". Bez slovníčku (lekce má vlastní myth/callout výklad FAIR≠Open).
-- Pořadí: C4 → C3 → C2 → C1 → C5. Hotovo C4/C3/C2/C1, zbývá C5. Struktura: C4/C2/C5 mají 13 sekcí (Feynman 12); C1/C3 mají 14 (Feynman 13 → retenční 13/14/15, Feynman→16, Co dál→17).
+- C5 (0014) Vědecký vs. produkční SW: retenční vrstva (12 Páteř/13 Q&A/14 kartičky, Feynman→15, Co dál→16), Anki 23 kartiček (dvě řemesla, nebezpečná zóna, 4 otázky prototyp/produkt, Brooks 9×, AI podlaha/objem/úsudek, návaznost na A3 akcidentální/esenciální). Páteř: „dvě řemesla" / „nebezpečná zóna" / „Brooks 9×". Bez slovníčku.
+- Pořadí: C4 → C3 → C2 → C1 → C5. **BLOK C KOMPLETNÍ** (2026-07-30): všech 5 lekcí (C1–C5) má Páteř/Q&A/kartičky/Anki. Bez slovníčku (blok C má vlastní výkladové callouty/tabulky). Struktura: C4/C2/C5 mají 13 sekcí (Feynman 12); C1/C3 mají 14 (Feynman 13 → retenční 13/14/15, Feynman→16, Co dál→17).
 
 ## Blok B doplnění (probíhá 2026-07-28)
 - B2 (0004): retenční vrstva bez slovníčku (5 vrstev už vizualizované). Sekce 10 Páteř / 11 Q&A / 12 kartičky, Feynman→13, Co dál→14. Anki: 20 kartiček.
 - BLOK B KOMPLETNÍ v retenčním balíku (2026-07-28): B1(27), B2(20), B3(20), B4(20), B5(20), B6(20), B7(22). Všechny mají Páteř/Q&A/kartičky/Anki. Slovníček jen B1 (harness/guardrails); ostatní B už měly dost terminologie.
 
 ## Retenční balík — stav pokrytí (lekce s Páteř+Q&A+kartičky+Anki)
-- Hotovo: A1 (24), A2 (26), A3 (37), A4 (26), A5 (26) = celý blok A; B1 (27), B8 (26), B9 (25). Zbývá ~15 lekcí (blok C 5, blok D 5, B2–B7 6).
+- Hotovo: A1 (24), A2 (26), A3 (37), A4 (26), A5 (26) = celý blok A; celý blok B B1–B9 (B1 27, B2 20, B3 20, B4 20, B5 20, B6 20, B7 22, B8 26, B9 25); celý blok C C1 (23), C2 (25), C3 (21), C4 (23), C5 (23). Zbývá už jen blok D (D1–D5): 0018 context-engineering, 0019 verifikace-code-review, 0020 bezpečnost-citliva-data, 0021 licence-provenance-autorstvi, 0022 zavadeni-v-tymu.
 - Pozn.: slovníček přidávat jen tam, kde jsou cizí/abstraktní pojmy (A2/A5 ne, A4 ano). U zralejších lekcí retenční vrstvu vkládat před Feynmana a přečíslovat.
 
 ## Curriculum state

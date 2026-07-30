@@ -355,8 +355,90 @@
   </li>
 </ul>
 
-<!-- 12. Feynmanovo cvičení -->
-<h2>12 — Feynmanovo cvičení</h2>
+<!-- 12. Páteř -->
+<h2>12 — Páteř 🎯</h2>
+
+<p>Jádro nastudeno — jedna věta, ze které odvodíš skoro cokoli, a tři kotvy, co si držíš. Když zamrzneš, vrať se sem.</p>
+
+<div class="spine">
+  <p class="spine-sentence">Vědecký a produkční software jsou <strong>dvě různá řemesla s jinými cíli</strong>, ne dvě úrovně kvality téhož. Otázka není „je to kvalitní?", ale „kvalitní <em>na co</em>?". Klíčová dovednost není psát dokonalý kód, ale <strong>vědět, který druh právě píšeš</strong> — a přehodnotit to, když se to změní. Past číhá oběma směry; ta zákeřnější je tichý přechod prototypu v páteř.</p>
+  <ul class="spine-anchors">
+    <li><span class="num">dvě řemesla</span>Ne dvě úrovně kvality. Vědecký = správný vědecky + reprodukovatelný (žije paper). Produkční = spolehlivý + udržovatelný (žije roky). Přehnané inženýrství vědy = plýtvání; podceněné inženýrství páteře = časovaná bomba.</li>
+    <li><span class="num">nebezpečná zóna</span>Tichý přechod věda→produkce: prototyp na týden začne používat skupina, stojí na něm grant — a pořád nula testů/dokumentace. Nikdo neřekl „tohle je teď páteř". Rozhoduj průběžně: kolikrát poběží? kdo to spustí? co když tiše selže?</li>
+    <li><span class="num">Brooks 9×</span>Program → systémový produkt = ~9× víc úsilí (Mythical Man-Month, 1975). AI zvedá podlahu (akcidentální plumbing zlevnilo → i prototyp zaslouží LICENSE+README+repro), ale strop a úsudek „kolik kód zaslouží" zůstává na tobě (esenciální, A3).</li>
+  </ul>
+</div>
+
+<div class="callout">
+  <div class="callout-label">Přenosný test „prototyp, nebo produkt?"</div>
+  <p>„<strong>Kolikrát to poběží, kdo to spustí kromě mě, a co se stane, když to tiše selže?</strong>"<br>
+  Jednou / nikdo / nic → <strong>prototyp</strong> (nettestuj na 100 %, jen levné minimum).<br>
+  Pořád / cizí lidé / padne grant nebo služba → <strong>produkt</strong> (aspoň FAIR + reprodukovatelnost, vědomě povýšeno).</p>
+</div>
+
+<!-- 13. Až se tě zeptají -->
+<h2>13 — Až se tě zeptají 🎤</h2>
+
+<p>Ostré dotazy z publika + krátká odpověď s pointou (tučně). Trénuj <em>nahlas</em>, ne čtením.</p>
+
+<div class="qa-item">
+  <p class="qa-q">Provokace „vědci to neumí": „Vědecký kód je prostě nekvalitní produkční kód — vědci to jen nedělají pořádně."</p>
+  <p class="qa-a">Je to <em>jiný druh</em> s jinými cíli, ne horší verze téhož. Vědecký kód optimalizuje na rychlost objevu a vědeckou validitu, ne na dostupnost a udržovatelnost. <strong>Kvalita se měří vůči účelu, ne vůči jedné univerzální šabloně.</strong> Aplikovat produkční standardy na explorativní skript je stejná chyba jako opačně.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Námitka „teď už je inženýrství levné": „Když AI zlevnila testy a CI, měl by být všechen vědecký kód produkčně tvrdý."</p>
+  <p class="qa-a"><strong>Podlaha se zvedla, ale strop se nezměnil.</strong> Skript, co jednou běží a umře, pořád nepotřebuje mikroslužby — levné inženýrství neznamená povinné inženýrství. AI zlevnila přechod, ne zrušila rozdíl. Přehnané inženýrství vědy je pořád chyba, teď jen lákavější, protože je levnější.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Zjednodušení „rozhodnu jednou": „Na začátku určím, jestli je to prototyp nebo produkt, a mám klid."</p>
+  <p class="qa-a">Rozhodnutí není jednorázové — je to <em>průběžná ostražitost</em>. Nejnebezpečnější je tichý přechod prototypu v páteř, který nikdo neoznačil. <strong>Bomba nevybuchne z prvního rozhodnutí, ale z toho, že se nikdy nepřehodnotilo.</strong> Ptej se periodicky „je tohle pořád prototyp?" a když ne, vědomě povyš.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Výmluva vědce: „Je to jen prototyp, na testy a dokumentaci nemám čas."</p>
+  <p class="qa-a">Dokud je to opravdu prototyp (jednou běží, jen ty, tiché selhání = nic), máš pravdu — netestuj na 100 %. Ale levné minimum si zaslouží i on: připnuté prostředí, README, jeden regenerující příkaz (C2). <strong>To dnes udělá agent za zlomek ceny</strong> — a chrání tě, až se skript tiše stane páteří.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Otázka o Brooksovi: „Proč prý produkt stojí 9× víc než program, co běží?"</p>
+  <p class="qa-a">Brooks (1975): program (1×) → programový produkt (+testy, dokumentace, obecnost, cizí vstupy = 3×) → systémový produkt (+ integrace = 9×). <strong>Kdo čeká produkční spolehlivost za cenu prototypu, počítá s 1× a dostane 9× účet.</strong> AI zlevnila akcidentální část toho násobku, ne esenciální.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Manažerská otázka: „Jak poznám, že máme skrytý problém?"</p>
+  <p class="qa-a">Zeptej se ne „máme software?", ale „<strong>který náš software je ve skutečnosti páteř — a chováme se k němu tak?</strong>" Klasický vzor: klíčový nástroj napsal student, co za rok odchází, a nikdo jiný ho neumí spustit. To je nezaplacený technický dluh na kódu, který všichni brali jako prototyp. AI dělá povýšení levným — výmluva „nebyl čas" už neobstojí.</p>
+</div>
+
+<!-- 14. Do kartiček -->
+<h2>14 — Do kartiček 🔁</h2>
+
+<p>Rychlá startovní sada. Zkopíruj blok níž a naimportuj do <a href="https://apps.ankiweb.net/" target="_blank">Anki</a> (oddělovač = středník). Pak pár minut denně.</p>
+
+<div class="callout green">
+  <div class="callout-label">Plná sada je připravená v repu</div>
+  <p>Blok níž je rychlá verze. V repu je <strong>plná sada ~23 kartiček</strong> s podrobnějšími odpověďmi a tématy (jádro, rozdíly, past, nebezpečná zóna, Brooks, AI, historie, námitky) — soubor <code>anki/0014-vedecky-vs-produkcni-sw.txt</code>. Import do Anki na jeden klik, tagy pro procvičování po blocích (<code>tag:zona</code>, <code>tag:brooks</code>…). Návod: <code>anki/README.md</code>.</p>
+</div>
+
+<pre class="flashcards">Vědecký vs. produkční SW — hlavní teze? ; Dvě různá řemesla s jinými cíli, ne dvě úrovně kvality téhož. Vědecký kód zodpovídá otázku (žije paper), produkční spolehlivě slouží (žije roky). Optimalizují na jiné věci.
+Jedno pravidlo? ; Otázka není „je ten kód kvalitní?", ale „kvalitní NA CO?". Nároč na kód to, co jeho účel vyžaduje — ne víc, ne míň. Klíčová dovednost = vědět, který druh právě píšeš.
+Jaké jsou dvě pasti (obě směry)? ; 1) Přehnané inženýrství vědy (Kubernetes pro skript na 3 běhy = plýtvání). 2) Podceněné inženýrství páteře (prototyp bez testů, na kterém stojí tři papery = časovaná bomba). Ta druhá je zákeřnější, protože přichází plíživě.
+Co je „nebezpečná zóna"? ; Tichý přechod věda→produkce: prototyp na týden začne používat kolega, pak skupina, pak na něm stojí grant — a pořád nula testů/dokumentace/jeden člověk. Nikdo neoznačil ten přechod.
+4 otázky „prototyp, nebo produkt"? ; 1) Kolikrát poběží? (jednou→prototyp, pořád→produkt) 2) Kdo to spustí kromě mě? 3) Co když tiše selže? (nic vs. padne grant) 4) Stojí na tom výsledek do světa? (ano→aspoň FAIR+repro). Přehodnoť, když se to změní.
+Brooksovo pravidlo 9× (1975)? ; Program (1×) → programový produkt (+testy/dok/obecnost/cizí vstupy = 3×) → systémový produkt (+integrace = 9×). Produkt použitelný ostatními stojí ~9× víc než program, co běží jen tobě.
+Jak AI posouvá kompromis (3 věci)? ; 1) Podlaha se zvedá (plumbing levné → i prototyp zaslouží LICENSE+README+repro). 2) Objem roste (víc prototypů → nebezpečná zóna se plní rychleji). 3) Úsudek důležitější (rozhodnutí „kolik zaslouží" se zostřuje, nemizí).
+Návaznost na A3 (No Silver Bullet)? ; AI seká AKCIDENTÁLNÍ komplexitu (plumbing, boilerplate, testy → zvedá podlahu). ESENCIÁLNÍ komplexitu vědy (je ten model správně? ptá se analýza na správnou věc?) neseká vůbec — podstata zůstává na tobě.
+Námitka „vědecký kód je nekvalitní produkční" — odpověď? ; Jiný druh s jinými cíli, ne horší verze téhož. Optimalizuje na rychlost objevu a validitu, ne na dostupnost. Kvalita se měří vůči účelu, ne vůči univerzální šabloně. Produkční standardy na explorativní skript = stejná chyba jako opačně.
+Spicy teze C5? ; Nejnebezpečnější software je „prototyp", na kterém běží produkce. Každá laborka jeden má — skript na týden drží tři granty a umí ho spustit jediný odcházející člověk. Není to selhání kompetence, ale pojmenování. Levné psaní kódu ≠ levné vlastnictví kódu.</pre>
+
+<div class="callout green">
+  <div class="callout-label">Rituál</div>
+  <p>Denně pár minut kartičky + jednou týdně lekci „odříkej naostro" prázdné židli, jako bys ji přednášel. A až budeš chtít ostrý test, řekni v Claude Code „vygriluj mě z C5".</p>
+</div>
+
+<!-- 15. Feynmanovo cvičení -->
+<h2>15 — Feynmanovo cvičení</h2>
 
 <div class="quiz" id="quiz-main">
   <div class="quiz-header">Feynmanův test — Vědecký vs. produkční software</div>
@@ -417,7 +499,7 @@
 </div>
 
 <!-- 13. Co dál -->
-<h2>13 — Co dál</h2>
+<h2>16 — Co dál</h2>
 
 <p><strong>Co musíš znát před touto lekcí:</strong></p>
 <ul>
