@@ -184,7 +184,89 @@
   <li><a href="https://queue.acm.org/detail.cfm?id=3454124" target="_blank">The Fagan Inspection a historie code review (ACM Queue)</a><span class="why">Proč: Kontext — proč review jako disciplína existuje 50 let a proč se najití chyby při čtení vyplácí. Ukotvení, že AI review nevynalezla, jen zostřila.</span></li>
 </ul>
 
-<h2>12 — Feynmanovo cvičení</h2>
+<h2>12 — Páteř 🎯</h2>
+
+<p>Jádro nastudeno — jedna věta, ze které odvodíš skoro cokoli, a tři kotvy, co si držíš. Když zamrzneš, vrať se sem.</p>
+
+<div class="spine">
+  <p class="spine-sentence">Verifikace = prokázat, že kód dělá <strong>správnou věc správně</strong> — ne že to tak <em>vypadá</em>. Když AI zlevnila psaní, úzké hrdlo se přesunulo na ověřování → review přestal být zdvořilost a stal se <strong>povinnou, nepřeskočitelnou vrstvou</strong>. A review AI kódu se dělá jinak: <strong>nesmíš odeslat kód, kterému nerozumíš</strong> — bez ohledu na to, kdo (nebo co) ho napsal.</p>
+  <ul class="spine-anchors">
+    <li><span class="num">sebejistota není signál</span>AI výstup je vždy uhlazený a sebejistý — když je správně i když halucinuje neexistující API (C4). Člověk nejistotu dá najevo, model nikdy. Ověřuj chování a existenci volaných věcí, ne dojem z formátování.</li>
+    <li><span class="num">ownership</span>Jakmile kód odešleš, je tvůj se vším, co dělá. „Napsala to AI" není obhajoba — u reviewera, v produkci ani v článku. Odpovědnost se přenosem na nástroj neředí. A kdo ověřuje s porozuměním, brání se i deskillingu (C3).</li>
+    <li><span class="num">zelená ≠ důkaz</span>Model, který napsal chybný kód, umí napsat i test, který tu chybu posvětí. Zkontroluj i testy a měj aspoň jeden, který drží <em>známý</em> výsledek. Nezkontrolovaná zelená je dvakrát nezkontrolovaný předpoklad.</li>
+  </ul>
+</div>
+
+<div class="callout">
+  <div class="callout-label">Přenosný test „zreviewoval jsem, nebo jen schválil?"</div>
+  <p>„<strong>Umím tenhle kód obhájit řádek po řádku — a spustil jsem ho na datech, kde znám odpověď?</strong>"<br>
+  Ano → <strong>zreviewováno</strong> (převzal jsi vlastnictví).<br>
+  „Vypadá dobře / prošly testy / model zní jistě" → jen <strong>schváleno</strong>, ne zreviewováno (schválení bez porozumění je pomalejší způsob, jak přijmout chybu).</p>
+</div>
+
+<!-- 13. Až se tě zeptají -->
+<h2>13 — Až se tě zeptají 🎤</h2>
+
+<p>Ostré dotazy z publika + krátká odpověď s pointou (tučně). Trénuj <em>nahlas</em>, ne čtením.</p>
+
+<div class="qa-item">
+  <p class="qa-q">Sebeklam „testy jsou zelené": „AI napsala kód i testy, testy prošly — tak je to ověřené."</p>
+  <p class="qa-a">Zelená je důkaz jen tehdy, když víš, že test testuje <em>správnou věc</em>. Tentýž model, co napsal chybu, umí napsat test, který ji posvětí — chyba a její „důkaz" pak souhlasí. <strong>Zkontroluj i testy a měj aspoň jeden, který drží nezávisle známý výsledek.</strong> Nezkontrolovaná zelená je dvakrát nezkontrolovaný předpoklad.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Námitka „vypadá to čistě": „Kód je uhlazený a sebejistý, takže je nejspíš správně."</p>
+  <p class="qa-a">Sebejistota AI výstupu je <em>konstantní</em> — vypadá stejně uhlazeně, když je správně i když halucinuje neexistující funkci knihovny. <strong>Vzhled proto není signál kvality (C4).</strong> Ověřuješ chování a existenci volaných věcí, ne dojem z formátování. Kdo hledá důvod diff schválit, prohrál; ověřuje jen ten, kdo hledá, čím ho rozbít.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Vyvlékání z odpovědnosti: „Tu chybu jsem nezpůsobil já, kód napsala AI."</p>
+  <p class="qa-a">V okamžiku, kdy kód odešleš, je tvůj — se vším, co dělá. „Napsala to AI" neobstojí u reviewera, v produkci ani v článku. <strong>Odpovědnost se přenosem na nástroj neředí.</strong> Standard: rozumět odesílanému kódu tak, jako bys ho napsal — protože z hlediska odpovědnosti jsi ho napsal. Proto: nerozumíš-li tomu, neodesílej to.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Manažerská past: „AI zvýšila produktivitu o 40 %."</p>
+  <p class="qa-a">Správná otázka: „<strong>Vzrostla úměrně i kapacita na verifikaci?</strong>" Když se kód generuje rychleji, než ho tým stíhá ověřit, nevzniká zrychlení — vzniká fronta nezvěřeného rizika. Rychlost se měří v <em>ověřeném</em> kódu, ne vygenerovaném. Řádky za den jsou anti-metrika (A5).</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Výmluva „nemám na to čas": „AI vygeneruje tolik kódu, že to nejde všechno poctivě reviewovat."</p>
+  <p class="qa-a">Tak žádej <strong>malé diffy</strong>: co nepřečteš celé, nezreviewuješ. Velký diff se nedá poctivě ověřit — a schválit ho znamená přijmout riziko naslepo. Nezvládnutelný objem není důvod ověřování vypustit, ale signál zpomalit generování na tempo, které stíháš ověřit. Nezvěřený kód není hotový kód.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Námitka „review zpomaluje": „AI má přece zrychlovat — review jde proti tomu."</p>
+  <p class="qa-a">Úzké hrdlo se přesunulo z <em>psaní</em> na <em>ověřování</em> — dřív bylo vzácné napsat kód, dnes je vzácné vědět, že je správný. Review, který přeskočíš, protože kód vypadá dobře, je přesně ten, který jsi nejvíc potřeboval. <strong>„Fungující" znamená ověřené, ne vygenerované</strong> (A5). Přeskočený review není úspora času — je to odložená chyba.</p>
+</div>
+
+<!-- 14. Do kartiček -->
+<h2>14 — Do kartiček 🔁</h2>
+
+<p>Rychlá startovní sada. Zkopíruj blok níž a naimportuj do <a href="https://apps.ankiweb.net/" target="_blank">Anki</a> (oddělovač = středník). Pak pár minut denně.</p>
+
+<div class="callout green">
+  <div class="callout-label">Plná sada je připravená v repu</div>
+  <p>Blok níž je rychlá verze. V repu je <strong>plná sada ~23 kartiček</strong> s podrobnějšími odpověďmi a tématy (jádro, AI vs. lidský review, co ověřovat, techniky, ownership, historie, námitky) — soubor <code>anki/0019-verifikace-code-review.txt</code>. Import do Anki na jeden klik, tagy pro procvičování po blocích (<code>tag:ownership</code>, <code>tag:techniky</code>…). Návod: <code>anki/README.md</code>.</p>
+</div>
+
+<pre class="flashcards">Co je verifikace v AI-assisted vývoji? ; Krok, kterým prokážeš, že to, co model vyprodukoval, skutečně dělá správnou věc správně — ne že to tak vypadá. Není to volitelná fáze na konci, ale nejdůležitější práce, kterou děláš.
+Jedno pravidlo verifikace? ; Nesmíš odeslat kód, kterému nerozumíš — bez ohledu na to, kdo (nebo co) ho napsal. Když ho nechápeš natolik, abys ho uměl obhájit řádek po řádku, nezreviewoval jsi ho; jen jsi ho schválil.
+Proč je review AI kódu jiný než review od kolegy? ; 1) Není koho se zeptat na „proč" (záměr rekonstruuješ sám). 2) Objem je obrovský, snadno víc, než stíháš ověřit. 3) Výstup je vždy uhlazený a sebejistý, i když je špatně. Sebejistota je konstantní, ne signál.
+Proč „vypadá to sebejistě" není důkaz správnosti? ; Model vygeneruje neexistující funkci knihovny se stejnou elegancí jako správný kód. Sebejistota AI výstupu je konstantní (C4) — ověřuješ chování a existenci volaných věcí, ne dojem z formátování.
+Šest otázek na každý diff? ; 1) Dělá to správnou věc (řeší zadaný problém)? 2) Dělá to tu věc správně (okraje, jednotky)? 3) Existuje všechno, co volá (halucinované API)? 4) Mluví to jazykem domény (A4)? 5) Prokazuje to test (A1)? 6) Rozumím tomu natolik, abych to obhájil?
+Proč zelené testy od AI nestačí? ; Model, který napsal chybný kód, umí napsat i test, který tu chybu posvětí. Zkontroluj i testy a měj aspoň jeden, který drží známý výsledek. Nezkontrolovaná zelená je dvakrát nezkontrolovaný předpoklad.
+Techniky, které opravdu ověřují? ; Testy first (A1), malé diffy (co nepřečteš celé, nezreviewuješ), spusť to na datech se známou odpovědí, nech model vysvětlit „proč tenhle řádek", adversariální čtení (hledej, čím to rozbít), druhý agent na nezávislý review (subagenti).
+Co je ownership u AI kódu? ; Za AI-generovaný kód neseš odpovědnost stejně, jako bys ho napsal sám. „Napsala to AI" není obhajoba — u reviewera, v produkci ani v článku. Jakmile to odešleš, je to tvůj podpis pod správností. Odpovědnost se přenosem na nástroj neředí.
+Manažerská otázka na „AI zrychlila vývoj o 40 %"? ; „Vzrostla úměrně i kapacita na verifikaci?" Když se kód generuje rychleji, než ho tým ověří, nevzniká zrychlení, ale fronta nezvěřeného rizika. Rychlost se měří v ověřeném kódu, ne vygenerovaném.
+Spicy teze D2? ; Review, který přeskočíš, protože kód vypadá dobře, je přesně ten, který jsi nejvíc potřeboval. AI nezhoršila kvalitu kódu — zhoršila kvalitu SIGNÁLŮ, podle kterých kvalitu odhadujeme. Ověřuje jen ten, kdo hledá, čím to rozbít, ne důvod to schválit.</pre>
+
+<div class="callout green">
+  <div class="callout-label">Rituál</div>
+  <p>Denně pár minut kartičky + jednou týdně lekci „odříkej naostro" prázdné židli, jako bys ji přednášel. A až budeš chtít ostrý test, řekni v Claude Code „vygriluj mě z D2".</p>
+</div>
+
+<!-- 15. Feynmanovo cvičení -->
+<h2>15 — Feynmanovo cvičení</h2>
 
 <div class="quiz" id="quiz-main">
   <div class="quiz-header">Feynmanův test — Verifikace a code review</div>
@@ -240,7 +322,7 @@
   <div class="quiz-score" id="quiz-score"></div>
 </div>
 
-<h2>13 — Co dál</h2>
+<h2>16 — Co dál</h2>
 
 <p><strong>Co musíš znát před touto lekcí:</strong></p>
 <ul>

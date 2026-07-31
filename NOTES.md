@@ -57,6 +57,10 @@ Cíl: aby Radek uměl ustát živé Q&A, ne jen text přečíst. Tři nové sekc
 - C5 (0014) Vědecký vs. produkční SW: retenční vrstva (12 Páteř/13 Q&A/14 kartičky, Feynman→15, Co dál→16), Anki 23 kartiček (dvě řemesla, nebezpečná zóna, 4 otázky prototyp/produkt, Brooks 9×, AI podlaha/objem/úsudek, návaznost na A3 akcidentální/esenciální). Páteř: „dvě řemesla" / „nebezpečná zóna" / „Brooks 9×". Bez slovníčku.
 - Pořadí: C4 → C3 → C2 → C1 → C5. **BLOK C KOMPLETNÍ** (2026-07-30): všech 5 lekcí (C1–C5) má Páteř/Q&A/kartičky/Anki. Bez slovníčku (blok C má vlastní výkladové callouty/tabulky). Struktura: C4/C2/C5 mají 13 sekcí (Feynman 12); C1/C3 mají 14 (Feynman 13 → retenční 13/14/15, Feynman→16, Co dál→17).
 
+## Blok D doplnění (probíhá 2026-07-31) — pořadí podle pódia
+- Pořadí (schváleno Radkem): D2 → D3 → D5 → D1 → D4. D2/D3 vyvolají nejvíc dotazů z publika. Všechny D lekce mají 13 sekcí (Feynman 12) → retenční 12/13/14, Feynman→15, Co dál→16.
+- D2 (0019) Verifikace a code review: retenční vrstva (12 Páteř/13 Q&A/14 kartičky, Feynman→15, Co dál→16), Anki 23 kartiček (review = povinná vrstva, AI review ≠ lidský, 6 otázek na diff, zelená≠důkaz, ownership, Fagan 1976). Páteř: „sebejistota není signál" / „ownership" / „zelená ≠ důkaz". Bez slovníčku.
+
 ## Blok B doplnění (probíhá 2026-07-28)
 - B2 (0004): retenční vrstva bez slovníčku (5 vrstev už vizualizované). Sekce 10 Páteř / 11 Q&A / 12 kartičky, Feynman→13, Co dál→14. Anki: 20 kartiček.
 - BLOK B KOMPLETNÍ v retenčním balíku (2026-07-28): B1(27), B2(20), B3(20), B4(20), B5(20), B6(20), B7(22). Všechny mají Páteř/Q&A/kartičky/Anki. Slovníček jen B1 (harness/guardrails); ostatní B už měly dost terminologie.
