@@ -5,6 +5,24 @@
 - Styl: přímý, bez omáčky, krátké věty — "příprava na živou přednášku", ne akademický výklad
 - Každá lekce musí mít variantu pro 3 publika: vědec-kodér / RSE vývojář / manažer/PI
 - Feynmanovo cvičení je klíčová součást každé lekce — konkrétní, ne abstraktní
+- Zpětná vazba: **buď kritický a přímý, netlač pozitivitu.** Když je nápad slabý, priorita špatná nebo tvrzení nadsazené, řekni to rovnou — i proti vlastnímu (AI) výstupu. Radek to explicitně chce (2026-07-31).
+
+## Strategie prezentace kurzu (rozhodnuto 2026-07-31)
+Kritický verdikt, se kterým Radek souhlasí: **artefakt předběhl autora.** Kurz existuje,
+expertíza v něm zatím ne. Proto pořadí:
+1. **Naučit se kurz sám** — Anki + „griluj mě", až umět ustát každou lekci naostro.
+2. **Mezitím sbírat reálné poznatky/historky** z praxe (IT4I) — konkrétní průšvihy, čísla, co nefungovalo.
+3. **Odučit interní workshop** pro kolegy na IT4I (reálné publikum, reálná hodnota).
+4. **LinkedIn až POTOM** — zakotvené v tom, co reálně odučil a ověřil, ne v syntéze cizích myšlenek.
+
+Checklist před čímkoli veřejným:
+- Ověřit tvrzení a citace v lekcích (doložit nebo změkčit; viz flag u New Relic statu v A1).
+- Poctivá provenance: kurz vznikl s AI asistencí — přiznat, neprezentovat jako sólo ruční práci (ironicky = lekce D4).
+- Odlišit se reálnou zkušeností — bez ní jsou posty „chytré shrnutí diskurzu", ne hlas praktika.
+
+LinkedIn kampaň: **deprioritizováno, nejslabší a nejrizikovější část.** Byl to brainstorming.
+Drafty (6 postů, EN, position-building) jen lokálně v `linkedin-posts/`
+(gitignored přes `.git/info/exclude`, nepushuje se na remote). Časem fajn, teď ne priorita.
 
 ## Retenční vrstva (vzor pro všechny lekce — přidáno 2026-07-27)
 Cíl: aby Radek uměl ustát živé Q&A, ne jen text přečíst. Tři nové sekce před Feynmanovým cvičením:
