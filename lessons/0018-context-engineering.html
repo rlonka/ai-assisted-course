@@ -204,7 +204,89 @@
   <li><a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview" target="_blank">Claude — prompt engineering overview (Anthropic docs)</a><span class="why">Proč: Praktická referenční příručka k tomu, jak zadávat úkoly konkrétně a s příklady. Nutné minimum pro každodenní práci.</span></li>
 </ul>
 
-<h2>12 — Feynmanovo cvičení</h2>
+<h2>12 — Páteř 🎯</h2>
+
+<p>Jádro nastudeno — jedna věta, ze které odvodíš skoro cokoli, a tři kotvy, co si držíš. Když zamrzneš, vrať se sem.</p>
+
+<div class="spine">
+  <p class="spine-sentence">Context engineering = cílené sestavení toho, co model <strong>vidí</strong>, než začne odpovídat. Kvalita výstupu je funkcí <em>obsahu okna</em>, ne chytrých slov — je to <strong>editorská (kurátorská) dřina, ne magie</strong>. Model nedokáže vzít v úvahu, co nemá v kontextu; páka se přesunula z <em>psaní kódu</em> na <em>sestavení kontextu, ze kterého kód vznikne</em>.</p>
+  <ul class="spine-anchors">
+    <li><span class="num">obsah okna, ne slova</span>Nosič kvality není formulace, ale co model vidí. Většina špatných výstupů není chyba modelu — je to chybějící nebo utopený kontext. Než viníš model, ptej se: „vidělo to vůbec všechno, co bylo potřeba?"</li>
+    <li><span class="num">signál, ne objem</span>Okno je vzácný zdroj, ne skladiště. Málo → model si domýšlí (mimo). Moc → podstatné se utopí v balastu (context rot, taky mimo). Cíl: nabít okno signálem — relevantní soubory, ne celé repo.</li>
+    <li><span class="num">vrstvy</span>Trvalé věci (doménový slovník A4, konvence) → CLAUDE.md (B3), ne do každého promptu. Jednorázové (tenhle úkol, formát, příklad) → zadání. Dobrý kontext = prevence trust gapu (C4); správnost potvrdí až verifikace (D2). Prevence, ne léčba.</li>
+  </ul>
+</div>
+
+<div class="callout">
+  <div class="callout-label">Přenosný test „dal jsem modelu, co potřebuje?"</div>
+  <p>„<strong>Kdyby model dostal jen obsah okna (nečte myšlenky) — měl by přesně relevantní soubor + formát výstupu + doménový termín + příklad?</strong>"<br>
+  Ano → <strong>kurátorováno</strong> (odstranil jsi nejistotu).<br>
+  „Musel by si domyslet formát / co je vlastně výstup / o jakou doménu jde" → <strong>chybí signál</strong> (a model si domyslí = mimo).</p>
+</div>
+
+<!-- 13. Až se tě zeptají -->
+<h2>13 — Až se tě zeptají 🎤</h2>
+
+<p>Ostré dotazy z publika + krátká odpověď s pointou (tučně). Trénuj <em>nahlas</em>, ne čtením.</p>
+
+<div class="qa-item">
+  <p class="qa-q">Hledání zaklínadla: „Existuje kouzelná formulace promptu, kterou když najdu, model bude vždycky dobrý?"</p>
+  <p class="qa-a">Nosič kvality není formulace, ale obsah okna. <strong>Žádné zaklínadlo nenahradí chybějící relevantní soubor nebo doménový termín.</strong> „Chytrá slova" na prázdném kontextu nefungují; obyčejná slova na dobře postaveném kontextu ano. Kdo hledá zaklínadlo, prohrává s tím, kdo prostě dá modelu správný soubor.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Intuice „víc je líp": „Čím víc kontextu dám, tím líp — přiložím rovnou celé repo."</p>
+  <p class="qa-a">Víc není líp — víc <em>signálu</em> je líp. Okno je konečné a každý irelevantní token soupeří o pozornost s tím podstatným. <strong>Vysypání repa je context rot: podstatné se ztratí v balastu</strong> a výsledek se zhorší. Cíl je kurátorství — přesně relevantní soubory, ne všechny. Okno je vzácný zdroj, ne skladiště.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Svalování na model: „Dal mi blbost — ten model je prostě hloupý."</p>
+  <p class="qa-a">Model bere v úvahu jen to, co má v okně (plus trénink). Když mu chybí relevantní soubor, formát nebo doménový termín, <em>domýšlí si</em> — a to plodí chyby. <strong>Než viníš model, ověř kontext: vidělo to vše potřebné?</strong> To je nejlevnější oprava, kterou máš — a většinou ta správná.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Odbytí „to časem odpadne": „Context engineering je jen berlička, než budou modely dost chytré."</p>
+  <p class="qa-a">Ani nejchytřejší model neví, co mu neřekneš — tvoje data, tvou doménu, tvůj cíl. <strong>Sestavení relevantního kontextu je informační problém, ne problém inteligence modelu.</strong> Čím schopnější modely, tím větší páka je dát jim správný kontext, ne menší.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Manažerská mylná diagnóza: „Dva lidé, stejný nástroj, různé výsledky — jeden má prostě talent na AI."</p>
+  <p class="qa-a">Neliší se talentem, ale <strong>dovedností kurátorovat kontext</strong>. Praktický dopad: investice do sdíleného CLAUDE.md a doménového slovníku (A4) zvedne výstup celého týmu víc než upgrade modelu. Context engineering je týmová infrastruktura, ne individuální trik.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Záměna prevence za záruku: „Když postavím dobrý kontext, nemusím pak ověřovat, ne?"</p>
+  <p class="qa-a">Dobrý kontext dramaticky sníží počet chyb, které vůbec vzniknou (míň domýšlení = míň věrohodných nesmyslů) — ale <strong>nezaručí správnost</strong>. To dělá až verifikace (D2). <em>Context engineering je prevence; review je léčba.</em> Potřebuješ obojí — prevence sníží počet chyb, review chytí ty zbylé.</p>
+</div>
+
+<!-- 14. Do kartiček -->
+<h2>14 — Do kartiček 🔁</h2>
+
+<p>Rychlá startovní sada. Zkopíruj blok níž a naimportuj do <a href="https://apps.ankiweb.net/" target="_blank">Anki</a> (oddělovač = středník). Pak pár minut denně.</p>
+
+<div class="callout green">
+  <div class="callout-label">Plná sada je připravená v repu</div>
+  <p>Blok níž je rychlá verze. V repu je <strong>plná sada ~23 kartiček</strong> s podrobnějšími odpověďmi a tématy (jádro, okno jako zdroj, vrstvy, techniky, proč to teď rozhoduje, historie, námitky) — soubor <code>anki/0018-context-engineering.txt</code>. Import do Anki na jeden klik, tagy pro procvičování po blocích (<code>tag:vrstvy</code>, <code>tag:techniky</code>…). Návod: <code>anki/README.md</code>.</p>
+</div>
+
+<pre class="flashcards">Co je context engineering? ; Disciplína cíleného sestavení toho, co model vidí, než začne odpovídat. Model neví nic o tvém problému kromě tréninku a toho, co je právě teď v kontextovém okně — to druhé je jediné, co ovládáš, a rozhoduje o kvalitě víc než jakákoliv „chytrá" formulace.
+Jedno pravidlo context engineeringu? ; Model nedokáže vzít v úvahu to, co nemá v kontextu. Většina špatných výstupů není chyba modelu — je to chybějící nebo utopený kontext. Než viníš model, zeptej se: „vidělo to vůbec všechno, co bylo potřeba?"
+Proč je „prompt engineering" zavádějící název? ; Evokoval hledání magických frází. Skutečná práce není vymyslet zaklínadlo, ale kurátorství: dostat do okna přesně ty instrukce, kód, doménový jazyk a příklady, které model potřebuje, a nezanést ho šumem. Editorská, ne alchymistická dovednost.
+Proč je kontextové okno vzácný zdroj? ; Je konečné a každý token v něm soupeří o pozornost. Dvě zrcadlová selhání: příliš málo (model nemá klíčovou info a domýšlí si) a příliš mnoho (podstatné se utopí v balastu — „context rot"). Cíl není okno naplnit, ale nabít ho signálem.
+Vrstvy kontextu podle životnosti? ; CLAUDE.md/paměť (trvalá: doménový jazyk, konvence, B3), načtené soubory (relevantní kód/data pro úkol), zadání úkolu (co chceš, formát, omezení, příklady), výsledky nástrojů (zpětná vazba), historie konverzace (roste a časem se sama stává šumem → začni načisto).
+Co patří do CLAUDE.md a co do zadání? ; Trvalé věci (doménový slovník, konvence, „jak tu pracujeme") do CLAUDE.md — jednou, ne do každého promptu. Jednorázové věci (tenhle konkrétní úkol, formát, příklad) do zadání. Plést to plýtvá oknem i časem.
+Techniky, které nabíjejí kontext signálem? ; Buď konkrétní (formát, meze, cíl); dej příklad (jeden vzor vstup→výstup řekne víc než odstavec); odkaž na soubory (ať model čte reálný kód, ne tvůj popis z paměti); dej doménový jazyk (A4); rozděl úkol (menší krok = míň místa pro odbočení).
+Co zanáší kontext šumem? ; Vágní zadání („zlepši to" → model si domyslí cíl); vysypání celého repa (podstatné se utopí); popisování kódu slovy místo načtení (tichá pošta); dlouhá zašuměná historie (radši začni načisto); protichůdné instrukce v jednom okně.
+Proč context engineering teď rozhoduje víc než dřív? ; Když AI píše větší kusy práce, páka se přesouvá z psaní kódu na sestavení kontextu, ze kterého kód vznikne. RSE, který umí kurátorovat kontext, dostane z průměrného modelu lepší výsledky než ten, kdo umí programovat líp, ale krmí model šumem.
+Jak context engineering souvisí s trust gapem (C4) a verifikací (D2)? ; Čím líp je kontext postavený, tím míň si model domýšlí — a domýšlení plodí věrohodně vypadající nesmysly. Dobrý kontext sníží počet chyb, které vzniknou (prevence), ale nezaručí správnost — tu potvrdí až verifikace (léčba). Context engineering je prevence, review je léčba.</pre>
+
+<div class="callout green">
+  <div class="callout-label">Rituál</div>
+  <p>Denně pár minut kartičky + jednou týdně lekci „odříkej naostro" prázdné židli, jako bys ji přednášel. A až budeš chtít ostrý test, řekni v Claude Code „vygriluj mě z D1".</p>
+</div>
+
+<!-- 15. Feynmanovo cvičení -->
+<h2>15 — Feynmanovo cvičení</h2>
 
 <div class="quiz" id="quiz-main">
   <div class="quiz-header">Feynmanův test — Context engineering</div>
@@ -260,7 +342,7 @@
   <div class="quiz-score" id="quiz-score"></div>
 </div>
 
-<h2>13 — Co dál</h2>
+<h2>16 — Co dál</h2>
 
 <p><strong>Co musíš znát před touto lekcí:</strong></p>
 <ul>
