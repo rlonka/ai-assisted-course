@@ -186,7 +186,89 @@
   <li><a href="https://simonwillison.net/series/prompt-injection/" target="_blank">Prompt injection — série Simona Willisona</a><span class="why">Proč: Nejlepší srozumitelné vysvětlení prompt injection a proč u agentů s nástroji nejde snadno vyřešit. Nutné pro pochopení sekce 5.</span></li>
 </ul>
 
-<h2>12 — Feynmanovo cvičení</h2>
+<h2>12 — Páteř 🎯</h2>
+
+<p>Jádro nastudeno — jedna věta, ze které odvodíš skoro cokoli, a tři kotvy, co si držíš. Když zamrzneš, vrať se sem.</p>
+
+<div class="spine">
+  <p class="spine-sentence">Vložit kód nebo data do cloudového modelu = <strong>poslat je třetí straně</strong> (můžou se logovat, uchovávat, trénovat), dokud smlouva neříká výslovně jinak. První otázka vždy: „<strong>smí tahle konkrétní věc opustit náš perimetr?</strong>" Otázka není „AI ano/ne", ale <strong>„která data kam"</strong> — a bezpečnost patří do nástroje, ne do lidské paměti.</p>
+  <ul class="spine-anchors">
+    <li><span class="num">3 koše</span>Volné (veřejný kód, syntetická data → cloud OK) / Podmíněné (interní, anonymizované → jen zero-retention / enterprise smlouva) / Nikdy do cloudu (osobní+medicínská data GDPR, embargo, IP, secrets → jen lokální model, nebo vůbec). Klasifikace se týká i úryvků.</li>
+    <li><span class="num">která data kam</span>AI se s citlivou vědou nevylučuje — jen chce správný nástroj pro správný koš. HPC je pro self-hosted open-weights model ideální: máš kapacitu i perimetr → citlivá data nikam neodejdou a AI je přesto k dispozici. Data residency, air-gap, smluvní režim řeší lokální model.</li>
+    <li><span class="num">do nástroje</span>Pohodlí vložení je okamžité, škoda (GDPR, únik IP) odložená → lidská disciplína ten souboj prohrává. Hook (B5) mechanicky zablokuje odeslání secretů / souborů z citlivých adresářů. A pozor na vstup: prompt injection — text z internetu není příkaz, a agent to sám nepozná (drž ho v guardrailech B1 + verifikuj D2).</li>
+  </ul>
+</div>
+
+<div class="callout">
+  <div class="callout-label">Přenosný test „smí to ven?"</div>
+  <p>„<strong>Kdyby tohle skončilo v logu poskytovatele nebo v tréninkových datech, je to problém?</strong>"<br>
+  Ne (veřejný kód, syntetická data) → <strong>volné</strong>, pošli.<br>
+  Ano / nejsi si jistý → chovej se, jako by ano. <strong>Data, která jednou opustí perimetr, nevrátíš — a log nezapomíná.</strong></p>
+</div>
+
+<!-- 13. Až se tě zeptají -->
+<h2>13 — Až se tě zeptají 🎤</h2>
+
+<p>Ostré dotazy z publika + krátká odpověď s pointou (tučně). Trénuj <em>nahlas</em>, ne čtením.</p>
+
+<div class="qa-item">
+  <p class="qa-q">Bagatelizace „je to jen úryvek": „Vždyť je to jen krátká chybová hláška, na tom přece nezáleží."</p>
+  <p class="qa-a">Klasifikace se týká i úryvků. <strong>Jedno jméno v chybové hlášce je osobní údaj, jeden klíč v konfiguraci je únik, jedna nepublikovaná rovnice je vyzrazené IP.</strong> Velikost není kritérium — obsah ano. Nejčastější reálné úniky jsou drobné, ne celé datasety: chybová hláška s ID pacienta, <code>.env</code> s klíčem, kus dat „na ukázku".</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Falešné dilema: „Pracuju s citlivými daty, takže AI a věda se prostě vylučují."</p>
+  <p class="qa-a">Otázka není „AI ano/ne", ale <strong>„která data kam"</strong>. Volný kód do cloudu, citlivá data do lokálního modelu na clusteru. HPC prostředí je pro self-hosted modely ideální — máš výpočetní kapacitu i perimetr. Pro citlivou vědu je to často jediná cesta, jak AI využít <em>legálně</em>, ne důvod ji zavrhnout.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Naivní důvěra: „Poskytovatel přece nebude trénovat na mých datech ani je číst."</p>
+  <p class="qa-a">Výchozí režim mnoha služeb data loguje a některé je používá ke zlepšování. <strong>„Nebude" platí jen tehdy, když to smlouva výslovně říká</strong> (zero-retention, enterprise) — ne s výchozím účtem. Předpoklad není politika. Znej konkrétní podmínky svého účtu, ne dojem o tom, co „asi" dělají.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Spoléhání na disciplínu: „Stačí, když si dáme pozor, co posíláme."</p>
+  <p class="qa-a">Vložit citlivý úryvek trvá vteřinu a odměna je okamžitá; porušení se ohlásí za rok. <strong>Člověk se unaví a přehlédne; hook ne.</strong> Bezpečnost, která stojí jen na „dej si pozor", není bezpečnost — je to seznam lidí, kteří se ještě nespálili. Postav ji do nástroje: hook (B5) blokuje odeslání secretů a souborů z citlivých adresářů mechanicky.</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Otázka na vstup: „Agent čte issue z GitHubu nebo obsah webu — co se může pokazit?"</p>
+  <p class="qa-a"><strong>Prompt injection:</strong> škodlivé instrukce ukryté v datech, která agent zpracovává, unesou jeho chování (vyzradit soubory, spustit nebezpečný příkaz). Text z internetu <em>není příkaz</em> — a agent to sám nepozná. Obrana: nedůvěřuj datům jako instrukcím, drž agenta v guardrailech (B1) s omezenými právy, a co udělá na základě externího obsahu, ověřuj dvojnásob (D2).</p>
+</div>
+
+<div class="qa-item">
+  <p class="qa-q">Manažerská otázka od etické komise: „Posílají naši lidé data studie do AI?"</p>
+  <p class="qa-a">Bez politiky odpověď neznáš — <strong>a to je samo o sobě riziko.</strong> Zaveď klasifikaci dat (3 koše), schválený seznam nástrojů a režimů, a on-prem model pro citlivé projekty. Rámuj to ne jako zákaz AI, ale jako <em>podmínky, za kterých je AI legální</em>. Metrika není „používáme AI", ale „víme, která naše data kam tečou".</p>
+</div>
+
+<!-- 14. Do kartiček -->
+<h2>14 — Do kartiček 🔁</h2>
+
+<p>Rychlá startovní sada. Zkopíruj blok níž a naimportuj do <a href="https://apps.ankiweb.net/" target="_blank">Anki</a> (oddělovač = středník). Pak pár minut denně.</p>
+
+<div class="callout green">
+  <div class="callout-label">Plná sada je připravená v repu</div>
+  <p>Blok níž je rychlá verze. V repu je <strong>plná sada ~23 kartiček</strong> s podrobnějšími odpověďmi a tématy (jádro, tři koše, HPC omezení, obrana, prompt injection, historie, námitky) — soubor <code>anki/0020-bezpecnost-citliva-data.txt</code>. Import do Anki na jeden klik, tagy pro procvičování po blocích (<code>tag:kose</code>, <code>tag:injection</code>…). Návod: <code>anki/README.md</code>.</p>
+</div>
+
+<pre class="flashcards">Co se stane s kódem/daty vloženými do cloudového modelu? ; Opustí tvůj stroj a putují na server třetí strany, kde se podle podmínek mohou logovat, uchovávat, zpracovávat lidmi nebo použít k tréninku. Výchozí realita, dokud smlouva neříká jinak. „Nebude" platí jen se zero-retention / enterprise smlouvou.
+Jedno pravidlo bezpečnosti? ; Než něco vložíš, zeptej se: „kdyby to skončilo v logu poskytovatele nebo v tréninkových datech, je to problém?" Nejsi si jistý → chovej se, jako by ano. Data, která jednou opustí perimetr, nevrátíš — a log nezapomíná.
+Tři koše klasifikace dat? ; Volné (veřejný kód, syntetická data → cloud OK). Podmíněné (interní kód, anonymizovaná data → jen zero-retention/enterprise smlouva). Nikdy do cloudu (osobní/medicínská data GDPR, embargo, patentovatelné IP, secrets → jen lokální/on-prem model, nebo vůbec).
+Nejčastější reálná chyba úniku? ; Ne poslat celý dataset pacientů (to lidé tuší), ale vložit ÚRYVEK: chybovou hlášku s reálným jménem, konfiguraci s API klíčem, kus dat „na ukázku". Klasifikace se týká i úryvků — jedno jméno v hlášce je pořád osobní údaj.
+Tři HPC/vědecká omezení pro AI? ; Data residency (data nesmí opustit zemi/EU → cloud v USA vyloučen). Air-gapped systémy (utajené clustery bez internetu → cloud fyzicky nedosáhne). Smluvní režim dat (smlouva s partnerem/klinická studie určuje, kdo smí zpracovat — poskytovatel v ní není).
+Proč je HPC ideální pro citlivá data a AI zároveň? ; Má výpočetní kapacitu a perimetr provozovat schopný open-weights model uvnitř → citlivá data nikam neodcházejí a AI je přesto k dispozici. Otázka není „cloud, nebo nic", ale „cloud pro volné, lokální model pro citlivé".
+Co je prompt injection? ; Útok, kdy škodlivé instrukce ukryté v datech, která agent zpracovává (issue, web, komentář v kódu), unesou jeho chování — navedou ho vyzradit soubory nebo spustit nebezpečný příkaz. Text z internetu není příkaz a agent to sám nepozná.
+Obrana proti prompt injection? ; Nedůvěřuj datům jako instrukcím; drž agenta v guardrailech (B1) s omezenými právy; a cokoliv agent udělá na základě externího obsahu, ověřuj dvojnásob (D2). Perimetr práv omezuje škodu, kterou unesený agent nadělá.
+Proč nestačí „dát si pozor" a jak souvisí hooks (B5)? ; Pohodlí vložení je okamžité, škoda odložená (GDPR se ohlásí za rok) — lidská disciplína ten souboj prohrává, každý se jednou unaví. Proto se bezpečnost staví do nástroje: hook (B5) mechanicky zablokuje odeslání secretů či souborů z citlivých adresářů.
+Spicy teze D3? ; Nejnebezpečnější vlastnost AI nástrojů není zákeřnost — je to pohodlí. Vložit hlášku s reálnými daty trvá vteřinu, porušení GDPR se ohlásí za rok. Bezpečnost na „dej si pozor" není bezpečnost — je to jen seznam lidí, kteří se ještě nespálili. Postav ji do nástroje.</pre>
+
+<div class="callout green">
+  <div class="callout-label">Rituál</div>
+  <p>Denně pár minut kartičky + jednou týdně lekci „odříkej naostro" prázdné židli, jako bys ji přednášel. A až budeš chtít ostrý test, řekni v Claude Code „vygriluj mě z D3".</p>
+</div>
+
+<!-- 15. Feynmanovo cvičení -->
+<h2>15 — Feynmanovo cvičení</h2>
 
 <div class="quiz" id="quiz-main">
   <div class="quiz-header">Feynmanův test — Bezpečnost a citlivá data</div>
@@ -242,7 +324,7 @@
   <div class="quiz-score" id="quiz-score"></div>
 </div>
 
-<h2>13 — Co dál</h2>
+<h2>16 — Co dál</h2>
 
 <p><strong>Co musíš znát před touto lekcí:</strong></p>
 <ul>
