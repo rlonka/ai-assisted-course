@@ -44,6 +44,7 @@ poslechu spadne po ~12 minutách. Časy jsou vodítko, ne dogma.
   s **tichou chybou** (prohozené osy / špatná jednotka).
 - Spustíš to na datech, kde **znáš odpověď** → vyjde blbost.
 - Pointa: *„Tohle je celých dalších 82 minut."*
+- 📦 **Hotový balíček:** [`workshop/demo/stupne-radiany/`](workshop/demo/stupne-radiany/README.md) — data, přesný prompt, referenční kontrola, fallback a postup naživo (recept stupně vs. radiány).
 
 > **Interakce:** hlasování rukou před spuštěním — „Kdo by tomuhle výsledku věřil?"
 > **Proč:** informační mezera (Loewenstein) · emoční aktivace · efekt primárnosti — zakládáš vrchol už tady.
@@ -135,8 +136,9 @@ Pět věcí, které rozhodují, jestli to bude živé, nebo uspávající.
 
 Začínáme s v1 a vylepšujeme. Kandidáti na příští verze:
 
-- [ ] **Konkrétní scénáře dem** — přesný prompt + dataset pro studený start a pro
-  Pilíř 2, ať ta „tichá chyba" naživo spolehlivě vyskočí.
+- [x] **Scénář studeného startu** — hotový: [`workshop/demo/stupne-radiany/`](workshop/demo/stupne-radiany/README.md) (recept stupně vs. radiány).
+- [ ] **Další scénáře dem** — Pilíř 1 (vágní vs. kurátorovaný prompt) a Pilíř 2
+  (AI napíše kód i zelené testy s chybou), plus náhradní recept „české CSV".
 - [ ] **Skript řečníka** — co u každého segmentu říct slovo od slova (věty, přechody, pointy).
 - [ ] **Hands-on lab** — jak z těch tří dem udělat cvičení pro delší formát.
 - [ ] **Manažerská / PI větev** — governance a zavádění (D5) pro smíšené publikum.
