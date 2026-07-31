@@ -61,6 +61,7 @@ Cíl: aby Radek uměl ustát živé Q&A, ne jen text přečíst. Tři nové sekc
 - Pořadí (schváleno Radkem): D2 → D3 → D5 → D1 → D4. D2/D3 vyvolají nejvíc dotazů z publika. Všechny D lekce mají 13 sekcí (Feynman 12) → retenční 12/13/14, Feynman→15, Co dál→16.
 - D2 (0019) Verifikace a code review: retenční vrstva (12 Páteř/13 Q&A/14 kartičky, Feynman→15, Co dál→16), Anki 23 kartiček (review = povinná vrstva, AI review ≠ lidský, 6 otázek na diff, zelená≠důkaz, ownership, Fagan 1976). Páteř: „sebejistota není signál" / „ownership" / „zelená ≠ důkaz". Bez slovníčku.
 - D3 (0020) Bezpečnost a citlivá data: retenční vrstva (12 Páteř/13 Q&A/14 kartičky, Feynman→15, Co dál→16), Anki 23 kartiček (3 koše volné/podmíněné/nikdy, klasifikace i úryvků, HPC data residency/air-gap → self-hosted model, prompt injection, hooks B5 do nástroje, GDPR/OWASP). Páteř: „3 koše" / „která data kam" / „do nástroje". Bez slovníčku.
+- D5 (0022) Zavádění v týmu: retenční vrstva (12 Páteř/13 Q&A/14 kartičky, Feynman→15, Co dál→16), Anki 22 kartiček (sociální ne technický problém, zákaz=příkaz, rámec s hranicemi, 3 páky politika/vzdělávání/kultura, uč verifikaci ne tlačítka, junioři+deskilling C3, kultura drží trust gap C4, shadow IT, Rogers/Westrum). Páteř: „zákaz = příkaz" / „3 páky" / „metrika". Bez slovníčku. Pozn.: „🎓 Konec kurzu" callout v Co dál zachován.
 
 ## Blok B doplnění (probíhá 2026-07-28)
 - B2 (0004): retenční vrstva bez slovníčku (5 vrstev už vizualizované). Sekce 10 Páteř / 11 Q&A / 12 kartičky, Feynman→13, Co dál→14. Anki: 20 kartiček.
