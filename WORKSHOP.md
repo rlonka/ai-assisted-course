@@ -121,7 +121,7 @@ zůstává, jen slouží demu, ne naopak.
 
 ## Facilitátorské zásady
 
-Pět věcí, které rozhodují, jestli to bude živé, nebo uspávající.
+Věci, které rozhodují, jestli to bude živé, nebo uspávající.
 
 - **Mikro-interakce á 10–15 min** — hlasování, predikce, dvojice. Pozornost jinak spadne — ať sál pořád něco dělá.
 - **Dema = tvůj vrchol → nacvič je** — a měj nahranou zálohu (video/screenshoty), kdyby selhala síť nebo model.
@@ -129,6 +129,18 @@ Pět věcí, které rozhodují, jestli to bude živé, nebo uspávající.
 - **Dvě publika i bez manažerů** — u každého pilíře jedna věta „pro vědce znamená… / pro RSE znamená…".
 - **Parkoviště** — hluboké odbočky → „to je v Anki / v materiálech". Chrání časový rozpočet.
 - **Most na delší formát** — až přijde hands-on, každé demo se stane cvičením. Kostra zůstává, jen se prohloubí.
+
+### Knihy jako rekvizita (koření, ne pilíř)
+
+Fyzická kniha je omezená, ale u naší teze dobře motivovaná rekvizita: 20–40 let starý
+titul, který pořád platí, *prodává* „AI řemeslo nezneguje, jen zostřuje" líp než URL na slajdu.
+Pravidlo: **1–3 kusy, ne knihovna.** Výběr viz [`BOOKS.md`](BOOKS.md).
+
+- **U hlavní teze zvedni JEDNU** (Pragmatic Programmer / Fowler Refactoring): „Tahle je z roku 1999. Každé slovo pořád platí — a AI to udělala povinným." Řekni, ukaž, polož.
+- **Na konci malý štůsek (max 3) na stole** jako „kam dál" — jedna věta ke každé, „fotky vítány". Naváže na Anki + samostudium.
+- **Nikdy z nich nečti naživo** a **nekolej je během přednášky** (lidi listují místo poslouchání — nabídni je až na konci).
+- **Kniha si zaslouží moment jen tehdy, když u ní umíš říct něco konkrétního.** Prázdná rekvizita = vanity; u chytrého publika hrozí „flex" — rám sebevědomě-skromně, ne „koukněte, co jsem přečetl".
+- **Online/hybrid:** fyzické knihy na webkameře nefungují → dej obálky na slajd.
 
 ---
 
