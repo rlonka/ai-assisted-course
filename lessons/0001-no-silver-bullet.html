@@ -195,6 +195,11 @@
 
 <p>Rok 1986. Fred Brooks, autor <em>The Mythical Man-Month</em> (1975), publikuje esej v IEEE Computer. Kontext: průmysl zažívá vlnu optimismu kolem objektově orientovaného programování. Každý slibuje revoluci.</p>
 
+<div class="callout">
+  <div class="callout-label">Bonus na pódium — druhý (slavnější) Brooksův zákon</div>
+  <p>Brooks je i autor pravidla z <em>The Mythical Man-Month</em> (1975): <strong>„Přidání lidí do zpožděného softwarového projektu ho ještě víc zpozdí."</strong> (Brooks's Law.) Mechanismus je stejného ražení jako celý „No Silver Bullet": nový člověk se musí zaškolit (což ubere čas těm, kdo už rozumí), a každý další člen přidává komunikační kanály — u <em>n</em> lidí jich je <em>n(n−1)/2</em>, tedy roste kvadraticky. Esenciální práci nejde urychlit tím, že na ni <strong>naházíš víc zdrojů</strong>. Pointa pro AI: agent je taky „další zdroj". Hodit ho na zamotaný projekt, kterému nikdo nerozumí, zrychlení nedá — jen rychleji vyrobí kód, který pak nikdo neumí ověřit.</p>
+</div>
+
 <p>Brooks se vrací k otázce, proč softwarová krize z 60. let stále trvá. Identifikuje čtyři vlastnosti softwaru, které ho dělají fundamentálně odlišným od hardwaru:</p>
 
 <div class="two-col">
@@ -222,6 +227,14 @@
 </div>
 
 <p>Každá vlna přinesla zlepšení — ale žádná nedala 10×. A každá vlna přišla s hype, který sliboval víc.</p>
+
+<div class="callout">
+  <div class="callout-label">Proč se to pořád srovnává s hardwarem — a proč Brooks říká „nesrovnávej"</div>
+  <p>Brooks psal svůj argument na pozadí <strong>opačného příběhu — hardwaru.</strong> Zatímco software se plahočil, čipy zažívaly desítky let exponenciálního zlepšování (parita s tím, čemu se říká <strong>Moorův zákon</strong>). Odtud pramení implicitní naděje každého publika: „hardware to umí každé dva roky zdvojnásobit — proč ne software?"</p>
+  <p>Brooks Moorův zákon <em>nezpochybňuje</em> — hardware se tak opravdu zlepšuje. Zpochybňuje <strong>naději, že software pojede po stejné křivce.</strong> Zisky hardwaru přišly z domény, kam jde tlačit jedním směrem donekonečna (menší tranzistory); zbývající obtíž softwaru je <em>esenciální</em> (konceptuální), a tam žádná Moorovská křivka nevznikne. Moorův zákon je tu proto <strong>fólie, ne inspirace ani terč</strong> — protipříklad, který Brooks vysvětluje: „ano, hardware tohle umí; ne, software to nezopakuje, a tady je strukturální důvod."</p>
+  <p><strong>Payoff pro AI:</strong> je to přesně týž vzorec o generaci dál. AI dává Moorovské zisky na <em>akcidentální</em> komplexitě (psaní kódu) — a <strong>žádné</strong> na esenciální (vědět, že je to správně). Brooks ti v roce 1986 dopředu vysvětlil, proč AI zrychlí <em>psaní</em> a nezrychlí <em>vědění, že je to správně</em>.</p>
+  <p><em>Pozn. na ověření: že Brooks staví kontrast se zisky hardwaru, je v eseji explicitní; jestli tam ale doslova padne spojení „Moore's law", si před citací ověř v originále — bývá to až pozdější glosa.</em></p>
+</div>
 
 <h3>Co ten seznam vůbec je</h3>
 
@@ -299,12 +312,12 @@
 <em>Předtím:</em> boilerplate, syntax lookup, ruční překlad, generování testů — vše ručně.<br>
 <em>Co to sundává:</em> historicky <strong>nejsilnější útok na akcidentální komplexitu</strong>, jaký jsme viděli. Zvládne toho víc než cokoli před tím.<br>
 <em>Proč ne 10×:</em> a přesně tady je celá pointa lekce — je to <em>jen další položka na tomtéž seznamu</em>. Největší zatím, ale ze stejného druhu: útočí na akcidentální komplexitu. Esenciální (rozumět problému, poznat správný výsledek) zůstává u tebe. A navíc ji umí i <strong>schovat</strong>, což je nový druh nebezpečí.<br>
-<em>Munice — dvě tvrdá čísla:</em> (1) <strong>New Relic (2026):</strong> AI kód má <strong>1,7× víc issues</strong> než kód psaný bez AI. (2) <strong>METR (RCT, 2025):</strong> zkušení open-source vývojáři byli s AI nástroji na známém kódu <strong>~19 % pomalejší</strong> — a přitom čekali zrychlení a <em>cítili se</em> asi o 20 % rychlejší. To je Brooksova past změřená v laboratoři: vnímané zrychlení ≠ měřené zrychlení. Právě proto, že se výsledek <em>cítí</em> hotový, je pokušení přeskočit kontrolu největší.</p>
+<em>Munice:</em> tady je Brooksova past nejzrádnější — protože se výsledek <em>cítí</em> hotový. Vnímané zrychlení není totéž co změřené: kód přiteče rychle, ale porozumění mu zaostává a esenciální komplexita se přesune do slepého místa. Právě proto, že to <em>vypadá</em> hotově, je pokušení přeskočit kontrolu největší. <strong>Konkrétní čísla o produktivitě/kvalitě AI sem záměrně nedávám</strong> — mění se každých pár měsíců a co je dnes „studie", je za rok přežité; tvrdí <em>trend</em> („víc kódu, míň porozumění"), ne procento.</p>
 
 <div class="callout amber">
   <div class="callout-label">Kalibrace — kde je tvrdé číslo a kde ilustrace (ať tě nechytí za overclaim)</div>
   <ul>
-    <li><strong>Tvrdá data (můžeš citovat jako fakt):</strong> Brooksův „faktor pět" u jazyků (jeho vlastní odhad v eseji); New Relic 2026 „1,7× víc issues"; METR 2025 „~19 % pomalejší". Tyhle tři si dohledej a měj u ruky zdroj.</li>
+    <li><strong>Tvrdá data (můžeš citovat jako fakt):</strong> Brooksův „faktor pět" u jazyků — jeho vlastní odhad v eseji, historicky ukotvený a neměnný. <em>Čerstvá čísla o produktivitě/kvalitě AI kódu sem záměrně nedávám</em> — mění se každých pár měsíců a co je dnes „studie", může být za rok přežité. Tvrdí <strong>trend</strong> („AI kód nese víc chyb, protože mu autor míň rozumí"), ne konkrétní procento; kdybys číslo chtěl, dohledej ho čerstvé těsně před přednáškou a uveď rok.</li>
     <li><strong>Ilustrace / meme (funguje na pódiu, ale neprodávej jako statistiku):</strong> „YAML engineer", supply-chain historky (<code>left-pad</code>, <code>event-stream</code>), „tisíce závislostí". Jsou pravdivé v duchu, ale konkrétní čísla se liší projekt od projektu — používej je jako obraz, ne jako měření.</li>
     <li><strong>Historická anekdota (barva, ne důkaz):</strong> Backusova obava o rychlost Fortranu, Smalltalkův slib. Skvělé pro vyprávění, špatné jako argument sám o sobě.</li>
   </ul>
@@ -337,7 +350,7 @@
   <p><strong>Esenciální komplexita zůstává celá u tebe:</strong> pochopit problémovou doménu, navrhnout správnou abstrakci, rozhodnout co je správný výsledek, poznat kdy je řešení špatně. AI ti pomůže napsat kód — neurčí za tebe, co ten kód má dělat.</p>
 </div>
 
-<p>Data z New Relic (2026): AI kód má <strong>1,7× více issues</strong> než kód psaný bez AI. Příčina: vývojáři přestávají rozumět kódu, který AI vygeneruje — esenciální komplexita se neztratila, jen se přesunula do slepého místa.</p>
+<p>Sleduje se to i empiricky: měření opakovaně ukazují, že AI-generovaný kód nese <strong>víc chyb a hůř se udržuje</strong> — ne proto, že by model psal špatně, ale proto, že autor přestává rozumět tomu, co vygeneroval. Esenciální komplexita se neztratila, jen se přesunula do slepého místa. (Konkrétní čísla se rychle mění; drž se trendu, ne jednoho procenta.)</p>
 
 <!-- 5. Tři příklady -->
 <h2>5 — Tři příklady</h2>
@@ -447,10 +460,6 @@
     <span class="why">Proč: 10 stran, přečteš za 30 minut. Každá věta je přesná. Nutné přečíst v originále — parafráze vždy ztrácí ostrost argumentu.</span>
   </li>
   <li>
-    <a href="https://newrelic.com/resources/report/state-of-ai-coding" target="_blank">State of AI Coding 2026 — New Relic</a>
-    <span class="why">Proč: empirická data, ne intuice. 1,7× více issues je konkrétní číslo, které si publikum zapamatuje. Použij pro C4 lekci také.</span>
-  </li>
-  <li>
     <a href="https://en.wikipedia.org/wiki/No_Silver_Bullet" target="_blank">No Silver Bullet — Wikipedia (kontext a recepce)</a>
     <span class="why">Proč: ukazuje, jak byl argument přijat a kde se myslitelé mýlili. Dobrý pro historický kontext přednášky, ne jako primární zdroj.</span>
   </li>
@@ -459,14 +468,14 @@
 <!-- 10. Páteř -->
 <h2>10 — Páteř 🎯</h2>
 
-<p>Tohle je jádro nastudeno — jedna věta, ze které si odvodíš odpověď na skoro cokoli, a tři čísla, která nesmíš na pódiu splést. Když zamrzneš, vrať se sem. Ostatní si dopočítáš.</p>
+<p>Tohle je jádro nastudeno — jedna věta, ze které si odvodíš odpověď na skoro cokoli, a tři kotvy, které nesmíš na pódiu splést. Když zamrzneš, vrať se sem. Ostatní si dopočítáš.</p>
 
 <div class="spine">
   <p class="spine-sentence">Software má dvě vrstvy — akcidentální <em>dřinu</em> a esenciální <em>přemýšlení</em>. Každý pokrok v historii sundal jen tu dřinu, nikdy to přemýšlení — a AI je jen poslední (a nejsilnější) v té řadě.</p>
   <ul class="spine-anchors">
     <li><span class="num">5×</span>Brooksův „faktor pět" — největší skok v dějinách SW (assembler → Fortran). I ten nejlepší dal 5×, ne 10×.</li>
-    <li><span class="num">1,7×</span>New Relic 2026: AI kód má 1,7× víc issues než kód psaný bez AI.</li>
-    <li><span class="num">−19 %</span>METR RCT 2025: zkušení vývojáři na známém kódu byli s AI ~19 % pomalejší — a cítili se ~20 % rychlejší.</li>
+    <li><span class="num">HW ≠ SW</span>Hardware jede Moorovu křivku (exponenciálně), software ne — esenciální komplexita žádný řádový skok nepustí. Moorův zákon je fólie, ne slib pro software.</li>
+    <li><span class="num">+lidi → později</span>Brooksův zákon (Mythical Man-Month): přidat lidi do zpožděného projektu ho ještě víc zpozdí. Esenciální práci neurychlíš naházením zdrojů — platí i pro AI.</li>
   </ul>
 </div>
 
@@ -515,7 +524,7 @@
 
 <div class="qa-item">
   <p class="qa-q">Námitka „ale nám to zrychlilo": „Tým s AI zrychlil o 30 %. Kde je problém?"</p>
-  <p class="qa-a">Akcidentální bariéra zmizela, ale esenciální komplexita se schovala do slepého místa a projeví se za pár měsíců jako neudržovatelný kód (New Relic to měří: 1,7× víc issues). <strong>Zrychlení bez porozumění není produktivita — je to dluh.</strong></p>
+  <p class="qa-a">Akcidentální bariéra zmizela, ale esenciální komplexita se schovala do slepého místa a projeví se za pár měsíců jako neudržovatelný kód (měření to opakovaně potvrzují: AI kód nese víc chyb). <strong>Zrychlení bez porozumění není produktivita — je to dluh.</strong></p>
 </div>
 
 <!-- 12. Do kartiček -->
@@ -525,7 +534,7 @@
 
 <div class="callout green">
   <div class="callout-label">Bohatší sada je připravená v repu</div>
-  <p>Blok níž je rychlá startovní verze. V repu je <strong>plná sada 37 kartiček</strong> s podrobnějšími odpověďmi a rozdělením do témat (jádro, čísla, generace, historie, námitky, anekdoty…) — soubor <code>anki/0001-no-silver-bullet.txt</code>. Má hlavičku pro <strong>import do Anki na jeden klik</strong> (nastaví oddělovač, balíček i typ poznámky) a tagy, takže můžeš procvičovat po blocích (<code>tag:cisla</code>, <code>tag:historie</code>…). Návod: <code>anki/README.md</code>.</p>
+  <p>Blok níž je rychlá startovní verze. V repu je <strong>plná sada 43 kartiček</strong> s podrobnějšími odpověďmi a rozdělením do témat (jádro, generace, historie, AI dnes, námitky, anekdoty…) — soubor <code>anki/0001-no-silver-bullet.txt</code>. Má hlavičku pro <strong>import do Anki na jeden klik</strong> (nastaví oddělovač, balíček i typ poznámky) a tagy, takže můžeš procvičovat po blocích (<code>tag:cisla</code>, <code>tag:historie</code>…). Návod: <code>anki/README.md</code>.</p>
 </div>
 
 <pre class="flashcards">Kdo a kdy napsal „No Silver Bullet"? ; Fred Brooks, 1986, IEEE Computer (autor The Mythical Man-Month, 1975).
@@ -533,8 +542,8 @@ Dva typy komplexity podle Brookse? ; Esenciální (vlastní problému, nelze ods
 Co dělá AI s komplexitou? ; Snižuje akcidentální (boilerplate, syntax, lookup). Esenciální zůstává celá u člověka.
 Co je „silver bullet" / laťka pro zázrak? ; Řád magnitudy = 10× zlepšení produktivity. Nic takového neexistuje ani nepřijde.
 Brooksův „faktor pět"? ; Jeho odhad největšího skoku v historii SW (2GL→3GL, assembler→Fortran) — jen ~5×, ne 10×.
-Číslo z New Relic 2026? ; AI kód má 1,7× víc issues než kód psaný bez AI.
-Číslo z METR (RCT, 2025)? ; Zkušení open-source vývojáři na známém kódu ~19 % pomalejší s AI — a cítili se ~20 % rychlejší.
+Proč se software nesrovnává s Moorovým zákonem? ; Hardware jede exponenciálně (Moore); software ne — zisky HW útočí na doménu bez esenciální komplexity, softwaru zbývá esenciální (konceptuální) obtíž, kde řádový skok nevznikne. Moore = fólie, ne slib.
+Brooksův zákon (Mythical Man-Month, 1975)? ; „Přidání lidí do zpožděného projektu ho ještě víc zpozdí." Zaškolení + kvadraticky rostoucí komunikace n(n−1)/2. Esenciální práci neurychlíš naházením zdrojů — ani AI.
 Čtyři vlastnosti softwaru podle Brookse? ; Complexity, Conformity, Changeability, Invisibility.
 Do jaké generace patří Python? ; 3GL — stejná jako Fortran/C/Java. Pohodlnější, ne vyšší generace.
 Generace jazyků 1–5? ; 1GL strojový kód, 2GL assembler, 3GL Fortran/C/Python, 4GL SQL/MATLAB/R, 5GL Prolog/constraint solvery.
@@ -622,7 +631,7 @@ Přenosný test esenciální vs. akcidentální? ; „Můžu to změnit, aniž v
 <p><strong>Propojení do curricula:</strong></p>
 <ul>
   <li><a href="0004-ramec-peti-otazek.html">B2 — Rámec pěti otázek</a> — každá z pěti otázek je odpovědí na konkrétní typ (esenciální / akcidentální) komplexity</li>
-  <li><em>C4 — AI kód quality</em> — empirická data (1,7× více issues) jsou přímým měřením Brooksovy predikce</li>
+  <li><em>C4 — AI kód quality</em> — empirické měření, že AI kód nese víc chyb, je přímým potvrzením Brooksovy predikce (esenciální komplexita se přesune do slepého místa)</li>
   <li><em>C3 — Deskilling</em> — deskilling je přesun esenciální komplexity do slepého místa</li>
   <li><em>A2 — Refactoring</em> — refactoring je systematická práce s akcidentální komplexitou; Brooks mu dává kontext</li>
 </ul>

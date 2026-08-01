@@ -38,9 +38,12 @@ Prostý text (TSV), jedna kartička na řádek: `otázka<TAB>odpověď<TAB>tagy`
 - `0017-agile-manifesto.txt` — A5 (26 kartiček): agile = hodnoty ne ceremonie, 4 hodnoty, cargo cult,
   smyčka zpětné vazby (fungující = ověřené), AI přesouvá hrdlo na ověřování, Snowbird 2001/XP/Scrum,
   námitky (velocity, Scrum na vědu), propojení na A1/C4.
-- `0001-no-silver-bullet.txt` — A3 (37 kartiček): esenciální/akcidentální komplexita,
-  Aristoteles, čtyři vlastnosti SW, tvrdá čísla (5×, 1,7×, −19 %), generace jazyků,
-  historické vlny, AI dnes + námitky, analogie (guláš, 128 řidičů), anekdoty (bug, Backus).
+- `0001-no-silver-bullet.txt` — A3 (43 kartiček): esenciální/akcidentální komplexita,
+  Aristoteles, čtyři vlastnosti SW, Brooksův „faktor pět" (5×), Moorův zákon jako fólie
+  (HW vs. SW), Brooksův zákon (přidání lidí do zpožděného projektu), generace jazyků,
+  historické vlny, AI dnes + námitky, analogie (paper-writing, knihtisk, 128 řidičů),
+  anekdoty (bug, Backus). Pozn.: volatilní staty (New Relic 1,7×, METR −19 %) záměrně
+  vyňaty — rychle zastarávají; deck tvrdí trend, ne procento.
 - `0004-ramec-peti-otazek.txt` — B2 (20 kartiček): rámec pěti otázek (Memory/Skills/Hooks/MCP/Subagents),
   co každá vrstva řeší, závislé pořadí, mapování na klasické disciplíny, námitky, propojení na B1/A1/A4.
 - `0005-memory-a-claude-md.txt` — B3 (20 kartiček): CLAUDE.md (konfigurace projektu pro agenta), tři typy paměti (CLAUDE.md/memory/settings.json), hierarchie global/projekt/lokal, co patří dovnitř, technika psaní, námitky.

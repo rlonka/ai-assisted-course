@@ -7,6 +7,16 @@
 - Feynmanovo cvičení je klíčová součást každé lekce — konkrétní, ne abstraktní
 - Zpětná vazba: **buď kritický a přímý, netlač pozitivitu.** Když je nápad slabý, priorita špatná nebo tvrzení nadsazené, řekni to rovnou — i proti vlastnímu (AI) výstupu. Radek to explicitně chce (2026-07-31).
 
+## Volatilní AI staty — čištění (2026-08-01)
+Radek: volatilní čísla o AI produktivitě/kvalitě rychle zastarávají, riziko v přednášce.
+- **A3 (0001) HOTOVO:** odstraněny New Relic „1,7×" a METR „−19 %" z HTML i Anki. Nahrazeno:
+  Moorův zákon jako fólie (HW vs. SW), Brooksův zákon (přidání lidí do zpožděného projektu),
+  a kvalitativní „trend, ne procento". Deck 43 karet (beze změny počtu). Brooksův „faktor pět" (5×)
+  ponechán — historicky ukotvený, neměnný.
+- **JEŠTĚ OBSAHUJÍ tytéž staty (čeká na rozhodnutí):** HTML A1 (0003), B5 (0007), C3 (0010),
+  C4 (0011), B8 (0023); Anki C3 (0010), C4 (0011). Pozn.: C4 je „trust gap" — tam je 1,7× hůř
+  vyjmout (je to nosné číslo lekce), spíš změkčit na trend než mazat.
+
 ## Strategie prezentace kurzu (rozhodnuto 2026-07-31)
 Kritický verdikt, se kterým Radek souhlasí: **artefakt předběhl autora.** Kurz existuje,
 expertíza v něm zatím ne. Proto pořadí:
