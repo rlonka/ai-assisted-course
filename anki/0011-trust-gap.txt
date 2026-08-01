@@ -7,7 +7,7 @@ Co je trust gap?	Propast mezi tvou důvěrou v AI výstup a jeho skutečnou spol
 Jedno pravidlo trust gapu?	Důvěra má být úměrná ověření, ne plynulosti. Ne „zní přesvědčivě, tak věřím", ale „prověřil jsem úměrně sázce, tak věřím tak akorát".	C4 jadro
 Je trust gap jednosměrný?	Ne, obousměrný. Nadměrná důvěra (nasadíš neověřené) je nebezpečnější a častější, ale paušální nedůvěra (odmítneš užitečný nástroj) je taky špatná kalibrace.	C4 jadro
 Přenosný test důvěry?	„Jak bych poznal, že je to špatně?" Máš odpověď (test/kontrola/referenční hodnota) → důvěřuj po jejím provedení. Nemáš → tvá důvěra nemá o co se opřít (varování).	C4 jadro
-Číslo z New Relic 2026 (trust gap)?	AI-generovaný kód má ~1,7× víc issues než kód psaný člověkem — přesto mu vývojáři často věří víc. Propast mezi důvěrou a spolehlivostí je měřitelná.	C4 cisla
+Kolik víc chyb nese AI kód (trust gap)?	Měření ukazují řádově ~1,7× víc issues než kód psaný člověkem (číslo se vyvíjí — drž trend, ověř aktuální vydání). Přesto mu vývojáři často věří víc. Propast mezi důvěrou a spolehlivostí je měřitelná.	C4 cisla
 Proč přeceňujeme AI (fluency heuristic)?	Mozek si plete snadnost zpracování (plynulost) s pravdivostí. Co se čte hladce, cítí se pravdivější. AI produkuje hladký text ke všemu (správnému i špatnému) a tím tu heuristiku systematicky obchází.	C4 plynulost
 Co u AI znamená plynulý, sebejistý text?	Nic o správnosti. Model se plete stejně sebejistě jako když má pravdu. Sebejistota AI = absence kalibrace, ne signál kompetence.	C4 plynulost
 Je fluency heuristic tvá osobní slabost?	Ne, je to kognitivní bias, který máme všichni — jen ho AI industrializovala tím, že produkuje dokonale hladký text i pro nesmysl.	C4 plynulost

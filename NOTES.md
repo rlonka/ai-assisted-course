@@ -13,9 +13,12 @@ Radek: volatilní čísla o AI produktivitě/kvalitě rychle zastarávají, rizi
   Moorův zákon jako fólie (HW vs. SW), Brooksův zákon (přidání lidí do zpožděného projektu),
   a kvalitativní „trend, ne procento". Deck 43 karet (beze změny počtu). Brooksův „faktor pět" (5×)
   ponechán — historicky ukotvený, neměnný.
-- **JEŠTĚ OBSAHUJÍ tytéž staty (čeká na rozhodnutí):** HTML A1 (0003), B5 (0007), C3 (0010),
-  C4 (0011), B8 (0023); Anki C3 (0010), C4 (0011). Pozn.: C4 je „trust gap" — tam je 1,7× hůř
-  vyjmout (je to nosné číslo lekce), spíš změkčit na trend než mazat.
+- **HOTOVO napříč celým kurzem (2026-08-01):** volatilní staty vyňaty i z A1 (0003), B5 (0007),
+  C3 (0010), B8 (0023) — HTML i Anki; nahrazeno kvalitativním trendem („AI kód nese víc chyb").
+  C3 stat blok: velké „1,7×" → šipka „↑" + trend. New Relic resource odkazy odebrány z A3/C3/B8.
+- **C4 (0011) ZÁMĚRNĚ ZMĚKČENO, ne smazáno:** 1,7× je nosné číslo lekce trust gap → ponecháno
+  jako „~1,7× (měřený trend, ověř aktuální — číslo se vyvíjí)" v HTML, Páteři, flashcards, Anki
+  i zdroji (New Relic link ponechán jako zdroj). Jediné místo v kurzu, kde „1,7×" zůstává.
 
 ## Strategie prezentace kurzu (rozhodnuto 2026-07-31)
 Kritický verdikt, se kterým Radek souhlasí: **artefakt předběhl autora.** Kurz existuje,

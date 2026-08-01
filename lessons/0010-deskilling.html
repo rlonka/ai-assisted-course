@@ -150,8 +150,8 @@
 <p>Tohle není morální panika ani technofobie — je to měřitelný jev.</p>
 
 <div class="datum">
-  <span class="big">1,7×</span>
-  <span class="txt">Podle State of AI Coding (2026) obsahuje AI-generovaný kód řádově <strong>1,7× více issues</strong> než kód psaný člověkem. Klíčový důsledek: revizní dovednost je najednou <em>kritičtější</em> než dřív — přesně ve chvíli, kdy ji AI eroduje. To je jádro <em>trust gap</em> (C4).</span>
+  <span class="big">↑</span>
+  <span class="txt">Měření opakovaně ukazují, že AI-generovaný kód nese <strong>víc issues</strong> než kód psaný člověkem (konkrétní čísla se rychle mění — drž se trendu, ne procenta). Klíčový důsledek: revizní dovednost je najednou <em>kritičtější</em> než dřív — přesně ve chvíli, kdy ji AI eroduje. To je jádro <em>trust gap</em> (C4).</span>
 </div>
 
 <p>Anthropic i další měří dopad AI asistence na dovednosti napřímo. Vzorec je konzistentní: krátkodobě roste rychlost, dlouhodobě u lidí, kteří přestanou sami rozhodovat, klesá schopnost chybu odhalit. Produktivita a kompetence se rozejdou — a rozdíl je vidět, až když nástroj selže nebo vyrobí věrohodný nesmysl.</p>
@@ -214,7 +214,7 @@
 <ul>
   <li><strong>Čtení cizího kódu.</strong> Když neumíš přečíst, co AI napsala, nemůžeš to zodpovědně nasadit. Tohle je nosná dovednost číslo jedna.</li>
   <li><strong>Ladění a hledání příčiny.</strong> AI umí navrhnout opravu; najít <em>skutečnou</em> příčinu ve složitém systému je úsudek, který se procvičuje jen děláním.</li>
-  <li><strong>Kritická revize.</strong> Rozpoznat věrohodný nesmysl. Přesně ta dovednost, kterou 1,7× více issues vyžaduje — a kterou pohodlí eroduje nejrychleji.</li>
+  <li><strong>Kritická revize.</strong> Rozpoznat věrohodný nesmysl. Přesně ta dovednost, kterou vyšší chybovost AI kódu vyžaduje — a kterou pohodlí eroduje nejrychleji.</li>
   <li><strong>Doménový úsudek.</strong> Vědět, jestli výsledek dává fyzikální/vědecký smysl. AI nezná tvůj obor tak jako ty; když tuhle kotvu ztratíš, ztratíš schopnost říct „tohle je špatně, i když to vypadá dobře".</li>
 </ul>
 
@@ -281,7 +281,7 @@
 
 <ul>
   <li><strong>Celý blok B:</strong> Tahle lekce je jeho protiváha. Memory, Skills, Hooks, MCP, Subagents dávají obrovskou sílu — deskilling je cena, kterou platíš, když tu sílu použiješ k delegování úsudku, ne mechaniky.</li>
-  <li><strong>C4 — Trust gap:</strong> 1,7× více issues v AI kódu znamená, že revizní dovednost je kritičtější než kdy dřív. Deskilling ji ale eroduje. Ty dvě lekce jsou dvě strany téže mince: víc chyb + míň schopnosti je chytat.</li>
+  <li><strong>C4 — Trust gap:</strong> vyšší chybovost AI kódu znamená, že revizní dovednost je kritičtější než kdy dřív. Deskilling ji ale eroduje. Ty dvě lekce jsou dvě strany téže mince: víc chyb + míň schopnosti je chytat.</li>
   <li><strong>B4 — Skills:</strong> „Skill má automatizovat rutinu, ne myšlení" — to je hranice deskillingu vyjádřená v harness. Skill, který zabalí <em>rozhodování</em>, je přesně ta past.</li>
   <li><strong>A1 — TDD:</strong> Testy jsou externí kotva proti erozi úsudku. Když si nejsi jistý vlastní revizí, red-green cyklus drží objektivní pravdu mimo tvou (nebo AI) hlavu.</li>
 </ul>
@@ -333,10 +333,6 @@
   <li>
     <a href="https://www.anthropic.com/research" target="_blank">Anthropic — výzkum dopadu AI na dovednosti (2025)</a>
     <span class="why">Proč: Primární data o měřitelném dopadu AI asistence na kompetence. Hledej studie o „skill" a „reliance". Základ pro tvrzení, že deskilling je měřitelný, ne dojem.</span>
-  </li>
-  <li>
-    <a href="https://newrelic.com/resources/report/state-of-ai-coding" target="_blank">State of AI Coding 2026 (New Relic)</a>
-    <span class="why">Proč: Zdroj čísla 1,7× více issues v AI kódu a dat o trust gap. Propojuje deskilling s C4 — proč je revizní dovednost kritičtější právě teď. Přečti shrnutí a sekci o kvalitě kódu.</span>
   </li>
   <li>
     <a href="https://www.ise.ncsu.edu/wp-content/uploads/2017/02/Bainbridge_1983_Ironies-of-Automation.pdf" target="_blank">Ironies of Automation — Lisanne Bainbridge (1983)</a>
@@ -460,14 +456,14 @@ Co je „ironie automatizace" (Bainbridge 1983)? ; Čím víc systém automatizu
 
   <!-- Q3 -->
   <div class="quiz-question" id="q3">
-    <div class="quiz-q">3. Proč je 1,7× více issues v AI kódu (C4) přímo propojené s deskillingem?</div>
+    <div class="quiz-q">3. Proč je vyšší chybovost AI kódu (C4) přímo propojená s deskillingem?</div>
     <ul class="quiz-options">
       <li><label><input type="radio" name="q3" value="a"> Není propojené — jsou to dvě nezávislá témata</label></li>
       <li><label><input type="radio" name="q3" value="b"> Víc chyb v AI kódu činí revizní dovednost kritičtější než dřív — přesně tu dovednost, kterou deskilling eroduje. Roste potřeba a zároveň klesá schopnost</label></li>
       <li><label><input type="radio" name="q3" value="c"> Protože AI kód má víc chyb, měli bychom ho přestat používat</label></li>
-      <li><label><input type="radio" name="q3" value="d"> Protože 1,7× je způsobeno tím, že lidé neumí psát prompty</label></li>
+      <li><label><input type="radio" name="q3" value="d"> Protože vyšší chybovost je způsobena tím, že lidé neumí psát prompty</label></li>
     </ul>
-    <button class="quiz-check" onclick="check('q3','b','Výborně. To je ta osudová kombinace: AI produkuje víc chyb (potřeba revize roste), a zároveň pohodlím eroduje revizní dovednost (schopnost revize klesá). Nůžky se rozevírají — víc věrohodných chyb potkává míň schopnosti je chytit. Proto jsou C3 a C4 dvě strany jedné mince.','Ne. Propojení je konkrétní: 1,7× více chyb znamená, že revizní dovednost je kritičtější než kdy dřív — a deskilling právě tuhle dovednost eroduje. Potřeba roste, schopnost klesá. To není důvod AI zavrhnout, ale důvod chránit revizní dovednost.')">Zkontrolovat</button>
+    <button class="quiz-check" onclick="check('q3','b','Výborně. To je ta osudová kombinace: AI produkuje víc chyb (potřeba revize roste), a zároveň pohodlím eroduje revizní dovednost (schopnost revize klesá). Nůžky se rozevírají — víc věrohodných chyb potkává míň schopnosti je chytit. Proto jsou C3 a C4 dvě strany jedné mince.','Ne. Propojení je konkrétní: víc chyb v AI kódu znamená, že revizní dovednost je kritičtější než kdy dřív — a deskilling právě tuhle dovednost eroduje. Potřeba roste, schopnost klesá. To není důvod AI zavrhnout, ale důvod chránit revizní dovednost.')">Zkontrolovat</button>
     <div class="quiz-feedback" id="q3-fb"></div>
   </div>
 
@@ -500,7 +496,7 @@ Co je „ironie automatizace" (Bainbridge 1983)? ; Čím víc systém automatizu
 
 <p><strong>Příští lekce (dokončení bloku C):</strong></p>
 <ul>
-  <li><em>C4 — Trust gap</em> — druhá strana téže mince: 1,7× více issues a proč je revizní dovednost kritičtější než kdy dřív.</li>
+  <li><em>C4 — Trust gap</em> — druhá strana téže mince: vyšší chybovost AI kódu a proč je revizní dovednost kritičtější než kdy dřív.</li>
   <li><em>C1 — FAIR4RS, C2 — Reprodukovatelnost</em> — jak agentní paradigma pomáhá (a škodí) vědecké kvalitě software.</li>
 </ul>
 
