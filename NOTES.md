@@ -7,6 +7,20 @@
 - Feynmanovo cvičení je klíčová součást každé lekce — konkrétní, ne abstraktní
 - Zpětná vazba: **buď kritický a přímý, netlač pozitivitu.** Když je nápad slabý, priorita špatná nebo tvrzení nadsazené, řekni to rovnou — i proti vlastnímu (AI) výstupu. Radek to explicitně chce (2026-07-31).
 
+## Hlavní teze + knihovnička (2026-08-01)
+Radkova myšlenka: dnes záleží na klasických disciplínách (agile, TDD, DDD, malé iterace)
+víc než jindy; AI nepřináší nic nového, jen zostřuje nutnost je znát; čerpat z klasických knih.
+- Byla rozprostřená napříč blokem A (A2/A4/A5/D5, README tagline), ale nikde vyslovená jako jedna ostrá teze.
+- **HOTOVO:** (1) Konsolidovaný callout „Hlavní teze celého kurzu" v A3 sekci 1 (green callout,
+  s mechanismem „dřív nutila k porozumění dřina; AI ji sundala → kód, kterému nerozumíš →
+  disciplíny držící správnost mimo hlavu jsou povinné"). (2) Nová Anki karta v A3 (deck 43→44).
+  (3) On-page flashcard teze jako první. (4) **BOOKS.md** — anotovaná knihovnička (Pragmatic
+  Programmer, Brooks ×2, Beck TDD, Fowler Refactoring, Feathers Legacy Code, Evans+Vernon DDD,
+  Agile/XP, Accelerate, Ousterhout) s „📚 mít na workshop" značkami + top-3 k nákupu. (5) RESOURCES.md
+  doplněn (Pragmatic Programmer, Mythical Man-Month, Feathers, Accelerate + odkaz na BOOKS.md).
+  (6) A2 resource-list: Feathers + Pragmatic Programmer. Chybějící kniha byla hlavně Pragmatic Programmer
+  (dřív jen DRY v B4).
+
 ## Volatilní AI staty — čištění (2026-08-01)
 Radek: volatilní čísla o AI produktivitě/kvalitě rychle zastarávají, riziko v přednášce.
 - **A3 (0001) HOTOVO:** odstraněny New Relic „1,7×" a METR „−19 %" z HTML i Anki. Nahrazeno:

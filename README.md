@@ -66,6 +66,9 @@ learning-records/   záznamy o vzniku a rozhodnutích
 MISSION.md          proč kurz existuje a jak vypadá úspěch
 NOTES.md            stav kurikula a preference
 RESOURCES.md        zdroje
+BOOKS.md            knihovnička — co číst a co koupit fyzicky na workshop
+WORKSHOP.md         facilitátorská kostra 90min workshopu
+anki/               kartičky k rozloženému opakování (24 decků)
 ```
 
 ## Formát lekce

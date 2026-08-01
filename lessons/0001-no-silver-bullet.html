@@ -43,6 +43,13 @@
   <p>Každé publikum přichází s implicitní nadějí: "<em>AI za mě vyřeší těžkou práci.</em>" Brooks ti dává jazyk, jak tuto naději kalibrovat bez cynismu. Není to "AI je špatná" — je to "přesněji popišme, co AI umí a co neumí."</p>
 </div>
 
+<div class="callout green">
+  <div class="callout-label">Hlavní teze celého kurzu — tady si ji ukotvi</div>
+  <p><strong>AI nepřináší do softwarového řemesla nic nového. Zvyšuje sázku na všechno, co jsme už uměli.</strong></p>
+  <p>Mechanismus: dřív tě k porozumění nutila samotná <em>dřina</em> — musel jsi kód napsat, tak jsi mu rozuměl. AI tu dřinu odstranila, takže dnes můžeš poslat kód, kterému <em>nerozumíš</em>. A jediné, co tě pak chrání, jsou disciplíny, které drží správnost <strong>mimo tvou hlavu</strong>: testy (<a href="0003-tdd.html">A1</a>), refactoring se sítí (<a href="0015-refactoring.html">A2</a>), doménový jazyk (<a href="0016-domain-driven-design.html">A4</a>), malé iterace a rychlá zpětná vazba (<a href="0017-agile-manifesto.html">A5</a>), review (<a href="0019-verifikace-code-review.html">D2</a>).</p>
+  <p>Ty knihy z 90. a 2000. let — Brooks, Beck, Fowler, Evans, Hunt &amp; Thomas — <strong>nezastaraly. AI je udělala povinnými.</strong> Kdo je zná, ví přesně, co po AI chtít a čemu nevěřit. (Seznam k pořízení: soubor <code>BOOKS.md</code> v repu.)</p>
+</div>
+
 <h3>Slovníček — odkud ta dvě slova jsou (a proč znějí abstraktně)</h3>
 
 <p>„Esenciální" a „akcidentální" znějí zbytečně učeně — ale nejsou to Brooksova náhodně zvolená abstrakta. Než je použiješ na pódiu, měj jasno, odkud jsou a čím je nahradit v běžné řeči.</p>
@@ -534,10 +541,11 @@
 
 <div class="callout green">
   <div class="callout-label">Bohatší sada je připravená v repu</div>
-  <p>Blok níž je rychlá startovní verze. V repu je <strong>plná sada 43 kartiček</strong> s podrobnějšími odpověďmi a rozdělením do témat (jádro, generace, historie, AI dnes, námitky, anekdoty…) — soubor <code>anki/0001-no-silver-bullet.txt</code>. Má hlavičku pro <strong>import do Anki na jeden klik</strong> (nastaví oddělovač, balíček i typ poznámky) a tagy, takže můžeš procvičovat po blocích (<code>tag:cisla</code>, <code>tag:historie</code>…). Návod: <code>anki/README.md</code>.</p>
+  <p>Blok níž je rychlá startovní verze. V repu je <strong>plná sada 44 kartiček</strong> s podrobnějšími odpověďmi a rozdělením do témat (jádro, generace, historie, AI dnes, námitky, anekdoty…) — soubor <code>anki/0001-no-silver-bullet.txt</code>. Má hlavičku pro <strong>import do Anki na jeden klik</strong> (nastaví oddělovač, balíček i typ poznámky) a tagy, takže můžeš procvičovat po blocích (<code>tag:cisla</code>, <code>tag:historie</code>…). Návod: <code>anki/README.md</code>.</p>
 </div>
 
-<pre class="flashcards">Kdo a kdy napsal „No Silver Bullet"? ; Fred Brooks, 1986, IEEE Computer (autor The Mythical Man-Month, 1975).
+<pre class="flashcards">Hlavní teze kurzu (AI a klasické disciplíny)? ; AI nepřináší do řemesla nic nového — zvyšuje sázku na vše, co jsme uměli. Dřív k porozumění nutila dřina; AI ji sundala → můžeš poslat kód, kterému nerozumíš. Disciplíny držící správnost mimo tvou hlavu (TDD/refactoring/DDD/iterace/review) jsou teď povinné, ne volitelné.
+Kdo a kdy napsal „No Silver Bullet"? ; Fred Brooks, 1986, IEEE Computer (autor The Mythical Man-Month, 1975).
 Dva typy komplexity podle Brookse? ; Esenciální (vlastní problému, nelze odstranit) a akcidentální (implementační tření, lze redukovat).
 Co dělá AI s komplexitou? ; Snižuje akcidentální (boilerplate, syntax, lookup). Esenciální zůstává celá u člověka.
 Co je „silver bullet" / laťka pro zázrak? ; Řád magnitudy = 10× zlepšení produktivity. Nic takového neexistuje ani nepřijde.

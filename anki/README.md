@@ -38,7 +38,8 @@ Prostý text (TSV), jedna kartička na řádek: `otázka<TAB>odpověď<TAB>tagy`
 - `0017-agile-manifesto.txt` — A5 (26 kartiček): agile = hodnoty ne ceremonie, 4 hodnoty, cargo cult,
   smyčka zpětné vazby (fungující = ověřené), AI přesouvá hrdlo na ověřování, Snowbird 2001/XP/Scrum,
   námitky (velocity, Scrum na vědu), propojení na A1/C4.
-- `0001-no-silver-bullet.txt` — A3 (43 kartiček): esenciální/akcidentální komplexita,
+- `0001-no-silver-bullet.txt` — A3 (44 kartiček): hlavní teze kurzu (AI nepřináší nic
+  nového, zvyšuje sázku na klasické disciplíny), esenciální/akcidentální komplexita,
   Aristoteles, čtyři vlastnosti SW, Brooksův „faktor pět" (5×), Moorův zákon jako fólie
   (HW vs. SW), Brooksův zákon (přidání lidí do zpožděného projektu), generace jazyků,
   historické vlny, AI dnes + námitky, analogie (paper-writing, knihtisk, 128 řidičů),

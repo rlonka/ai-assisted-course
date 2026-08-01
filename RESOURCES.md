@@ -4,8 +4,16 @@
 
 ### Klasické zdroje (canon)
 
+> 📖 **Kompletní anotovaná knihovnička (co číst, co koupit fyzicky na workshop): [`BOOKS.md`](BOOKS.md).**
+
+- [The Pragmatic Programmer — Hunt & Thomas (1999 / 2019)](https://pragprog.com/titles/tpp20/the-pragmatic-programmer-20th-anniversary-edition/)
+  Kanonická „timeless craft" kniha (DRY, ortogonalita, tracer bullets). Přesně étos, který AI nezneguje, jen zostřuje. Použij pro: hlavní tezi kurzu, B4, celý blok A.
+
 - [No Silver Bullet — Fred Brooks (1986)](https://www.cs.unc.edu/techreports/86-020.pdf)
   Esenciální vs. akcidentální komplexita. Historická kotva pro AI hype. Použij pro: lekce A3, úvod každé přednášky.
+
+- [The Mythical Man-Month — Fred Brooks (1975)](https://en.wikipedia.org/wiki/The_Mythical_Man-Month)
+  Brooksův zákon, program vs. produkt (9×). Použij pro: lekce A3, C5.
 
 - [TDD by Example — Kent Beck (2002)](https://www.oreilly.com/library/view/test-driven-development/0321146530/)
   Red-green-refactor cyklus, kapitoly 1–3 stačí. Použij pro: lekce A1, D4.
@@ -13,11 +21,17 @@
 - [Refactoring: Improving the Design of Existing Code — Martin Fowler (2018)](https://martinfowler.com/books/refactoring.html)
   Bezpečná změna kódu. Úvod + kap. 1 jsou nutné minimum. Použij pro: lekce A2, D5.
 
+- [Working Effectively with Legacy Code — Michael Feathers (2004)](https://www.oreilly.com/library/view/working-effectively-with/0131177052/)
+  Charakterizační testy jako síť kolem kódu, kterému nerozumíš — přesně situace AI-generovaného kódu. Použij pro: lekce A2, D2.
+
 - [Domain-Driven Design — Eric Evans (2003)](https://www.domainlanguage.com/ddd/)
   Ubiquitous language, bounded context. Kap. 1–2. Použij pro: lekce A4.
 
 - [Agile Manifesto (2001)](https://agilemanifesto.org/)
   Původní text, 1 strana. Použij pro: lekce A5 — kde agentic navazuje, kde inovuje.
+
+- [Accelerate — Forsgren, Humble, Kim (2018)](https://itrevolution.com/product/accelerate/)
+  Výzkumem podložené metriky výkonu týmů (DORA). Použij pro: lekce D5 — „metrika není kolik AI".
 
 ### Agentní paradigma
 
@@ -36,7 +50,7 @@
   Mechanický test reprodukovatelnosti, /reproduce skill. Použij pro: lekce C2.
 
 - [New Relic: State of AI Coding 2026](https://newrelic.com/resources/report/state-of-ai-coding)
-  1.7× více issues v AI kódu, trust gap data. Použij pro: lekce C4.
+  Měřený trend „AI kód nese víc issues" (~1,7× — číslo se vyvíjí, ověř aktuální vydání). Použij pro: lekce C4. Pozn.: konkrétní staty jinde v kurzu záměrně nahrazeny trendem — zastarávají.
 
 - [BSSw.io — Better Scientific Software](https://bssw.io/)
   Vědecký software vs. produkční software. Použij pro: lekce C5.
